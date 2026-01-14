@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.LabtestMethodsMapper">
+    
+    <resultMap type="LabtestMethods" id="BsLabtestMethodsResult">
+        <result property="bsLabtestMethodsId"    column="bs_labtest_methods_id"    />
+        <result property="bsLabtestItemsId"    column="bs_labtest_item_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="methodName"    column="method_name"    />
+        <result property="temperatureMax"    column="temperature_max"    />
+        <result property="temperatureMin"    column="temperature_min"    />
+        <result property="humidityMax"    column="humidity_max"    />
+        <result property="humidityMin"    column="humidity_min"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <!-- 设备列表关联查询 -->
+        <collection property="instrumentsList" ofType="Instruments"
+                    select="selectInstrumentsByMethodId" column="bs_labtest_methods_id"/>
+    </resultMap>
+
+    <resultMap id="BsLabtestMethodsBsLabtestMethodsFormulaResult" type="LabtestMethods" extends="BsLabtestMethodsResult">
+        <collection property="labtestMethodsFormulaList" ofType="LabtestMethodsFormula" column="bs_labtest_methods_id" select="selectFormulaList" />
+    </resultMap>
+
+    <resultMap id="BsLabtestMethodsBsLabtestMethodsAttributeResult" type="LabtestMethods" extends="BsLabtestMethodsResult">
+        <collection property="labtestMethodsAttributeList" ofType="LabtestMethodsAttribute" column="bs_labtest_methods_id" select="selectAttributeList" />
+    </resultMap>
+
+    <resultMap id="BsLabtestMethodsWithSubTablesResult" type="LabtestMethods" extends="BsLabtestMethodsResult">
+        <collection property="labtestMethodsFormulaList" ofType="LabtestMethodsFormula" column="bs_labtest_methods_id" select="selectFormulaList" />
+        <collection property="labtestMethodsAttributeList" ofType="LabtestMethodsAttribute" column="bs_labtest_methods_id" select="selectAttributeList" />
+        <collection property="instrumentsList" ofType="Instruments" column="bs_labtest_methods_id" select="selectInstrumentList" />
+    </resultMap>
+
+    <resultMap type="LabtestMethodsFormula" id="BsLabtestMethodsFormulaResult">
+        <result property="bsLabtestMethodsFormulaId"    column="bs_labtest_methods_formula_id"    />
+        <result property="bsLabtestMethodsId"    column="bs_labtest_methods_id"    />
+        <result property="formulaContent"    column="formula_content"    />
+        <result property="formulaDescription"    column="formula_description"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <resultMap type="LabtestMethodsAttribute" id="BsLabtestMethodsAttributeResult">
+        <result property="bsLabtestMethodsAttributeId"    column="bs_labtest_methods_attribute_id"    />
+        <result property="bsLabtestMethodsId"    column="bs_labtest_methods_id"    />
+        <result property="attributeName"    column="attribute_name"    />
+        <result property="attributeCode"    column="attribute_code"    />
+        <result property="attributeType"    column="attribute_type"    />
+        <result property="seqNo"    column="seq_no"    />
+        <result property="defaultValue"    column="default_value"    />
+        <result property="maxValue"    column="max_value"    />
+        <result property="minValue"    column="min_value"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <resultMap type="Instruments" id="BsInstrumentsResult">
+        <result property="bsInstrumentsId"    column="bs_instruments_id"    />
+        <result property="instrumentName"    column="instrument_name"    />
+        <result property="instrumentCode"    column="instrument_code"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="type"    column="type"    />
+        <result property="responsiblePerson"    column="responsible_person"    />
+        <result property="modelNumber"    column="model_number"    />
+        <result property="remark"    column="remark"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBsLabtestMethodsVo">
+        select bs_labtest_methods_id, bs_labtest_item_id, method_name, temperature_max, temperature_min, humidity_max, humidity_min, is_delete, is_enable, create_time, create_by, update_time, update_by from bs_labtest_methods
+    </sql>
+
+    <select id="selectMethodsList" parameterType="LabtestMethods" resultMap="BsLabtestMethodsResult">
+        select m.bs_labtest_methods_id, m.bs_labtest_item_id, m.method_name, m.temperature_max, m.temperature_min, m.humidity_max, m.humidity_min, m.is_delete, m.is_enable, m.create_time, m.create_by, m.update_time, m.update_by
+        ,it.item_name
+        from bs_labtest_methods m
+        left join bs_labtest_items it on m.bs_labtest_item_id=it.bs_labtest_item_id
+
+        <where>
+            and m.is_delete = '0'  <!-- 固定添加软删除条件 -->
+            and it.is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="bsLabtestItemsId != null  and bsLabtestItemsId != ''"> and m.bs_labtest_item_id = #{bsLabtestItemsId}</if>
+            <if test="methodName != null  and methodName != ''"> and m.method_name like concat('%', #{methodName}, '%')</if>
+            <if test="temperatureMax != null  and temperatureMax != ''"> and m.temperature_max = #{temperatureMax}</if>
+            <if test="temperatureMin != null  and temperatureMin != ''"> and m.temperature_min = #{temperatureMin}</if>
+            <if test="humidityMax != null  and humidityMax != ''"> and m.humidity_max = #{humidityMax}</if>
+            <if test="humidityMin != null  and humidityMin != ''"> and m.humidity_min = #{humidityMin}</if>
+            <if test="isEnable != null  and isEnable != ''"> and m.is_enable = #{isEnable}</if>
+            <if test="itemName != null  and itemName != ''"> and it.item_name like concat('%', #{itemName}, '%')</if>
+        </where>
+    </select>
+
+    <!-- 根据方法ID查询关联设备 -->
+    <select id="selectInstrumentsByMethodId" resultType="Instruments">
+        select i.bs_instruments_id as bsInstrumentsId, i.instrument_name as instrumentName,mi.bs_labtest_methods_id
+        from bs_instruments i
+                 inner join bs_labtest_method_instrument mi on i.bs_instruments_id = mi.bs_instruments_id
+        where mi.bs_labtest_methods_id = #{bsLabtestMethodsId}
+          and mi.is_delete = '0' and i.is_enable = 1
+        order by mi.create_time asc
+    </select>
+
+    <select id="selectMethodsByMethodsId" parameterType="String" resultMap="BsLabtestMethodsWithSubTablesResult">
+        select m.bs_labtest_methods_id, m.bs_labtest_item_id, m.method_name, m.temperature_max, m.temperature_min, m.humidity_max, m.humidity_min, m.is_delete, m.is_enable, m.create_time, m.create_by, m.update_time, m.update_by
+        ,it.item_name
+        from bs_labtest_methods m
+        left join bs_labtest_items it on m.bs_labtest_item_id=it.bs_labtest_item_id
+        where m.bs_labtest_methods_id = #{bsLabtestMethodsId}
+        and m.is_delete = '0'  <!-- 固定添加软删除条件 -->
+        and it.is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <select id="selectFormulaList" resultType="LabtestMethodsFormula" resultMap="BsLabtestMethodsFormulaResult">
+        select bs_labtest_methods_formula_id, bs_labtest_methods_id, formula_content, formula_description, is_delete, create_time, create_by, update_time, update_by
+        from bs_labtest_methods_formula
+        where bs_labtest_methods_id = #{bs_labtest_methods_id}
+        and is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <select id="selectAttributeList" resultType="LabtestMethodsAttribute" resultMap="BsLabtestMethodsAttributeResult">
+        select bs_labtest_methods_attribute_id, bs_labtest_methods_id, attribute_name, attribute_code, attribute_type, seq_no, default_value, max_value, min_value, is_delete, create_time, create_by, update_time, update_by
+        from bs_labtest_methods_attribute
+        where bs_labtest_methods_id = #{bs_labtest_methods_id}
+        and is_delete = '0'  <!-- 固定添加软删除条件 -->
+        order by seq_no asc,create_time asc
+    </select>
+
+    <select id="selectInstrumentList" resultType="Instruments" resultMap="BsInstrumentsResult">
+        select i.bs_instruments_id, i.instrument_name, i.instrument_code, i.dept_id, i.type, i.responsible_person, i.model_number,
+        i.remark, i.is_enable, i.is_delete, i.create_time, i.create_by, i.update_time, i.update_by
+        from bs_labtest_method_instrument mi
+            inner join bs_instruments i on mi.bs_instruments_id=i.bs_instruments_id
+        where mi.bs_labtest_methods_id = #{bs_labtest_methods_id}
+        and mi.is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+
+    <insert id="insertMethods" parameterType="LabtestMethods">
+        insert into bs_labtest_methods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestMethodsId != null">bs_labtest_methods_id,</if>
+            <if test="bsLabtestItemsId != null and bsLabtestItemsId != ''">bs_labtest_item_id,</if>
+            <if test="methodName != null and methodName != ''">method_name,</if>
+            <if test="temperatureMax != null">temperature_max,</if>
+            <if test="temperatureMin != null and temperatureMin != ''">temperature_min,</if>
+            <if test="humidityMax != null">humidity_max,</if>
+            <if test="humidityMin != null and humidityMin != ''">humidity_min,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="isEnable != null and isEnable != ''">is_enable,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestMethodsId != null">#{bsLabtestMethodsId},</if>
+            <if test="bsLabtestItemsId != null and bsLabtestItemsId != ''">#{bsLabtestItemsId},</if>
+            <if test="methodName != null and methodName != ''">#{methodName},</if>
+            <if test="bsInstrumentsId != null and bsInstrumentsId != ''">#{bsInstrumentsId},</if>
+            <if test="temperatureMax != null">#{temperatureMax},</if>
+            <if test="temperatureMin != null and temperatureMin != ''">#{temperatureMin},</if>
+            <if test="humidityMax != null">#{humidityMax},</if>
+            <if test="humidityMin != null and humidityMin != ''">#{humidityMin},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMethods" parameterType="LabtestMethods">
+        update bs_labtest_methods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bsLabtestItemsId != null and bsLabtestItemsId != ''">bs_labtest_item_id = #{bsLabtestItemsId},</if>
+            <if test="methodName != null and methodName != ''">method_name = #{methodName},</if>
+            <if test="temperatureMax != null">temperature_max = #{temperatureMax},</if>
+            <if test="temperatureMin != null">temperature_min = #{temperatureMin},</if>
+            <if test="humidityMax != null">humidity_max = #{humidityMax},</if>
+            <if test="humidityMin != null">humidity_min = #{humidityMin},</if>
+            <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+<!--            <if test="createTime != null">create_time = #{createTime},</if>-->
+<!--            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>-->
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_labtest_methods_id = #{bsLabtestMethodsId}
+    </update>
+
+    <update id="updateEnableById" parameterType="LabtestItems">
+        update bs_labtest_methods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isEnable != null">is_enable = #{isEnable},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_labtest_methods_id = #{bsLabtestMethodsId}
+    </update>
+
+    <delete id="deleteMethodsByMethodsId" parameterType="String">
+        delete from bs_labtest_methods where bs_labtest_methods_id = #{bsLabtestMethodsId}
+    </delete>
+
+    <delete id="deleteMethodsByBMethodsIds" parameterType="String">
+        delete from bs_labtest_methods where bs_labtest_methods_id in 
+        <foreach item="bsLabtestMethodsId" collection="array" open="(" separator="," close=")">
+            #{bsLabtestMethodsId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteFormulaByMethodsIds" parameterType="String">
+        delete from bs_labtest_methods_formula where bs_labtest_methods_id in 
+        <foreach item="bsLabtestMethodsId" collection="array" open="(" separator="," close=")">
+            #{bsLabtestMethodsId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAttributeByMethodsIds" parameterType="String">
+        delete from bs_labtest_methods_attribute where bs_labtest_methods_id in
+        <foreach item="bsLabtestMethodsId" collection="array" open="(" separator="," close=")">
+            #{bsLabtestMethodsId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteFormulaByMethodsId" parameterType="String">
+        delete from bs_labtest_methods_formula where bs_labtest_methods_id = #{bsLabtestMethodsId}
+    </delete>
+
+    <delete id="deleteAttributeByMethodsId" parameterType="String">
+        delete from bs_labtest_methods_attribute where bs_labtest_methods_id = #{bsLabtestMethodsId}
+    </delete>
+
+    <insert id="batchFormula">
+        insert into bs_labtest_methods_formula( bs_labtest_methods_formula_id, bs_labtest_methods_id, formula_content, formula_description,  create_time, create_by, update_time, update_by) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.bsLabtestMethodsFormulaId}, #{item.bsLabtestMethodsId}, #{item.formulaContent}, #{item.formulaDescription}, #{item.createTime}, #{item.createBy}, #{item.updateTime}, #{item.updateBy})
+        </foreach>
+    </insert>
+    <insert id="batchAttribute">
+        insert into bs_labtest_methods_attribute
+        ( bs_labtest_methods_attribute_id, bs_labtest_methods_id, attribute_name, attribute_code, attribute_type, seq_no, default_value, max_value, min_value, create_time, create_by, update_time, update_by) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.bsLabtestMethodsAttributeId}, #{item.bsLabtestMethodsId}, #{item.attributeName}, #{item.attributeCode}, #{item.attributeType}, #{item.seqNo}, #{item.defaultValue}, #{item.maxValue}, #{item.minValue},  #{item.createTime}, #{item.createBy}, #{item.updateTime}, #{item.updateBy})
+        </foreach>
+    </insert>
+
+    <insert id="batchLabtestMethodInstrument">
+        insert into bs_labtest_method_instrument
+        ( bs_labtest_method_instrument_id, bs_labtest_methods_id, bs_instruments_id, create_time, create_by, update_time, update_by) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.labtestMethodInstrumentId}, #{item.labtestMethodsId}, #{item.instrumentsId},  #{item.createTime}, #{item.createBy}, #{item.updateTime}, #{item.updateBy})
+        </foreach>
+    </insert>
+</mapper>

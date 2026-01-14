@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxTestModelMapper">
+
+    <resultMap type="OpJczxTestModel" id="OpJczxTestModelResult">
+        <result property="opJczxTestModelId"    column="op_jczx_test_model_id"    />
+        <result property="testModelNo"    column="test_model_no"    />
+        <result property="testModelName"    column="test_model_name"    />
+        <result property="invbillTag"    column="invbill_tag"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="testBasis"    column="delete_id"    />
+    </resultMap>
+
+    <sql id="selectOpJczxTestModelVo">
+        select op_jczx_test_model_id, test_model_no, test_model_name, invbill_tag, item_id, create_time, create_by,
+               update_time, update_by, delete_id from op_jczx_test_model
+    </sql>
+
+    <select id="selectOpJczxTestModelList" parameterType="OpJczxTestModel" resultMap="OpJczxTestModelResult">
+        <include refid="selectOpJczxTestModelVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="testModelNo != null  and testModelNo != ''"> and test_model_no = #{testModelNo}</if>
+            <if test="testModelName != null  and testModelName != ''"> and test_model_name like concat('%', #{testModelName}, '%')</if>
+            <if test="invbillTag != null  and invbillTag != ''"> and invbill_tag = #{invbillTag}</if>
+            <if test="itemId != null  and itemId != ''"> and item_id = #{itemId}</if>
+        </where>
+    </select>
+
+    <select id="selectOpJczxTestModelByOpJczxTestModelId" parameterType="String" resultMap="OpJczxTestModelResult">
+        <include refid="selectOpJczxTestModelVo"/>
+        where op_jczx_test_model_id = #{opJczxTestModelId}
+    </select>
+
+
+    <select id="selectByItemIdInvbillCode" parameterType="String" resultMap="OpJczxTestModelResult">
+            select m.*
+             from business_invbill i
+             left join bs_invbill_info ii on i.sap_code=ii.sap_code and ii.delete_id='0'
+             left join op_jczx_test_model m on FIND_IN_SET(m.invbill_tag, ii.tag) > 0 and m.delete_id='0'
+            where  i.sap_code=#{invbillCode} and m.item_id=#{itemId}
+              and i.del_flag='0'
+            limit 1
+    </select>
+    <insert id="insertOpJczxTestModel" parameterType="OpJczxTestModel">
+        insert into op_jczx_test_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxTestModelId != null">op_jczx_test_model_id,</if>
+            <if test="testModelNo != null">test_model_no,</if>
+            <if test="testModelName != null">test_model_name,</if>
+            <if test="invbillTag != null">invbill_tag,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="testBasis != null and testBasis != ''">delete_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxTestModelId != null">#{opJczxTestModelId},</if>
+            <if test="testModelNo != null">#{testModelNo},</if>
+            <if test="testModelName != null">#{testModelName},</if>
+            <if test="invbillTag != null">#{invbillTag},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="testBasis != null and testBasis != ''">#{testBasis},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpJczxTestModel" parameterType="OpJczxTestModel">
+        update op_jczx_test_model
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="testModelNo != null">test_model_no = #{testModelNo},</if>
+            <if test="testModelName != null">test_model_name = #{testModelName},</if>
+            <if test="invbillTag != null">invbill_tag = #{invbillTag},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="testBasis != null and testBasis != ''">delete_id = #{testBasis},</if>
+        </trim>
+        where op_jczx_test_model_id = #{opJczxTestModelId}
+    </update>
+
+
+
+</mapper>

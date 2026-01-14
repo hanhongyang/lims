@@ -1,0 +1,1367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpNearInfraredSummaryMapper">
+    
+    <resultMap type="OpNearInfraredSummary" id="OpNearInfraredSummaryResult">
+        <result property="dairylandId"    column="dairylandId"    />
+        <result property="dateProcessed"    column="dateProcessed"    />
+        <result property="accountNumber"    column="accountNumber"    />
+        <result property="subAccountNumber"    column="subAccountNumber"    />
+        <result property="sampledFor"    column="sampledFor"    />
+        <result property="productType"    column="productType"    />
+        <result property="subType"    column="subType"    />
+        <result property="eSampleNo"    column="eSampleNo"    />
+        <result property="alias"    column="alias"    />
+        <result property="description1"    column="description1"    />
+        <result property="description2"    column="description2"    />
+        <result property="description3"    column="description3"    />
+        <result property="analysisPackage"    column="analysisPackage"    />
+        <result property="moisture"    column="moisture"    />
+        <result property="dryMatter"    column="dryMatter"    />
+        <result property="rdm"    column="rdm"    />
+        <result property="ph"    column="ph"    />
+        <result property="cp"    column="cp"    />
+        <result property="adIcp"    column="adIcp"    />
+        <result property="ndIcp"    column="ndIcp"    />
+        <result property="ndIcpss"    column="ndIcpss"    />
+        <result property="hRUPPCP16"    column="hRUPPCP16"    />
+        <result property="ucpCP"    column="ucpCP"    />
+        <result property="solubleProtein"    column="solubleProtein"    />
+        <result property="kohSolubility"    column="kohSolubility"    />
+        <result property="ammonia"    column="ammonia"    />
+        <result property="ammoniaCP"    column="ammoniaCP"    />
+        <result property="ammoniaSP"    column="ammoniaSP"    />
+        <result property="lysine"    column="lysine"    />
+        <result property="methionine"    column="methionine"    />
+        <result property="cysteine"    column="cysteine"    />
+        <result property="alanine"    column="alanine"    />
+        <result property="asparticAcid"    column="asparticAcid"    />
+        <result property="glutamicAcid"    column="glutamicAcid"    />
+        <result property="glycine"    column="glycine"    />
+        <result property="isoleucine"    column="isoleucine"    />
+        <result property="leucine"    column="leucine"    />
+        <result property="proline"    column="proline"    />
+        <result property="threonine"    column="threonine"    />
+        <result property="valine"    column="valine"    />
+        <result property="arginine"    column="arginine"    />
+        <result property="histidine"    column="histidine"    />
+        <result property="phenylalanine"    column="phenylalanine"    />
+        <result property="tyrosine"    column="tyrosine"    />
+        <result property="tryptophan"    column="tryptophan"    />
+        <result property="serine"    column="serine"    />
+        <result property="totalAminoAcids"    column="totalAminoAcids"    />
+        <result property="adf"    column="adf"    />
+        <result property="aNdf"    column="aNdf"    />
+        <result property="aNdfom"    column="aNdfom"    />
+        <result property="lignin"    column="lignin"    />
+        <result property="crudeFiber"    column="crudeFiber"    />
+        <result property="ndfd12"    column="ndfd12"    />
+        <result property="ndfd24"    column="ndfd24"    />
+        <result property="ndfd30"    column="ndfd30"    />
+        <result property="ndfd48"    column="ndfd48"    />
+        <result property="ndfd72"    column="ndfd72"    />
+        <result property="ndfd120"    column="ndfd120"    />
+        <result property="ndfd240"    column="ndfd240"    />
+        <result property="uNdfom12"    column="uNdfom12"    />
+        <result property="uNdfom24"    column="uNdfom24"    />
+        <result property="uNdfom30"    column="uNdfom30"    />
+        <result property="uNdfom48"    column="uNdfom48"    />
+        <result property="uNdfom72"    column="uNdfom72"    />
+        <result property="uNdfom240"    column="uNdfom240"    />
+        <result property="uNdfom120"    column="uNdfom120"    />
+        <result property="calibrateNdf"    column="calibrateNdf"    />
+        <result property="fpn"    column="fpn"    />
+        <result property="starch"    column="starch"    />
+        <result property="calibrateStarch"    column="calibrateStarch"    />
+        <result property="gpn"    column="gpn"    />
+        <result property="calibrateLeafPercent"    column="calibrateLeafPercent"    />
+        <result property="csps"    column="csps"    />
+        <result property="ivsd7"    column="ivsd7"    />
+        <result property="ivsd7o"    column="ivsd7o"    />
+        <result property="ivsd7oEst"    column="ivsd7oEst"    />
+        <result property="escSugar"    column="escSugar"    />
+        <result property="wscSugar"    column="wscSugar"    />
+        <result property="sucrose"    column="sucrose"    />
+        <result property="sucroseTotalSugars"    column="sucroseTotalSugars"    />
+        <result property="totalSugar"    column="totalSugar"    />
+        <result property="lactose"    column="lactose"    />
+        <result property="eeFat"    column="eeFat"    />
+        <result property="ahFat"    column="ahFat"    />
+        <result property="tfa"    column="tfa"    />
+        <result property="c120"    column="c120"    />
+        <result property="c140"    column="c140"    />
+        <result property="c141"    column="c141"    />
+        <result property="c160"    column="c160"    />
+        <result property="c161"    column="c161"    />
+        <result property="c170"    column="c170"    />
+        <result property="c180"    column="c180"    />
+        <result property="c181"    column="c181"    />
+        <result property="c182"    column="c182"    />
+        <result property="c183"    column="c183"    />
+        <result property="c190"    column="c190"    />
+        <result property="c200"    column="c200"    />
+        <result property="c201"    column="c201"    />
+        <result property="c202"    column="c202"    />
+        <result property="c203"    column="c203"    />
+        <result property="c204"    column="c204"    />
+        <result property="c205"    column="c205"    />
+        <result property="c220"    column="c220"    />
+        <result property="c221"    column="c221"    />
+        <result property="c226"    column="c226"    />
+        <result property="c240"    column="c240"    />
+        <result property="c241"    column="c241"    />
+        <result property="otherFattyAcids"    column="otherFattyAcids"    />
+        <result property="c120TFA"    column="c120TFA"    />
+        <result property="c140TFA"    column="c140TFA"    />
+        <result property="c141TFA"    column="c141TFA"    />
+        <result property="c160TFA"    column="c160TFA"    />
+        <result property="c161TFA"    column="c161TFA"    />
+        <result property="c170TFA"    column="c170TFA"    />
+        <result property="c180TFA"    column="c180TFA"    />
+        <result property="c181TFA"    column="c181TFA"    />
+        <result property="c182TFA"    column="c182TFA"    />
+        <result property="c183TFA"    column="c183TFA"    />
+        <result property="c190TFA"    column="c190TFA"    />
+        <result property="c200TFA"    column="c200TFA"    />
+        <result property="c201TFA"    column="c201TFA"    />
+        <result property="c202TFA"    column="c202TFA"    />
+        <result property="c203TFA"    column="c203TFA"    />
+        <result property="c204TFA"    column="c204TFA"    />
+        <result property="c205TFA"    column="c205TFA"    />
+        <result property="c220TFA"    column="c220TFA"    />
+        <result property="c221TFA"    column="c221TFA"    />
+        <result property="c226TFA"    column="c226TFA"    />
+        <result property="c240TFA"    column="c240TFA"    />
+        <result property="c241TFA"    column="c241TFA"    />
+        <result property="otherFattyAcidsTFA"    column="otherFattyAcidsTFA"    />
+        <result property="ash"    column="ash"    />
+        <result property="ca"    column="ca"    />
+        <result property="p"    column="p"    />
+        <result property="mg"    column="mg"    />
+        <result property="k"    column="k"    />
+        <result property="s"    column="s"    />
+        <result property="na"    column="na"    />
+        <result property="cl"    column="cl"    />
+        <result property="al"    column="al"    />
+        <result property="b"    column="b"    />
+        <result property="mn"    column="mn"    />
+        <result property="zn"    column="zn"    />
+        <result property="cu"    column="cu"    />
+        <result property="fe"    column="fe"    />
+        <result property="lacticAcid"    column="lacticAcid"    />
+        <result property="aceticAcid"    column="aceticAcid"    />
+        <result property="propionicAcid"    column="propionicAcid"    />
+        <result property="butyricAcid"    column="butyricAcid"    />
+        <result property="isoButryicAcid"    column="isoButryicAcid"    />
+        <result property="ethanol"    column="ethanol"    />
+        <result property="Propanediol12"    column="Propanediol12"    />
+        <result property="methanol"    column="methanol"    />
+        <result property="propanol"    column="propanol"    />
+        <result property="butanol"    column="butanol"    />
+        <result property="moldCount"    column="moldCount"    />
+        <result property="yeastCount"    column="yeastCount"    />
+        <result property="aflatoxinB1"    column="aflatoxinB1"    />
+        <result property="aflatoxinB2"    column="aflatoxinB2"    />
+        <result property="aflatoxinG1"    column="aflatoxinG1"    />
+        <result property="aflatoxinG2"    column="aflatoxinG2"    />
+        <result property="zearalenone"    column="zearalenone"    />
+        <result property="t2"    column="t2"    />
+        <result property="ht2"    column="ht2"    />
+        <result property="neosolaniol"    column="neosolaniol"    />
+        <result property="das"    column="das"    />
+        <result property="ochratoxinA"    column="ochratoxinA"    />
+        <result property="citrinin"    column="citrinin"    />
+        <result property="patulin"    column="patulin"    />
+        <result property="fumonisinB1"    column="fumonisinB1"    />
+        <result property="fumonisinB2"    column="fumonisinB2"    />
+        <result property="fumonisinB3"    column="fumonisinB3"    />
+        <result property="vomitoxinDON"    column="vomitoxinDON"    />
+        <result property="AcetylDON3"    column="AcetylDON3"    />
+        <result property="AcetylDON15"    column="AcetylDON15"    />
+        <result property="fusarenonX"    column="fusarenonX"    />
+        <result property="nivalenol"    column="nivalenol"    />
+        <result property="fusaricAcid"    column="fusaricAcid"    />
+        <result property="totalAflatoxins"    column="totalAflatoxins"    />
+        <result property="roquefortineC"    column="roquefortineC"    />
+        <result property="totalFumonisins"    column="totalFumonisins"    />
+        <result property="totalDONs"    column="totalDONs"    />
+        <result property="totalT2HT2"    column="totalT2HT2"    />
+        <result property="donVomitoxinThreshold2Ppm"    column="donVomitoxinThreshold2Ppm"    />
+        <result property="zearalenoneThreshold100Ppb"    column="zearalenoneThreshold100Ppb"    />
+        <result property="t2HT2Threshold10Ppb"    column="t2HT2Threshold10Ppb"    />
+        <result property="fumonisinThreshold05Ppm"    column="fumonisinThreshold05Ppm"    />
+        <result property="mucor"    column="mucor"    />
+        <result property="rhizopus"    column="rhizopus"    />
+        <result property="cladosporium"    column="cladosporium"    />
+        <result property="penicillium"    column="penicillium"    />
+        <result property="aspergillius"    column="aspergillius"    />
+        <result property="fusarium"    column="fusarium"    />
+        <result property="otherMold"    column="otherMold"    />
+        <result property="coliform"    column="coliform"    />
+        <result property="clostridiaPerfringens"    column="clostridiaPerfringens"    />
+        <result property="eColi"    column="eColi"    />
+        <result property="enterobacteriaceae"    column="enterobacteriaceae"    />
+        <result property="nitrateNitrogen"    column="nitrateNitrogen"    />
+        <result property="adjustedCP"    column="adjustedCP"    />
+        <result property="rdpNrc01CP"    column="rdpNrc01CP"    />
+        <result property="rdpNrc01DM"    column="rdpNrc01DM"    />
+        <result property="rupNrc01CP"    column="rupNrc01CP"    />
+        <result property="rupNrc01DM"    column="rupNrc01DM"    />
+        <result property="nfc"    column="nfc"    />
+        <result property="lacticAceticRatio"    column="lacticAceticRatio"    />
+        <result property="rfv"    column="rfv"    />
+        <result property="rfq"    column="rfq"    />
+        <result property="domi90PercentDry"    column="domi90PercentDry"    />
+        <result property="californiaTDN90PercentDry"    column="californiaTDN90PercentDry"    />
+        <result property="dcad"    column="dcad"    />
+        <result property="ndfKdRateVanAmburgh"    column="ndfKdRateVanAmburgh"    />
+        <result property="ndfKdRateMIR"    column="ndfKdRateMIR"    />
+        <result property="ttnDfd"    column="ttnDfd"    />
+        <result property="starchkdratemirP1t1"    column="starchKdRateMIR_P1T1"    />
+        <result property="tdnADF"    column="tdnADF"    />
+        <result property="negADF"    column="negADF"    />
+        <result property="nemADF"    column="nemADF"    />
+        <result property="nelADF"    column="nelADF"    />
+        <result property="tdnOARDC"    column="tdnOARDC"    />
+        <result property="negOARDC"    column="negOARDC"    />
+        <result property="nemOARDC"    column="nemOARDC"    />
+        <result property="nelOARDC"    column="nelOARDC"    />
+        <result property="meOARDC"    column="meOARDC"    />
+        <result property="tdnMilk2006"    column="tdnMilk2006"    />
+        <result property="negMilk2006"    column="negMilk2006"    />
+        <result property="nemMilk2006"    column="nemMilk2006"    />
+        <result property="nelMilk2006Processed"    column="nelMilk2006Processed"    />
+        <result property="nelMilk2006NonProcessed"    column="nelMilk2006NonProcessed"    />
+        <result property="milkTonCornSilageMilk2006"    column="milkTonCornSilageMilk2006"    />
+        <result property="milkAcreMLK06Proc"    column="milkAcreMLK06Proc"    />
+        <result property="milkAcreMLK06NonProc"    column="milkAcreMLK06NonProc"    />
+        <result property="tdnMilk13"    column="tdnMilk13"    />
+        <result property="nelMilk13"    column="nelMilk13"    />
+        <result property="negMilk13"    column="negMilk13"    />
+        <result property="nemMilk13"    column="nemMilk13"    />
+        <result property="milkPerTonMilk13"    column="milkPerTonMilk13"    />
+        <result property="beefPerTon"    column="beefPerTon"    />
+        <result property="negISUBeefMcalCwt"    column="negISUBeefMcalCwt"    />
+        <result property="nemISUBeefMcalCwt"    column="nemISUBeefMcalCwt"    />
+        <result property="negISUBeefMcalLb"    column="negISUBeefMcalLb"    />
+        <result property="nemISUBeefMcalLb"    column="nemISUBeefMcalLb"    />
+        <result property="negISUBeefMcalKg"    column="negISUBeefMcalKg"    />
+        <result property="nemISUBeefMcalKg"    column="nemISUBeefMcalKg"    />
+        <result property="negISUBeefMJKg"    column="negISUBeefMJKg"    />
+        <result property="nemISUBeefMJKg"    column="nemISUBeefMJKg"    />
+        <result property="tdn1xISUBeef"    column="tdn1xISUBeef"    />
+        <result property="swineDE"    column="swineDE"    />
+        <result property="swineME"    column="swineME"    />
+        <result property="swineNE"    column="swineNE"    />
+        <result property="equineDE"    column="equineDE"    />
+        <result property="equineTDN"    column="equineTDN"    />
+        <result property="dmYield"    column="dmYield"    />
+        <result property="meGfE2001"    column="meGfE2001"    />
+        <result property="rohfaserGfE2001"    column="rohfaserGfE2001"    />
+        <result property="nXPGfE2001"    column="nXPGfE2001"    />
+        <result property="rnbGfE2001"    column="rnbGfE2001"    />
+        <result property="nelMilk24McalCwt"    column="nelMilk24McalCwt"    />
+        <result property="milkPerTonMilk24LbsTon"    column="milkPerTonMilk24LbsTon"    />
+        <result property="importTime"    column="import_time"    />
+        <result property="importBy"    column="import_by"    />
+    </resultMap>
+
+    <sql id="selectOpNearInfraredSummaryVo">
+        select dairylandId, dateProcessed, accountNumber, subAccountNumber, sampledFor, productType, subType, eSampleNo, alias, description1, description2, description3, analysisPackage, moisture, dryMatter, rdm, ph, cp, adIcp, ndIcp, ndIcpss, hRUPPCP16, ucpCP, solubleProtein, kohSolubility, ammonia, ammoniaCP, ammoniaSP, lysine, methionine, cysteine, alanine, asparticAcid, glutamicAcid, glycine, isoleucine, leucine, proline, threonine, valine, arginine, histidine, phenylalanine, tyrosine, tryptophan, serine, totalAminoAcids, adf, aNdf, aNdfom, lignin, crudeFiber, ndfd12, ndfd24, ndfd30, ndfd48, ndfd72, ndfd120, ndfd240, uNdfom12, uNdfom24, uNdfom30, uNdfom48, uNdfom72, uNdfom240, uNdfom120, calibrateNdf, fpn, starch, calibrateStarch, gpn, calibrateLeafPercent, csps, ivsd7, ivsd7o, ivsd7oEst, escSugar, wscSugar, sucrose, sucroseTotalSugars, totalSugar, lactose, eeFat, ahFat, tfa, c120, c140, c141, c160, c161, c170, c180, c181, c182, c183, c190, c200, c201, c202, c203, c204, c205, c220, c221, c226, c240, c241, otherFattyAcids, c120TFA, c140TFA, c141TFA, c160TFA, c161TFA, c170TFA, c180TFA, c181TFA, c182TFA, c183TFA, c190TFA, c200TFA, c201TFA, c202TFA, c203TFA, c204TFA, c205TFA, c220TFA, c221TFA, c226TFA, c240TFA, c241TFA, otherFattyAcidsTFA, ash, ca, p, mg, k, s, na, cl, al, b, mn, zn, cu, fe, lacticAcid, aceticAcid, propionicAcid, butyricAcid, isoButryicAcid, ethanol, Propanediol12, methanol, propanol, butanol, moldCount, yeastCount, aflatoxinB1, aflatoxinB2, aflatoxinG1, aflatoxinG2, zearalenone, t2, ht2, neosolaniol, das, ochratoxinA, citrinin, patulin, fumonisinB1, fumonisinB2, fumonisinB3, vomitoxinDON, AcetylDON3, AcetylDON15, fusarenonX, nivalenol, fusaricAcid, totalAflatoxins, roquefortineC, totalFumonisins, totalDONs, totalT2HT2, donVomitoxinThreshold2Ppm, zearalenoneThreshold100Ppb, t2HT2Threshold10Ppb, fumonisinThreshold05Ppm, mucor, rhizopus, cladosporium, penicillium, aspergillius, fusarium, otherMold, coliform, clostridiaPerfringens, eColi, enterobacteriaceae, nitrateNitrogen, adjustedCP, rdpNrc01CP, rdpNrc01DM, rupNrc01CP, rupNrc01DM, nfc, lacticAceticRatio, rfv, rfq, domi90PercentDry, californiaTDN90PercentDry, dcad, ndfKdRateVanAmburgh, ndfKdRateMIR, ttnDfd, starchKdRateMIR_P1T1, tdnADF, negADF, nemADF, nelADF, tdnOARDC, negOARDC, nemOARDC, nelOARDC, meOARDC, tdnMilk2006, negMilk2006, nemMilk2006, nelMilk2006Processed, nelMilk2006NonProcessed, milkTonCornSilageMilk2006, milkAcreMLK06Proc, milkAcreMLK06NonProc, tdnMilk13, nelMilk13, negMilk13, nemMilk13, milkPerTonMilk13, beefPerTon, negISUBeefMcalCwt, nemISUBeefMcalCwt, negISUBeefMcalLb, nemISUBeefMcalLb, negISUBeefMcalKg, nemISUBeefMcalKg, negISUBeefMJKg, nemISUBeefMJKg, tdn1xISUBeef, swineDE, swineME, swineNE, equineDE, equineTDN, dmYield, meGfE2001, rohfaserGfE2001, nXPGfE2001, rnbGfE2001, nelMilk24McalCwt, milkPerTonMilk24LbsTon, import_time, import_by from op_near_infrared_summary
+    </sql>
+
+    <select id="selectOpNearInfraredSummaryList" parameterType="OpNearInfraredSummary" resultMap="OpNearInfraredSummaryResult">
+        <include refid="selectOpNearInfraredSummaryVo"/>
+        <where>
+            <if test="dairylandId != null  and dairylandId != ''"> and dairylandId = #{dairylandId}</if>
+            <if test="dateProcessed != null "> and dateProcessed = #{dateProcessed}</if>
+            <if test="accountNumber != null "> and accountNumber = #{accountNumber}</if>
+            <if test="subAccountNumber != null "> and subAccountNumber = #{subAccountNumber}</if>
+            <if test="sampledFor != null  and sampledFor != ''"> and sampledFor = #{sampledFor}</if>
+            <if test="productType != null  and productType != ''"> and productType = #{productType}</if>
+            <if test="subType != null  and subType != ''"> and subType = #{subType}</if>
+            <if test="eSampleNo != null  and eSampleNo != ''"> and eSampleNo = #{eSampleNo}</if>
+            <if test="alias != null  and alias != ''"> and alias = #{alias}</if>
+            <if test="description1 != null  and description1 != ''"> and description1 = #{description1}</if>
+            <if test="description2 != null  and description2 != ''"> and description2 = #{description2}</if>
+            <if test="description3 != null  and description3 != ''"> and description3 = #{description3}</if>
+            <if test="analysisPackage != null  and analysisPackage != ''"> and analysisPackage = #{analysisPackage}</if>
+            <if test="moisture != null "> and moisture = #{moisture}</if>
+            <if test="dryMatter != null "> and dryMatter = #{dryMatter}</if>
+            <if test="rdm != null "> and rdm = #{rdm}</if>
+            <if test="ph != null "> and ph = #{ph}</if>
+            <if test="cp != null "> and cp = #{cp}</if>
+            <if test="adIcp != null "> and adIcp = #{adIcp}</if>
+            <if test="ndIcp != null "> and ndIcp = #{ndIcp}</if>
+            <if test="ndIcpss != null "> and ndIcpss = #{ndIcpss}</if>
+            <if test="hRUPPCP16 != null "> and hRUPPCP16 = #{hRUPPCP16}</if>
+            <if test="ucpCP != null "> and ucpCP = #{ucpCP}</if>
+            <if test="solubleProtein != null "> and solubleProtein = #{solubleProtein}</if>
+            <if test="kohSolubility != null "> and kohSolubility = #{kohSolubility}</if>
+            <if test="ammonia != null "> and ammonia = #{ammonia}</if>
+            <if test="ammoniaCP != null "> and ammoniaCP = #{ammoniaCP}</if>
+            <if test="ammoniaSP != null "> and ammoniaSP = #{ammoniaSP}</if>
+            <if test="lysine != null "> and lysine = #{lysine}</if>
+            <if test="methionine != null "> and methionine = #{methionine}</if>
+            <if test="cysteine != null "> and cysteine = #{cysteine}</if>
+            <if test="alanine != null "> and alanine = #{alanine}</if>
+            <if test="asparticAcid != null "> and asparticAcid = #{asparticAcid}</if>
+            <if test="glutamicAcid != null "> and glutamicAcid = #{glutamicAcid}</if>
+            <if test="glycine != null "> and glycine = #{glycine}</if>
+            <if test="isoleucine != null "> and isoleucine = #{isoleucine}</if>
+            <if test="leucine != null "> and leucine = #{leucine}</if>
+            <if test="proline != null "> and proline = #{proline}</if>
+            <if test="threonine != null "> and threonine = #{threonine}</if>
+            <if test="valine != null "> and valine = #{valine}</if>
+            <if test="arginine != null "> and arginine = #{arginine}</if>
+            <if test="histidine != null "> and histidine = #{histidine}</if>
+            <if test="phenylalanine != null "> and phenylalanine = #{phenylalanine}</if>
+            <if test="tyrosine != null "> and tyrosine = #{tyrosine}</if>
+            <if test="tryptophan != null "> and tryptophan = #{tryptophan}</if>
+            <if test="serine != null "> and serine = #{serine}</if>
+            <if test="totalAminoAcids != null "> and totalAminoAcids = #{totalAminoAcids}</if>
+            <if test="adf != null "> and adf = #{adf}</if>
+            <if test="aNdf != null "> and aNdf = #{aNdf}</if>
+            <if test="aNdfom != null "> and aNdfom = #{aNdfom}</if>
+            <if test="lignin != null "> and lignin = #{lignin}</if>
+            <if test="crudeFiber != null "> and crudeFiber = #{crudeFiber}</if>
+            <if test="ndfd12 != null "> and ndfd12 = #{ndfd12}</if>
+            <if test="ndfd24 != null "> and ndfd24 = #{ndfd24}</if>
+            <if test="ndfd30 != null "> and ndfd30 = #{ndfd30}</if>
+            <if test="ndfd48 != null "> and ndfd48 = #{ndfd48}</if>
+            <if test="ndfd72 != null "> and ndfd72 = #{ndfd72}</if>
+            <if test="ndfd120 != null "> and ndfd120 = #{ndfd120}</if>
+            <if test="ndfd240 != null "> and ndfd240 = #{ndfd240}</if>
+            <if test="uNdfom12 != null "> and uNdfom12 = #{uNdfom12}</if>
+            <if test="uNdfom24 != null "> and uNdfom24 = #{uNdfom24}</if>
+            <if test="uNdfom30 != null "> and uNdfom30 = #{uNdfom30}</if>
+            <if test="uNdfom48 != null "> and uNdfom48 = #{uNdfom48}</if>
+            <if test="uNdfom72 != null "> and uNdfom72 = #{uNdfom72}</if>
+            <if test="uNdfom240 != null "> and uNdfom240 = #{uNdfom240}</if>
+            <if test="uNdfom120 != null "> and uNdfom120 = #{uNdfom120}</if>
+            <if test="calibrateNdf != null "> and calibrateNdf = #{calibrateNdf}</if>
+            <if test="fpn != null "> and fpn = #{fpn}</if>
+            <if test="starch != null "> and starch = #{starch}</if>
+            <if test="calibrateStarch != null "> and calibrateStarch = #{calibrateStarch}</if>
+            <if test="gpn != null "> and gpn = #{gpn}</if>
+            <if test="calibrateLeafPercent != null "> and calibrateLeafPercent = #{calibrateLeafPercent}</if>
+            <if test="csps != null "> and csps = #{csps}</if>
+            <if test="ivsd7 != null "> and ivsd7 = #{ivsd7}</if>
+            <if test="ivsd7o != null "> and ivsd7o = #{ivsd7o}</if>
+            <if test="ivsd7oEst != null "> and ivsd7oEst = #{ivsd7oEst}</if>
+            <if test="escSugar != null "> and escSugar = #{escSugar}</if>
+            <if test="wscSugar != null "> and wscSugar = #{wscSugar}</if>
+            <if test="sucrose != null "> and sucrose = #{sucrose}</if>
+            <if test="sucroseTotalSugars != null "> and sucroseTotalSugars = #{sucroseTotalSugars}</if>
+            <if test="totalSugar != null "> and totalSugar = #{totalSugar}</if>
+            <if test="lactose != null "> and lactose = #{lactose}</if>
+            <if test="eeFat != null "> and eeFat = #{eeFat}</if>
+            <if test="ahFat != null "> and ahFat = #{ahFat}</if>
+            <if test="tfa != null "> and tfa = #{tfa}</if>
+            <if test="c120 != null "> and c120 = #{c120}</if>
+            <if test="c140 != null "> and c140 = #{c140}</if>
+            <if test="c141 != null "> and c141 = #{c141}</if>
+            <if test="c160 != null "> and c160 = #{c160}</if>
+            <if test="c161 != null "> and c161 = #{c161}</if>
+            <if test="c170 != null "> and c170 = #{c170}</if>
+            <if test="c180 != null "> and c180 = #{c180}</if>
+            <if test="c181 != null "> and c181 = #{c181}</if>
+            <if test="c182 != null "> and c182 = #{c182}</if>
+            <if test="c183 != null "> and c183 = #{c183}</if>
+            <if test="c190 != null "> and c190 = #{c190}</if>
+            <if test="c200 != null "> and c200 = #{c200}</if>
+            <if test="c201 != null "> and c201 = #{c201}</if>
+            <if test="c202 != null "> and c202 = #{c202}</if>
+            <if test="c203 != null "> and c203 = #{c203}</if>
+            <if test="c204 != null "> and c204 = #{c204}</if>
+            <if test="c205 != null "> and c205 = #{c205}</if>
+            <if test="c220 != null "> and c220 = #{c220}</if>
+            <if test="c221 != null "> and c221 = #{c221}</if>
+            <if test="c226 != null "> and c226 = #{c226}</if>
+            <if test="c240 != null "> and c240 = #{c240}</if>
+            <if test="c241 != null "> and c241 = #{c241}</if>
+            <if test="otherFattyAcids != null "> and otherFattyAcids = #{otherFattyAcids}</if>
+            <if test="c120TFA != null "> and c120TFA = #{c120TFA}</if>
+            <if test="c140TFA != null "> and c140TFA = #{c140TFA}</if>
+            <if test="c141TFA != null "> and c141TFA = #{c141TFA}</if>
+            <if test="c160TFA != null "> and c160TFA = #{c160TFA}</if>
+            <if test="c161TFA != null "> and c161TFA = #{c161TFA}</if>
+            <if test="c170TFA != null "> and c170TFA = #{c170TFA}</if>
+            <if test="c180TFA != null "> and c180TFA = #{c180TFA}</if>
+            <if test="c181TFA != null "> and c181TFA = #{c181TFA}</if>
+            <if test="c182TFA != null "> and c182TFA = #{c182TFA}</if>
+            <if test="c183TFA != null "> and c183TFA = #{c183TFA}</if>
+            <if test="c190TFA != null "> and c190TFA = #{c190TFA}</if>
+            <if test="c200TFA != null "> and c200TFA = #{c200TFA}</if>
+            <if test="c201TFA != null "> and c201TFA = #{c201TFA}</if>
+            <if test="c202TFA != null "> and c202TFA = #{c202TFA}</if>
+            <if test="c203TFA != null "> and c203TFA = #{c203TFA}</if>
+            <if test="c204TFA != null "> and c204TFA = #{c204TFA}</if>
+            <if test="c205TFA != null "> and c205TFA = #{c205TFA}</if>
+            <if test="c220TFA != null "> and c220TFA = #{c220TFA}</if>
+            <if test="c221TFA != null "> and c221TFA = #{c221TFA}</if>
+            <if test="c226TFA != null "> and c226TFA = #{c226TFA}</if>
+            <if test="c240TFA != null "> and c240TFA = #{c240TFA}</if>
+            <if test="c241TFA != null "> and c241TFA = #{c241TFA}</if>
+            <if test="otherFattyAcidsTFA != null "> and otherFattyAcidsTFA = #{otherFattyAcidsTFA}</if>
+            <if test="ash != null "> and ash = #{ash}</if>
+            <if test="ca != null "> and ca = #{ca}</if>
+            <if test="p != null "> and p = #{p}</if>
+            <if test="mg != null "> and mg = #{mg}</if>
+            <if test="k != null "> and k = #{k}</if>
+            <if test="s != null "> and s = #{s}</if>
+            <if test="na != null "> and na = #{na}</if>
+            <if test="cl != null "> and cl = #{cl}</if>
+            <if test="al != null "> and al = #{al}</if>
+            <if test="b != null "> and b = #{b}</if>
+            <if test="mn != null "> and mn = #{mn}</if>
+            <if test="zn != null "> and zn = #{zn}</if>
+            <if test="cu != null "> and cu = #{cu}</if>
+            <if test="fe != null "> and fe = #{fe}</if>
+            <if test="lacticAcid != null "> and lacticAcid = #{lacticAcid}</if>
+            <if test="aceticAcid != null "> and aceticAcid = #{aceticAcid}</if>
+            <if test="propionicAcid != null "> and propionicAcid = #{propionicAcid}</if>
+            <if test="butyricAcid != null "> and butyricAcid = #{butyricAcid}</if>
+            <if test="isoButryicAcid != null "> and isoButryicAcid = #{isoButryicAcid}</if>
+            <if test="ethanol != null "> and ethanol = #{ethanol}</if>
+            <if test="Propanediol12 != null "> and Propanediol12 = #{Propanediol12}</if>
+            <if test="methanol != null "> and methanol = #{methanol}</if>
+            <if test="propanol != null "> and propanol = #{propanol}</if>
+            <if test="butanol != null "> and butanol = #{butanol}</if>
+            <if test="moldCount != null "> and moldCount = #{moldCount}</if>
+            <if test="yeastCount != null "> and yeastCount = #{yeastCount}</if>
+            <if test="aflatoxinB1 != null "> and aflatoxinB1 = #{aflatoxinB1}</if>
+            <if test="aflatoxinB2 != null "> and aflatoxinB2 = #{aflatoxinB2}</if>
+            <if test="aflatoxinG1 != null "> and aflatoxinG1 = #{aflatoxinG1}</if>
+            <if test="aflatoxinG2 != null "> and aflatoxinG2 = #{aflatoxinG2}</if>
+            <if test="zearalenone != null "> and zearalenone = #{zearalenone}</if>
+            <if test="t2 != null "> and t2 = #{t2}</if>
+            <if test="ht2 != null "> and ht2 = #{ht2}</if>
+            <if test="neosolaniol != null "> and neosolaniol = #{neosolaniol}</if>
+            <if test="das != null "> and das = #{das}</if>
+            <if test="ochratoxinA != null "> and ochratoxinA = #{ochratoxinA}</if>
+            <if test="citrinin != null "> and citrinin = #{citrinin}</if>
+            <if test="patulin != null "> and patulin = #{patulin}</if>
+            <if test="fumonisinB1 != null "> and fumonisinB1 = #{fumonisinB1}</if>
+            <if test="fumonisinB2 != null "> and fumonisinB2 = #{fumonisinB2}</if>
+            <if test="fumonisinB3 != null "> and fumonisinB3 = #{fumonisinB3}</if>
+            <if test="vomitoxinDON != null "> and vomitoxinDON = #{vomitoxinDON}</if>
+            <if test="AcetylDON3 != null "> and AcetylDON3 = #{AcetylDON3}</if>
+            <if test="AcetylDON15 != null "> and AcetylDON15 = #{AcetylDON15}</if>
+            <if test="fusarenonX != null "> and fusarenonX = #{fusarenonX}</if>
+            <if test="nivalenol != null "> and nivalenol = #{nivalenol}</if>
+            <if test="fusaricAcid != null "> and fusaricAcid = #{fusaricAcid}</if>
+            <if test="totalAflatoxins != null "> and totalAflatoxins = #{totalAflatoxins}</if>
+            <if test="roquefortineC != null "> and roquefortineC = #{roquefortineC}</if>
+            <if test="totalFumonisins != null "> and totalFumonisins = #{totalFumonisins}</if>
+            <if test="totalDONs != null "> and totalDONs = #{totalDONs}</if>
+            <if test="totalT2HT2 != null "> and totalT2HT2 = #{totalT2HT2}</if>
+            <if test="donVomitoxinThreshold2Ppm != null "> and donVomitoxinThreshold2Ppm = #{donVomitoxinThreshold2Ppm}</if>
+            <if test="zearalenoneThreshold100Ppb != null "> and zearalenoneThreshold100Ppb = #{zearalenoneThreshold100Ppb}</if>
+            <if test="t2HT2Threshold10Ppb != null "> and t2HT2Threshold10Ppb = #{t2HT2Threshold10Ppb}</if>
+            <if test="fumonisinThreshold05Ppm != null "> and fumonisinThreshold05Ppm = #{fumonisinThreshold05Ppm}</if>
+            <if test="mucor != null "> and mucor = #{mucor}</if>
+            <if test="rhizopus != null "> and rhizopus = #{rhizopus}</if>
+            <if test="cladosporium != null "> and cladosporium = #{cladosporium}</if>
+            <if test="penicillium != null "> and penicillium = #{penicillium}</if>
+            <if test="aspergillius != null "> and aspergillius = #{aspergillius}</if>
+            <if test="fusarium != null "> and fusarium = #{fusarium}</if>
+            <if test="otherMold != null "> and otherMold = #{otherMold}</if>
+            <if test="coliform != null "> and coliform = #{coliform}</if>
+            <if test="clostridiaPerfringens != null "> and clostridiaPerfringens = #{clostridiaPerfringens}</if>
+            <if test="eColi != null "> and eColi = #{eColi}</if>
+            <if test="enterobacteriaceae != null "> and enterobacteriaceae = #{enterobacteriaceae}</if>
+            <if test="nitrateNitrogen != null "> and nitrateNitrogen = #{nitrateNitrogen}</if>
+            <if test="adjustedCP != null "> and adjustedCP = #{adjustedCP}</if>
+            <if test="rdpNrc01CP != null "> and rdpNrc01CP = #{rdpNrc01CP}</if>
+            <if test="rdpNrc01DM != null "> and rdpNrc01DM = #{rdpNrc01DM}</if>
+            <if test="rupNrc01CP != null "> and rupNrc01CP = #{rupNrc01CP}</if>
+            <if test="rupNrc01DM != null "> and rupNrc01DM = #{rupNrc01DM}</if>
+            <if test="nfc != null "> and nfc = #{nfc}</if>
+            <if test="lacticAceticRatio != null "> and lacticAceticRatio = #{lacticAceticRatio}</if>
+            <if test="rfv != null "> and rfv = #{rfv}</if>
+            <if test="rfq != null "> and rfq = #{rfq}</if>
+            <if test="domi90PercentDry != null "> and domi90PercentDry = #{domi90PercentDry}</if>
+            <if test="californiaTDN90PercentDry != null "> and californiaTDN90PercentDry = #{californiaTDN90PercentDry}</if>
+            <if test="dcad != null "> and dcad = #{dcad}</if>
+            <if test="ndfKdRateVanAmburgh != null "> and ndfKdRateVanAmburgh = #{ndfKdRateVanAmburgh}</if>
+            <if test="ndfKdRateMIR != null "> and ndfKdRateMIR = #{ndfKdRateMIR}</if>
+            <if test="ttnDfd != null "> and ttnDfd = #{ttnDfd}</if>
+            <if test="starchkdratemirP1t1 != null "> and starchKdRateMIR_P1T1 = #{starchkdratemirP1t1}</if>
+            <if test="tdnADF != null "> and tdnADF = #{tdnADF}</if>
+            <if test="negADF != null "> and negADF = #{negADF}</if>
+            <if test="nemADF != null "> and nemADF = #{nemADF}</if>
+            <if test="nelADF != null "> and nelADF = #{nelADF}</if>
+            <if test="tdnOARDC != null "> and tdnOARDC = #{tdnOARDC}</if>
+            <if test="negOARDC != null "> and negOARDC = #{negOARDC}</if>
+            <if test="nemOARDC != null "> and nemOARDC = #{nemOARDC}</if>
+            <if test="nelOARDC != null "> and nelOARDC = #{nelOARDC}</if>
+            <if test="meOARDC != null "> and meOARDC = #{meOARDC}</if>
+            <if test="tdnMilk2006 != null "> and tdnMilk2006 = #{tdnMilk2006}</if>
+            <if test="negMilk2006 != null "> and negMilk2006 = #{negMilk2006}</if>
+            <if test="nemMilk2006 != null "> and nemMilk2006 = #{nemMilk2006}</if>
+            <if test="nelMilk2006Processed != null "> and nelMilk2006Processed = #{nelMilk2006Processed}</if>
+            <if test="nelMilk2006NonProcessed != null "> and nelMilk2006NonProcessed = #{nelMilk2006NonProcessed}</if>
+            <if test="milkTonCornSilageMilk2006 != null "> and milkTonCornSilageMilk2006 = #{milkTonCornSilageMilk2006}</if>
+            <if test="milkAcreMLK06Proc != null "> and milkAcreMLK06Proc = #{milkAcreMLK06Proc}</if>
+            <if test="milkAcreMLK06NonProc != null "> and milkAcreMLK06NonProc = #{milkAcreMLK06NonProc}</if>
+            <if test="tdnMilk13 != null "> and tdnMilk13 = #{tdnMilk13}</if>
+            <if test="nelMilk13 != null "> and nelMilk13 = #{nelMilk13}</if>
+            <if test="negMilk13 != null "> and negMilk13 = #{negMilk13}</if>
+            <if test="nemMilk13 != null "> and nemMilk13 = #{nemMilk13}</if>
+            <if test="milkPerTonMilk13 != null "> and milkPerTonMilk13 = #{milkPerTonMilk13}</if>
+            <if test="beefPerTon != null "> and beefPerTon = #{beefPerTon}</if>
+            <if test="negISUBeefMcalCwt != null "> and negISUBeefMcalCwt = #{negISUBeefMcalCwt}</if>
+            <if test="nemISUBeefMcalCwt != null "> and nemISUBeefMcalCwt = #{nemISUBeefMcalCwt}</if>
+            <if test="negISUBeefMcalLb != null "> and negISUBeefMcalLb = #{negISUBeefMcalLb}</if>
+            <if test="nemISUBeefMcalLb != null "> and nemISUBeefMcalLb = #{nemISUBeefMcalLb}</if>
+            <if test="negISUBeefMcalKg != null "> and negISUBeefMcalKg = #{negISUBeefMcalKg}</if>
+            <if test="nemISUBeefMcalKg != null "> and nemISUBeefMcalKg = #{nemISUBeefMcalKg}</if>
+            <if test="negISUBeefMJKg != null "> and negISUBeefMJKg = #{negISUBeefMJKg}</if>
+            <if test="nemISUBeefMJKg != null "> and nemISUBeefMJKg = #{nemISUBeefMJKg}</if>
+            <if test="tdn1xISUBeef != null "> and tdn1xISUBeef = #{tdn1xISUBeef}</if>
+            <if test="swineDE != null "> and swineDE = #{swineDE}</if>
+            <if test="swineME != null "> and swineME = #{swineME}</if>
+            <if test="swineNE != null "> and swineNE = #{swineNE}</if>
+            <if test="equineDE != null "> and equineDE = #{equineDE}</if>
+            <if test="equineTDN != null "> and equineTDN = #{equineTDN}</if>
+            <if test="dmYield != null "> and dmYield = #{dmYield}</if>
+            <if test="meGfE2001 != null "> and meGfE2001 = #{meGfE2001}</if>
+            <if test="rohfaserGfE2001 != null "> and rohfaserGfE2001 = #{rohfaserGfE2001}</if>
+            <if test="nXPGfE2001 != null "> and nXPGfE2001 = #{nXPGfE2001}</if>
+            <if test="rnbGfE2001 != null "> and rnbGfE2001 = #{rnbGfE2001}</if>
+            <if test="nelMilk24McalCwt != null "> and nelMilk24McalCwt = #{nelMilk24McalCwt}</if>
+            <if test="milkPerTonMilk24LbsTon != null "> and milkPerTonMilk24LbsTon = #{milkPerTonMilk24LbsTon}</if>
+            <if test="importTime != null "> and import_time = #{importTime}</if>
+            <if test="importBy != null  and importBy != ''"> and import_by = #{importBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectOpNearInfraredSummaryByDairylandId" parameterType="String" resultMap="OpNearInfraredSummaryResult">
+        <include refid="selectOpNearInfraredSummaryVo"/>
+        where dairylandId = #{dairylandId}
+    </select>
+
+    <insert id="insertOpNearInfraredSummary" parameterType="OpNearInfraredSummary">
+        insert into op_near_infrared_summary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dairylandId != null">dairylandId,</if>
+            <if test="dateProcessed != null">dateProcessed,</if>
+            <if test="accountNumber != null">accountNumber,</if>
+            <if test="subAccountNumber != null">subAccountNumber,</if>
+            <if test="sampledFor != null">sampledFor,</if>
+            <if test="productType != null">productType,</if>
+            <if test="subType != null">subType,</if>
+            <if test="eSampleNo != null">eSampleNo,</if>
+            <if test="alias != null">alias,</if>
+            <if test="description1 != null">description1,</if>
+            <if test="description2 != null">description2,</if>
+            <if test="description3 != null">description3,</if>
+            <if test="analysisPackage != null">analysisPackage,</if>
+            <if test="moisture != null">moisture,</if>
+            <if test="dryMatter != null">dryMatter,</if>
+            <if test="rdm != null">rdm,</if>
+            <if test="ph != null">ph,</if>
+            <if test="cp != null">cp,</if>
+            <if test="adIcp != null">adIcp,</if>
+            <if test="ndIcp != null">ndIcp,</if>
+            <if test="ndIcpss != null">ndIcpss,</if>
+            <if test="hRUPPCP16 != null">hRUPPCP16,</if>
+            <if test="ucpCP != null">ucpCP,</if>
+            <if test="solubleProtein != null">solubleProtein,</if>
+            <if test="kohSolubility != null">kohSolubility,</if>
+            <if test="ammonia != null">ammonia,</if>
+            <if test="ammoniaCP != null">ammoniaCP,</if>
+            <if test="ammoniaSP != null">ammoniaSP,</if>
+            <if test="lysine != null">lysine,</if>
+            <if test="methionine != null">methionine,</if>
+            <if test="cysteine != null">cysteine,</if>
+            <if test="alanine != null">alanine,</if>
+            <if test="asparticAcid != null">asparticAcid,</if>
+            <if test="glutamicAcid != null">glutamicAcid,</if>
+            <if test="glycine != null">glycine,</if>
+            <if test="isoleucine != null">isoleucine,</if>
+            <if test="leucine != null">leucine,</if>
+            <if test="proline != null">proline,</if>
+            <if test="threonine != null">threonine,</if>
+            <if test="valine != null">valine,</if>
+            <if test="arginine != null">arginine,</if>
+            <if test="histidine != null">histidine,</if>
+            <if test="phenylalanine != null">phenylalanine,</if>
+            <if test="tyrosine != null">tyrosine,</if>
+            <if test="tryptophan != null">tryptophan,</if>
+            <if test="serine != null">serine,</if>
+            <if test="totalAminoAcids != null">totalAminoAcids,</if>
+            <if test="adf != null">adf,</if>
+            <if test="aNdf != null">aNdf,</if>
+            <if test="aNdfom != null">aNdfom,</if>
+            <if test="lignin != null">lignin,</if>
+            <if test="crudeFiber != null">crudeFiber,</if>
+            <if test="ndfd12 != null">ndfd12,</if>
+            <if test="ndfd24 != null">ndfd24,</if>
+            <if test="ndfd30 != null">ndfd30,</if>
+            <if test="ndfd48 != null">ndfd48,</if>
+            <if test="ndfd72 != null">ndfd72,</if>
+            <if test="ndfd120 != null">ndfd120,</if>
+            <if test="ndfd240 != null">ndfd240,</if>
+            <if test="uNdfom12 != null">uNdfom12,</if>
+            <if test="uNdfom24 != null">uNdfom24,</if>
+            <if test="uNdfom30 != null">uNdfom30,</if>
+            <if test="uNdfom48 != null">uNdfom48,</if>
+            <if test="uNdfom72 != null">uNdfom72,</if>
+            <if test="uNdfom240 != null">uNdfom240,</if>
+            <if test="uNdfom120 != null">uNdfom120,</if>
+            <if test="calibrateNdf != null">calibrateNdf,</if>
+            <if test="fpn != null">fpn,</if>
+            <if test="starch != null">starch,</if>
+            <if test="calibrateStarch != null">calibrateStarch,</if>
+            <if test="gpn != null">gpn,</if>
+            <if test="calibrateLeafPercent != null">calibrateLeafPercent,</if>
+            <if test="csps != null">csps,</if>
+            <if test="ivsd7 != null">ivsd7,</if>
+            <if test="ivsd7o != null">ivsd7o,</if>
+            <if test="ivsd7oEst != null">ivsd7oEst,</if>
+            <if test="escSugar != null">escSugar,</if>
+            <if test="wscSugar != null">wscSugar,</if>
+            <if test="sucrose != null">sucrose,</if>
+            <if test="sucroseTotalSugars != null">sucroseTotalSugars,</if>
+            <if test="totalSugar != null">totalSugar,</if>
+            <if test="lactose != null">lactose,</if>
+            <if test="eeFat != null">eeFat,</if>
+            <if test="ahFat != null">ahFat,</if>
+            <if test="tfa != null">tfa,</if>
+            <if test="c120 != null">c120,</if>
+            <if test="c140 != null">c140,</if>
+            <if test="c141 != null">c141,</if>
+            <if test="c160 != null">c160,</if>
+            <if test="c161 != null">c161,</if>
+            <if test="c170 != null">c170,</if>
+            <if test="c180 != null">c180,</if>
+            <if test="c181 != null">c181,</if>
+            <if test="c182 != null">c182,</if>
+            <if test="c183 != null">c183,</if>
+            <if test="c190 != null">c190,</if>
+            <if test="c200 != null">c200,</if>
+            <if test="c201 != null">c201,</if>
+            <if test="c202 != null">c202,</if>
+            <if test="c203 != null">c203,</if>
+            <if test="c204 != null">c204,</if>
+            <if test="c205 != null">c205,</if>
+            <if test="c220 != null">c220,</if>
+            <if test="c221 != null">c221,</if>
+            <if test="c226 != null">c226,</if>
+            <if test="c240 != null">c240,</if>
+            <if test="c241 != null">c241,</if>
+            <if test="otherFattyAcids != null">otherFattyAcids,</if>
+            <if test="c120TFA != null">c120TFA,</if>
+            <if test="c140TFA != null">c140TFA,</if>
+            <if test="c141TFA != null">c141TFA,</if>
+            <if test="c160TFA != null">c160TFA,</if>
+            <if test="c161TFA != null">c161TFA,</if>
+            <if test="c170TFA != null">c170TFA,</if>
+            <if test="c180TFA != null">c180TFA,</if>
+            <if test="c181TFA != null">c181TFA,</if>
+            <if test="c182TFA != null">c182TFA,</if>
+            <if test="c183TFA != null">c183TFA,</if>
+            <if test="c190TFA != null">c190TFA,</if>
+            <if test="c200TFA != null">c200TFA,</if>
+            <if test="c201TFA != null">c201TFA,</if>
+            <if test="c202TFA != null">c202TFA,</if>
+            <if test="c203TFA != null">c203TFA,</if>
+            <if test="c204TFA != null">c204TFA,</if>
+            <if test="c205TFA != null">c205TFA,</if>
+            <if test="c220TFA != null">c220TFA,</if>
+            <if test="c221TFA != null">c221TFA,</if>
+            <if test="c226TFA != null">c226TFA,</if>
+            <if test="c240TFA != null">c240TFA,</if>
+            <if test="c241TFA != null">c241TFA,</if>
+            <if test="otherFattyAcidsTFA != null">otherFattyAcidsTFA,</if>
+            <if test="ash != null">ash,</if>
+            <if test="ca != null">ca,</if>
+            <if test="p != null">p,</if>
+            <if test="mg != null">mg,</if>
+            <if test="k != null">k,</if>
+            <if test="s != null">s,</if>
+            <if test="na != null">na,</if>
+            <if test="cl != null">cl,</if>
+            <if test="al != null">al,</if>
+            <if test="b != null">b,</if>
+            <if test="mn != null">mn,</if>
+            <if test="zn != null">zn,</if>
+            <if test="cu != null">cu,</if>
+            <if test="fe != null">fe,</if>
+            <if test="lacticAcid != null">lacticAcid,</if>
+            <if test="aceticAcid != null">aceticAcid,</if>
+            <if test="propionicAcid != null">propionicAcid,</if>
+            <if test="butyricAcid != null">butyricAcid,</if>
+            <if test="isoButryicAcid != null">isoButryicAcid,</if>
+            <if test="ethanol != null">ethanol,</if>
+            <if test="Propanediol12 != null">Propanediol12,</if>
+            <if test="methanol != null">methanol,</if>
+            <if test="propanol != null">propanol,</if>
+            <if test="butanol != null">butanol,</if>
+            <if test="moldCount != null">moldCount,</if>
+            <if test="yeastCount != null">yeastCount,</if>
+            <if test="aflatoxinB1 != null">aflatoxinB1,</if>
+            <if test="aflatoxinB2 != null">aflatoxinB2,</if>
+            <if test="aflatoxinG1 != null">aflatoxinG1,</if>
+            <if test="aflatoxinG2 != null">aflatoxinG2,</if>
+            <if test="zearalenone != null">zearalenone,</if>
+            <if test="t2 != null">t2,</if>
+            <if test="ht2 != null">ht2,</if>
+            <if test="neosolaniol != null">neosolaniol,</if>
+            <if test="das != null">das,</if>
+            <if test="ochratoxinA != null">ochratoxinA,</if>
+            <if test="citrinin != null">citrinin,</if>
+            <if test="patulin != null">patulin,</if>
+            <if test="fumonisinB1 != null">fumonisinB1,</if>
+            <if test="fumonisinB2 != null">fumonisinB2,</if>
+            <if test="fumonisinB3 != null">fumonisinB3,</if>
+            <if test="vomitoxinDON != null">vomitoxinDON,</if>
+            <if test="AcetylDON3 != null">AcetylDON3,</if>
+            <if test="AcetylDON15 != null">AcetylDON15,</if>
+            <if test="fusarenonX != null">fusarenonX,</if>
+            <if test="nivalenol != null">nivalenol,</if>
+            <if test="fusaricAcid != null">fusaricAcid,</if>
+            <if test="totalAflatoxins != null">totalAflatoxins,</if>
+            <if test="roquefortineC != null">roquefortineC,</if>
+            <if test="totalFumonisins != null">totalFumonisins,</if>
+            <if test="totalDONs != null">totalDONs,</if>
+            <if test="totalT2HT2 != null">totalT2HT2,</if>
+            <if test="donVomitoxinThreshold2Ppm != null">donVomitoxinThreshold2Ppm,</if>
+            <if test="zearalenoneThreshold100Ppb != null">zearalenoneThreshold100Ppb,</if>
+            <if test="t2HT2Threshold10Ppb != null">t2HT2Threshold10Ppb,</if>
+            <if test="fumonisinThreshold05Ppm != null">fumonisinThreshold05Ppm,</if>
+            <if test="mucor != null">mucor,</if>
+            <if test="rhizopus != null">rhizopus,</if>
+            <if test="cladosporium != null">cladosporium,</if>
+            <if test="penicillium != null">penicillium,</if>
+            <if test="aspergillius != null">aspergillius,</if>
+            <if test="fusarium != null">fusarium,</if>
+            <if test="otherMold != null">otherMold,</if>
+            <if test="coliform != null">coliform,</if>
+            <if test="clostridiaPerfringens != null">clostridiaPerfringens,</if>
+            <if test="eColi != null">eColi,</if>
+            <if test="enterobacteriaceae != null">enterobacteriaceae,</if>
+            <if test="nitrateNitrogen != null">nitrateNitrogen,</if>
+            <if test="adjustedCP != null">adjustedCP,</if>
+            <if test="rdpNrc01CP != null">rdpNrc01CP,</if>
+            <if test="rdpNrc01DM != null">rdpNrc01DM,</if>
+            <if test="rupNrc01CP != null">rupNrc01CP,</if>
+            <if test="rupNrc01DM != null">rupNrc01DM,</if>
+            <if test="nfc != null">nfc,</if>
+            <if test="lacticAceticRatio != null">lacticAceticRatio,</if>
+            <if test="rfv != null">rfv,</if>
+            <if test="rfq != null">rfq,</if>
+            <if test="domi90PercentDry != null">domi90PercentDry,</if>
+            <if test="californiaTDN90PercentDry != null">californiaTDN90PercentDry,</if>
+            <if test="dcad != null">dcad,</if>
+            <if test="ndfKdRateVanAmburgh != null">ndfKdRateVanAmburgh,</if>
+            <if test="ndfKdRateMIR != null">ndfKdRateMIR,</if>
+            <if test="ttnDfd != null">ttnDfd,</if>
+            <if test="starchkdratemirP1t1 != null">starchKdRateMIR_P1T1,</if>
+            <if test="tdnADF != null">tdnADF,</if>
+            <if test="negADF != null">negADF,</if>
+            <if test="nemADF != null">nemADF,</if>
+            <if test="nelADF != null">nelADF,</if>
+            <if test="tdnOARDC != null">tdnOARDC,</if>
+            <if test="negOARDC != null">negOARDC,</if>
+            <if test="nemOARDC != null">nemOARDC,</if>
+            <if test="nelOARDC != null">nelOARDC,</if>
+            <if test="meOARDC != null">meOARDC,</if>
+            <if test="tdnMilk2006 != null">tdnMilk2006,</if>
+            <if test="negMilk2006 != null">negMilk2006,</if>
+            <if test="nemMilk2006 != null">nemMilk2006,</if>
+            <if test="nelMilk2006Processed != null">nelMilk2006Processed,</if>
+            <if test="nelMilk2006NonProcessed != null">nelMilk2006NonProcessed,</if>
+            <if test="milkTonCornSilageMilk2006 != null">milkTonCornSilageMilk2006,</if>
+            <if test="milkAcreMLK06Proc != null">milkAcreMLK06Proc,</if>
+            <if test="milkAcreMLK06NonProc != null">milkAcreMLK06NonProc,</if>
+            <if test="tdnMilk13 != null">tdnMilk13,</if>
+            <if test="nelMilk13 != null">nelMilk13,</if>
+            <if test="negMilk13 != null">negMilk13,</if>
+            <if test="nemMilk13 != null">nemMilk13,</if>
+            <if test="milkPerTonMilk13 != null">milkPerTonMilk13,</if>
+            <if test="beefPerTon != null">beefPerTon,</if>
+            <if test="negISUBeefMcalCwt != null">negISUBeefMcalCwt,</if>
+            <if test="nemISUBeefMcalCwt != null">nemISUBeefMcalCwt,</if>
+            <if test="negISUBeefMcalLb != null">negISUBeefMcalLb,</if>
+            <if test="nemISUBeefMcalLb != null">nemISUBeefMcalLb,</if>
+            <if test="negISUBeefMcalKg != null">negISUBeefMcalKg,</if>
+            <if test="nemISUBeefMcalKg != null">nemISUBeefMcalKg,</if>
+            <if test="negISUBeefMJKg != null">negISUBeefMJKg,</if>
+            <if test="nemISUBeefMJKg != null">nemISUBeefMJKg,</if>
+            <if test="tdn1xISUBeef != null">tdn1xISUBeef,</if>
+            <if test="swineDE != null">swineDE,</if>
+            <if test="swineME != null">swineME,</if>
+            <if test="swineNE != null">swineNE,</if>
+            <if test="equineDE != null">equineDE,</if>
+            <if test="equineTDN != null">equineTDN,</if>
+            <if test="dmYield != null">dmYield,</if>
+            <if test="meGfE2001 != null">meGfE2001,</if>
+            <if test="rohfaserGfE2001 != null">rohfaserGfE2001,</if>
+            <if test="nXPGfE2001 != null">nXPGfE2001,</if>
+            <if test="rnbGfE2001 != null">rnbGfE2001,</if>
+            <if test="nelMilk24McalCwt != null">nelMilk24McalCwt,</if>
+            <if test="milkPerTonMilk24LbsTon != null">milkPerTonMilk24LbsTon,</if>
+            <if test="importTime != null">import_time,</if>
+            <if test="importBy != null">import_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dairylandId != null">#{dairylandId},</if>
+            <if test="dateProcessed != null">#{dateProcessed},</if>
+            <if test="accountNumber != null">#{accountNumber},</if>
+            <if test="subAccountNumber != null">#{subAccountNumber},</if>
+            <if test="sampledFor != null">#{sampledFor},</if>
+            <if test="productType != null">#{productType},</if>
+            <if test="subType != null">#{subType},</if>
+            <if test="eSampleNo != null">#{eSampleNo},</if>
+            <if test="alias != null">#{alias},</if>
+            <if test="description1 != null">#{description1},</if>
+            <if test="description2 != null">#{description2},</if>
+            <if test="description3 != null">#{description3},</if>
+            <if test="analysisPackage != null">#{analysisPackage},</if>
+            <if test="moisture != null">#{moisture},</if>
+            <if test="dryMatter != null">#{dryMatter},</if>
+            <if test="rdm != null">#{rdm},</if>
+            <if test="ph != null">#{ph},</if>
+            <if test="cp != null">#{cp},</if>
+            <if test="adIcp != null">#{adIcp},</if>
+            <if test="ndIcp != null">#{ndIcp},</if>
+            <if test="ndIcpss != null">#{ndIcpss},</if>
+            <if test="hRUPPCP16 != null">#{hRUPPCP16},</if>
+            <if test="ucpCP != null">#{ucpCP},</if>
+            <if test="solubleProtein != null">#{solubleProtein},</if>
+            <if test="kohSolubility != null">#{kohSolubility},</if>
+            <if test="ammonia != null">#{ammonia},</if>
+            <if test="ammoniaCP != null">#{ammoniaCP},</if>
+            <if test="ammoniaSP != null">#{ammoniaSP},</if>
+            <if test="lysine != null">#{lysine},</if>
+            <if test="methionine != null">#{methionine},</if>
+            <if test="cysteine != null">#{cysteine},</if>
+            <if test="alanine != null">#{alanine},</if>
+            <if test="asparticAcid != null">#{asparticAcid},</if>
+            <if test="glutamicAcid != null">#{glutamicAcid},</if>
+            <if test="glycine != null">#{glycine},</if>
+            <if test="isoleucine != null">#{isoleucine},</if>
+            <if test="leucine != null">#{leucine},</if>
+            <if test="proline != null">#{proline},</if>
+            <if test="threonine != null">#{threonine},</if>
+            <if test="valine != null">#{valine},</if>
+            <if test="arginine != null">#{arginine},</if>
+            <if test="histidine != null">#{histidine},</if>
+            <if test="phenylalanine != null">#{phenylalanine},</if>
+            <if test="tyrosine != null">#{tyrosine},</if>
+            <if test="tryptophan != null">#{tryptophan},</if>
+            <if test="serine != null">#{serine},</if>
+            <if test="totalAminoAcids != null">#{totalAminoAcids},</if>
+            <if test="adf != null">#{adf},</if>
+            <if test="aNdf != null">#{aNdf},</if>
+            <if test="aNdfom != null">#{aNdfom},</if>
+            <if test="lignin != null">#{lignin},</if>
+            <if test="crudeFiber != null">#{crudeFiber},</if>
+            <if test="ndfd12 != null">#{ndfd12},</if>
+            <if test="ndfd24 != null">#{ndfd24},</if>
+            <if test="ndfd30 != null">#{ndfd30},</if>
+            <if test="ndfd48 != null">#{ndfd48},</if>
+            <if test="ndfd72 != null">#{ndfd72},</if>
+            <if test="ndfd120 != null">#{ndfd120},</if>
+            <if test="ndfd240 != null">#{ndfd240},</if>
+            <if test="uNdfom12 != null">#{uNdfom12},</if>
+            <if test="uNdfom24 != null">#{uNdfom24},</if>
+            <if test="uNdfom30 != null">#{uNdfom30},</if>
+            <if test="uNdfom48 != null">#{uNdfom48},</if>
+            <if test="uNdfom72 != null">#{uNdfom72},</if>
+            <if test="uNdfom240 != null">#{uNdfom240},</if>
+            <if test="uNdfom120 != null">#{uNdfom120},</if>
+            <if test="calibrateNdf != null">#{calibrateNdf},</if>
+            <if test="fpn != null">#{fpn},</if>
+            <if test="starch != null">#{starch},</if>
+            <if test="calibrateStarch != null">#{calibrateStarch},</if>
+            <if test="gpn != null">#{gpn},</if>
+            <if test="calibrateLeafPercent != null">#{calibrateLeafPercent},</if>
+            <if test="csps != null">#{csps},</if>
+            <if test="ivsd7 != null">#{ivsd7},</if>
+            <if test="ivsd7o != null">#{ivsd7o},</if>
+            <if test="ivsd7oEst != null">#{ivsd7oEst},</if>
+            <if test="escSugar != null">#{escSugar},</if>
+            <if test="wscSugar != null">#{wscSugar},</if>
+            <if test="sucrose != null">#{sucrose},</if>
+            <if test="sucroseTotalSugars != null">#{sucroseTotalSugars},</if>
+            <if test="totalSugar != null">#{totalSugar},</if>
+            <if test="lactose != null">#{lactose},</if>
+            <if test="eeFat != null">#{eeFat},</if>
+            <if test="ahFat != null">#{ahFat},</if>
+            <if test="tfa != null">#{tfa},</if>
+            <if test="c120 != null">#{c120},</if>
+            <if test="c140 != null">#{c140},</if>
+            <if test="c141 != null">#{c141},</if>
+            <if test="c160 != null">#{c160},</if>
+            <if test="c161 != null">#{c161},</if>
+            <if test="c170 != null">#{c170},</if>
+            <if test="c180 != null">#{c180},</if>
+            <if test="c181 != null">#{c181},</if>
+            <if test="c182 != null">#{c182},</if>
+            <if test="c183 != null">#{c183},</if>
+            <if test="c190 != null">#{c190},</if>
+            <if test="c200 != null">#{c200},</if>
+            <if test="c201 != null">#{c201},</if>
+            <if test="c202 != null">#{c202},</if>
+            <if test="c203 != null">#{c203},</if>
+            <if test="c204 != null">#{c204},</if>
+            <if test="c205 != null">#{c205},</if>
+            <if test="c220 != null">#{c220},</if>
+            <if test="c221 != null">#{c221},</if>
+            <if test="c226 != null">#{c226},</if>
+            <if test="c240 != null">#{c240},</if>
+            <if test="c241 != null">#{c241},</if>
+            <if test="otherFattyAcids != null">#{otherFattyAcids},</if>
+            <if test="c120TFA != null">#{c120TFA},</if>
+            <if test="c140TFA != null">#{c140TFA},</if>
+            <if test="c141TFA != null">#{c141TFA},</if>
+            <if test="c160TFA != null">#{c160TFA},</if>
+            <if test="c161TFA != null">#{c161TFA},</if>
+            <if test="c170TFA != null">#{c170TFA},</if>
+            <if test="c180TFA != null">#{c180TFA},</if>
+            <if test="c181TFA != null">#{c181TFA},</if>
+            <if test="c182TFA != null">#{c182TFA},</if>
+            <if test="c183TFA != null">#{c183TFA},</if>
+            <if test="c190TFA != null">#{c190TFA},</if>
+            <if test="c200TFA != null">#{c200TFA},</if>
+            <if test="c201TFA != null">#{c201TFA},</if>
+            <if test="c202TFA != null">#{c202TFA},</if>
+            <if test="c203TFA != null">#{c203TFA},</if>
+            <if test="c204TFA != null">#{c204TFA},</if>
+            <if test="c205TFA != null">#{c205TFA},</if>
+            <if test="c220TFA != null">#{c220TFA},</if>
+            <if test="c221TFA != null">#{c221TFA},</if>
+            <if test="c226TFA != null">#{c226TFA},</if>
+            <if test="c240TFA != null">#{c240TFA},</if>
+            <if test="c241TFA != null">#{c241TFA},</if>
+            <if test="otherFattyAcidsTFA != null">#{otherFattyAcidsTFA},</if>
+            <if test="ash != null">#{ash},</if>
+            <if test="ca != null">#{ca},</if>
+            <if test="p != null">#{p},</if>
+            <if test="mg != null">#{mg},</if>
+            <if test="k != null">#{k},</if>
+            <if test="s != null">#{s},</if>
+            <if test="na != null">#{na},</if>
+            <if test="cl != null">#{cl},</if>
+            <if test="al != null">#{al},</if>
+            <if test="b != null">#{b},</if>
+            <if test="mn != null">#{mn},</if>
+            <if test="zn != null">#{zn},</if>
+            <if test="cu != null">#{cu},</if>
+            <if test="fe != null">#{fe},</if>
+            <if test="lacticAcid != null">#{lacticAcid},</if>
+            <if test="aceticAcid != null">#{aceticAcid},</if>
+            <if test="propionicAcid != null">#{propionicAcid},</if>
+            <if test="butyricAcid != null">#{butyricAcid},</if>
+            <if test="isoButryicAcid != null">#{isoButryicAcid},</if>
+            <if test="ethanol != null">#{ethanol},</if>
+            <if test="Propanediol12 != null">#{Propanediol12},</if>
+            <if test="methanol != null">#{methanol},</if>
+            <if test="propanol != null">#{propanol},</if>
+            <if test="butanol != null">#{butanol},</if>
+            <if test="moldCount != null">#{moldCount},</if>
+            <if test="yeastCount != null">#{yeastCount},</if>
+            <if test="aflatoxinB1 != null">#{aflatoxinB1},</if>
+            <if test="aflatoxinB2 != null">#{aflatoxinB2},</if>
+            <if test="aflatoxinG1 != null">#{aflatoxinG1},</if>
+            <if test="aflatoxinG2 != null">#{aflatoxinG2},</if>
+            <if test="zearalenone != null">#{zearalenone},</if>
+            <if test="t2 != null">#{t2},</if>
+            <if test="ht2 != null">#{ht2},</if>
+            <if test="neosolaniol != null">#{neosolaniol},</if>
+            <if test="das != null">#{das},</if>
+            <if test="ochratoxinA != null">#{ochratoxinA},</if>
+            <if test="citrinin != null">#{citrinin},</if>
+            <if test="patulin != null">#{patulin},</if>
+            <if test="fumonisinB1 != null">#{fumonisinB1},</if>
+            <if test="fumonisinB2 != null">#{fumonisinB2},</if>
+            <if test="fumonisinB3 != null">#{fumonisinB3},</if>
+            <if test="vomitoxinDON != null">#{vomitoxinDON},</if>
+            <if test="AcetylDON3 != null">#{AcetylDON3},</if>
+            <if test="AcetylDON15 != null">#{AcetylDON15},</if>
+            <if test="fusarenonX != null">#{fusarenonX},</if>
+            <if test="nivalenol != null">#{nivalenol},</if>
+            <if test="fusaricAcid != null">#{fusaricAcid},</if>
+            <if test="totalAflatoxins != null">#{totalAflatoxins},</if>
+            <if test="roquefortineC != null">#{roquefortineC},</if>
+            <if test="totalFumonisins != null">#{totalFumonisins},</if>
+            <if test="totalDONs != null">#{totalDONs},</if>
+            <if test="totalT2HT2 != null">#{totalT2HT2},</if>
+            <if test="donVomitoxinThreshold2Ppm != null">#{donVomitoxinThreshold2Ppm},</if>
+            <if test="zearalenoneThreshold100Ppb != null">#{zearalenoneThreshold100Ppb},</if>
+            <if test="t2HT2Threshold10Ppb != null">#{t2HT2Threshold10Ppb},</if>
+            <if test="fumonisinThreshold05Ppm != null">#{fumonisinThreshold05Ppm},</if>
+            <if test="mucor != null">#{mucor},</if>
+            <if test="rhizopus != null">#{rhizopus},</if>
+            <if test="cladosporium != null">#{cladosporium},</if>
+            <if test="penicillium != null">#{penicillium},</if>
+            <if test="aspergillius != null">#{aspergillius},</if>
+            <if test="fusarium != null">#{fusarium},</if>
+            <if test="otherMold != null">#{otherMold},</if>
+            <if test="coliform != null">#{coliform},</if>
+            <if test="clostridiaPerfringens != null">#{clostridiaPerfringens},</if>
+            <if test="eColi != null">#{eColi},</if>
+            <if test="enterobacteriaceae != null">#{enterobacteriaceae},</if>
+            <if test="nitrateNitrogen != null">#{nitrateNitrogen},</if>
+            <if test="adjustedCP != null">#{adjustedCP},</if>
+            <if test="rdpNrc01CP != null">#{rdpNrc01CP},</if>
+            <if test="rdpNrc01DM != null">#{rdpNrc01DM},</if>
+            <if test="rupNrc01CP != null">#{rupNrc01CP},</if>
+            <if test="rupNrc01DM != null">#{rupNrc01DM},</if>
+            <if test="nfc != null">#{nfc},</if>
+            <if test="lacticAceticRatio != null">#{lacticAceticRatio},</if>
+            <if test="rfv != null">#{rfv},</if>
+            <if test="rfq != null">#{rfq},</if>
+            <if test="domi90PercentDry != null">#{domi90PercentDry},</if>
+            <if test="californiaTDN90PercentDry != null">#{californiaTDN90PercentDry},</if>
+            <if test="dcad != null">#{dcad},</if>
+            <if test="ndfKdRateVanAmburgh != null">#{ndfKdRateVanAmburgh},</if>
+            <if test="ndfKdRateMIR != null">#{ndfKdRateMIR},</if>
+            <if test="ttnDfd != null">#{ttnDfd},</if>
+            <if test="starchkdratemirP1t1 != null">#{starchkdratemirP1t1},</if>
+            <if test="tdnADF != null">#{tdnADF},</if>
+            <if test="negADF != null">#{negADF},</if>
+            <if test="nemADF != null">#{nemADF},</if>
+            <if test="nelADF != null">#{nelADF},</if>
+            <if test="tdnOARDC != null">#{tdnOARDC},</if>
+            <if test="negOARDC != null">#{negOARDC},</if>
+            <if test="nemOARDC != null">#{nemOARDC},</if>
+            <if test="nelOARDC != null">#{nelOARDC},</if>
+            <if test="meOARDC != null">#{meOARDC},</if>
+            <if test="tdnMilk2006 != null">#{tdnMilk2006},</if>
+            <if test="negMilk2006 != null">#{negMilk2006},</if>
+            <if test="nemMilk2006 != null">#{nemMilk2006},</if>
+            <if test="nelMilk2006Processed != null">#{nelMilk2006Processed},</if>
+            <if test="nelMilk2006NonProcessed != null">#{nelMilk2006NonProcessed},</if>
+            <if test="milkTonCornSilageMilk2006 != null">#{milkTonCornSilageMilk2006},</if>
+            <if test="milkAcreMLK06Proc != null">#{milkAcreMLK06Proc},</if>
+            <if test="milkAcreMLK06NonProc != null">#{milkAcreMLK06NonProc},</if>
+            <if test="tdnMilk13 != null">#{tdnMilk13},</if>
+            <if test="nelMilk13 != null">#{nelMilk13},</if>
+            <if test="negMilk13 != null">#{negMilk13},</if>
+            <if test="nemMilk13 != null">#{nemMilk13},</if>
+            <if test="milkPerTonMilk13 != null">#{milkPerTonMilk13},</if>
+            <if test="beefPerTon != null">#{beefPerTon},</if>
+            <if test="negISUBeefMcalCwt != null">#{negISUBeefMcalCwt},</if>
+            <if test="nemISUBeefMcalCwt != null">#{nemISUBeefMcalCwt},</if>
+            <if test="negISUBeefMcalLb != null">#{negISUBeefMcalLb},</if>
+            <if test="nemISUBeefMcalLb != null">#{nemISUBeefMcalLb},</if>
+            <if test="negISUBeefMcalKg != null">#{negISUBeefMcalKg},</if>
+            <if test="nemISUBeefMcalKg != null">#{nemISUBeefMcalKg},</if>
+            <if test="negISUBeefMJKg != null">#{negISUBeefMJKg},</if>
+            <if test="nemISUBeefMJKg != null">#{nemISUBeefMJKg},</if>
+            <if test="tdn1xISUBeef != null">#{tdn1xISUBeef},</if>
+            <if test="swineDE != null">#{swineDE},</if>
+            <if test="swineME != null">#{swineME},</if>
+            <if test="swineNE != null">#{swineNE},</if>
+            <if test="equineDE != null">#{equineDE},</if>
+            <if test="equineTDN != null">#{equineTDN},</if>
+            <if test="dmYield != null">#{dmYield},</if>
+            <if test="meGfE2001 != null">#{meGfE2001},</if>
+            <if test="rohfaserGfE2001 != null">#{rohfaserGfE2001},</if>
+            <if test="nXPGfE2001 != null">#{nXPGfE2001},</if>
+            <if test="rnbGfE2001 != null">#{rnbGfE2001},</if>
+            <if test="nelMilk24McalCwt != null">#{nelMilk24McalCwt},</if>
+            <if test="milkPerTonMilk24LbsTon != null">#{milkPerTonMilk24LbsTon},</if>
+            <if test="importTime != null">#{importTime},</if>
+            <if test="importBy != null">#{importBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpNearInfraredSummary" parameterType="OpNearInfraredSummary">
+        update op_near_infrared_summary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dateProcessed != null">dateProcessed = #{dateProcessed},</if>
+            <if test="accountNumber != null">accountNumber = #{accountNumber},</if>
+            <if test="subAccountNumber != null">subAccountNumber = #{subAccountNumber},</if>
+            <if test="sampledFor != null">sampledFor = #{sampledFor},</if>
+            <if test="productType != null">productType = #{productType},</if>
+            <if test="subType != null">subType = #{subType},</if>
+            <if test="eSampleNo != null">eSampleNo = #{eSampleNo},</if>
+            <if test="alias != null">alias = #{alias},</if>
+            <if test="description1 != null">description1 = #{description1},</if>
+            <if test="description2 != null">description2 = #{description2},</if>
+            <if test="description3 != null">description3 = #{description3},</if>
+            <if test="analysisPackage != null">analysisPackage = #{analysisPackage},</if>
+            <if test="moisture != null">moisture = #{moisture},</if>
+            <if test="dryMatter != null">dryMatter = #{dryMatter},</if>
+            <if test="rdm != null">rdm = #{rdm},</if>
+            <if test="ph != null">ph = #{ph},</if>
+            <if test="cp != null">cp = #{cp},</if>
+            <if test="adIcp != null">adIcp = #{adIcp},</if>
+            <if test="ndIcp != null">ndIcp = #{ndIcp},</if>
+            <if test="ndIcpss != null">ndIcpss = #{ndIcpss},</if>
+            <if test="hRUPPCP16 != null">hRUPPCP16 = #{hRUPPCP16},</if>
+            <if test="ucpCP != null">ucpCP = #{ucpCP},</if>
+            <if test="solubleProtein != null">solubleProtein = #{solubleProtein},</if>
+            <if test="kohSolubility != null">kohSolubility = #{kohSolubility},</if>
+            <if test="ammonia != null">ammonia = #{ammonia},</if>
+            <if test="ammoniaCP != null">ammoniaCP = #{ammoniaCP},</if>
+            <if test="ammoniaSP != null">ammoniaSP = #{ammoniaSP},</if>
+            <if test="lysine != null">lysine = #{lysine},</if>
+            <if test="methionine != null">methionine = #{methionine},</if>
+            <if test="cysteine != null">cysteine = #{cysteine},</if>
+            <if test="alanine != null">alanine = #{alanine},</if>
+            <if test="asparticAcid != null">asparticAcid = #{asparticAcid},</if>
+            <if test="glutamicAcid != null">glutamicAcid = #{glutamicAcid},</if>
+            <if test="glycine != null">glycine = #{glycine},</if>
+            <if test="isoleucine != null">isoleucine = #{isoleucine},</if>
+            <if test="leucine != null">leucine = #{leucine},</if>
+            <if test="proline != null">proline = #{proline},</if>
+            <if test="threonine != null">threonine = #{threonine},</if>
+            <if test="valine != null">valine = #{valine},</if>
+            <if test="arginine != null">arginine = #{arginine},</if>
+            <if test="histidine != null">histidine = #{histidine},</if>
+            <if test="phenylalanine != null">phenylalanine = #{phenylalanine},</if>
+            <if test="tyrosine != null">tyrosine = #{tyrosine},</if>
+            <if test="tryptophan != null">tryptophan = #{tryptophan},</if>
+            <if test="serine != null">serine = #{serine},</if>
+            <if test="totalAminoAcids != null">totalAminoAcids = #{totalAminoAcids},</if>
+            <if test="adf != null">adf = #{adf},</if>
+            <if test="aNdf != null">aNdf = #{aNdf},</if>
+            <if test="aNdfom != null">aNdfom = #{aNdfom},</if>
+            <if test="lignin != null">lignin = #{lignin},</if>
+            <if test="crudeFiber != null">crudeFiber = #{crudeFiber},</if>
+            <if test="ndfd12 != null">ndfd12 = #{ndfd12},</if>
+            <if test="ndfd24 != null">ndfd24 = #{ndfd24},</if>
+            <if test="ndfd30 != null">ndfd30 = #{ndfd30},</if>
+            <if test="ndfd48 != null">ndfd48 = #{ndfd48},</if>
+            <if test="ndfd72 != null">ndfd72 = #{ndfd72},</if>
+            <if test="ndfd120 != null">ndfd120 = #{ndfd120},</if>
+            <if test="ndfd240 != null">ndfd240 = #{ndfd240},</if>
+            <if test="uNdfom12 != null">uNdfom12 = #{uNdfom12},</if>
+            <if test="uNdfom24 != null">uNdfom24 = #{uNdfom24},</if>
+            <if test="uNdfom30 != null">uNdfom30 = #{uNdfom30},</if>
+            <if test="uNdfom48 != null">uNdfom48 = #{uNdfom48},</if>
+            <if test="uNdfom72 != null">uNdfom72 = #{uNdfom72},</if>
+            <if test="uNdfom240 != null">uNdfom240 = #{uNdfom240},</if>
+            <if test="uNdfom120 != null">uNdfom120 = #{uNdfom120},</if>
+            <if test="calibrateNdf != null">calibrateNdf = #{calibrateNdf},</if>
+            <if test="fpn != null">fpn = #{fpn},</if>
+            <if test="starch != null">starch = #{starch},</if>
+            <if test="calibrateStarch != null">calibrateStarch = #{calibrateStarch},</if>
+            <if test="gpn != null">gpn = #{gpn},</if>
+            <if test="calibrateLeafPercent != null">calibrateLeafPercent = #{calibrateLeafPercent},</if>
+            <if test="csps != null">csps = #{csps},</if>
+            <if test="ivsd7 != null">ivsd7 = #{ivsd7},</if>
+            <if test="ivsd7o != null">ivsd7o = #{ivsd7o},</if>
+            <if test="ivsd7oEst != null">ivsd7oEst = #{ivsd7oEst},</if>
+            <if test="escSugar != null">escSugar = #{escSugar},</if>
+            <if test="wscSugar != null">wscSugar = #{wscSugar},</if>
+            <if test="sucrose != null">sucrose = #{sucrose},</if>
+            <if test="sucroseTotalSugars != null">sucroseTotalSugars = #{sucroseTotalSugars},</if>
+            <if test="totalSugar != null">totalSugar = #{totalSugar},</if>
+            <if test="lactose != null">lactose = #{lactose},</if>
+            <if test="eeFat != null">eeFat = #{eeFat},</if>
+            <if test="ahFat != null">ahFat = #{ahFat},</if>
+            <if test="tfa != null">tfa = #{tfa},</if>
+            <if test="c120 != null">c120 = #{c120},</if>
+            <if test="c140 != null">c140 = #{c140},</if>
+            <if test="c141 != null">c141 = #{c141},</if>
+            <if test="c160 != null">c160 = #{c160},</if>
+            <if test="c161 != null">c161 = #{c161},</if>
+            <if test="c170 != null">c170 = #{c170},</if>
+            <if test="c180 != null">c180 = #{c180},</if>
+            <if test="c181 != null">c181 = #{c181},</if>
+            <if test="c182 != null">c182 = #{c182},</if>
+            <if test="c183 != null">c183 = #{c183},</if>
+            <if test="c190 != null">c190 = #{c190},</if>
+            <if test="c200 != null">c200 = #{c200},</if>
+            <if test="c201 != null">c201 = #{c201},</if>
+            <if test="c202 != null">c202 = #{c202},</if>
+            <if test="c203 != null">c203 = #{c203},</if>
+            <if test="c204 != null">c204 = #{c204},</if>
+            <if test="c205 != null">c205 = #{c205},</if>
+            <if test="c220 != null">c220 = #{c220},</if>
+            <if test="c221 != null">c221 = #{c221},</if>
+            <if test="c226 != null">c226 = #{c226},</if>
+            <if test="c240 != null">c240 = #{c240},</if>
+            <if test="c241 != null">c241 = #{c241},</if>
+            <if test="otherFattyAcids != null">otherFattyAcids = #{otherFattyAcids},</if>
+            <if test="c120TFA != null">c120TFA = #{c120TFA},</if>
+            <if test="c140TFA != null">c140TFA = #{c140TFA},</if>
+            <if test="c141TFA != null">c141TFA = #{c141TFA},</if>
+            <if test="c160TFA != null">c160TFA = #{c160TFA},</if>
+            <if test="c161TFA != null">c161TFA = #{c161TFA},</if>
+            <if test="c170TFA != null">c170TFA = #{c170TFA},</if>
+            <if test="c180TFA != null">c180TFA = #{c180TFA},</if>
+            <if test="c181TFA != null">c181TFA = #{c181TFA},</if>
+            <if test="c182TFA != null">c182TFA = #{c182TFA},</if>
+            <if test="c183TFA != null">c183TFA = #{c183TFA},</if>
+            <if test="c190TFA != null">c190TFA = #{c190TFA},</if>
+            <if test="c200TFA != null">c200TFA = #{c200TFA},</if>
+            <if test="c201TFA != null">c201TFA = #{c201TFA},</if>
+            <if test="c202TFA != null">c202TFA = #{c202TFA},</if>
+            <if test="c203TFA != null">c203TFA = #{c203TFA},</if>
+            <if test="c204TFA != null">c204TFA = #{c204TFA},</if>
+            <if test="c205TFA != null">c205TFA = #{c205TFA},</if>
+            <if test="c220TFA != null">c220TFA = #{c220TFA},</if>
+            <if test="c221TFA != null">c221TFA = #{c221TFA},</if>
+            <if test="c226TFA != null">c226TFA = #{c226TFA},</if>
+            <if test="c240TFA != null">c240TFA = #{c240TFA},</if>
+            <if test="c241TFA != null">c241TFA = #{c241TFA},</if>
+            <if test="otherFattyAcidsTFA != null">otherFattyAcidsTFA = #{otherFattyAcidsTFA},</if>
+            <if test="ash != null">ash = #{ash},</if>
+            <if test="ca != null">ca = #{ca},</if>
+            <if test="p != null">p = #{p},</if>
+            <if test="mg != null">mg = #{mg},</if>
+            <if test="k != null">k = #{k},</if>
+            <if test="s != null">s = #{s},</if>
+            <if test="na != null">na = #{na},</if>
+            <if test="cl != null">cl = #{cl},</if>
+            <if test="al != null">al = #{al},</if>
+            <if test="b != null">b = #{b},</if>
+            <if test="mn != null">mn = #{mn},</if>
+            <if test="zn != null">zn = #{zn},</if>
+            <if test="cu != null">cu = #{cu},</if>
+            <if test="fe != null">fe = #{fe},</if>
+            <if test="lacticAcid != null">lacticAcid = #{lacticAcid},</if>
+            <if test="aceticAcid != null">aceticAcid = #{aceticAcid},</if>
+            <if test="propionicAcid != null">propionicAcid = #{propionicAcid},</if>
+            <if test="butyricAcid != null">butyricAcid = #{butyricAcid},</if>
+            <if test="isoButryicAcid != null">isoButryicAcid = #{isoButryicAcid},</if>
+            <if test="ethanol != null">ethanol = #{ethanol},</if>
+            <if test="Propanediol12 != null">Propanediol12 = #{Propanediol12},</if>
+            <if test="methanol != null">methanol = #{methanol},</if>
+            <if test="propanol != null">propanol = #{propanol},</if>
+            <if test="butanol != null">butanol = #{butanol},</if>
+            <if test="moldCount != null">moldCount = #{moldCount},</if>
+            <if test="yeastCount != null">yeastCount = #{yeastCount},</if>
+            <if test="aflatoxinB1 != null">aflatoxinB1 = #{aflatoxinB1},</if>
+            <if test="aflatoxinB2 != null">aflatoxinB2 = #{aflatoxinB2},</if>
+            <if test="aflatoxinG1 != null">aflatoxinG1 = #{aflatoxinG1},</if>
+            <if test="aflatoxinG2 != null">aflatoxinG2 = #{aflatoxinG2},</if>
+            <if test="zearalenone != null">zearalenone = #{zearalenone},</if>
+            <if test="t2 != null">t2 = #{t2},</if>
+            <if test="ht2 != null">ht2 = #{ht2},</if>
+            <if test="neosolaniol != null">neosolaniol = #{neosolaniol},</if>
+            <if test="das != null">das = #{das},</if>
+            <if test="ochratoxinA != null">ochratoxinA = #{ochratoxinA},</if>
+            <if test="citrinin != null">citrinin = #{citrinin},</if>
+            <if test="patulin != null">patulin = #{patulin},</if>
+            <if test="fumonisinB1 != null">fumonisinB1 = #{fumonisinB1},</if>
+            <if test="fumonisinB2 != null">fumonisinB2 = #{fumonisinB2},</if>
+            <if test="fumonisinB3 != null">fumonisinB3 = #{fumonisinB3},</if>
+            <if test="vomitoxinDON != null">vomitoxinDON = #{vomitoxinDON},</if>
+            <if test="AcetylDON3 != null">AcetylDON3 = #{AcetylDON3},</if>
+            <if test="AcetylDON15 != null">AcetylDON15 = #{AcetylDON15},</if>
+            <if test="fusarenonX != null">fusarenonX = #{fusarenonX},</if>
+            <if test="nivalenol != null">nivalenol = #{nivalenol},</if>
+            <if test="fusaricAcid != null">fusaricAcid = #{fusaricAcid},</if>
+            <if test="totalAflatoxins != null">totalAflatoxins = #{totalAflatoxins},</if>
+            <if test="roquefortineC != null">roquefortineC = #{roquefortineC},</if>
+            <if test="totalFumonisins != null">totalFumonisins = #{totalFumonisins},</if>
+            <if test="totalDONs != null">totalDONs = #{totalDONs},</if>
+            <if test="totalT2HT2 != null">totalT2HT2 = #{totalT2HT2},</if>
+            <if test="donVomitoxinThreshold2Ppm != null">donVomitoxinThreshold2Ppm = #{donVomitoxinThreshold2Ppm},</if>
+            <if test="zearalenoneThreshold100Ppb != null">zearalenoneThreshold100Ppb = #{zearalenoneThreshold100Ppb},</if>
+            <if test="t2HT2Threshold10Ppb != null">t2HT2Threshold10Ppb = #{t2HT2Threshold10Ppb},</if>
+            <if test="fumonisinThreshold05Ppm != null">fumonisinThreshold05Ppm = #{fumonisinThreshold05Ppm},</if>
+            <if test="mucor != null">mucor = #{mucor},</if>
+            <if test="rhizopus != null">rhizopus = #{rhizopus},</if>
+            <if test="cladosporium != null">cladosporium = #{cladosporium},</if>
+            <if test="penicillium != null">penicillium = #{penicillium},</if>
+            <if test="aspergillius != null">aspergillius = #{aspergillius},</if>
+            <if test="fusarium != null">fusarium = #{fusarium},</if>
+            <if test="otherMold != null">otherMold = #{otherMold},</if>
+            <if test="coliform != null">coliform = #{coliform},</if>
+            <if test="clostridiaPerfringens != null">clostridiaPerfringens = #{clostridiaPerfringens},</if>
+            <if test="eColi != null">eColi = #{eColi},</if>
+            <if test="enterobacteriaceae != null">enterobacteriaceae = #{enterobacteriaceae},</if>
+            <if test="nitrateNitrogen != null">nitrateNitrogen = #{nitrateNitrogen},</if>
+            <if test="adjustedCP != null">adjustedCP = #{adjustedCP},</if>
+            <if test="rdpNrc01CP != null">rdpNrc01CP = #{rdpNrc01CP},</if>
+            <if test="rdpNrc01DM != null">rdpNrc01DM = #{rdpNrc01DM},</if>
+            <if test="rupNrc01CP != null">rupNrc01CP = #{rupNrc01CP},</if>
+            <if test="rupNrc01DM != null">rupNrc01DM = #{rupNrc01DM},</if>
+            <if test="nfc != null">nfc = #{nfc},</if>
+            <if test="lacticAceticRatio != null">lacticAceticRatio = #{lacticAceticRatio},</if>
+            <if test="rfv != null">rfv = #{rfv},</if>
+            <if test="rfq != null">rfq = #{rfq},</if>
+            <if test="domi90PercentDry != null">domi90PercentDry = #{domi90PercentDry},</if>
+            <if test="californiaTDN90PercentDry != null">californiaTDN90PercentDry = #{californiaTDN90PercentDry},</if>
+            <if test="dcad != null">dcad = #{dcad},</if>
+            <if test="ndfKdRateVanAmburgh != null">ndfKdRateVanAmburgh = #{ndfKdRateVanAmburgh},</if>
+            <if test="ndfKdRateMIR != null">ndfKdRateMIR = #{ndfKdRateMIR},</if>
+            <if test="ttnDfd != null">ttnDfd = #{ttnDfd},</if>
+            <if test="starchkdratemirP1t1 != null">starchKdRateMIR_P1T1 = #{starchkdratemirP1t1},</if>
+            <if test="tdnADF != null">tdnADF = #{tdnADF},</if>
+            <if test="negADF != null">negADF = #{negADF},</if>
+            <if test="nemADF != null">nemADF = #{nemADF},</if>
+            <if test="nelADF != null">nelADF = #{nelADF},</if>
+            <if test="tdnOARDC != null">tdnOARDC = #{tdnOARDC},</if>
+            <if test="negOARDC != null">negOARDC = #{negOARDC},</if>
+            <if test="nemOARDC != null">nemOARDC = #{nemOARDC},</if>
+            <if test="nelOARDC != null">nelOARDC = #{nelOARDC},</if>
+            <if test="meOARDC != null">meOARDC = #{meOARDC},</if>
+            <if test="tdnMilk2006 != null">tdnMilk2006 = #{tdnMilk2006},</if>
+            <if test="negMilk2006 != null">negMilk2006 = #{negMilk2006},</if>
+            <if test="nemMilk2006 != null">nemMilk2006 = #{nemMilk2006},</if>
+            <if test="nelMilk2006Processed != null">nelMilk2006Processed = #{nelMilk2006Processed},</if>
+            <if test="nelMilk2006NonProcessed != null">nelMilk2006NonProcessed = #{nelMilk2006NonProcessed},</if>
+            <if test="milkTonCornSilageMilk2006 != null">milkTonCornSilageMilk2006 = #{milkTonCornSilageMilk2006},</if>
+            <if test="milkAcreMLK06Proc != null">milkAcreMLK06Proc = #{milkAcreMLK06Proc},</if>
+            <if test="milkAcreMLK06NonProc != null">milkAcreMLK06NonProc = #{milkAcreMLK06NonProc},</if>
+            <if test="tdnMilk13 != null">tdnMilk13 = #{tdnMilk13},</if>
+            <if test="nelMilk13 != null">nelMilk13 = #{nelMilk13},</if>
+            <if test="negMilk13 != null">negMilk13 = #{negMilk13},</if>
+            <if test="nemMilk13 != null">nemMilk13 = #{nemMilk13},</if>
+            <if test="milkPerTonMilk13 != null">milkPerTonMilk13 = #{milkPerTonMilk13},</if>
+            <if test="beefPerTon != null">beefPerTon = #{beefPerTon},</if>
+            <if test="negISUBeefMcalCwt != null">negISUBeefMcalCwt = #{negISUBeefMcalCwt},</if>
+            <if test="nemISUBeefMcalCwt != null">nemISUBeefMcalCwt = #{nemISUBeefMcalCwt},</if>
+            <if test="negISUBeefMcalLb != null">negISUBeefMcalLb = #{negISUBeefMcalLb},</if>
+            <if test="nemISUBeefMcalLb != null">nemISUBeefMcalLb = #{nemISUBeefMcalLb},</if>
+            <if test="negISUBeefMcalKg != null">negISUBeefMcalKg = #{negISUBeefMcalKg},</if>
+            <if test="nemISUBeefMcalKg != null">nemISUBeefMcalKg = #{nemISUBeefMcalKg},</if>
+            <if test="negISUBeefMJKg != null">negISUBeefMJKg = #{negISUBeefMJKg},</if>
+            <if test="nemISUBeefMJKg != null">nemISUBeefMJKg = #{nemISUBeefMJKg},</if>
+            <if test="tdn1xISUBeef != null">tdn1xISUBeef = #{tdn1xISUBeef},</if>
+            <if test="swineDE != null">swineDE = #{swineDE},</if>
+            <if test="swineME != null">swineME = #{swineME},</if>
+            <if test="swineNE != null">swineNE = #{swineNE},</if>
+            <if test="equineDE != null">equineDE = #{equineDE},</if>
+            <if test="equineTDN != null">equineTDN = #{equineTDN},</if>
+            <if test="dmYield != null">dmYield = #{dmYield},</if>
+            <if test="meGfE2001 != null">meGfE2001 = #{meGfE2001},</if>
+            <if test="rohfaserGfE2001 != null">rohfaserGfE2001 = #{rohfaserGfE2001},</if>
+            <if test="nXPGfE2001 != null">nXPGfE2001 = #{nXPGfE2001},</if>
+            <if test="rnbGfE2001 != null">rnbGfE2001 = #{rnbGfE2001},</if>
+            <if test="nelMilk24McalCwt != null">nelMilk24McalCwt = #{nelMilk24McalCwt},</if>
+            <if test="milkPerTonMilk24LbsTon != null">milkPerTonMilk24LbsTon = #{milkPerTonMilk24LbsTon},</if>
+            <if test="importTime != null">import_time = #{importTime},</if>
+            <if test="importBy != null">import_by = #{importBy},</if>
+        </trim>
+        where dairylandId = #{dairylandId}
+    </update>
+
+    <delete id="deleteOpNearInfraredSummaryByDairylandId" parameterType="String">
+        delete from op_near_infrared_summary where dairylandId = #{dairylandId}
+    </delete>
+
+    <delete id="deleteOpNearInfraredSummaryByDairylandIds" parameterType="String">
+        delete from op_near_infrared_summary where dairylandId in 
+        <foreach item="dairylandId" collection="array" open="(" separator="," close=")">
+            #{dairylandId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_near_infrared_summary set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where dairylandId = #{dairylandId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_near_infrared_summary set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where dairylandId in
+        <foreach item="dairylandId" collection="array" open="(" separator="," close=")">
+            #{dairylandId}
+        </foreach>
+    </update>
+
+
+</mapper>

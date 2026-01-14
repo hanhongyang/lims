@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpFeedEntrustOrderSampleMapper">
+
+    <resultMap type="OpFeedEntrustOrderSample" id="OpFeedEntrustOrderSampleResult">
+        <result property="opFeedEntrustOrderSampleId"    column="op_feed_entrust_order_sample_id"    />
+        <result property="feedEntrustOrderId"    column="feed_entrust_order_id"    />
+        <result property="invbillCode"    column="invbill_code"    />
+        <result property="materialName"    column="material_name"    />
+        <result property="name"    column="name"    />
+        <result property="model"    column="model"    />
+        <result property="batchNo"    column="batch_no"    />
+        <result property="packaging"    column="packaging"    />
+        <result property="status"    column="status"    />
+        <result property="storageRequirement"    column="storage_requirement"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="testMethod"    column="test_method"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="isReceive"    column="is_receive"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="receiverName"    column="receiver_name"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="producerUnit"    column="producer_unit"    />
+        <result property="sampleRemark"    column="sample_remark"    />
+        <result property="jhwNo"    column="jhw_no"    />
+        <result property="isRetest"    column="is_retest"    />
+        <result property="materialSampleNo"    column="material_sample_no"    />
+        <result property="returnReason"    column="return_reason"    />
+
+    </resultMap>
+
+    <resultMap type="com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrderSample" id="JhwItemList">
+        <!-- 样品基本信息 -->
+        <id property="opFeedEntrustOrderSampleId" column="op_feed_entrust_order_sample_id"/>
+        <result property="name" column="name"/>
+        <result property="sampleNo" column="sample_no"/>
+        <result property="invbillCode" column="invbill_code"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="receiverId" column="receiver_id"/>
+        <result property="receiverName" column="receiver_name"/>
+
+        <!-- 嵌套的测试项目集合 -->
+        <collection property="testItem" ofType="com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrderItem"
+                    resultMap="TestItemResultMap"/>
+    </resultMap>
+    <resultMap id="TestItemResultMap" type="com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrderItem">
+        <id property="opFeedEntrustOrderItemId" column="op_feed_entrust_order_item_id"/>
+        <result property="opFeedEntrustOrderSampleId" column="op_feed_entrust_order_sample_id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+    </resultMap>
+
+    <sql id="selectOpFeedEntrustOrderSampleVo">
+        select op_feed_entrust_order_sample_id, feed_entrust_order_id, invbill_code, name, model, batch_no,
+               packaging, status, storage_requirement, sequence, is_delete, create_time, create_by, update_time, update_by,
+               test_method,sample_no,is_receive,receiver_id,receive_time,file_id, producer_unit, sample_remark,material_name,
+               jhw_no,is_retest,return_reason,material_sample_no
+        from op_feed_entrust_order_sample
+    </sql>
+
+    <select id="selectOpFeedEntrustOrderSampleList" parameterType="OpFeedEntrustOrderSample" resultMap="OpFeedEntrustOrderSampleResult">
+        select s.*,u.nick_name receiver_name
+        from op_feed_entrust_order_sample s
+        left join sys_user u on u.user_id=s.receiver_id and u.del_flag='0'
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="feedEntrustOrderId != null  and feedEntrustOrderId != ''"> and s.feed_entrust_order_id = #{feedEntrustOrderId}</if>
+            <if test="invbillCode != null  and invbillCode != ''"> and s.invbill_code = #{invbillCode}</if>
+            <if test="name != null  and name != ''"> and s.name like concat('%', #{name}, '%')</if>
+            <if test="model != null  and model != ''"> and s.model = #{model}</if>
+            <if test="batchNo != null  and batchNo != ''"> and s.batch_no = #{batchNo}</if>
+            <if test="packaging != null  and packaging != ''"> and s.packaging = #{packaging}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="storageRequirement != null  and storageRequirement != ''"> and s.storage_requirement = #{storageRequirement}</if>
+            <if test="sequence != null "> and s.sequence = #{sequence}</if>
+            <if test="sampleNo != null "> and s.sample_no = #{sample_no}</if>
+            <if test="isReceive != null  and isReceive != ''"> and s.is_receive = #{isReceive}</if>
+            <if test="receiverName != null  and receiverName != ''"> and u.nick_name like concat('%', #{receiverName}, '%')</if>
+
+        </where>
+    </select>
+    <select id="selectDeletedSamplesByOrderId" resultMap="OpFeedEntrustOrderSampleResult" parameterType="String">
+        select s.*, ib.invbill_name
+        from op_feed_entrust_order_sample s
+                 left join business_invbill ib on s.invbill_code=ib.sap_code
+        where s.feed_entrust_order_id = #{orderId}
+          and s.is_delete = '1'
+        order by s.create_time desc
+    </select>
+    <select id="selectJhwItemList" parameterType="java.util.List" resultMap="JhwItemList">
+        SELECT
+        fos.op_feed_entrust_order_sample_id,
+        fos.name,
+        fos.sample_no,
+        fos.receive_time,
+        fos.receiver_id,
+        fos.invbill_code,
+        u.nick_name AS receiver_name,
+        fi.op_feed_entrust_order_item_id,
+        fi.op_feed_entrust_order_sample_id,
+        fi.item_id,
+        i.item_code,
+        i.item_name
+        FROM op_feed_entrust_order_sample fos
+        LEFT JOIN op_feed_entrust_order_item fi ON fos.op_feed_entrust_order_sample_id = fi.op_feed_entrust_order_sample_id
+        AND fi.is_delete = '0'
+        LEFT JOIN bs_labtest_items i ON i.bs_labtest_items_id = fi.item_id
+        AND i.is_delete = '0'
+        AND i.is_jhw = '1'
+        LEFT JOIN sys_user u ON u.user_id = fos.receiver_id AND u.del_flag = '0'
+        WHERE fos.is_delete = '0'
+        AND fos.op_feed_entrust_order_sample_id IN
+        <foreach item="sampleId" collection="list" open="(" separator="," close=")">
+            #{sampleId}
+        </foreach>
+        AND i.is_jhw = '1'  -- 确保只返回计划外项目
+        ORDER BY fos.sample_no, fi.create_time
+    </select>
+
+    <select id="selectOpFeedEntrustOrderSampleByOpFeedEntrustOrderSampleId" parameterType="String" resultMap="OpFeedEntrustOrderSampleResult">
+        <include refid="selectOpFeedEntrustOrderSampleVo"/>
+        where op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId}
+    </select>
+
+    <insert id="insertOpFeedEntrustOrderSample" parameterType="OpFeedEntrustOrderSample">
+        insert into op_feed_entrust_order_sample
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opFeedEntrustOrderSampleId != null">op_feed_entrust_order_sample_id,</if>
+            <if test="feedEntrustOrderId != null and feedEntrustOrderId != ''">feed_entrust_order_id,</if>
+            <if test="invbillCode != null and invbillCode != ''">invbill_code,</if>
+            <if test="materialName != null and materialName != ''">material_name,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="model != null">model,</if>
+            <if test="batchNo != null">batch_no,</if>
+            <if test="testMethod != null">test_method,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="packaging != null">packaging,</if>
+            <if test="status != null">status,</if>
+            <if test="storageRequirement != null">storage_requirement,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="receiverId != null">receiver_id,</if>
+            <if test="receiveTime != null">receive_time,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="producerUnit != null">producer_unit,</if>
+            <if test="sampleRemark != null">sample_remark,</if>
+            <if test="jhwNo != null">jhw_no,</if>
+            <if test="isRetest != null">is_retest,</if>
+            <if test="returnReason != null">return_reason,</if>
+            <if test="materialSampleNo != null">material_sample_no,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opFeedEntrustOrderSampleId != null">#{opFeedEntrustOrderSampleId},</if>
+            <if test="feedEntrustOrderId != null and feedEntrustOrderId != ''">#{feedEntrustOrderId},</if>
+            <if test="invbillCode != null and invbillCode != ''">#{invbillCode},</if>
+            <if test="materialName != null and materialName != ''">#{materialName},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="model != null">#{model},</if>
+            <if test="batchNo != null">#{batchNo},</if>
+            <if test="testMethod != null">#{testMethod},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="packaging != null">#{packaging},</if>
+            <if test="status != null">#{status},</if>
+            <if test="storageRequirement != null">#{storageRequirement},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="receiverId != null">#{receiverId},</if>
+            <if test="receiveTime != null">#{receiveTime},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="producerUnit != null">#{producerUnit},</if>
+            <if test="sampleRemark != null">#{sampleRemark},</if>
+            <if test="jhwNo != null">#{jhwNo},</if>
+            <if test="isRetest != null">#{isRetest},</if>
+            <if test="returnReason != null">#{returnReason},</if>
+            <if test="materialSampleNo != null">#{materialSampleNo},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateOpFeedEntrustOrderSample" parameterType="OpFeedEntrustOrderSample">
+        update op_feed_entrust_order_sample
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="feedEntrustOrderId != null and feedEntrustOrderId != ''">feed_entrust_order_id = #{feedEntrustOrderId},</if>
+            <if test="invbillCode != null and invbillCode != ''">invbill_code = #{invbillCode},</if>
+            <if test="materialName != null and materialName != ''">material_name = #{materialName},</if>
+            <if test="name != null ">name = #{name},</if>
+            <if test="model != null">model = #{model},</if>
+            <if test="batchNo != null">batch_no = #{batchNo},</if>
+            <if test="testMethod != null">test_method = #{testMethod},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="packaging != null">packaging = #{packaging},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="storageRequirement != null">storage_requirement = #{storageRequirement},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isReceive != null">is_receive = #{isReceive},</if>
+            <if test="receiverId != null">receiver_id = #{receiverId},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="reportId != null">report_id = #{reportId},</if>
+            <if test="producerUnit != null">producer_unit = #{producerUnit},</if>
+            <if test="sampleRemark != null">sample_remark = #{sampleRemark},</if>
+            <if test="jhwNo != null">jhw_no = #{jhwNo},</if>
+            <if test="isRetest != null">is_retest = #{isRetest},</if>
+            <if test="returnReason != null">return_reason = #{returnReason},</if>
+            <if test="materialSampleNo != null">material_sample_no = #{materialSampleNo},</if>
+        </trim>
+        where op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId}
+    </update>
+
+
+
+    <update id="updateDeleteByOrderId" >
+        update op_feed_entrust_order_sample set is_delete=1 ,update_time=now(),update_by=#{updateBy}
+        where feed_entrust_order_id = #{feedEntrustOrderId}
+    </update>
+
+    <update id="updateDeleteById" >
+        update op_feed_entrust_order_sample set is_delete=1 ,update_time=now(),update_by=#{updateBy}
+        where op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId}
+    </update>
+
+    <update id="updateReceiveById" >
+        update op_feed_entrust_order_sample set is_receive=1 ,receive_time=now(),receiver_id=#{receiverId}
+        where op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId}
+    </update>
+
+    <update id="updateRetestById" >
+        update op_feed_entrust_order_sample set is_retest='1'
+        where op_feed_entrust_order_sample_id = #{entrustOrderSampleId}
+    </update>
+
+    <select id="selectOrderIdById" parameterType="String" resultType="String">
+        select feed_entrust_order_id
+        from    op_feed_entrust_order_sample
+        where op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId}
+    </select>
+
+    <select id="selectSamplesByOrderIds" parameterType="java.util.List" resultMap="OpFeedEntrustOrderSampleResult">
+        <include refid="selectOpFeedEntrustOrderSampleVo"/>
+        WHERE feed_entrust_order_id IN
+        <foreach item="item" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND is_delete = '0'
+        ORDER BY feed_entrust_order_id, sequence
+    </select>
+
+    <select id="selectNextJhwNo" resultType="int">
+        SELECT nextval('feed_jhw_no')
+    </select>
+
+<update id="updateReturnReason" parameterType="String">
+    update op_feed_entrust_order_sample set return_reason =#{returnReason} where sample_no =#{sampleNo} and is_delete='0'
+</update>
+    <update id="updateDeleteByNo" parameterType="String">
+        update op_feed_entrust_order_sample set is_delete=1 ,update_time=now(),update_by=#{updateBy}
+        where sample_no = #{sampleNo}
+    </update>
+</mapper>

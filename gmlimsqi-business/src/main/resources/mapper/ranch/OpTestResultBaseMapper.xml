@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.ranch.mapper.OpTestResultBaseMapper">
+
+    <resultMap type="OpTestResultBase" id="OpTestResultBaseResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="resultNo"    column="result_no"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="examineUser"    column="examine_user"    />
+        <result property="examineUserId"    column="examine_user_id"    />
+        <result property="examineTime"    column="examine_time"    />
+        <result property="testTime"    column="test_time"    />
+        <result property="testUser"    column="test_user"    />
+        <result property="testUserId"    column="test_user_id"    />
+        <result property="resultAddType"    column="result_add_type"    />
+        <result property="status"    column="status"    />
+        <result property="returnReason"    column="return_reason"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+    </resultMap>
+
+    <sql id="selectOpTestResultBaseVo">
+        select d.id,
+               d.dept_id,
+               d.result_no,
+               d.dept_name,
+               d.item_name,
+               d.item_id,
+               d.examine_user,
+               d.examine_user_id,
+               d.examine_time,
+               d.test_time,
+               d.test_user,
+               d.test_user_id,
+               d.result_add_type,
+               d.status,
+               d.return_reason,
+               d.create_time,
+               d.create_by,
+               d.update_time,
+               d.update_by,
+               d.delete_id
+        from op_test_result_base d
+    </sql>
+
+    <select id="selectOpTestResultBaseList" parameterType="OpTestResultBase" resultMap="OpTestResultBaseResult">
+        <include refid="selectOpTestResultBaseVo"/>
+        <where>
+            d.delete_id = '0'
+            <if test="resultNo != null  and resultNo != ''">and d.result_no = #{resultNo}</if>
+            <if test="deptName != null  and deptName != ''">and d.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="itemName != null  and itemName != ''">and d.item_name like concat('%', #{itemName}, '%')</if>
+            <if test="itemId != null  and itemId != ''">and d.item_id = #{itemId}</if>
+            <if test="examineUser != null  and examineUser != ''">and d.examine_user = #{examineUser}</if>
+            <if test="examineTime != null ">and d.examine_time = #{examineTime}</if>
+            <if test="testTime != null ">and d.test_time = #{testTime}</if>
+            <if test="testUser != null  and testUser != ''">and d.test_user = #{testUser}</if>
+            <if test="resultAddType != null  and resultAddType != ''">and d.result_add_type = #{resultAddType}</if>
+            <if test="status != null and status != ''">
+                <choose>
+                    <when test="status == 2 or status == '2'.toString()">
+                        and d.status in (2,3)
+                    </when>
+                    <otherwise>
+                        and d.status = #{status}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        order by test_time desc
+    </select>
+
+    <select id="selectOpTestResultBaseById" parameterType="String" resultMap="OpTestResultBaseResult">
+        <include refid="selectOpTestResultBaseVo"/>
+        where d.id = #{id}
+        and d.delete_id = '0'
+    </select>
+
+    <insert id="insertOpTestResultBase" parameterType="OpTestResultBase">
+        insert into op_test_result_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="deptId != null and deptId != ''">dept_id,</if>
+            <if test="resultNo != null">result_no,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="examineUser != null">examine_user,</if>
+            <if test="examineUserId != null">examine_user_id,</if>
+            <if test="examineTime != null">examine_time,</if>
+            <if test="testTime != null">test_time,</if>
+            <if test="testUser != null">test_user,</if>
+            <if test="testUserId != null">test_user_id,</if>
+            <if test="resultAddType != null">result_add_type,</if>
+            <if test="status != null">status,</if>
+            <if test="returnReason != null">return_reason,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deleteId != null">delete_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="deptId != null and deptId != ''">#{deptId},</if>
+            <if test="resultNo != null">#{resultNo},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="examineUser != null">#{examineUser},</if>
+            <if test="examineUserId != null">#{examineUserId},</if>
+            <if test="examineTime != null">#{examineTime},</if>
+            <if test="testTime != null">#{testTime},</if>
+            <if test="testUser != null">#{testUser},</if>
+            <if test="testUserId != null">#{testUserId},</if>
+            <if test="resultAddType != null">#{resultAddType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="returnReason != null">#{returnReason},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deleteId != null">#{deleteId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpTestResultBase" parameterType="OpTestResultBase">
+        update op_test_result_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+            <if test="resultNo != null">result_no = #{resultNo},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="examineUser != null">examine_user = #{examineUser},</if>
+            <if test="examineUserId != null">examine_user_id = #{examineUserId},</if>
+            <if test="examineTime != null">examine_time = #{examineTime},</if>
+            <if test="testTime != null">test_time = #{testTime},</if>
+            <if test="testUser != null">test_user = #{testUser},</if>
+            <if test="testUserId != null">test_user_id = #{testUserId},</if>
+            <if test="resultAddType != null">result_add_type = #{resultAddType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="returnReason != null">return_reason = #{returnReason},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deleteId != null">delete_id = #{deleteId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <resultMap type="com.gmlimsqi.business.ranch.vo.SampleTaskVo" id="SampleTaskVoResult">
+        <result property="opSamplingPlanItemId" column="op_sampling_plan_item_id"/>
+        <result property="samplingPlanSampleId" column="sampling_plan_sample_id"/>
+        <result property="sampleNo" column="sample_no"/>
+        <result property="invbillName" column="invbill_name"/>
+        <result property="itemId" column="item_id"/>
+        <result property="itemName" column="item_name"/>
+        <result property="receiveTime" column="receive_time"/>
+    </resultMap>
+
+    <!--<select id="selectPendingTaskList" parameterType="com.gmlimsqi.business.ranch.vo.SampleTaskVo" resultMap="SampleTaskVoResult">
+        SELECT
+        pi.op_sampling_plan_item_id,
+        pi.sampling_plan_sample_id,
+        ps.sample_no,
+        ps.invbill_name,
+        pi.item_id,
+        pi.item_name,
+        ps.receive_time
+        FROM
+        op_sampling_plan_item pi
+        LEFT JOIN
+        op_sampling_plan_sample ps ON pi.sampling_plan_sample_id = ps.op_sampling_plan_sample_id
+        LEFT JOIN
+        op_sampling_plan p ON ps.sampling_plan_id = p.op_sampling_plan_id
+        LEFT JOIN
+        op_test_result_info tri ON pi.op_sampling_plan_item_id = tri.plan_item_id AND tri.delete_id = '0'
+        <where>
+            ps.is_receive = '1'
+            AND ps.is_delete = '0'
+            AND pi.is_delete = '0'
+            AND p.delete_id = '0'
+            AND (tri.id IS NULL or tri.retest_flag = '1')
+            <if test="sampleNo != null and sampleNo != ''">
+                AND ps.sample_no LIKE concat('%', #{sampleNo}, '%')
+            </if>
+            <if test="invbillName != null and invbillName != ''">
+                AND ps.invbill_name LIKE concat('%', #{invbillName}, '%')
+            </if>
+            <if test="itemName != null and itemName != ''">
+                AND pi.item_name LIKE concat('%', #{itemName}, '%')
+            </if>
+            <if test="receiveTime != null">
+                AND date(ps.receive_time) = date(#{receiveTime})
+            </if>
+
+        </where>
+        ${params.dataScope}
+        ORDER BY
+        ps.receive_time DESC
+    </select>-->
+
+    <select id="selectPendingTaskList" parameterType="com.gmlimsqi.business.ranch.vo.SampleTaskVo" resultMap="SampleTaskVoResult">
+        SELECT
+        pi.op_sampling_plan_item_id,
+        pi.sampling_plan_sample_id,
+        ps.sample_no,
+        ps.invbill_name,
+        pi.item_id,
+        pi.item_name,
+        ps.receive_time,
+        -- 无deptId时task_source显示为"全部任务"，有deptId时按原逻辑显示
+        CASE
+        WHEN #{deptId} IS NOT NULL AND #{deptId} != '' AND ps.dept_id = #{deptId} THEN '本部门自有'
+        WHEN #{deptId} IS NOT NULL AND #{deptId} != '' AND std.designated_dept_id = #{deptId} THEN '其他牧场指定'
+        ELSE '全部任务'
+        END AS task_source,
+        std.dept_id AS source_dept_id,
+        std.designated_dept_id AS target_dept_id
+        FROM op_sampling_plan_item pi
+        -- 1. 关联样品表
+        LEFT JOIN op_sampling_plan_sample ps
+        ON pi.sampling_plan_sample_id = ps.op_sampling_plan_sample_id
+        -- 2. 关联取样计划主表
+        LEFT JOIN op_sampling_plan p
+        ON ps.sampling_plan_id = p.op_sampling_plan_id AND p.delete_id = '0'
+        -- 3. 关联化验结果表（保持原逻辑）
+        LEFT JOIN op_test_result_info tri
+        ON pi.op_sampling_plan_item_id = tri.plan_item_id
+        AND tri.delete_id = '0'
+        -- 4. 关联指定部门表（补充物料ID匹配，避免关联异常）
+        LEFT JOIN op_sampling_test_item_dept std
+        ON pi.item_id = std.item_id  -- 项目ID匹配
+        AND std.is_delete = '0'  -- 未删除的指定记录
+        LEFT JOIN op_test_result_base otrb ON tri.base_id = otrb.id AND otrb.delete_id = '0'
+        WHERE
+        -- 基础条件（已接收、未删除、待化验）
+        ps.is_receive = '1'
+        AND (tri.id IS NULL OR otrb.status = '0')
+        AND ps.is_delete = '0'
+        AND pi.is_delete = '0'
+        AND (tri.id IS NULL OR tri.retest_flag = '1')
+        -- 核心逻辑：根据deptId是否传入动态判断
+        <choose>
+            <!-- 传了deptId：按原逻辑筛选（本部门自有+其他牧场指定本部门） -->
+            <when test="deptId != null and deptId != ''">
+                AND (
+                -- 本部门自有任务（排除已指定给其他部门的）
+                (
+                ps.dept_id = #{deptId}
+                AND NOT EXISTS (
+                SELECT 1
+                FROM op_sampling_test_item_dept std_exclude
+                WHERE std_exclude.item_id = pi.item_id      -- 项目ID匹配
+                AND std_exclude.designated_dept_id != #{deptId} -- 指定给其他部门
+                AND std_exclude.is_delete = '0'           -- 未删除
+                )
+                )
+                OR
+                -- 其他牧场指定本部门的任务
+                (
+                std.designated_dept_id = #{deptId}
+                AND std.dept_id != #{deptId}
+                )
+                )
+            </when>
+            <!-- 没传deptId：查询所有符合基础条件的任务，不做部门过滤 -->
+            <otherwise>
+                AND 1 = 1
+            </otherwise>
+        </choose>
+
+        -- 原有动态查询条件（保持不变）
+        <if test="sampleNo != null and sampleNo != ''">
+            AND ps.sample_no LIKE concat('%', #{sampleNo}, '%')
+        </if>
+        <if test="invbillName != null and invbillName != ''">
+            AND ps.invbill_name LIKE concat('%', #{invbillName}, '%')
+        </if>
+        <if test="itemName != null and itemName != ''">
+            AND pi.item_name LIKE concat('%', #{itemName}, '%')
+        </if>
+        <if test="receiveTime != null">
+            AND date(ps.receive_time) = date(#{receiveTime})
+        </if>
+
+        ORDER BY ps.receive_time DESC
+    </select>
+
+    <select id="countPendingTaskList" parameterType="com.gmlimsqi.business.ranch.vo.SampleTaskVo" resultType="Long">
+        SELECT COUNT(pi.op_sampling_plan_item_id)
+        FROM
+        op_sampling_plan_item pi
+        LEFT JOIN
+        op_sampling_plan_sample ps ON pi.sampling_plan_sample_id = ps.op_sampling_plan_sample_id
+        LEFT JOIN
+        op_sampling_plan d ON ps.sampling_plan_id = d.op_sampling_plan_id
+        LEFT JOIN
+        op_test_result_info tri ON pi.op_sampling_plan_item_id = tri.plan_item_id AND tri.delete_id = '0'
+        <where>
+            ps.is_receive = '1'
+            AND ps.is_delete = '0'
+            AND pi.is_delete = '0'
+            AND d.delete_id = '0'
+            AND tri.id IS NULL
+            <if test="sampleNo != null and sampleNo != ''">
+                AND ps.sample_no LIKE concat('%', #{sampleNo}, '%')
+            </if>
+            <if test="invbillName != null and invbillName != ''">
+                AND ps.invbill_name LIKE concat('%', #{invbillName}, '%')
+            </if>
+            <if test="itemName != null and itemName != ''">
+                AND pi.item_name LIKE concat('%', #{itemName}, '%')
+            </if>
+            <if test="receiveTime != null">
+                AND date(ps.receive_time) = date(#{receiveTime})
+            </if>
+
+        </where>
+        ${params.dataScope}
+    </select>
+
+    <select id="countByStatus" parameterType="com.gmlimsqi.business.ranch.domain.OpTestResultBase" resultType="java.util.HashMap">
+        SELECT
+        d.status,
+        COUNT(*) as count
+        FROM
+        op_test_result_base d
+        <where>
+            d.delete_id = '0'
+            AND d.status IN ('2', '3', '4')
+            <if test="resultNo != null  and resultNo != ''"> and d.result_no = #{resultNo}</if>
+            <if test="itemName != null  and itemName != ''"> and d.item_name like concat('%', #{itemName}, '%')</if>
+            <if test="testUser != null  and testUser != ''"> and d.test_user = #{testUser}</if>
+            <if test="examineUser != null  and examineUser != ''"> and d.examine_user = #{examineUser}</if>
+
+        </where>
+        ${params.dataScope}
+        GROUP BY
+        d.status
+    </select>
+
+    <!-- 基础结果映射 -->
+    <resultMap id="SamplingPlanItemMap" type="com.gmlimsqi.business.ranch.vo.SamplingPlanItemVO">
+        <!-- 样品信息 -->
+        <id property="opSamplingPlanSampleId" column="op_sampling_plan_sample_id"/>
+        <result property="invbillCode" column="invbill_code"/>
+        <result property="invbillName" column="invbill_name"/>
+        <result property="testTime" column="test_time"/>
+        <result property="status" column="status"/>
+        <result property="productionDate" column="production_date"/>
+        <result property="deptId" column="dept_id"/>
+
+        <!-- 项目信息 -->
+        <result property="itemId" column="item_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+
+        <!-- 特性信息 -->
+        <result property="featureName" column="feature_name"/>
+        <result property="featureInfo" column="feature_info"/>
+        <result property="upperLimit" column="upper_limit"/>
+        <result property="lowerLimit" column="lower_limit"/>
+        <result property="unitOfMeasurement" column="unit_of_measurement"/>
+        <result property="qualitativeOrQuantitative" column="qualitative_or_quantitative"/>
+        <result property="qualitativeType" column="qualitative_type"/>
+        <result property="result" column="result"/>
+        <result property="checkResult" column="check_result"/>
+        <result property="standardValue" column="standard_value"/>
+        <result property="judgeValue" column="judge_value"/>
+    </resultMap>
+
+    <!-- 根据样品ID查询采样计划报表数据 -->
+    <select id="selectReportBySampleId" resultMap="SamplingPlanItemMap">
+        SELECT
+        a.op_sampling_plan_sample_id,
+        a.invbill_code,
+        a.invbill_name,
+        d.test_time,
+        a.status,
+        a.production_date,
+        b.item_id,
+        b.item_code,
+        b.item_name,
+        a.dept_id,
+        -- 特性数据
+        f.feature_name,
+        f.feature_info,
+        f.upper_limit,
+        f.lower_limit,
+        f.unit_of_measurement,
+        f.qualitative_or_quantitative,
+        f.qualitative_type,
+        c.result,
+        c.check_result,
+        f.allow_error as standard_value,
+        f.error_info as judge_value
+        FROM op_sampling_plan_sample a
+        INNER JOIN op_sampling_plan_item b ON a.op_sampling_plan_sample_id = b.sampling_plan_sample_id
+        LEFT JOIN op_test_result_info c ON a.op_sampling_plan_sample_id = c.plan_sample_id
+        LEFT JOIN op_test_result_base d ON c.base_id = d.id
+        -- 连接特性视图
+        LEFT JOIN vw_item_feature f ON a.dept_id = f.dept_id
+        AND a.invbill_code = f.invbill_code
+        AND b.item_id = f.item_id
+        WHERE a.op_sampling_plan_sample_id = #{sampleId}
+        AND b.item_id IS NOT NULL
+        ORDER BY b.item_id
+    </select>
+</mapper>

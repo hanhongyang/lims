@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.sap.accept.mapper.material.BaseSapupMapper">
+
+    <resultMap type="com.gmlimsqi.sap.accept.domain.material.BaseSapup" id="BaseSapupResult">
+        <result property="id" column="id"/>
+        <result property="dcreatetime" column="dcreatetime"/>
+        <result property="dmodifytime" column="dmodifytime"/>
+        <result property="bsysdel" column="bsysdel"/>
+        <result property="inv" column="inv"/>
+        <result property="cus" column="cus"/>
+        <result property="ven" column="ven"/>
+        <result property="cztcode" column="cztcode"/>
+    </resultMap>
+
+    <sql id="selectBaseSapupVo">
+        select id,
+               dcreatetime,
+               dmodifytime,
+               bsysdel,
+               inv,
+               cus,
+               ven,
+               cztcode
+        from base_sapup
+    </sql>
+
+    <insert id="insertBaseSapup" parameterType="BaseSapup">
+        insert into base_sapup
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="dcreatetime != null">dcreatetime,</if>
+            <if test="dmodifytime != null">dmodifytime,</if>
+            <if test="bsysdel != null">bsysdel,</if>
+            <if test="inv != null">inv,</if>
+            <if test="cus != null">cus,</if>
+            <if test="ven != null">ven,</if>
+            <if test="cztcode != null">cztcode,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="dcreatetime != null">#{dcreatetime},</if>
+            <if test="dmodifytime != null">#{dmodifytime},</if>
+            <if test="bsysdel != null">#{bsysdel},</if>
+            <if test="inv != null">#{inv},</if>
+            <if test="cus != null">#{cus},</if>
+            <if test="ven != null">#{ven},</if>
+            <if test="cztcode != null">#{cztcode},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        update base_sapup
+        set ${name} = #{nowDate}
+        where cztcode = #{cztCode}
+    </update>
+
+    <select id="selectSapup" resultMap="BaseSapupResult">
+        select id,
+               dcreatetime,
+               dmodifytime,
+               bsysdel,
+               inv,
+               cus,
+               ven,
+               cztcode
+        from base_sapup
+        where cztcode = #{cztCode}
+    </select>
+
+</mapper>

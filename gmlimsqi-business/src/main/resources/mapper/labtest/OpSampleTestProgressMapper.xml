@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpSampleTestProgressMapper">
+
+    <resultMap type="com.gmlimsqi.business.labtest.vo.OpSampleTestProgressVo" id="OpSampleTestProgressVo">
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="startedItems"    column="started_items"    />
+        <result property="notStartedItems"    column="not_started_items"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="testMethod"    column="test_method"    />
+        <result property="bloodTaskItemType"    column="blood_task_item_type"    />
+        <result property="progress"    column="progress"    />
+    </resultMap>
+
+
+    <select id="selectFeedSampleTestProgressList"
+            parameterType="com.gmlimsqi.business.labtest.dto.OpSampleTestProgressDto"
+            resultMap="OpSampleTestProgressVo">
+
+        SELECT * FROM (
+
+        SELECT
+        d.dept_name,
+        fo.entrust_order_no,
+        fos.name as sample_name,
+        fos.sample_no,
+        fos.test_method,
+        GROUP_CONCAT(CASE WHEN fi.test_user_id IS NOT NULL AND fi.test_user_id != '' THEN i.item_name ELSE NULL END SEPARATOR ',') AS started_items,
+        GROUP_CONCAT(CASE WHEN fi.test_user_id IS NULL OR fi.test_user_id = '' THEN i.item_name ELSE NULL END SEPARATOR ',') AS not_started_items,
+        fo.receive_time,
+
+        CASE
+        WHEN COUNT(CASE WHEN fi.test_user_id IS NULL OR fi.test_user_id = '' THEN 1 ELSE NULL END) = 0 THEN '1'
+        WHEN COUNT(CASE WHEN fi.test_user_id IS NOT NULL AND fi.test_user_id != '' THEN 1 ELSE NULL END) = 0 THEN '2'
+        ELSE '3'
+        END AS progress_status
+
+        FROM op_feed_entrust_order fo
+        LEFT JOIN op_feed_entrust_order_sample fos ON fos.feed_entrust_order_id = fo.op_feed_entrust_order_id AND fos.is_delete = '0'
+        LEFT JOIN op_feed_entrust_order_item fi ON fi.op_feed_entrust_order_sample_id = fos.op_feed_entrust_order_sample_id AND fi.is_delete = '0'
+        LEFT JOIN bs_labtest_items i ON i.bs_labtest_items_id = fi.item_id AND i.is_delete = '0'
+        LEFT JOIN sys_dept d ON fo.entrust_dept_id = d.dept_id AND d.del_flag = '0'
+
+        <where>
+            AND fo.delete_id = '0' AND fos.sample_no IS NOT NULL
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> AND fo.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null and deptName != ''"> AND d.dept_name LIKE CONCAT('%', #{deptName}, '%')</if>
+            <if test="sampleNo != null and sampleNo != ''"> AND fos.sample_no LIKE CONCAT('%', #{sampleNo}, '%')</if>
+            <if test="beginReceiveTime != null"> AND fo.receive_time &gt;= #{beginReceiveTime}</if>
+            <if test="endReceiveTime != null"> AND fo.receive_time &lt;= #{endReceiveTime}</if>
+        </where>
+
+        GROUP BY d.dept_name, fo.entrust_order_no, fos.name, fos.sample_no, fos.test_method, fo.receive_time, fos.op_feed_entrust_order_sample_id
+
+        ) AS main_query
+
+        <where>
+            <if test="progress != null and progress != ''">
+                AND main_query.progress_status = #{progress}
+            </if>
+        </where>
+
+        ORDER BY main_query.receive_time DESC
+    </select>
+    <select id="selectBloodSampleTestProgressList"
+            parameterType="com.gmlimsqi.business.labtest.dto.OpSampleTestProgressDto"
+            resultMap="OpSampleTestProgressVo">
+
+        SELECT * FROM (
+
+        SELECT
+        d.dept_name,
+        bo.entrust_order_no,
+        bos.sample_name,
+        bos.sample_no,
+        bos.blood_task_item_type,
+        bo.receive_time,
+
+        CASE
+        WHEN i.op_jczx_blood_result_info_id IS NULL THEN '2'  WHEN i.op_jczx_blood_result_info_id IS NOT NULL AND i.file_id IS NOT NULL AND i.file_id != '' THEN '1'  WHEN i.op_jczx_blood_result_info_id IS NOT NULL AND (i.file_id IS NULL OR i.file_id = '') THEN '3'  END AS progress
+
+        FROM op_blood_entrust_order bo
+        LEFT JOIN op_blood_entrust_order_sample bos ON bos.op_blood_entrust_order_id = bo.op_blood_entrust_order_id AND bos.is_delete = '0'
+        LEFT JOIN op_jczx_blood_result_info i ON i.blood_entrust_order_sample_id = bos.op_blood_entrust_order_sample_id AND i.delete_id = '0'
+        LEFT JOIN sys_dept d ON bo.entrust_dept_id = d.dept_id AND d.del_flag = '0'
+
+        <where>
+            AND bo.delete_id = '0' AND bos.sample_no IS NOT NULL
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> AND bo.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null and deptName != ''"> AND d.dept_name LIKE CONCAT('%', #{deptName}, '%')</if>
+            <if test="sampleNo != null and sampleNo != ''"> AND bos.sample_no LIKE CONCAT('%', #{sampleNo}, '%')</if>
+            <if test="beginReceiveTime != null"> AND bo.receive_time &gt;= #{beginReceiveTime}</if>
+            <if test="endReceiveTime != null"> AND bo.receive_time &lt;= #{endReceiveTime}</if>
+        </where>
+
+        ) AS main_query
+
+        <where>
+            <if test="progress != null and progress != ''">
+                AND main_query.progress = #{progress}
+            </if>
+        </where>
+
+        ORDER BY main_query.receive_time DESC
+    </select>
+    <select id="selectPcrSampleTestProgressList"
+            parameterType="com.gmlimsqi.business.labtest.dto.OpSampleTestProgressDto"
+            resultMap="OpSampleTestProgressVo">
+
+        SELECT * FROM (
+
+        SELECT
+        d.dept_name,
+        po.entrust_order_no,
+        pos.name AS sample_name,
+        pos.sample_no,
+        GROUP_CONCAT(CASE WHEN pi.test_user_id IS NOT NULL AND pi.test_user_id != '' THEN i.item_name ELSE NULL END SEPARATOR ',') AS started_items,
+        GROUP_CONCAT(CASE WHEN pi.test_user_id IS NULL OR pi.test_user_id = '' THEN i.item_name ELSE NULL END SEPARATOR ',') AS not_started_items,
+        po.receive_time,
+
+        CASE
+        WHEN COUNT(CASE WHEN pi.test_user_id IS NULL OR pi.test_user_id = '' THEN 1 ELSE NULL END) = 0 THEN '1'
+        WHEN COUNT(CASE WHEN pi.test_user_id IS NOT NULL AND pi.test_user_id != '' THEN 1 ELSE NULL END) = 0 THEN '2'
+        ELSE '3'
+        END AS progress_status
+
+        FROM op_pcr_entrust_order po
+        LEFT JOIN op_pcr_entrust_order_sample pos ON pos.pcr_entrust_order_id = po.op_pcr_entrust_order_id AND pos.is_delete = '0'
+        LEFT JOIN op_pcr_entrust_order_item pi ON pi.pcr_entrust_order_sample_id = pos.op_pcr_entrust_order_sample_id AND pi.is_delete = '0'
+        LEFT JOIN bs_labtest_items i ON i.bs_labtest_items_id = pi.item_id AND i.is_delete = '0'
+        LEFT JOIN sys_dept d ON po.entrust_dept_id = d.dept_id AND d.del_flag = '0'
+
+        <where>
+            AND po.delete_id = '0' AND pos.sample_no IS NOT NULL
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> AND po.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null and deptName != ''"> AND d.dept_name LIKE CONCAT('%', #{deptName}, '%')</if>
+            <if test="sampleNo != null and sampleNo != ''"> AND pos.sample_no LIKE CONCAT('%', #{sampleNo}, '%')</if>
+            <if test="beginReceiveTime != null"> AND po.receive_time &gt;= #{beginReceiveTime}</if>
+            <if test="endReceiveTime != null"> AND po.receive_time &lt;= #{endReceiveTime}</if>
+        </where>
+
+        GROUP BY d.dept_name, po.entrust_order_no, pos.name, pos.sample_no, po.receive_time, pos.op_pcr_entrust_order_sample_id
+
+        ) AS main_query
+
+        <where>
+            <if test="progress != null and progress != ''">
+                AND main_query.progress_status = #{progress}
+            </if>
+        </where>
+
+        ORDER BY main_query.receive_time DESC
+    </select>
+
+
+</mapper>

@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsInvbillItemStandardMapper">
+
+    <resultMap type="BsInvbillItemStandard" id="BsInvbillItemStandardResult">
+        <result property="bsInvbillItemStandardId"    column="bs_invbill_item_standard_id"    />
+        <result property="invbillId"    column="invbill_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName" column="dept_name"/>
+        <result property="itemId"    column="item_id"    />
+        <result property="featureId"    column="feature_id"    />
+        <result property="zxbz"    column="zxbz"    />
+        <result property="instrumentId"    column="instrument_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="isBj"    column="is_bj"    />
+        <result property="isCj"    column="is_cj"    />
+        <result property="invbillName"    column="invbill_name"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="featureName"    column="name"    />
+        <result property="upperLimit"    column="upper_limit"    />
+        <result property="lowerLimit"    column="lower_limit"    />
+        <result property="instrumentName"    column="instrument_name"    />
+        <result property="resultAddType"    column="result_add_type"    />
+        <result property="testModelNo"    column="test_model_no"    />
+        <result property="testModelName"    column="test_model_name"    />
+        <result property="invbillCode"    column="invbill_code"    />
+    </resultMap>
+
+    <!-- 物料项目标准Vo结果映射 -->
+    <resultMap id="BsInvbillItemStandardVoResult" type="com.gmlimsqi.business.basicdata.vo.BsInvbillItemStandardVo">
+        <id property="invbillId" column="invbill_id"/>
+        <result property="invbillName" column="invbill_name"/>
+        <result property="invbillCode" column="invbill_code"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <collection property="standardList" ofType="BsInvbillItemStandard" resultMap="BsInvbillItemStandardResult"/>
+    </resultMap>
+
+    <sql id="selectBsInvbillItemStandardVo">
+        select bs_invbill_item_standard_id, invbill_id, dept_id, item_id, feature_id, zxbz, instrument_id, create_time,
+               create_by, update_time, update_by, is_delete, is_enable ,result_add_type,test_model_no,test_model_name,invbill_code
+        from bs_invbill_item_standard
+    </sql>
+
+    <select id="selectBsInvbillItemStandardList" parameterType="BsInvbillItemStandard" resultMap="BsInvbillItemStandardResult">
+        <include refid="selectBsInvbillItemStandardVo"/>
+        <where>
+            is_delete = '0'
+            <if test="invbillId != null  and invbillId != ''"> and invbill_id = #{invbillId}</if>
+            <if test="invbillCode != null  and invbillCode != ''"> and invbill_code = #{invbillCode}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="itemId != null  and itemId != ''"> and item_id = #{itemId}</if>
+            <if test="featureId != null  and featureId != ''"> and feature_id = #{featureId}</if>
+            <if test="zxbz != null  and zxbz != ''"> and zxbz = #{zxbz}</if>
+            <if test="instrumentId != null  and instrumentId != ''"> and instrument_id = #{instrumentId}</if>
+            <if test="isEnable != null  and isEnable != ''"> and is_enable = #{isEnable}</if>
+            <if test="isBj != null  and isBj != ''"> and is_bj = #{isBj}</if>
+            <if test="isCj != null  and isCj != ''"> and is_cj = #{isCj}</if>
+        </where>
+
+    </select>
+
+    <select id="selectBsInvbillItemStandardByBsInvbillItemStandardId" parameterType="String" resultMap="BsInvbillItemStandardResult">
+        <include refid="selectBsInvbillItemStandardVo"/>
+        where bs_invbill_item_standard_id = #{bsInvbillItemStandardId}
+        and is_delete = '0'
+    </select>
+
+    <insert id="insertBsInvbillItemStandard" parameterType="BsInvbillItemStandard">
+        insert into bs_invbill_item_standard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsInvbillItemStandardId != null">bs_invbill_item_standard_id,</if>
+            <if test="invbillId != null and invbillId != ''">invbill_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="itemId != null and itemId != ''">item_id,</if>
+            <if test="featureId != null">feature_id,</if>
+            <if test="zxbz != null">zxbz,</if>
+            <if test="instrumentId != null">instrument_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="isEnable != null and isEnable != ''">is_enable,</if>
+            <if test="isBj != null  and isBj != ''">  is_bj,</if>
+            <if test="isCj != null  and isCj != ''">  is_cj,</if>
+            <if test="resultAddType != null  and resultAddType != ''">  result_add_type,</if>
+            <if test="testModelNo != null  and testModelNo != ''">  test_model_no,</if>
+            <if test="testModelName != null  and testModelName != ''">  test_model_name,</if>
+            <if test="invbillCode != null  and invbillCode != ''">  invbill_code,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsInvbillItemStandardId != null">#{bsInvbillItemStandardId},</if>
+            <if test="invbillId != null and invbillId != ''">#{invbillId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="itemId != null and itemId != ''">#{itemId},</if>
+            <if test="featureId != null">#{featureId},</if>
+            <if test="zxbz != null">#{zxbz},</if>
+            <if test="instrumentId != null">#{instrumentId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+            <if test="isBj != null  and isBj != ''">  #{isBj},</if>
+            <if test="isCj != null  and isCj != ''">  #{isCj},</if>
+            <if test="resultAddType != null  and resultAddType != ''">  #{resultAddType},</if>
+            <if test="testModelNo != null  and testModelNo != ''">  #{testModelNo},</if>
+            <if test="testModelName != null  and testModelName != ''">  #{testModelName},</if>
+            <if test="invbillCode != null  and invbillCode != ''">  #{invbillCode},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsInvbillItemStandard" parameterType="BsInvbillItemStandard">
+        update bs_invbill_item_standard
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invbillId != null and invbillId != ''">invbill_id = #{invbillId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="itemId != null and itemId != ''">item_id = #{itemId},</if>
+            <if test="featureId != null">feature_id = #{featureId},</if>
+            <if test="zxbz != null">zxbz = #{zxbz},</if>
+            <if test="instrumentId != null">instrument_id = #{instrumentId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+            <if test="isBj != null  and isBj != ''">  is_bj = #{isBj},</if>
+            <if test="isCj != null  and isCj != ''">  is_cj = #{isCj},</if>
+            <if test="resultAddType != null  and resultAddType != ''">  result_add_type = #{resultAddType},</if>
+            <if test="testModelNo != null  and testModelNo != ''">  test_model_no = #{testModelNo},</if>
+            <if test="testModelName != null  and testModelName != ''">  test_model_name = #{testModelName},</if>
+            <if test="invbillCode != null  and invbillCode != ''">  invbill_code = #{invbillCode},</if>
+        </trim>
+        where bs_invbill_item_standard_id = #{bsInvbillItemStandardId}
+    </update>
+
+
+    <update id="updateDeleteFlagById" >
+        update bs_invbill_item_standard set is_delete=1 ,update_time=now(),update_by=#{updateUserId} where bs_invbill_item_standard_id = #{bsInvbillItemStandardId}
+    </update>
+    <update id="updateDeleteFlagByInvbillCode" >
+        update bs_invbill_item_standard set is_delete=1 ,update_time=now(),update_by=#{updateUserId}
+                                        where invbill_code = #{invbillCode}
+        and dept_id=#{deptId}
+    </update>
+    <update id="updateDeleteFlagByIds">
+        update  bs_invbill_item_standard set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where bs_invbill_item_standard_id in
+        <foreach item="bsInvbillItemStandardId" collection="array" open="(" separator="," close=")">
+            #{bsInvbillItemStandardId}
+        </foreach>
+    </update>
+
+
+
+        <!-- 按物料分组查询 -->
+    <select id="selectListGroupByInvbill" parameterType="BsInvbillItemStandard" resultMap="BsInvbillItemStandardVoResult">
+        SELECT
+        i.id as invbill_id,
+        i.sap_code,
+        i.invbill_name,
+        s.dept_id,
+        d.dept_name,
+        s.bs_invbill_item_standard_id,
+        s.item_id,
+        s.feature_id,
+        s.zxbz,
+        s.instrument_id,
+        s.invbill_code,
+
+        s.create_time,
+        s.create_by,
+        s.update_time,
+        s.update_by,
+        s.is_delete,
+        s.is_enable,
+        it.item_name,
+        f.name,
+        f.lower_limit,
+        f.upper_limit,
+        d.sap_name,
+        s.create_by,
+        s.update_by,
+        s.create_time,
+        s.update_time,
+        s.result_add_type,
+        s.test_model_no,
+        s.test_model_name
+        FROM bs_invbill_item_standard s
+        LEFT JOIN sys_dept d ON s.dept_id = d.dept_id and d.del_flag='0'
+        LEFT JOIN business_invbill i ON i.sap_code = s.invbill_code and i.del_flag='0'
+        left join bs_invbill_dept id on id.invbill_sap_code=i.sap_code and id.is_delete='0'
+        left join bs_labtest_items it on s.item_id=it.bs_labtest_items_id and it.is_delete='0' and it.is_enable='1'
+        left join bs_labtest_feature f on s.feature_id=f.bs_labtest_feature_id and f.is_delete='0' and f.is_enable='1'
+        WHERE i.del_flag = '0'
+        AND s.is_delete = '0'
+
+        <if test="invbillName != null and invbillName != ''">
+            AND i.invbill_name like concat('%', #{invbillName}, '%')
+        </if>
+        <if test="invbillId != null and invbillId != ''">
+            AND i.id =#{invbillId}
+        </if>
+        <if test="invbillCode != null and invbillCode != ''">
+            AND s.invbill_code like concat('%', #{invbillCode}, '%')
+        </if>
+        <if test="isEnable != null and isEnable != ''">
+            AND s.is_enable = #{isEnable}
+        </if>
+        <if test="isBj != null and isBj != ''">
+            AND s.is_bj = #{isBj}
+        </if>
+        <if test="isCj != null and isCj != ''">
+            AND s.is_cj = #{isCj}
+        </if>
+        <if test="deptId != null and deptId != ''">
+            AND s.dept_id = #{deptId}
+        </if>
+        ORDER BY s.create_time DESC
+
+    </select>
+
+
+    <!-- 先分页查询符合条件的物料编码 -->
+    <select id="selectInvbillCodesPage2" parameterType="BsInvbillItemStandard" resultType="java.lang.String">
+        SELECT  invbill_code
+        FROM (
+        SELECT DISTINCT s.invbill_code,s.create_time
+        FROM bs_invbill_item_standard s
+        LEFT JOIN business_invbill i ON i.sap_code = s.invbill_code AND i.del_flag='0'
+        LEFT JOIN sys_dept d ON s.dept_id = d.dept_id AND d.del_flag='0'
+        WHERE s.is_delete = '0'
+        <if test="invbillName != null and invbillName != ''">
+            AND i.invbill_name like concat('%', #{invbillName}, '%')
+        </if>
+        <if test="invbillId != null and invbillId != ''">
+            AND i.id = #{invbillId}
+        </if>
+        <if test="invbillCode != null and invbillCode != ''">
+            AND s.invbill_code like concat('%', #{invbillCode}, '%')
+        </if>
+        <if test="isEnable != null and isEnable != ''">
+            AND s.is_enable = #{isEnable}
+        </if>
+        <if test="isBj != null and isBj != ''">
+            AND s.is_bj = #{isBj}
+        </if>
+        <if test="isCj != null and isCj != ''">
+            AND s.is_cj = #{isCj}
+        </if>
+        <if test="deptId != null and deptId != ''">
+            AND s.dept_id = #{deptId}
+        </if>
+        ) t
+        ORDER BY create_time DESC
+
+    </select>
+    <select id="selectInvbillCodesPage" parameterType="BsInvbillItemStandard" resultType="java.lang.String">
+        SELECT
+        s.invbill_code
+        FROM bs_invbill_item_standard s
+        LEFT JOIN business_invbill i ON i.sap_code = s.invbill_code AND i.del_flag='0'
+        LEFT JOIN sys_dept d ON s.dept_id = d.dept_id AND d.del_flag='0'
+        WHERE s.is_delete = '0'
+
+        <if test="invbillName != null and invbillName != ''">
+            AND i.invbill_name like concat('%', #{invbillName}, '%')
+        </if>
+        <if test="invbillId != null and invbillId != ''">
+            AND i.id = #{invbillId}
+        </if>
+        <if test="invbillCode != null and invbillCode != ''">
+            AND s.invbill_code like concat('%', #{invbillCode}, '%')
+        </if>
+        <if test="isEnable != null and isEnable != ''">
+            AND s.is_enable = #{isEnable}
+        </if>
+        <if test="isBj != null and isBj != ''">
+            AND s.is_bj = #{isBj}
+        </if>
+        <if test="isCj != null and isCj != ''">
+            AND s.is_cj = #{isCj}
+        </if>
+        <if test="deptId != null and deptId != ''">
+            AND s.dept_id = #{deptId}
+        </if>
+
+        -- 对 invbill_code 进行分组，确保每个 code 只返回一次
+        GROUP BY s.invbill_code
+
+        -- 按照该 invbill_code 对应的子表记录中最新的 create_time 进行排序
+        ORDER BY MAX(s.create_time) DESC
+    </select>
+    <!-- 根据物料ID列表查询详细数据 -->
+    <select id="selectStandardListByInvbillCodes" resultMap="BsInvbillItemStandardResult">
+        SELECT
+        i.id as invbill_id,
+        i.sap_code,
+        i.invbill_name,
+        s.dept_id,
+        d.dept_name,
+        s.bs_invbill_item_standard_id,
+        s.item_id,
+        s.feature_id,
+        s.zxbz,
+        s.instrument_id,
+        s.create_time,
+        s.create_by,
+        s.update_time,
+        s.update_by,
+        s.is_delete,
+        s.is_enable,
+        s.is_bj,
+        s.is_cj,
+        s.result_add_type,
+        s.invbill_code,
+        it.item_name,
+        f.name ,
+        f.lower_limit,
+        f.upper_limit
+        -- inst.instrument_name
+        FROM bs_invbill_item_standard s
+        inner JOIN sys_dept d ON s.dept_id = d.dept_id AND d.del_flag='0'
+        inner JOIN business_invbill i ON i.sap_code = s.invbill_code AND i.del_flag='0'
+        inner JOIN bs_labtest_items it ON s.item_id=it.bs_labtest_items_id AND it.is_delete='0' AND it.is_enable='1'
+        left JOIN bs_labtest_feature f ON s.feature_id=f.bs_labtest_feature_id AND f.is_delete='0' AND f.is_enable='1'
+        -- LEFT JOIN bs_instruments inst ON inst.bs_instruments_id=s.instrument_id AND inst.dept_id=s.dept_id
+        WHERE s.invbill_code IN
+        <foreach collection="invbillCodes" item="invbillCode" open="(" separator="," close=")">
+            #{invbillCode}
+        </foreach>
+        AND i.del_flag = '0'
+        AND s.is_delete = '0'
+        <if test="bsInvbillItemStandard.invbillName != null and bsInvbillItemStandard.invbillName != ''">
+            AND i.invbill_name like concat('%', #{bsInvbillItemStandard.invbillName}, '%')
+        </if>
+        <if test="bsInvbillItemStandard.invbillId != null and bsInvbillItemStandard.invbillId != ''">
+            AND i.id = #{bsInvbillItemStandard.invbillId}
+        </if>
+        <if test="bsInvbillItemStandard.invbillCode != null and bsInvbillItemStandard.invbillCode != ''">
+            AND s.invbill_code  like concat('%', #{bsInvbillItemStandard.invbillCode}, '%')
+        </if>
+        <if test="bsInvbillItemStandard.isEnable != null and bsInvbillItemStandard.isEnable != ''">
+            AND s.is_enable = #{bsInvbillItemStandard.isEnable}
+        </if>
+        <if test="bsInvbillItemStandard.isBj != null and bsInvbillItemStandard.isBj != ''">
+            AND s.is_bj = #{bsInvbillItemStandard.isBj}
+        </if>
+        <if test="bsInvbillItemStandard.isCj != null and bsInvbillItemStandard.isCj != ''">
+            AND s.is_cj = #{bsInvbillItemStandard.isCj}
+        </if>
+        <if test="bsInvbillItemStandard.deptId != null and bsInvbillItemStandard.deptId != ''">
+            AND s.dept_id = #{bsInvbillItemStandard.deptId}
+        </if>
+        ORDER BY s.create_time DESC
+    </select>
+
+    <update id="updateInstrumentsByItemIdDeptId">
+        update bs_invbill_item_standard set instrument_id=#{instrumentIds}
+                                        where item_id=#{labtestItemsId} and dept_id=#{deptId} and is_delete='0' and is_enable='1'
+    </update>
+
+    <!-- 物料项目标准 resultMap，对应实体类：com.gmlimsqi.business.basicdata.domain.BsInvbillItemStandard -->
+    <resultMap id="BsInvbillItemStandardResultMap" type="com.gmlimsqi.business.basicdata.domain.BsInvbillItemStandard">
+        <!-- 主键映射 -->
+        <id property="bsInvbillItemStandardId" column="bs_invbill_item_standard_id" jdbcType="VARCHAR"/>
+
+        <!-- 实体自身属性映射（字段名按驼峰转下划线规则，若数据库字段名不同需手动调整column值） -->
+        <result property="invbillId" column="invbill_id" jdbcType="VARCHAR"/>
+        <result property="invbillCode" column="invbill_code" jdbcType="VARCHAR"/>
+        <result property="invbillName" column="invbill_name" jdbcType="VARCHAR"/>
+        <result property="deptId" column="dept_id" jdbcType="VARCHAR"/> <!-- 实体类用@JsonFormat转String，数据库字段对应VARCHAR -->
+        <result property="deptName" column="dept_name" jdbcType="VARCHAR"/>
+        <result property="itemId" column="item_id" jdbcType="VARCHAR"/>
+        <result property="itemCode" column="item_code" jdbcType="VARCHAR"/>
+        <result property="itemName" column="item_name" jdbcType="VARCHAR"/>
+        <result property="featureId" column="feature_id" jdbcType="VARCHAR"/>
+        <result property="featureName" column="feature_name" jdbcType="VARCHAR"/>
+        <result property="upperLimit" column="upper_limit" jdbcType="VARCHAR"/>
+        <result property="lowerLimit" column="lower_limit" jdbcType="VARCHAR"/>
+        <result property="zxbz" column="zxbz" jdbcType="VARCHAR"/> <!-- 执行标准，字段名与实体一致 -->
+        <result property="instrumentId" column="instrument_id" jdbcType="VARCHAR"/>
+        <result property="instrumentName" column="instrument_name" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="is_delete" jdbcType="VARCHAR"/> <!-- 是否删除：0否1是 -->
+        <result property="resultAddType" column="result_add_type" jdbcType="VARCHAR"/> <!-- 结果录入方式 -->
+        <result property="isEnable" column="is_enable" jdbcType="VARCHAR"/> <!-- 是否启用 -->
+        <result property="isBj" column="is_bj" jdbcType="VARCHAR"/> <!-- 是否必检 -->
+        <result property="isCj" column="is_cj" jdbcType="VARCHAR"/> <!-- 是否初检 -->
+        <result property="testModelNo" column="test_model_no" jdbcType="VARCHAR"/> <!-- 化验单模板编号 -->
+        <result property="testModelName" column="test_model_name" jdbcType="VARCHAR"/> <!-- 化验单模板名称 -->
+        <result property="unitOfMeasurement" column="unit_of_measurement" jdbcType="VARCHAR"/> <!-- 单位 -->
+        <result property="qualitativeOrQuantitative" column="qualitative_or_quantitative"/>
+
+        <!-- 父类 BaseEntity 继承的公共字段（若BaseEntity包含以下字段，需添加映射；若没有则删除对应行） -->
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/> <!-- 时间类型对应TIMESTAMP -->
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/> <!-- 备注字段（BaseEntity常见字段） -->
+    </resultMap>
+
+    <select id="getItemByInvbillCode" resultMap="BsInvbillItemStandardResultMap">
+        select distinct
+        a.bs_invbill_item_standard_id,
+        a.invbill_code,
+        a.item_id,
+        b.item_code,
+        b.item_name,
+        c.invbill_name,
+        c.is_sap_type,
+        d.upper_limit,
+        d.lower_limit,
+        d.unit_of_measurement,
+        b.qualitative_or_quantitative,
+        a.feature_id,
+        d.name as feature_name
+        from bs_invbill_item_standard a
+        left join bs_labtest_items b on a.item_id = b.bs_labtest_items_id and b.is_delete = '0'
+        left join business_invbill c on a.invbill_code = c.sap_code and c.del_flag = '0'
+        left join bs_labtest_feature d on a.feature_id = d.bs_labtest_feature_id and d.is_delete = '0'
+        <where>
+            a.is_delete = '0'
+            <if test="invbillCode != null and invbillCode != ''">
+                and a.invbill_code = #{invbillCode}
+            </if>
+            <if test="itemName != null and itemName != ''">
+                and b.item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="deptId != null and deptId != ''">
+                and a.dept_id = #{deptId}
+            </if>
+            <if test="itemId != null and itemId != ''">
+                and b.item_id = #{itemId}
+            </if>
+        </where>
+    </select>
+</mapper>

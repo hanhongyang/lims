@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsItemDeptConfigMapper">
+
+    <resultMap type="com.gmlimsqi.business.basicdata.domain.BsItemDeptConfig" id="BsItemDeptConfigResult">
+        <result property="configId"       column="config_id"      />
+        <result property="itemId"         column="item_id"        />
+        <result property="deptId"         column="dept_id"        />
+
+        <result property="instrumentId"   column="instrument_id"  />
+        <result property="locationId"     column="location_id"    />
+
+        <result property="instrumentName" column="instrument_name"/>
+        <result property="instrumentCode" column="instrument_code"/>
+        <result property="locationName"   column="location_name"  />
+
+        <result property="isDelete"       column="is_delete"      />
+        <result property="createBy"       column="create_by"      />
+        <result property="createTime"     column="create_time"    />
+        <result property="updateBy"       column="update_by"      />
+        <result property="updateTime"     column="update_time"    />
+
+        <result property="deptName"       column="dept_name"      />
+    </resultMap>
+
+    <insert id="batchInsert">
+        insert into bs_item_dept_config
+        (
+        config_id,
+        item_id,
+        dept_id,
+        instrument_id,
+        location_id,
+        instrument_name,
+        instrument_code,
+        location_name,
+        create_by,
+        create_time
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.configId},
+            #{item.itemId},
+            #{item.deptId},
+            #{item.instrumentId},
+            #{item.locationId},
+            #{item.instrumentName},
+            #{item.instrumentCode},
+            #{item.locationName},
+            #{item.createBy},
+            sysdate()
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByItemId" parameterType="String">
+        delete from bs_item_dept_config where item_id = #{itemId}
+    </delete>
+
+    <select id="selectConfigListByItemId" parameterType="String" resultMap="BsItemDeptConfigResult">
+        SELECT
+            c.config_id,
+            c.item_id,
+            c.dept_id,
+            c.instrument_id,
+            c.location_id,
+            c.instrument_name,
+            c.instrument_code,
+            c.location_name,
+            c.create_by,
+            c.create_time,
+            d.dept_name
+        FROM bs_item_dept_config c
+                 LEFT JOIN sys_dept d ON c.dept_id = d.dept_id and d.del_flag='0'
+        WHERE c.item_id = #{itemId}
+          AND c.is_delete = '0'
+    </select>
+
+</mapper>

@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.milksamplequalityinspection.mapper.OpMilkSampleQualityInspectionMapper">
+
+    <resultMap type="OpMilkSampleQualityInspection" id="OpMilkSampleQualityInspectionResult">
+            <result property="opMilkSampleQualityInspectionId"    column="op_milk_sample_quality_inspection_id"    />
+            <result property="milkSourcePlanOrderNumber"    column="milk_source_plan_order_number"    />
+            <result property="opMilkFillingOrderId"    column="op_Milk_filling_order_id"    />
+            <result property="inspectionMilkTankersId"    column="inspection_milk_tankers_id"    />
+            <result property="status"    column="status"    />
+            <result property="preStepCompleted"    column="pre_step_completed"    />
+            <result property="licensePlateNumber"    column="license_plate_number"    />
+            <result property="milkSampleQualityInspectionNumber"    column="milk_sample_quality_inspection_number"    />
+            <result property="destination"    column="destination"    />
+            <result property="entryTime"    column="entry_time"    />
+            <result property="samplerId"    column="sampler_id"    />
+            <result property="sampler"    column="sampler"    />
+            <result property="samplingTime"    column="sampling_time"    />
+            <result property="testerId"    column="tester_id"    />
+            <result property="tester"    column="tester"    />
+            <result property="testTime"    column="test_time"    />
+            <result property="reviewerId"    column="reviewer_id"    />
+            <result property="reviewer"    column="reviewer"    />
+            <result property="reviewTime"    column="review_time"    />
+            <result property="milkTemperature"    column="milk_temperature"    />
+            <result property="milkTempPhoto"    column="milk_temp_photo"    />
+            <result property="remark"    column="remark"    />
+            <result property="file"    column="file"    />
+            <result property="fatPercent"    column="fat_percent"    />
+            <result property="proteinPercent"    column="protein_percent"    />
+            <result property="phosphateTest"    column="phosphate_test"    />
+            <result property="acidity"    column="acidity"    />
+            <result property="roseBengal"    column="rose_bengal"    />
+            <result property="bromothymolBlue"    column="bromothymol_blue"    />
+            <result property="ferricChloride"    column="ferric_chloride"    />
+            <result property="methyleneBlueTest"    column="methylene_blue_test"    />
+            <result property="bloodMilkTest"    column="blood_milk_test"    />
+            <result property="e50"    column="e50"    />
+            <result property="sensoryIndex"    column="sensory_index"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createByName"    column="create_by_name"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="deptId"    column="dept_id"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="isPushMilkSource"    column="is_push_milk_source"    />
+            <result property="isSampling"    column="is_sampling"    />
+            <result property="exceptionType"    column="exception_type"    />
+            <result property="exceptionDesc"    column="exception_desc"    />
+            <result property="isExceptionSubmit"    column="is_exception_submit"    />
+            <result property="alcoholType"    column="alcohol_type"    />
+            <result property="alcoholValue"    column="alcohol_value"    />
+            <result property="alcoholPhoto"    column="alcohol_photo"    />
+            <result property="phosphatePhoto"    column="phosphate_photo"    />
+            <result property="bloodMilkTestPhoto"    column="blood_milk_test_photo"    />
+            <result property="sensoryIndexPhoto"    column="sensory_index_photo"    />
+            <result property="aflatoxinPhoto" column="aflatoxin_photo"/>
+            <result property="antibioticPhoto" column="antibiotic_photo"/>
+            <result property="acidityPhoto" column="acidity_photo"/>
+            <result property="betaLactam"    column="beta_lactam"    />
+            <result property="tetracyclines"    column="tetracyclines"    />
+            <result property="ceftiofur"    column="ceftiofur"    />
+            <result property="cephalexin"    column="cephalexin"    />
+            <result property="aflatoxinM1"    column="aflatoxin_m1"    />
+            <result property="quinolone"    column="quinolone"    />
+            <result property="freezingPoint"    column="freezing_point"    />
+            <result property="antibioticResidue"    column="antibiotic_residue"    />
+            <result property="flunixin"    column="flunixin"    />
+            <result property="meloxicam"    column="meloxicam"    />
+            <result property="streptomycin"    column="streptomycin"    />
+            <result property="kanamycin"    column="kanamycin"    />
+            <result property="monensin"    column="monensin"    />
+    </resultMap>
+
+    <sql id="selectOpMilkSampleQualityInspectionVo">
+        select a.op_milk_sample_quality_inspection_id,
+               a.milk_source_plan_order_number,
+               a.op_Milk_filling_order_id,
+               a.inspection_milk_tankers_id,
+               a.status,
+               a.pre_step_completed,
+               a.license_plate_number,
+               a.milk_sample_quality_inspection_number,
+               a.destination,
+               a.entry_time,
+               a.sampler_id,
+               a.sampler,
+               a.sampling_time,
+               a.tester_id,
+               a.tester,
+               a.test_time,
+               a.reviewer_id,
+               a.reviewer,
+               a.review_time,
+               a.milk_temperature,
+               a.milk_temp_photo,
+               a.remark,
+               a.file,
+               a.fat_percent,
+               a.protein_percent,
+               a.phosphate_test,
+               a.acidity,
+               a.rose_bengal,
+               a.bromothymol_blue,
+               a.ferric_chloride,
+               a.methylene_blue_test,
+               a.blood_milk_test,
+               a.e50,
+               a.sensory_index,
+               a.create_by,
+               a.create_by_name,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.dept_id,
+               a.is_delete,
+               a.is_push_milk_source,
+               a.is_sampling,
+               a.exception_type,
+               a.exception_desc,
+               a.is_exception_submit,
+               a.alcohol_type,
+               a.alcohol_value,
+               a.alcohol_photo,
+               a.phosphate_photo,
+               a.blood_milk_test_photo,
+               a.sensory_index_photo,
+               a.aflatoxin_photo,
+               a.antibiotic_photo,
+               a.acidity_photo,
+               a.beta_lactam,
+               a.tetracyclines,
+               a.ceftiofur,
+               a.cephalexin,
+               a.aflatoxin_m1,
+               a.quinolone,
+               a.freezing_point,
+               a.antibiotic_residue,
+               a.flunixin,
+               a.meloxicam,
+               a.streptomycin,
+               a.kanamycin,
+               a.monensin
+        from op_milk_sample_quality_inspection a
+    </sql>
+
+    <select id="selectOpMilkSampleQualityInspectionList" parameterType="OpMilkSampleQualityInspection" resultMap="OpMilkSampleQualityInspectionResult">
+        <include refid="selectOpMilkSampleQualityInspectionVo"/>
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.is_delete = '0' and a.pre_step_completed = '1'
+            <if test="milkSourcePlanOrderNumber != null  and milkSourcePlanOrderNumber != ''"> and a.milk_source_plan_order_number like concat('%',#{milkSourcePlanOrderNumber},'%')</if>
+            <if test="opMilkFillingOrderId != null  and opMilkFillingOrderId != ''"> and a.op_Milk_filling_order_id = #{opMilkFillingOrderId}</if>
+            <if test="inspectionMilkTankersId != null  and inspectionMilkTankersId != ''"> and a.inspection_milk_tankers_id = #{inspectionMilkTankersId}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="preStepCompleted != null  and preStepCompleted != ''"> and a.pre_step_completed = #{preStepCompleted}</if>
+            <if test="licensePlateNumber != null  and licensePlateNumber != ''">
+                and a.license_plate_number like concat('%',#{licensePlateNumber},'%')
+            </if>
+            <if test="milkSampleQualityInspectionNumber != null  and milkSampleQualityInspectionNumber != ''">
+                and a.milk_sample_quality_inspection_number like concat('%',#{milkSampleQualityInspectionNumber},'%')
+            </if>
+            <if test="destination != null  and destination != ''"> and a.destination = #{destination}</if>
+            <if test="entryTime != null "> and a.entry_time = #{entryTime}</if>
+            <if test="samplerId != null  and samplerId != ''"> and a.sampler_id = #{samplerId}</if>
+            <if test="sampler != null  and sampler != ''"> and a.sampler = #{sampler}</if>
+            <if test="samplingTime != null "> and a.sampling_time = #{samplingTime}</if>
+            <if test="testerId != null  and testerId != ''"> and a.tester_id = #{testerId}</if>
+            <if test="tester != null  and tester != ''"> and a.tester = #{tester}</if>
+            <if test="testTime != null "> and a.test_time = #{testTime}</if>
+            <if test="reviewerId != null  and reviewerId != ''"> and a.reviewer_id = #{reviewerId}</if>
+            <if test="reviewer != null  and reviewer != ''"> and a.reviewer = #{reviewer}</if>
+            <if test="reviewTime != null "> and a.review_time = #{reviewTime}</if>
+            <if test="milkTemperature != null  and milkTemperature != ''"> and a.milk_temperature = #{milkTemperature}</if>
+            <if test="milkTempPhoto != null  and milkTempPhoto != ''"> and a.milk_temp_photo = #{milkTempPhoto}</if>
+            <if test="file != null  and file != ''"> and a.file = #{file}</if>
+            <if test="fatPercent != null  and fatPercent != ''"> and a.fat_percent = #{fatPercent}</if>
+            <if test="proteinPercent != null  and proteinPercent != ''"> and a.protein_percent = #{proteinPercent}</if>
+            <if test="phosphateTest != null  and phosphateTest != ''"> and a.phosphate_test = #{phosphateTest}</if>
+            <if test="acidity != null  and acidity != ''"> and a.acidity = #{acidity}</if>
+            <if test="roseBengal != null  and roseBengal != ''"> and a.rose_bengal = #{roseBengal}</if>
+            <if test="bromothymolBlue != null  and bromothymolBlue != ''"> and a.bromothymol_blue = #{bromothymolBlue}</if>
+            <if test="ferricChloride != null  and ferricChloride != ''"> and a.ferric_chloride = #{ferricChloride}</if>
+            <if test="methyleneBlueTest != null  and methyleneBlueTest != ''"> and a.methylene_blue_test = #{methyleneBlueTest}</if>
+            <if test="bloodMilkTest != null  and bloodMilkTest != ''"> and a.blood_milk_test = #{bloodMilkTest}</if>
+            <if test="e50 != null  and e50 != ''"> and a.e50 = #{e50}</if>
+            <if test="sensoryIndex != null  and sensoryIndex != ''"> and a.sensory_index = #{sensoryIndex}</if>
+            <if test="createByName != null  and createByName != ''"> and a.create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if>
+            <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+            <if test="isSampling != null  and isSampling != ''"> and a.is_sampling = #{isSampling}</if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectOpMilkSampleQualityInspectionByOpMilkSampleQualityInspectionId" parameterType="String" resultMap="OpMilkSampleQualityInspectionResult">
+        <include refid="selectOpMilkSampleQualityInspectionVo"/>
+        where a.op_milk_sample_quality_inspection_id = #{opMilkSampleQualityInspectionId}
+        and a.is_delete = '0'
+    </select>
+
+    <insert id="insertOpMilkSampleQualityInspection" parameterType="OpMilkSampleQualityInspection">
+        insert into op_milk_sample_quality_inspection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="opMilkSampleQualityInspectionId != null">op_milk_sample_quality_inspection_id,</if>
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number,</if>
+                    <if test="opMilkFillingOrderId != null">op_Milk_filling_order_id,</if>
+                    <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id,</if>
+                    <if test="status != null">status,</if>
+                    <if test="preStepCompleted != null">pre_step_completed,</if>
+                    <if test="licensePlateNumber != null">license_plate_number,</if>
+                    <if test="milkSampleQualityInspectionNumber != null">milk_sample_quality_inspection_number,</if>
+                    <if test="destination != null">destination,</if>
+                    <if test="entryTime != null">entry_time,</if>
+                    <if test="samplerId != null">sampler_id,</if>
+                    <if test="sampler != null">sampler,</if>
+                    <if test="samplingTime != null">sampling_time,</if>
+                    <if test="testerId != null">tester_id,</if>
+                    <if test="tester != null">tester,</if>
+                    <if test="testTime != null">test_time,</if>
+                    <if test="reviewerId != null">reviewer_id,</if>
+                    <if test="reviewer != null">reviewer,</if>
+                    <if test="reviewTime != null">review_time,</if>
+                    <if test="milkTemperature != null">milk_temperature,</if>
+                    <if test="milkTempPhoto != null">milk_temp_photo,</if>
+                    <if test="remark != null">remark,</if>
+                    <if test="file != null">file,</if>
+                    <if test="fatPercent != null">fat_percent,</if>
+                    <if test="proteinPercent != null">protein_percent,</if>
+                    <if test="phosphateTest != null">phosphate_test,</if>
+                    <if test="acidity != null">acidity,</if>
+                    <if test="roseBengal != null">rose_bengal,</if>
+                    <if test="bromothymolBlue != null">bromothymol_blue,</if>
+                    <if test="ferricChloride != null">ferric_chloride,</if>
+                    <if test="methyleneBlueTest != null">methylene_blue_test,</if>
+                    <if test="bloodMilkTest != null">blood_milk_test,</if>
+                    <if test="e50 != null">e50,</if>
+                    <if test="sensoryIndex != null">sensory_index,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createByName != null">create_by_name,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="deptId != null">dept_id,</if>
+                    <if test="isDelete != null">is_delete,</if>
+                    <if test="isPushMilkSource != null">is_push_milk_source,</if>
+                    <if test="isSampling != null">is_sampling,</if>
+                    <if test="exceptionType != null">exception_type,</if>
+                    <if test="exceptionDesc != null">exception_desc,</if>
+                    <if test="isExceptionSubmit != null">is_exception_submit,</if>
+                    <if test="alcoholType != null">alcohol_type,</if>
+                    <if test="alcoholValue != null">alcohol_value,</if>
+                    <if test="alcoholPhoto != null">alcohol_photo,</if>
+                    <if test="phosphatePhoto != null">phosphate_photo,</if>
+                    <if test="bloodMilkTestPhoto != null">blood_milk_test_photo,</if>
+                    <if test="sensoryIndexPhoto != null">sensory_index_photo,</if>
+                    <if test="aflatoxinPhoto != null">aflatoxin_photo,</if>
+                    <if test="antibioticPhoto != null">antibiotic_photo,</if>
+                    <if test="acidityPhoto != null">acidity_photo,</if>
+                    <if test="betaLactam != null">beta_lactam,</if>
+                    <if test="tetracyclines != null">tetracyclines,</if>
+                    <if test="ceftiofur != null">ceftiofur,</if>
+                    <if test="cephalexin != null">cephalexin,</if>
+                    <if test="aflatoxinM1 != null">aflatoxin_m1,</if>
+                    <if test="quinolone != null">quinolone,</if>
+                    <if test="freezingPoint != null">freezing_point,</if>
+                    <if test="antibioticResidue != null">antibiotic_residue,</if>
+                    <if test="flunixin != null">flunixin,</if>
+                    <if test="meloxicam != null">meloxicam,</if>
+                    <if test="streptomycin != null">streptomycin,</if>
+                    <if test="kanamycin != null">kanamycin,</if>
+                    <if test="monensin != null">monensin,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="opMilkSampleQualityInspectionId != null">#{opMilkSampleQualityInspectionId},</if>
+                    <if test="milkSourcePlanOrderNumber != null">#{milkSourcePlanOrderNumber},</if>
+                    <if test="opMilkFillingOrderId != null">#{opMilkFillingOrderId},</if>
+                    <if test="inspectionMilkTankersId != null">#{inspectionMilkTankersId},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="preStepCompleted != null">#{preStepCompleted},</if>
+                    <if test="licensePlateNumber != null">#{licensePlateNumber},</if>
+                    <if test="milkSampleQualityInspectionNumber != null">#{milkSampleQualityInspectionNumber},</if>
+                    <if test="destination != null">#{destination},</if>
+                    <if test="entryTime != null">#{entryTime},</if>
+                    <if test="samplerId != null">#{samplerId},</if>
+                    <if test="sampler != null">#{sampler},</if>
+                    <if test="samplingTime != null">#{samplingTime},</if>
+                    <if test="testerId != null">#{testerId},</if>
+                    <if test="tester != null">#{tester},</if>
+                    <if test="testTime != null">#{testTime},</if>
+                    <if test="reviewerId != null">#{reviewerId},</if>
+                    <if test="reviewer != null">#{reviewer},</if>
+                    <if test="reviewTime != null">#{reviewTime},</if>
+                    <if test="milkTemperature != null">#{milkTemperature},</if>
+                    <if test="milkTempPhoto != null">#{milkTempPhoto},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="file != null">#{file},</if>
+                    <if test="fatPercent != null">#{fatPercent},</if>
+                    <if test="proteinPercent != null">#{proteinPercent},</if>
+                    <if test="phosphateTest != null">#{phosphateTest},</if>
+                    <if test="acidity != null">#{acidity},</if>
+                    <if test="roseBengal != null">#{roseBengal},</if>
+                    <if test="bromothymolBlue != null">#{bromothymolBlue},</if>
+                    <if test="ferricChloride != null">#{ferricChloride},</if>
+                    <if test="methyleneBlueTest != null">#{methyleneBlueTest},</if>
+                    <if test="bloodMilkTest != null">#{bloodMilkTest},</if>
+                    <if test="e50 != null">#{e50},</if>
+                    <if test="sensoryIndex != null">#{sensoryIndex},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createByName != null">#{createByName},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="deptId != null">#{deptId},</if>
+                    <if test="isDelete != null">#{isDelete},</if>
+                    <if test="isPushMilkSource != null">#{isPushMilkSource},</if>
+                    <if test="isSampling != null">#{isSampling},</if>
+                    <if test="exceptionType != null">#{exceptionType},</if>
+                    <if test="exceptionDesc != null">#{exceptionDesc},</if>
+                    <if test="isExceptionSubmit != null">#{isExceptionSubmit},</if>
+                    <if test="alcoholType != null">#{alcoholType},</if>
+                    <if test="alcoholValue != null">#{alcoholValue},</if>
+                    <if test="alcoholPhoto != null">#{alcoholPhoto},</if>
+                    <if test="phosphatePhoto != null">#{phosphatePhoto},</if>
+                    <if test="bloodMilkTestPhoto != null">#{bloodMilkTestPhoto},</if>
+                    <if test="sensoryIndexPhoto != null">#{sensoryIndexPhoto},</if>
+                    <if test="aflatoxinPhoto != null">#{aflatoxinPhoto},</if>
+                    <if test="antibioticPhoto != null">#{antibioticPhoto},</if>
+                    <if test="acidityPhoto != null">#{acidityPhoto},</if>
+                    <if test="betaLactam != null">#{betaLactam},</if>
+                    <if test="tetracyclines != null">#{tetracyclines},</if>
+                    <if test="ceftiofur != null">#{ceftiofur},</if>
+                    <if test="cephalexin != null">#{cephalexin},</if>
+                    <if test="aflatoxinM1 != null">#{aflatoxinM1},</if>
+                    <if test="quinolone != null">#{quinolone},</if>
+                    <if test="freezingPoint != null">#{freezingPoint},</if>
+                    <if test="antibioticResidue != null">#{antibioticResidue},</if>
+                    <if test="flunixin != null">#{flunixin},</if>
+                    <if test="meloxicam != null">#{meloxicam},</if>
+                    <if test="streptomycin != null">#{streptomycin},</if>
+                    <if test="kanamycin != null">#{kanamycin},</if>
+                    <if test="monensin != null">#{monensin},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpMilkSampleQualityInspection" parameterType="OpMilkSampleQualityInspection">
+        update op_milk_sample_quality_inspection
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number = #{milkSourcePlanOrderNumber},</if>
+                    <if test="opMilkFillingOrderId != null">op_Milk_filling_order_id = #{opMilkFillingOrderId},</if>
+                    <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id = #{inspectionMilkTankersId},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="preStepCompleted != null">pre_step_completed = #{preStepCompleted},</if>
+                    <if test="licensePlateNumber != null">license_plate_number = #{licensePlateNumber},</if>
+                    <if test="milkSampleQualityInspectionNumber != null">milk_sample_quality_inspection_number = #{milkSampleQualityInspectionNumber},</if>
+                    <if test="destination != null">destination = #{destination},</if>
+                    <if test="entryTime != null">entry_time = #{entryTime},</if>
+                    <if test="samplerId != null">sampler_id = #{samplerId},</if>
+                    <if test="sampler != null">sampler = #{sampler},</if>
+                    <if test="samplingTime != null">sampling_time = #{samplingTime},</if>
+                    <if test="testerId != null">tester_id = #{testerId},</if>
+                    <if test="tester != null">tester = #{tester},</if>
+                    <if test="testTime != null">test_time = #{testTime},</if>
+                    <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+                    <if test="reviewer != null">reviewer = #{reviewer},</if>
+                    <if test="reviewTime != null">review_time = #{reviewTime},</if>
+                    <if test="milkTemperature != null">milk_temperature = #{milkTemperature},</if>
+                    <if test="milkTempPhoto != null">milk_temp_photo = #{milkTempPhoto},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+                    <if test="file != null">file = #{file},</if>
+                    <if test="fatPercent != null">fat_percent = #{fatPercent},</if>
+                    <if test="proteinPercent != null">protein_percent = #{proteinPercent},</if>
+                    <if test="phosphateTest != null">phosphate_test = #{phosphateTest},</if>
+                    <if test="acidity != null">acidity = #{acidity},</if>
+                    <if test="roseBengal != null">rose_bengal = #{roseBengal},</if>
+                    <if test="bromothymolBlue != null">bromothymol_blue = #{bromothymolBlue},</if>
+                    <if test="ferricChloride != null">ferric_chloride = #{ferricChloride},</if>
+                    <if test="methyleneBlueTest != null">methylene_blue_test = #{methyleneBlueTest},</if>
+                    <if test="bloodMilkTest != null">blood_milk_test = #{bloodMilkTest},</if>
+                    <if test="e50 != null">e50 = #{e50},</if>
+                    <if test="sensoryIndex != null">sensory_index = #{sensoryIndex},</if>
+                    <if test="createByName != null">create_by_name = #{createByName},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="deptId != null">dept_id = #{deptId},</if>
+                    <if test="isDelete != null">is_delete = #{isDelete},</if>
+                    <if test="isPushMilkSource != null">is_push_milk_source = #{isPushMilkSource},</if>
+                    <if test="isSampling != null">is_sampling = #{isSampling},</if>
+                    <if test="exceptionType != null">exception_type = #{exceptionType},</if>
+                    <if test="exceptionDesc != null">exception_desc = #{exceptionDesc},</if>
+                    <if test="isExceptionSubmit != null">is_exception_submit = #{isExceptionSubmit},</if>
+                    <if test="alcoholType != null">alcohol_type = #{alcoholType},</if>
+                    <if test="alcoholValue != null">alcohol_value = #{alcoholValue},</if>
+                    <if test="alcoholPhoto != null">alcohol_photo = #{alcoholPhoto},</if>
+                    <if test="phosphatePhoto != null">phosphate_photo = #{phosphatePhoto},</if>
+                    <if test="bloodMilkTestPhoto != null">blood_milk_test_photo = #{bloodMilkTestPhoto},</if>
+                    <if test="sensoryIndexPhoto != null">sensory_index_photo = #{sensoryIndexPhoto},</if>
+                    <if test="aflatoxinPhoto != null">aflatoxin_photo = #{aflatoxinPhoto},</if>
+                    <if test="antibioticPhoto != null">antibiotic_photo = #{antibioticPhoto},</if>
+                    <if test="acidityPhoto != null">acidity_photo = #{acidityPhoto},</if>
+                    <if test="betaLactam != null">beta_lactam = #{betaLactam},</if>
+                    <if test="tetracyclines != null">tetracyclines = #{tetracyclines},</if>
+                    <if test="ceftiofur != null">ceftiofur = #{ceftiofur},</if>
+                    <if test="cephalexin != null">cephalexin = #{cephalexin},</if>
+                    <if test="aflatoxinM1 != null">aflatoxin_m1 = #{aflatoxinM1},</if>
+                    <if test="quinolone != null">quinolone = #{quinolone},</if>
+                    <if test="freezingPoint != null">freezing_point = #{freezingPoint},</if>
+                    <if test="antibioticResidue != null">antibiotic_residue = #{antibioticResidue},</if>
+                    <if test="flunixin != null">flunixin = #{flunixin},</if>
+                    <if test="meloxicam != null">meloxicam = #{meloxicam},</if>
+                    <if test="streptomycin != null">streptomycin = #{streptomycin},</if>
+                    <if test="kanamycin != null">kanamycin = #{kanamycin},</if>
+                    <if test="monensin != null">monensin = #{monensin},</if>
+        </trim>
+        where op_milk_sample_quality_inspection_id = #{opMilkSampleQualityInspectionId}
+    </update>
+
+    <update id="updateDeleteFlagById" >
+        update op_milk_sample_quality_inspection set delete_id = op_milk_sample_quality_inspection_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_milk_sample_quality_inspection_id = #{opMilkSampleQualityInspectionId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_milk_sample_quality_inspection set delete_id = op_milk_sample_quality_inspection_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_milk_sample_quality_inspection_id in
+        <foreach item="opMilkSampleQualityInspectionId" collection="array" open="(" separator="," close=")">
+            #{opMilkSampleQualityInspectionId}
+        </foreach>
+    </update>
+
+    <select id="selectOpMilkSampleQualityInspectionByInspectionMilkTankersId"
+            resultMap="OpMilkSampleQualityInspectionResult">
+        <include refid="selectOpMilkSampleQualityInspectionVo"/>
+        where a.inspection_milk_tankers_id = #{inspectionMilkTankersId}
+    </select>
+
+    <!-- 奶样质检异常列表 ResultMap -->
+    <resultMap id="OpMilkSampleQIExceptionResultMap" type="com.gmlimsqi.business.milksamplequalityinspection.domain.OpMilkSampleQIException">
+        <!-- 主键/关联ID -->
+        <result column="op_milk_sample_quality_inspection_id" property="opMilkSampleQualityInspectionId" jdbcType="VARCHAR"/>
+
+        <!-- 基础字段 -->
+        <result column="license_plate_number" property="licensePlateNumber" jdbcType="VARCHAR"/>
+        <result column="milk_sample_quality_inspection_number" property="milkSampleQualityInspectionNumber" jdbcType="VARCHAR"/>
+        <result column="milk_source_plan_order_number" property="milkSourcePlanOrderNumber" jdbcType="VARCHAR"/>
+        <result column="tester" property="tester" jdbcType="VARCHAR"/>
+
+        <!-- 日期字段（java.util.Date 对应 JDBC TIMESTAMP） -->
+        <result column="test_time" property="testTime" jdbcType="TIMESTAMP"/>
+
+        <!-- 异常相关字段 -->
+        <result column="exception_type" property="exceptionType" jdbcType="VARCHAR"/>
+        <result column="exception_desc" property="exceptionDesc" jdbcType="VARCHAR"/>
+        <result column="is_exception_submit" property="isExceptionSubmit" jdbcType="VARCHAR"/>
+        <result column="scheduling_date" property="schedulingDate" jdbcType="DATE"/>
+    </resultMap>
+
+    <select id="selectOpMilkSampleQIExceptionList"
+            resultMap="OpMilkSampleQIExceptionResultMap">
+        select
+            a.op_milk_sample_quality_inspection_id,
+            a.license_plate_number,
+            a.milk_sample_quality_inspection_number,
+            a.milk_source_plan_order_number,
+            a.tester,
+            a.test_time,
+            a.exception_type,
+            a.exception_desc,
+            a.is_exception_submit,
+            b.scheduling_date
+        from op_milk_sample_quality_inspection a
+        left join op_inspection_milk_tankers b on a.inspection_milk_tankers_id = b.inspection_milk_tankers_id
+        <where>
+            a.is_delete = '0' and a.pre_step_completed = '1'
+            <if test="schedulingDate != null">
+                and b.scheduling_date = #{schedulingDate}
+            </if>
+            <if test="deptId != null">
+                and a.dept_id = #{deptId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 牛奶质量检测VO结果映射 -->
+    <resultMap id="MilkQualityInspectionResultMap" type="com.gmlimsqi.business.milksamplequalityinspection.domain.ExitInspectionReportVO">
+        <!-- 基础字段 -->
+        <result column="test_time" property="testTime" jdbcType="TIMESTAMP"/>
+        <result column="chao_ci" property="chaoCi" jdbcType="VARCHAR"/>
+        <result column="milk_bin_name" property="milkBinName" jdbcType="VARCHAR"/>
+        <result column="destination" property="destination" jdbcType="VARCHAR"/>
+        <result column="quantity" property="quantity" jdbcType="DECIMAL"/>
+        <result column="sampling_milk_temperature" property="samplingMilkTemperature" jdbcType="DECIMAL"/>
+
+        <!-- 成分检测 -->
+        <result column="fat_percent" property="fatPercent" jdbcType="DECIMAL"/>
+        <result column="protein_percent" property="proteinPercent" jdbcType="DECIMAL"/>
+        <result column="alcohol_type" property="alcoholType" jdbcType="VARCHAR"/>
+        <result column="alcohol_value" property="alcoholValue" jdbcType="DECIMAL"/>
+        <result column="phosphate_test" property="phosphateTest" jdbcType="VARCHAR"/>
+        <result column="acidity" property="acidity" jdbcType="DECIMAL"/>
+
+        <!-- 残留/毒素检测 -->
+        <result column="antibiotic_residue" property="antibioticResidue" jdbcType="VARCHAR"/>
+        <result column="aflatoxin_m1" property="aflatoxinM1" jdbcType="VARCHAR"/>
+        <result column="beta_lactam" property="betaLactam" jdbcType="VARCHAR"/>
+        <result column="tetracyclines" property="tetracyclines" jdbcType="VARCHAR"/>
+        <result column="ceftiofur" property="ceftiofur" jdbcType="VARCHAR"/>
+        <result column="cefalexin" property="cefalexin" jdbcType="VARCHAR"/>
+        <result column="flunixin" property="flunixin" jdbcType="VARCHAR"/>
+        <result column="meloxicam" property="meloxicam" jdbcType="VARCHAR"/>
+        <result column="streptomycin" property="streptomycin" jdbcType="VARCHAR"/>
+        <result column="quinolone" property="quinolone" jdbcType="VARCHAR"/>
+        <result column="kanamycin" property="kanamycin" jdbcType="VARCHAR"/>
+        <result column="monensin" property="monensin" jdbcType="VARCHAR"/>
+
+        <!-- 理化实验 -->
+        <result column="rose_bengal" property="roseBengal" jdbcType="VARCHAR"/>
+        <result column="bromothymol_blue" property="bromothymolBlue" jdbcType="VARCHAR"/>
+        <result column="ferric_chloride" property="ferricChloride" jdbcType="VARCHAR"/>
+        <result column="methylene_blue_test" property="methyleneBlueTest" jdbcType="VARCHAR"/>
+        <result column="blood_milk_test" property="bloodMilkTest" jdbcType="VARCHAR"/>
+        <result column="freezing_point" property="freezingPoint" jdbcType="DECIMAL"/>
+        <result column="e50" property="e50" jdbcType="DECIMAL"/>
+
+        <!-- 其他信息 -->
+        <result column="sensory_index" property="sensoryIndex" jdbcType="VARCHAR"/>
+        <result column="sampler" property="sampler" jdbcType="VARCHAR"/>
+        <result column="tester" property="tester" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="exitInspectionReport" resultMap="MilkQualityInspectionResultMap">
+        SELECT
+        test_date as test_time,
+        chao_ci,
+        milk_bin_name,
+        '' as destination,
+        quantity,
+        sampling_milk_temperature,
+        fat_percent,
+        protein_percent,
+        alcohol_type,
+        alcohol_value as alcohol_value,
+        phosphate_test,
+        acidity,
+        antibiotic_residue,
+        aflatoxin_m1,
+        beta_lactam,
+        tetracyclines,
+        ceftiofur,
+        cefalexin,
+        flunixin,
+        meloxicam,
+        streptomycin,
+        quinolone,
+        kanamycin,
+        monensin,
+        rose_bengal,
+        bromothymol_blue,
+        ferric_chloride,
+        methylene_blue_test,
+        blood_milk_test,
+        freezing_point ,
+        e50,
+        sensory_index,
+        sampler,
+        tester,
+        dept_id
+        FROM op_milk_bin_quality_inspection
+        <where>
+            <if test="deptId != null and deptId != ''">
+                dept_id = #{deptId}
+            </if>
+            <if test="testStartTime != null">
+                AND test_date >= #{testStartTime}
+            </if>
+            <if test="testEndTime != null">
+                AND test_date &lt;= #{testEndTime}
+            </if>
+        </where>
+<!--        UNION-->
+<!--        SELECT-->
+<!--        a.test_time,-->
+<!--        a.license_plate_number,-->
+<!--        '' as milk_bin_name,-->
+<!--        a.destination,-->
+<!--        b.total_milk_capacity,-->
+<!--        a.milk_temperature,-->
+<!--        a.fat_percent,-->
+<!--        a.protein_percent,-->
+<!--        a.alcohol_type,-->
+<!--        a.alcohol_value,-->
+<!--        a.phosphate_test,-->
+<!--        a.acidity,-->
+<!--        a.antibiotic_residue,-->
+<!--        a.aflatoxin_m1,-->
+<!--        a.beta_lactam,-->
+<!--        a.tetracyclines,-->
+<!--        a.ceftiofur,-->
+<!--        a.cephalexin,-->
+<!--        a.flunixin,-->
+<!--        a.meloxicam,-->
+<!--        a.streptomycin,-->
+<!--        a.quinolone,-->
+<!--        a.kanamycin,-->
+<!--        a.monensin,-->
+<!--        a.rose_bengal,-->
+<!--        a.bromothymol_blue,-->
+<!--        a.ferric_chloride,-->
+<!--        a.methylene_blue_test,-->
+<!--        a.blood_milk_test,-->
+<!--        a.freezing_point,-->
+<!--        a.e50,-->
+<!--        a.sensory_index,-->
+<!--        a.sampler,-->
+<!--        a.tester,-->
+<!--        a.dept_id-->
+<!--        FROM op_milk_sample_quality_inspection a-->
+<!--        LEFT JOIN op_milk_filling_order b on a.op_Milk_filling_order_id=b.op_milk_filling_order_id-->
+<!--        <where>-->
+<!--            <if test="deptId != null and deptId != ''">-->
+<!--                a.dept_id = #{deptId}-->
+<!--            </if>-->
+<!--            <if test="testStartTime != null">-->
+<!--                AND a.test_time >= #{testStartTime}-->
+<!--            </if>-->
+<!--            <if test="testEndTime != null">-->
+<!--                AND a.test_time &lt;= #{testEndTime}-->
+<!--            </if>-->
+<!--        </where>-->
+    </select>
+</mapper>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.LabtestItemsMapper">
+    
+    <resultMap type="LabtestItems" id="BsLabtestItemsResult">
+        <result property="labtestItemsId"    column="bs_labtest_items_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="sapCode"    column="sap_code"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="tag"    column="tag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="decimalPlaces"    column="decimal_places"    />
+        <result property="significantDigits"    column="significant_digits"    />
+        <result property="qualitativeOrQuantitative"    column="qualitative_or_quantitative"    />
+        <result property="labLocation"    column="lab_location"    />
+        <result property="zxbz"    column="zxbz"    />
+        <result property="isJhw"    column="is_jhw"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="fileInfo"    column="file_info"    />
+
+        <collection property="itemDeptList" ofType="com.gmlimsqi.business.basicdata.domain.BsItemDept">
+            <result property="deptId"    column="dept_id"    />
+            <result property="deptName"    column="dept_name"    />
+            <result property="itemId"    column="item_id"    />
+        </collection>
+        <collection property="itemInstrumentList" ofType="com.gmlimsqi.business.basicdata.domain.BsItemInstrument">
+            <result property="instrumentId"    column="instrument_id"    />
+            <result property="instrumentName"    column="instrument_name"    />
+            <result property="instrumentCode"    column="instrument_code"    />
+            <result property="itemId"    column="item_id"    />
+        </collection>
+    </resultMap>
+
+    <sql id="selectBsLabtestItemsVo">
+        select bs_labtest_items_id, item_name, item_code, sap_code, is_delete, is_enable, create_time, create_by, update_time, update_by
+        ,decimal_places,significant_digits,qualitative_or_quantitative,tag,lab_location,zxbz,is_jhw,sort_order,file_info
+        from bs_labtest_items
+    </sql>
+
+    <select id="selectBsLabtestItemsList" parameterType="LabtestItems" resultMap="BsLabtestItemsResult">
+        <include refid="selectBsLabtestItemsVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="itemName != null  and itemName != ''"> and item_name like concat('%', #{itemName}, '%')</if>
+            <if test="itemCode != null  and itemCode != ''"> and item_code = #{itemCode}</if>
+            <if test="sapCode != null  and sapCode != ''"> and sap_code = #{sapCode}</if>
+            <if test="isEnable != null  and isEnable != ''"> and is_enable = #{isEnable}</if>
+            <if test="tag != null  and tag != ''">
+                and (FIND_IN_SET(#{tag}, tag) > 0)
+            </if>
+            <if test="filterTag != null  and filterTag != ''"> and NOT FIND_IN_SET(#{filterTag}, tag)</if>
+
+        </where>
+        order by sort_order asc, create_time desc
+    </select>
+    
+    <select id="selectBsLabtestItemsByLabtestItemsId" parameterType="String" resultMap="BsLabtestItemsResult">
+        <include refid="selectBsLabtestItemsVo"/>
+        where bs_labtest_items_id = #{labtestItemsId} and is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <select id="selectBsLabtestItemsDetailByLabtestItemsId" parameterType="String" resultMap="BsLabtestItemsResult">
+        select i.*,
+            itd.dept_id,
+            itd.item_id,
+            d.dept_name,
+            iti.instrument_id,
+            bi.instrument_name,
+            bi.instrument_code,
+            iti.item_id
+        from bs_labtest_items i
+        left join bs_item_dept itd on i.bs_labtest_items_id=itd.item_id and itd.is_delete='0'
+        left join sys_dept d on itd.dept_id=d.dept_id
+        left join bs_item_instrument iti on i.bs_labtest_items_id=iti.item_id and iti.is_delete='0'
+        left join bs_instruments bi on iti.instrument_id=bi.bs_instruments_id and bi.is_delete='0' and bi.is_enable='1'
+        where i.bs_labtest_items_id = #{labtestItemsId} and i.is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+    <insert id="insertBsLabtestItems" parameterType="LabtestItems">
+        insert into bs_labtest_items
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="labtestItemsId != null">bs_labtest_items_id,</if>
+            <if test="itemName != null and itemName != ''">item_name,</if>
+            <if test="itemCode != null and itemCode != ''">item_code,</if>
+            <if test="tag != null and tag != ''">tag,</if>
+            <if test="sapCode != null">sap_code,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="isEnable != null">is_enable,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="decimalPlaces != null">decimal_places,</if>
+            <if test="significantDigits != null">significant_digits,</if>
+            <if test="qualitativeOrQuantitative != null">qualitative_or_quantitative,</if>
+            <if test="labLocation != null">lab_location,</if>
+            <if test="zxbz != null">zxbz,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="fileInfo != null">file_info,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="labtestItemsId != null">#{labtestItemsId},</if>
+            <if test="itemName != null and itemName != ''">#{itemName},</if>
+            <if test="itemCode != null and itemCode != ''">#{itemCode},</if>
+            <if test="tag != null and tag != ''">#{tag},</if>
+            <if test="sapCode != null">#{sapCode},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="isEnable != null">#{isEnable},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="decimalPlaces != null">#{decimalPlaces},</if>
+            <if test="significantDigits != null">#{significantDigits},</if>
+            <if test="qualitativeOrQuantitative != null">#{qualitativeOrQuantitative},</if>
+            <if test="labLocation != null">#{labLocation},</if>
+            <if test="zxbz != null">#{zxbz},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="fileInfo != null">#{fileInfo},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBsLabtestItems" parameterType="LabtestItems">
+        update bs_labtest_items
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemName != null and itemName != ''">item_name = #{itemName},</if>
+            <if test="itemCode != null and itemCode != ''">item_code = #{itemCode},</if>
+            <if test="tag != null">tag = #{tag},</if>
+            <if test="sapCode != null">sap_code = #{sapCode},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="isEnable != null">is_enable = #{isEnable},</if>
+<!--            <if test="createTime != null">create_time = #{createTime},</if>-->
+<!--            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>-->
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+
+            <if test="decimalPlaces != null">decimal_places = #{decimalPlaces},</if>
+            <if test="significantDigits != null">significant_digits = #{significantDigits},</if>
+            <if test="qualitativeOrQuantitative != null">qualitative_or_quantitative = #{qualitativeOrQuantitative},</if>
+            <if test="labLocation != null">lab_location = #{labLocation},</if>
+            <if test="zxbz != null">zxbz = #{zxbz},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="fileInfo != null">file_info = #{fileInfo},</if>
+        </trim>
+        where bs_labtest_items_id = #{labtestItemsId}
+    </update>
+
+    <update id="updateEnableById" parameterType="LabtestItems">
+        update bs_labtest_items
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isEnable != null">is_enable = #{isEnable},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_labtest_items_id = #{labtestItemsId}
+    </update>
+
+    <delete id="deleteBsLabtestItemsByLabtestItemsId" parameterType="String">
+        delete from bs_labtest_items where bs_labtest_items_id = #{labtestItemsId}
+    </delete>
+
+    <delete id="deleteBsLabtestItemsByLabtestItemsIds" parameterType="String">
+        delete from bs_labtest_items where bs_labtest_items_id in
+        <foreach item="labtestItemsId" collection="array" open="(" separator="," close=")">
+            #{labtestItemsId}
+        </foreach>
+    </delete>
+
+    <!-- 检查itemCode是否已存在 -->
+    <select id="isItemCodeExist" resultType="boolean">
+        SELECT COUNT(1) > 0
+        FROM bs_labtest_items
+        WHERE item_code = #{itemCode} and is_delete = '0'  <!-- 固定添加软删除条件 -->
+        <if test="excludeId != null and excludeId != ''">
+            AND bs_labtest_items_id != #{excludeId}
+        </if>
+    </select>
+
+    <select id="selectBsLabtestItemsByLabtestItemsName"
+            parameterType="LabtestItems" resultMap="BsLabtestItemsResult">
+        SELECT * from bs_labtest_items where item_name = #{itemName}
+    </select>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpBloodEntrustItemConfigMapper">
+
+    <resultMap type="OpBloodEntrustItemConfig" id="OpBloodEntrustItemConfigResult">
+        <result property="opBloodEntrustItemConfigId"    column="op_blood_entrust_item_config_id"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="reportModelCode"    column="report_model_code"    />
+    </resultMap>
+
+    <sql id="selectOpBloodEntrustItemConfigVo">
+        select op_blood_entrust_item_config_id, item_code, item_id, is_delete, create_time, create_by, update_time, update_by, report_model_code from op_blood_entrust_item_config
+    </sql>
+
+    <select id="selectOpBloodEntrustItemConfigList" parameterType="OpBloodEntrustItemConfig" resultMap="OpBloodEntrustItemConfigResult">
+        <include refid="selectOpBloodEntrustItemConfigVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="itemCode != null  and itemCode != ''"> and item_code = #{itemCode}</if>
+            <if test="itemId != null  and itemId != ''"> and item_id = #{itemId}</if>
+            <if test="reportModelCode != null  and reportModelCode != ''"> and report_model_code = #{reportModelCode}</if>
+        </where>
+    </select>
+
+    <select id="selectOpBloodEntrustItemConfigByOpBloodEntrustItemConfigId" parameterType="String" resultMap="OpBloodEntrustItemConfigResult">
+        <include refid="selectOpBloodEntrustItemConfigVo"/>
+        where op_blood_entrust_item_config_id = #{opBloodEntrustItemConfigId}
+    </select>
+
+    <insert id="insertOpBloodEntrustItemConfig" parameterType="OpBloodEntrustItemConfig">
+        insert into op_blood_entrust_item_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opBloodEntrustItemConfigId != null">op_blood_entrust_item_config_id,</if>
+            <if test="itemCode != null and itemCode != ''">item_code,</if>
+            <if test="itemId != null and itemId != ''">item_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="reportModelCode != null">report_model_code,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opBloodEntrustItemConfigId != null">#{opBloodEntrustItemConfigId},</if>
+            <if test="itemCode != null and itemCode != ''">#{itemCode},</if>
+            <if test="itemId != null and itemId != ''">#{itemId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="reportModelCode != null">#{reportModelCode},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpBloodEntrustItemConfig" parameterType="OpBloodEntrustItemConfig">
+        update op_blood_entrust_item_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemCode != null and itemCode != ''">item_code = #{itemCode},</if>
+            <if test="itemId != null and itemId != ''">item_id = #{itemId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="reportModelCode != null">report_model_code = #{reportModelCode},</if>
+        </trim>
+        where op_blood_entrust_item_config_id = #{opBloodEntrustItemConfigId}
+    </update>
+    <select id="selectItemIdByItemCode" parameterType="String" resultType="String">
+        select item_id from op_blood_entrust_item_config
+        where item_code = #{itemCode}
+    </select>
+
+
+</mapper>

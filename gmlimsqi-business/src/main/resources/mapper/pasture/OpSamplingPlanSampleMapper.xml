@@ -1,0 +1,1122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.ranch.mapper.OpSamplingPlanSampleMapper">
+
+    <resultMap type="OpSamplingPlanSample" id="OpSamplingPlanSampleResult">
+        <result property="opSamplingPlanSampleId"    column="op_sampling_plan_sample_id"    />
+        <result property="samplingPlanId"    column="sampling_plan_id"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="invillId"    column="invill_id"    />
+        <result property="invbillCode"    column="invbill_code"    />
+        <result property="invbillName"    column="invbill_name"    />
+        <result property="model"    column="model"    />
+        <result property="ijweight"    column="ijweight"    />
+        <result property="productionDate"    column="production_date"    />
+        <result property="shelfLife"    column="shelf_life"    />
+        <result property="weight"    column="weight"    />
+        <result property="status"    column="status"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isReceive"    column="is_receive"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="ggQualityResult"    column="gg_quality_result"    />
+        <result property="ggQualityDescribe"    column="gg_quality_describe"    />
+        <result property="ggQualityFileIds"    column="gg_quality_fileIds"    />
+        <result property="receiverName"    column="receiver_name"    />
+        <result property="whetherQualified"    column="whether_qualified"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="isPushSap"    column="is_push_sap"    />
+        <result property="PRUEFLOS"    column="PRUEFLOS"    />
+        <result property="samplingLocation"    column="sampling_location"    />
+        <result property="remark"    column="remark"    />
+        <result property="samplingType"    column="sampling_type"    />
+        <result property="fileInfo"    column="file_info"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="driverName"    column="driver_name"    />
+        <result property="driverPhone"    column="driver_phone"    />
+        <result property="driverCode"    column="driver_code"    />
+        <result property="carInTime"    column="car_in_time"    />
+        <result property="carOutTime"    column="car_out_time"    />
+        <result property="toxicide"    column="toxicide"    />
+        <result property="density"    column="density"    />
+        <result property="disinfection"    column="disinfection"    />
+        <result property="newSamplingTypes"    column="new_sampling_types"    />
+        <result property="isMainSample" column="is_main_sample"    />
+        <result property="productionOrderNumber" column="production_order_number"    />
+        <result property="samplerName"    column="sampler_name"    />
+        <result property="outsourcedFactory"    column="outsourced_factory"    />
+        <result property="isDestroy"    column="is_destroy"    />
+        <result property="warehouseCode" column="warehouse_code"/>
+        <result property="warehouseName" column="warehouse_name"/>
+        <result property="batch" column="batch"/>
+        <result property="storageLocation" column="storage_location"/>
+    </resultMap>
+    <sql id="selectOpSamplingPlanSampleVo">
+        select op_sampling_plan_sample_id,
+               sampling_plan_id,
+               sample_no,
+               invill_id,
+               invbill_code,
+               invbill_name,
+               model,
+               ijweight,
+               production_date,
+               shelf_life,
+               weight,
+               status,
+               sequence,
+               is_delete,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               is_receive,
+               receive_time,
+               receiver_id,
+               report_id,
+               gg_quality_result,
+               gg_quality_fileIds,
+               gg_quality_describe,
+               receiver_name,
+               whether_qualified,
+               dept_id,
+               is_push_sap,
+               PRUEFLOS,
+               sampling_location,
+               remark,
+               sampling_type,
+               file_info,
+               supplier_id,
+               supplier_name,
+               driver_name,
+               driver_phone,
+               driver_code,
+               car_in_time,
+               car_out_time,
+               toxicide,
+               density,
+               disinfection,
+               new_sampling_types,
+               is_main_sample,
+               production_order_number,
+               outsourced_factory,
+               is_destroy,
+               warehouse_code,
+               warehouse_name,
+               batch,
+               storage_location
+        from op_sampling_plan_sample
+    </sql>
+
+    <resultMap type="com.gmlimsqi.business.ranch.vo.OpSamplingPlanSampleMonitorVO" id="OpSamplingPlanSampleMonitorResult" extends="OpSamplingPlanSampleResult">
+        <result property="totalItemCount" column="totalItemCount"/>
+        <result property="finishedItemCount" column="finishedItemCount"/>
+        <result property="samplingPlanNo" column="sampling_plan_no"/>
+        <result property="supplierName" column="supplier_name"/>
+        <result property="driverName" column="driver_name"/>
+        <result property="driverCode" column="driver_code"/>
+        <result property="samplerName" column="sampler_name"/>
+        <result property="sampleTime" column="sample_time"/>
+    </resultMap>
+
+    <select id="selectSampleMonitorList" parameterType="com.gmlimsqi.business.ranch.domain.OpSamplingPlanSample" resultMap="OpSamplingPlanSampleMonitorResult">
+        SELECT
+            s.op_sampling_plan_sample_id,
+            s.sampling_plan_id,
+            s.sample_no,
+            s.invill_id,
+            s.invbill_code,
+            s.invbill_name,
+            s.model,
+            s.ijweight,
+            s.production_date,
+            s.shelf_life,
+            s.weight,
+            s.status,
+            s.sequence,
+            s.is_delete,
+            s.create_time,
+            s.create_by,
+            s.update_time,
+            s.update_by,
+            s.is_receive,
+            s.receive_time,
+            s.receiver_id,
+            s.report_id,
+            s.gg_quality_result,
+            s.gg_quality_describe,
+            s.receiver_name,
+            s.whether_qualified,
+            s.dept_id,
+            s.is_push_sap,
+            s.PRUEFLOS,
+            s.sampling_location,
+            s.remark,
+            s.file_info,
+            s.sampling_type,
+            s.is_main_sample,
+            s.production_order_number,
+            s.outsourced_factory,
+            s.is_destroy,
+            s.warehouse_code,
+            s.warehouse_name,
+            s.batch,
+            s.storage_location,
+            p.sampling_plan_no,
+            p.supplier_name,
+            p.driver_name,
+            COALESCE(s.driver_code, p.driver_code) as driver_code,
+            COALESCE(s.car_in_time, p.car_in_time) as car_in_time,
+            COALESCE(s.car_out_time, p.car_out_time) as car_out_time,
+            p.toxicide,
+            p.density,
+            p.disinfection,
+            p.sampler_name,
+            DATE_FORMAT(p.sample_time, '%Y-%m-%d') as sample_time,
+            (SELECT COUNT(1) FROM op_sampling_plan_item i WHERE i.sampling_plan_sample_id = s.op_sampling_plan_sample_id AND i.is_delete = '0') as totalItemCount,
+            (SELECT COUNT(1)
+             FROM op_sampling_plan_item i
+             LEFT JOIN op_test_result_info tri ON i.op_sampling_plan_item_id = tri.plan_item_id AND tri.delete_id = '0'
+             LEFT JOIN op_test_result_base trb ON tri.base_id = trb.id AND trb.delete_id = '0'
+             WHERE i.sampling_plan_sample_id = s.op_sampling_plan_sample_id
+               AND i.is_delete = '0'
+               AND trb.status IS NOT NULL
+               AND trb.status != '1') as finishedItemCount
+        FROM op_sampling_plan_sample s
+        LEFT JOIN op_sampling_plan p ON s.sampling_plan_id = p.op_sampling_plan_id
+        <where>
+            AND s.is_delete = '0'
+            <if test="samplingPlanId != null and samplingPlanId != ''"> AND s.sampling_plan_id = #{samplingPlanId}</if>
+            <if test="sampleNo != null and sampleNo != ''"> AND s.sample_no LIKE CONCAT('%', #{sampleNo}, '%')</if>
+            <if test="invbillName != null and invbillName != ''"> AND s.invbill_name LIKE CONCAT('%', #{invbillName}, '%')</if>
+            <if test="driverCode != null and driverCode != ''"> AND p.driver_code LIKE CONCAT('%', #{driverCode}, '%')</if>
+            <if test="status != null and status != ''"> AND s.status = #{status}</if>
+            <if test="isReceive != null and isReceive != ''"> AND s.is_receive = #{isReceive}</if>
+        </where>
+        ORDER BY s.create_time DESC
+    </select>
+
+    <select id="selectOpSamplingPlanSampleList" parameterType="OpSamplingPlanSample" resultMap="OpSamplingPlanSampleResult">
+        <include refid="selectOpSamplingPlanSampleVo"/>
+        <where>
+            and is_delete = '0'
+            <if test="samplingPlanId != null  and samplingPlanId != ''"> and sampling_plan_id = #{samplingPlanId}</if>
+            <if test="sampleNo != null  and sampleNo != ''"> and sample_no = #{sampleNo}</if>
+            <if test="invillId != null  and invillId != ''"> and invill_id = #{invillId}</if>
+            <if test="invbillName != null  and invbillName != ''"> and invbill_name like concat('%', #{invbillName}, '%')</if>
+            <if test="model != null  and model != ''"> and model = #{model}</if>
+            <if test="ijweight != null "> and ijweight = #{ijweight}</if>
+            <if test="productionDate != null  and productionDate != ''"> and production_date = #{productionDate}</if>
+            <if test="shelfLife != null  and shelfLife != ''"> and shelf_life = #{shelfLife}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="sequence != null "> and sequence = #{sequence}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="isReceive != null  and isReceive != ''"> and is_receive = #{isReceive}</if>
+            <if test="receiveTime != null "> and receive_time = #{receiveTime}</if>
+            <if test="receiverId != null  and receiverId != ''"> and receiver_id = #{receiverId}</if>
+            <if test="reportId != null  and reportId != ''"> and report_id = #{reportId}</if>
+            <if test="ggQualityResult != null  and ggQualityResult != ''"> and gg_quality_result = #{ggQualityResult}</if>
+            <if test="ggQualityDescribe != null  and ggQualityDescribe != ''"> and gg_quality_describe = #{ggQualityDescribe}</if>
+            <if test="receiverName != null  and receiverName != ''"> and receiver_name = #{receiverName}</if>
+            <if test="whetherQualified != null  and whetherQualified != ''"> and whether_qualified = #{whetherQualified}</if>
+            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+            <if test="isDestroy != null and isDestroy != ''"> and is_destroy = #{isDestroy}</if>
+             <if test="warehouseCode != null and warehouseCode != ''">
+                 and warehouse_code like concat('%',#{warehouseCode},'%')
+             </if>
+             <if test="warehouseName != null and warehouseName != ''">
+                 and warehouse_name like concat('%',#{warehouseName},'%')
+             </if>
+             <if test="batch != null and batch != ''">
+                 and batch = #{batch}
+             </if>
+             <if test="storageLocation != null and storageLocation != ''">
+                 and storage_location = #{storageLocation}
+             </if>
+        </where>
+    </select>
+
+    <select id="selectOpSamplingPlanSampleByOpSamplingPlanSampleId" parameterType="String" resultMap="OpSamplingPlanSampleResult">
+        <include refid="selectOpSamplingPlanSampleVo"/>
+        where op_sampling_plan_sample_id = #{opSamplingPlanSampleId} and is_delete = '0'
+    </select>
+
+    <select id="selectOpSamplingPlanSampleListByPlanIdList" resultMap="OpSamplingPlanSampleResult">
+        <include refid="selectOpSamplingPlanSampleVo"/>
+        where sampling_plan_id IN
+        <foreach item="planId" collection="list" open="(" separator="," close=")">
+            #{planId}
+        </foreach>
+        AND is_delete = '0'
+    </select>
+
+    <select id="selectOpSamplingPlanSampleListByIds" resultMap="OpSamplingPlanSampleResult">
+        <include refid="selectOpSamplingPlanSampleVo"/>
+        where op_sampling_plan_sample_id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND is_delete = '0'
+    </select>
+
+    <insert id="insertOpSamplingPlanSample" parameterType="OpSamplingPlanSample">
+        insert into op_sampling_plan_sample
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opSamplingPlanSampleId != null">op_sampling_plan_sample_id,</if>
+            <if test="samplingPlanId != null and samplingPlanId != ''">sampling_plan_id,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="invillId != null and invillId != ''">invill_id,</if>
+            <if test="invbillCode != null and invbillCode != ''">invbill_code,</if>
+
+            <if test="model != null">model,</if>
+            <if test="ijweight != null">ijweight,</if>
+            <if test="productionDate != null">production_date,</if>
+            <if test="shelfLife != null">shelf_life,</if>
+            <if test="weight != null">weight,</if>
+
+            <if test="status != null">status,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="receiveTime != null">receive_time,</if>
+            <if test="receiverId != null">receiver_id,</if>
+            <if test="reportId != null">report_id,</if>
+            <if test="ggQualityResult != null">gg_quality_result,</if>
+            <if test="ggQualityDescribe != null">gg_quality_describe,</if>
+            <if test="ggQualityFileIds != null">gg_quality_fileIds,</if>
+            <if test="receiverName != null">receiver_name,</if>
+            <if test="invbillName != null">invbill_name,</if>
+            <if test="whetherQualified != null">whether_qualified,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="isPushSap != null">is_push_sap,</if>
+            <if test="PRUEFLOS != null">PRUEFLOS,</if>
+            <if test="samplingLocation != null">sampling_location,</if>
+            <if test="remark != null">remark,</if>
+            <if test="fileInfo != null">file_info,</if>
+            <if test="samplingType != null">sampling_type,</if>
+            <if test="supplierId != null and supplierId != ''">supplier_id,</if>
+            <if test="supplierName != null">supplier_name,</if>
+            <if test="driverName != null">driver_name,</if>
+            <if test="driverPhone != null">driver_phone,</if>
+            <if test="driverCode != null">driver_code,</if>
+            <if test="carInTime != null">car_in_time,</if>
+            <if test="carOutTime != null">car_out_time,</if>
+            <if test="toxicide != null">toxicide,</if>
+            <if test="density != null">density,</if>
+            <if test="disinfection != null">disinfection,</if>
+            <if test="newSamplingTypes != null">new_sampling_types,</if>
+            <if test="isMainSample != null">is_main_sample,</if>
+            <if test="productionOrderNumber != null">production_order_number,</if>
+            <if test="outsourcedFactory != null">outsourced_factory,</if>
+            <if test="isDestroy != null">is_destroy,</if>
+            <if test="warehouseCode != null">warehouse_code,</if>
+            <if test="warehouseName != null">warehouse_name,</if>
+            <if test="batch != null">batch,</if>
+            <if test="storageLocation != null">storage_location,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opSamplingPlanSampleId != null">#{opSamplingPlanSampleId},</if>
+            <if test="samplingPlanId != null and samplingPlanId != ''">#{samplingPlanId},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="invillId != null and invillId != ''">#{invillId},</if>
+            <if test="invbillCode != null and invbillCode != ''">#{invbillCode},</if>
+            <if test="model != null">#{model},</if>
+            <if test="ijweight != null">#{ijweight},</if>
+            <if test="productionDate != null">#{productionDate},</if>
+            <if test="shelfLife != null">#{shelfLife},</if>
+            <if test="weight != null">#{weight},</if>
+
+            <if test="status != null">#{status},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="receiveTime != null">#{receiveTime},</if>
+            <if test="receiverId != null">#{receiverId},</if>
+            <if test="reportId != null">#{reportId},</if>
+            <if test="ggQualityResult != null">#{ggQualityResult},</if>
+            <if test="ggQualityDescribe != null">#{ggQualityDescribe},</if>
+            <if test="ggQualityFileIds != null">#{ggQualityFileIds},</if>
+            <if test="receiverName != null">#{receiverName},</if>
+            <if test="invbillName != null">#{invbillName},</if>
+            <if test="whetherQualified != null">#{whetherQualified},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="isPushSap != null">#{isPushSap},</if>
+            <if test="PRUEFLOS != null">#{PRUEFLOS},</if>
+            <if test="samplingLocation != null">#{samplingLocation},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="fileInfo != null">#{fileInfo},</if>
+            <if test="samplingType != null">#{samplingType},</if>
+            <if test="supplierId != null and supplierId != ''">#{supplierId},</if>
+            <if test="supplierName != null">#{supplierName},</if>
+            <if test="driverName != null">#{driverName},</if>
+            <if test="driverPhone != null">#{driverPhone},</if>
+            <if test="driverCode != null">#{driverCode},</if>
+            <if test="carInTime != null">#{carInTime},</if>
+            <if test="carOutTime != null">#{carOutTime},</if>
+            <if test="toxicide != null">#{toxicide},</if>
+            <if test="density != null">#{density},</if>
+            <if test="disinfection != null">#{disinfection},</if>
+            <if test="newSamplingTypes != null">#{newSamplingTypes},</if>
+            <if test="isMainSample != null">#{isMainSample},</if>
+            <if test="productionOrderNumber != null">#{productionOrderNumber},</if>
+            <if test="outsourcedFactory != null">#{outsourcedFactory},</if>
+            <if test="isDestroy != null">#{isDestroy},</if>
+            <if test="warehouseCode != null">#{warehouseCode},</if>
+            <if test="warehouseName !=null">#{warehouseName},</if>
+            <if test="batch != null">#{batch},</if>
+            <if test="storageLocation != null">#{storageLocation},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpSamplingPlanSample" parameterType="OpSamplingPlanSample">
+        update op_sampling_plan_sample
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="invillId != null and invillId != ''">invill_id = #{invillId},</if>
+            <if test="invbillCode != null and invbillCode != ''">invbill_code = #{invbillCode},</if>
+
+            <if test="model != null">model = #{model},</if>
+            <if test="ijweight != null">ijweight = #{ijweight},</if>
+            <if test="productionDate != null">production_date = #{productionDate},</if>
+            <if test="shelfLife != null">shelf_life = #{shelfLife},</if>
+            <if test="weight != null">weight = #{weight},</if>
+
+            <if test="status != null">status = #{status},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isReceive != null and isReceive != ''">is_receive = #{isReceive},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="receiverId != null">receiver_id = #{receiverId},</if>
+            <if test="reportId != null">report_id = #{reportId},</if>
+            <if test="ggQualityResult != null">gg_quality_result = #{ggQualityResult},</if>
+            <if test="ggQualityDescribe != null">gg_quality_describe = #{ggQualityDescribe},</if>
+            <if test="ggQualityFileIds != null">gg_quality_fileIds = #{ggQualityFileIds},</if>
+            <if test="receiverName != null">receiver_name = #{receiverName},</if>
+            <if test="invbillName != null">invbill_name = #{invbillName},</if>
+            <if test="whetherQualified != null">whether_qualified = #{whetherQualified},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="isPushSap != null">is_push_sap = #{isPushSap},</if>
+            <if test="PRUEFLOS != null">PRUEFLOS = #{PRUEFLOS},</if>
+            <if test="samplingLocation != null">sampling_location = #{samplingLocation},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="fileInfo != null">file_info = #{fileInfo},</if>
+            <if test="samplingType != null">sampling_type = #{samplingType},</if>
+            <if test="supplierId != null and supplierId != ''">supplier_id = #{supplierId},</if>
+            <if test="supplierName != null">supplier_name = #{supplierName},</if>
+            <if test="driverName != null">driver_name = #{driverName},</if>
+            <if test="driverPhone != null">driver_phone = #{driverPhone},</if>
+            <if test="driverCode != null">driver_code = #{driverCode},</if>
+            <if test="carInTime != null">car_in_time = #{carInTime},</if>
+            <if test="carOutTime != null">car_out_time = #{carOutTime},</if>
+            <if test="toxicide != null">toxicide = #{toxicide},</if>
+            <if test="density != null">density = #{density},</if>
+            <if test="disinfection != null">disinfection = #{disinfection},</if>
+            <if test="newSamplingTypes != null">new_sampling_types = #{newSamplingTypes},</if>
+            <if test="isMainSample != null">is_main_sample = #{isMainSample},</if>
+            <if test="productionOrderNumber != null">production_order_number = #{productionOrderNumber},</if>
+            <if test="outsourcedFactory != null">outsourced_factory = #{outsourcedFactory},</if>
+            <if test="isDestroy != null">is_destroy = #{isDestroy},</if>
+            <if test="warehouseCode != null and warehouseCode != ''">warehouse_code = #{warehouseCode},</if>
+            <if test="warehouseName != null and warehouseName != ''">warehouse_name = #{warehouseName},</if>
+            <if test="batch != null and batch != ''">batch = #{batch},</if>
+            <if test="storageLocation != null and storageLocation != ''">storage_location = #{storageLocation},</if>
+        </trim>
+        where op_sampling_plan_sample_id = #{opSamplingPlanSampleId}
+    </update>
+
+    <update id="updateOpSamplingPlanSampleDTO" parameterType="OpSamplingPlanSample">
+        update op_sampling_plan_sample
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="invillId != null and invillId != ''">invill_id = #{invillId},</if>
+            <if test="invbillCode != null and invbillCode != ''">invbill_code = #{invbillCode},</if>
+
+            <if test="model != null">model = #{model},</if>
+            <if test="ijweight != null">ijweight = #{ijweight},</if>
+            <if test="productionDate != null">production_date = #{productionDate},</if>
+            <if test="shelfLife != null">shelf_life = #{shelfLife},</if>
+            <if test="weight != null">weight = #{weight},</if>
+
+            <if test="status != null">status = #{status},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isReceive != null and isReceive != ''">is_receive = #{isReceive},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="receiverId != null">receiver_id = #{receiverId},</if>
+            <if test="reportId != null">report_id = #{reportId},</if>
+            <if test="ggQualityResult != null">gg_quality_result = #{ggQualityResult},</if>
+            <if test="ggQualityDescribe != null">gg_quality_describe = #{ggQualityDescribe},</if>
+            <if test="ggQualityFileIds != null">gg_quality_fileIds = #{ggQualityFileIds},</if>
+            <if test="receiverName != null">receiver_name = #{receiverName},</if>
+            <if test="invbillName != null">invbill_name = #{invbillName},</if>
+            <if test="whetherQualified != null">whether_qualified = #{whetherQualified},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="isPushSap != null">is_push_sap = #{isPushSap},</if>
+            <if test="PRUEFLOS != null">PRUEFLOS = #{PRUEFLOS},</if>
+            <if test="samplingLocation != null">sampling_location = #{samplingLocation},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="fileInfo != null">file_info = #{fileInfo},</if>
+            <if test="samplingType != null">sampling_type = #{samplingType},</if>
+            <if test="supplierId != null and supplierId != ''">supplier_id = #{supplierId},</if>
+            <if test="supplierName != null">supplier_name = #{supplierName},</if>
+            <if test="driverName != null">driver_name = #{driverName},</if>
+            <if test="driverPhone != null">driver_phone = #{driverPhone},</if>
+            <if test="driverCode != null">driver_code = #{driverCode},</if>
+            <if test="carInTime != null">car_in_time = #{carInTime},</if>
+            <if test="carOutTime != null">car_out_time = #{carOutTime},</if>
+            <if test="toxicide != null">toxicide = #{toxicide},</if>
+            <if test="density != null">density = #{density},</if>
+            <if test="disinfection != null">disinfection = #{disinfection},</if>
+            <if test="newSamplingTypes != null">new_sampling_types = #{newSamplingTypes},</if>
+            <if test="isMainSample != null">is_main_sample = #{isMainSample},</if>
+            <if test="productionOrderNumber != null">production_order_number = #{productionOrderNumber},</if>
+            <if test="outsourcedFactory != null">outsourced_factory = #{outsourcedFactory},</if>
+            <if test="isDestroy != null">is_destroy = #{isDestroy},</if>
+            <if test="warehouseCode != null and warehouseCode != ''">warehouse_code = #{warehouseCode},</if>
+            <if test="warehouseName != null and warehouseName != ''">warehouse_name = #{warehouseName},</if>
+            <if test="batch != null and batch != ''">batch = #{batch},</if>
+            <if test="storageLocation != null and storageLocation != ''">storage_location = #{storageLocation},</if>
+        </trim>
+        where op_sampling_plan_sample_id = #{opSamplingPlanSampleId}
+    </update>
+
+    <delete id="deleteOpSamplingPlanSampleByOpSamplingPlanSampleId" parameterType="String">
+        delete from op_sampling_plan_sample where op_sampling_plan_sample_id = #{opSamplingPlanSampleId}
+    </delete>
+
+    <delete id="deleteOpSamplingPlanSampleByOpSamplingPlanSampleIds" parameterType="String">
+        delete from op_sampling_plan_sample where op_sampling_plan_sample_id in
+        <foreach item="opSamplingPlanSampleId" collection="array" open="(" separator="," close=")">
+            #{opSamplingPlanSampleId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_sampling_plan_sample set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_sampling_plan_sample_id = #{opSamplingPlanSampleId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_sampling_plan_sample set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where op_sampling_plan_sample_id in
+        <foreach item="opSamplingPlanSampleId" collection="array" open="(" separator="," close=")">
+            #{opSamplingPlanSampleId}
+        </foreach>
+    </update>
+
+    <insert id="batchInsertOpSamplingPlanSample">
+        INSERT INTO op_sampling_plan_sample (
+        op_sampling_plan_sample_id,
+        sampling_plan_id,
+        sample_no,
+        invill_id,
+        invbill_code,
+        invbill_name,
+        model,
+        ijweight,
+        production_date,
+        shelf_life,
+        weight,
+        status,
+        sequence,
+        receive_time,
+        receiver_id,
+        report_id,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        gg_quality_result,
+        gg_quality_describe,
+        gg_quality_fileIds,
+        receiver_name,
+        whether_qualified,
+        is_push_sap,
+        PRUEFLOS,
+        sampling_location,
+        remark,
+        file_info,
+        sampling_type,
+        supplier_id,
+        supplier_name,
+        driver_name,
+        driver_phone,
+        driver_code,
+        car_in_time,
+        car_out_time,
+        toxicide,
+        density,
+        disinfection,
+        new_sampling_types,
+        is_main_sample,
+        dept_id,
+        production_order_number,
+        outsourced_factory,
+        is_destroy,
+        warehouse_code,
+        warehouse_name,
+        batch,
+        storage_location
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.opSamplingPlanSampleId},
+            #{item.samplingPlanId},
+            #{item.sampleNo},
+            #{item.invillId},
+            #{item.invbillCode},
+            #{item.invbillName},
+            #{item.model},
+            #{item.ijweight},
+            #{item.productionDate},
+            #{item.shelfLife},
+            #{item.weight},
+            #{item.status},
+            #{item.sequence},
+            #{item.receiveTime},
+            #{item.receiverId},
+            #{item.reportId},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.updateBy},
+            #{item.updateTime},
+            #{item.ggQualityResult},
+            #{item.ggQualityDescribe},
+            #{item.ggQualityFileIds},
+            #{item.receiverName},
+            #{item.whetherQualified},
+            #{item.isPushSap},
+            #{item.PRUEFLOS},
+            #{item.samplingLocation},
+            #{item.remark},
+            #{item.fileInfo},
+            #{item.samplingType},
+            #{item.supplierId},
+            #{item.supplierName},
+            #{item.driverName},
+            #{item.driverPhone},
+            #{item.driverCode},
+            #{item.carInTime},
+            #{item.carOutTime},
+            #{item.toxicide},
+            #{item.density},
+            #{item.disinfection},
+            #{item.newSamplingTypes},
+            #{item.isMainSample},
+            #{item.deptId},
+            #{item.productionOrderNumber},
+            #{item.outsourcedFactory},
+            #{item.isDestroy},
+            #{item.warehouseCode},
+            #{item.warehouseName},
+            #{item.batch},
+            #{item.storageLocation}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectOpSamplingPlanSampleListByPlanId"
+            resultMap="OpSamplingPlanSampleResult">
+        <include refid="selectOpSamplingPlanSampleVo"/>
+        where sampling_plan_id = #{samplingPlanId} and is_delete = '0'
+    </select>
+
+    <select id="selectUnPushSapList" parameterType="OpSamplingPlanSample" resultMap="OpSamplingPlanSampleResult">
+        select s.op_sampling_plan_sample_id,
+               s.sampling_plan_id,
+               s.sample_no,
+               s.invill_id,
+               s.invbill_code,
+               s.invbill_name,
+               s.model,
+               s.ijweight,
+               s.production_date,
+               s.shelf_life,
+               s.weight,
+               s.status,
+               s.sequence,
+               s.is_delete,
+               s.create_time,
+               s.create_by,
+               s.update_time,
+               s.update_by,
+               s.is_receive,
+               s.receive_time,
+               s.receiver_id,
+               s.report_id,
+               s.gg_quality_result,
+               s.gg_quality_describe,
+               s.receiver_name,
+               s.invbill_name,
+               s.whether_qualified,
+               s.dept_id,
+               s.is_push_sap,
+               s.PRUEFLOS,
+               d.dept_name,
+               s.sampling_location,
+               s.remark,
+               s.file_info,
+               s.sampling_type,
+               s.supplier_id,
+               s.supplier_name,
+               s.driver_name,
+               s.driver_phone,
+               s.driver_code,
+               s.car_in_time,
+               s.car_out_time,
+               s.toxicide,
+               s.density,
+               s.disinfection,
+               s.new_sampling_types,
+               s.is_main_sample,
+               s.production_order_number,
+               s.outsourced_factory,
+               s.is_destroy,
+               s.warehouse_code,
+               s.warehouse_name,
+               s.batch,
+               s.storage_location
+        from op_sampling_plan_sample s
+        left join sys_dept d on s.dept_id = d.dept_id
+        <where>
+            exists (select 1 from op_test_result_info i where i.plan_sample_id = s.op_sampling_plan_sample_id and i.delete_id = '0' and i.is_push_sap = '0')
+            and s.is_delete = '0'
+            <if test="samplingPlanId != null  and samplingPlanId != ''"> and s.sampling_plan_id = #{samplingPlanId}</if>
+            <if test="sampleNo != null  and sampleNo != ''"> and s.sample_no = #{sampleNo}</if>
+            <if test="invillId != null  and invillId != ''"> and s.invill_id = #{invillId}</if>
+            <if test="invbillName != null  and invbillName != ''"> and s.invbill_name like concat('%', #{invbillName}, '%')</if>
+            <if test="model != null  and model != ''"> and s.model = #{model}</if>
+            <if test="ijweight != null "> and s.ijweight = #{ijweight}</if>
+            <if test="productionDate != null  and productionDate != ''"> and s.production_date = #{productionDate}</if>
+            <if test="shelfLife != null  and shelfLife != ''"> and s.shelf_life = #{shelfLife}</if>
+            <if test="weight != null "> and s.weight = #{weight}</if>
+            <if test="status != null  and status != ''"> and s.status = #{status}</if>
+            <if test="sequence != null "> and s.sequence = #{sequence}</if>
+            <if test="isDelete != null  and isDelete != ''"> and s.is_delete = #{isDelete}</if>
+            <if test="isReceive != null  and isReceive != ''"> and s.is_receive = #{isReceive}</if>
+            <if test="receiveTime != null "> and s.receive_time = #{receiveTime}</if>
+            <if test="receiverId != null  and receiverId != ''"> and s.receiver_id = #{receiverId}</if>
+            <if test="reportId != null  and reportId != ''"> and s.report_id = #{reportId}</if>
+            <if test="ggQualityResult != null  and ggQualityResult != ''"> and s.gg_quality_result = #{ggQualityResult}</if>
+            <if test="ggQualityDescribe != null  and ggQualityDescribe != ''"> and s.gg_quality_describe = #{ggQualityDescribe}</if>
+            <if test="receiverName != null  and receiverName != ''"> and s.receiver_name = #{receiverName}</if>
+            <if test="deptId != null and deptId != ''">
+                and s.dept_id = #{deptId}
+            </if>
+            <if test="warehouseCode != null and warehouseCode != ''">and s.warehouse_code = #{warehouseCode}</if>
+            <if test="warehouseName != null and warehouseName != ''">and s.warehouse_name = #{warehouseName}</if>
+            <if test="batch != null and batch != ''">and s.batch = #{batch}</if>
+            <if test="storageLocation != null and storageLocation != ''">and s.storage_location = #{storageLocation}</if>
+        </where>
+    </select>
+
+    <!-- 化验结果信息表（子表）ResultMap -->
+    <resultMap id="OpTestResultInfoResultMap" type="com.gmlimsqi.business.ranch.domain.OpTestResultInfo">
+        <!-- 主键 -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <!-- 基础字段 -->
+        <result column="base_id" property="baseId" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="sample_id" property="sampleId" jdbcType="VARCHAR"/>
+        <result column="sample_no" property="sampleNo" jdbcType="VARCHAR"/>
+        <result column="sample_name" property="sampleName" jdbcType="VARCHAR"/>
+        <result column="item_name" property="itemName" jdbcType="VARCHAR"/>
+        <result column="item_id" property="itemId" jdbcType="VARCHAR"/>
+        <result column="invbill_id" property="invbillId" jdbcType="VARCHAR"/>
+        <result column="invbill_code" property="invbillCode" jdbcType="VARCHAR"/>
+        <result column="invbill_name" property="invbillName" jdbcType="VARCHAR"/>
+        <result column="plan_id" property="planId" jdbcType="VARCHAR"/>
+        <result column="plan_sample_id" property="planSampleId" jdbcType="VARCHAR"/>
+        <result column="plan_item_id" property="planItemId" jdbcType="VARCHAR"/>
+        <result column="result" property="result" jdbcType="VARCHAR"/>
+        <result column="sjph" property="sjph" jdbcType="VARCHAR"/>
+        <result column="sjt_file_id" property="sjtFileId" jdbcType="VARCHAR"/>
+        <result column="sjt_file_url" property="sjtFileUrl" jdbcType="VARCHAR"/>
+        <result column="check_result" property="checkResult" jdbcType="VARCHAR"/>
+        <result column="delete_id" property="deleteId" jdbcType="VARCHAR"/>
+        <result column="retest_flag" property="retestFlag" jdbcType="VARCHAR"/>
+        <result column="is_push_sap" property="isPushSap" jdbcType="VARCHAR"/>
+        <result column="push_person_id" property="pushPersonId" jdbcType="VARCHAR"/>
+        <result column="push_person_name" property="pushPersonName" jdbcType="VARCHAR"/>
+        <result column="push_time" property="pushTime" jdbcType="TIMESTAMP"/>
+        <!-- BaseEntity 继承字段（CreateAware/UpdateAware） -->
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="feature_name" property="featureName" jdbcType="VARCHAR"/>
+        <result column="reference_range" property="referenceRange" jdbcType="VARCHAR"/>
+        <result column="feature_id" property="featureId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 样品检测详情VO（主表+子表关联）ResultMap -->
+    <resultMap id="SampleInfoVOResultMap" type="com.gmlimsqi.business.ranch.vo.SampleInfoVO">
+        <!-- 主键 -->
+        <id column="op_sampling_plan_sample_id" property="opSamplingPlanSampleId" jdbcType="VARCHAR"/>
+        <!-- 主表基础字段 -->
+        <result column="sampling_plan_id" property="samplingPlanId" jdbcType="VARCHAR"/>
+        <result column="sample_no" property="sampleNo" jdbcType="VARCHAR"/>
+        <result column="invill_id" property="invillId" jdbcType="VARCHAR"/> <!-- 注意：VO中是invillId，子表是invbillId，需确认数据库字段一致性 -->
+        <result column="invbill_code" property="invbillCode" jdbcType="VARCHAR"/>
+        <result column="invbill_name" property="invbillName" jdbcType="VARCHAR"/>
+        <result column="is_push_sap" property="isPushSap" jdbcType="VARCHAR"/>
+        <result column="whether_qualified" property="whetherQualified" jdbcType="VARCHAR"/>
+        <result column="PRUEFLOS" property="PRUEFLOS" jdbcType="VARCHAR"/>
+
+        <!-- 一对多关联：样品对应的检测项目列表 -->
+        <collection property="opTestResultInfoList" ofType="com.gmlimsqi.business.ranch.domain.OpTestResultInfo"
+                    column="op_sampling_plan_sample_id" resultMap="OpTestResultInfoResultMap"/>
+    </resultMap>
+
+    <select id="selectOpSamplingPlanSampleId" resultMap="SampleInfoVOResultMap">
+        select op_sampling_plan_sample_id,
+        sampling_plan_id,
+        sample_no,
+        invill_id,
+        invbill_code,
+        invbill_name,
+        is_push_sap,
+        whether_qualified,
+        PRUEFLOS,
+        sampling_location,
+        remark,
+        file_info,
+        sampling_type,
+        warehouse_code,
+        warehouse_name,
+        batch,
+        storage_location
+        from op_sampling_plan_sample
+        where op_sampling_plan_sample_id = #{opSamplingPlanSampleId}
+    </select>
+
+    <!-- 核心：主表 resultMap（映射 OpSamplingPlanSampleVO 与数据库表 op_sampling_plan_sample） -->
+    <resultMap id="OpSamplingPlanSampleVOResultMap" type="com.gmlimsqi.business.samplingplan.pojo.vo.OpSamplingPlanSampleVO">
+        <!-- 主键映射 -->
+        <id column="op_sampling_plan_sample_id" property="opSamplingPlanSampleId" jdbcType="VARCHAR"/>
+
+        <!-- 基本字段映射（按 VO 属性顺序，对应数据库下划线字段） -->
+        <result column="sampling_plan_id" property="samplingPlanId" jdbcType="VARCHAR"/>
+        <result column="sampling_order_number" property="samplingOrderNumber" jdbcType="VARCHAR"/>
+        <result column="plan_time" property="planTime" jdbcType="DATE"/>
+        <result column="plan_type" property="planType" jdbcType="VARCHAR"/>
+        <result column="production_order_number" property="productionOrderNumber" jdbcType="VARCHAR"/>
+        <result column="planned_production_volume" property="plannedProductionVolume" jdbcType="VARCHAR"/>
+        <result column="planned_sample_quantity" property="plannedSampleQuantity" jdbcType="VARCHAR"/>
+        <result column="have_sample_copies" property="haveSampleCopies" jdbcType="VARCHAR"/>
+        <result column="invill_id" property="invillId" jdbcType="VARCHAR"/>
+        <result column="invbill_code" property="invbillCode" jdbcType="VARCHAR"/>
+        <result column="invbill_name" property="invbillName" jdbcType="VARCHAR"/>
+        <result column="model" property="model" jdbcType="VARCHAR"/>
+        <result column="ijweight" property="ijweight" jdbcType="DECIMAL"/>
+        <result column="production_date" property="productionDate" jdbcType="VARCHAR"/>
+        <result column="shelf_life" property="shelfLife" jdbcType="VARCHAR"/>
+        <result column="weight" property="weight" jdbcType="DECIMAL"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="sequence" property="sequence" jdbcType="BIGINT"/>
+        <result column="is_delete" property="isDelete" jdbcType="VARCHAR"/>
+        <result column="is_receive" property="isReceive" jdbcType="VARCHAR"/>
+        <result column="receive_time" property="receiveTime" jdbcType="DATE"/>
+        <result column="receiver_id" property="receiverId" jdbcType="VARCHAR"/>
+        <result column="report_id" property="reportId" jdbcType="VARCHAR"/>
+        <result column="gg_quality_result" property="ggQualityResult" jdbcType="VARCHAR"/>
+        <result column="gg_quality_describe" property="ggQualityDescribe" jdbcType="VARCHAR"/>
+        <result column="receiver_name" property="receiverName" jdbcType="VARCHAR"/>
+        <result column="gg_quality_file_ids" property="ggQualityFileIds" jdbcType="VARCHAR"/>
+        <result column="gg_quality_file_urls" property="ggQualityFileUrls" jdbcType="VARCHAR"/>
+        <result column="quality_describe" property="qualityDescribe" jdbcType="VARCHAR"/>
+        <result column="quality_type" property="qualityType" jdbcType="VARCHAR"/>
+        <result column="debit_result" property="debitResult" jdbcType="VARCHAR"/>
+        <result column="debit_amount" property="debitAmount" jdbcType="DECIMAL"/>
+        <result column="debit_weight" property="debitWeight" jdbcType="DECIMAL"/>
+        <result column="quality_file_ids" property="qualityFileIds" jdbcType="VARCHAR"/>
+        <result column="whether_qualified" property="whetherQualified" jdbcType="VARCHAR"/>
+        <result column="is_push_sap" property="isPushSap" jdbcType="VARCHAR"/>
+        <result column="prueflos" property="PRUEFLOS" jdbcType="VARCHAR"/> <!-- 对应 @JsonProperty("PRUEFLOS") -->
+        <result column="sampling_location" property="samplingLocation" jdbcType="VARCHAR"/>
+        <result column="file_info" property="fileInfo" jdbcType="VARCHAR"/>
+        <result column="sampling_type" property="samplingType" jdbcType="VARCHAR"/>
+        <result column="outsourced_factory" property="outsourcedFactory" jdbcType="VARCHAR"/>
+        <result column="is_destroy" property="isDestroy" jdbcType="VARCHAR"/>
+        <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR"/>
+        <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
+        <result column="batch" property="batch" jdbcType="VARCHAR"/>
+        <result column="storage_location" property="storageLocation" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="sampler_name" property="samplerName" jdbcType="VARCHAR"/>
+        <result column="sample_time" property="sampleTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectOpSamplingPlanSampleListLinkOFPSP"
+            resultMap="OpSamplingPlanSampleVOResultMap">
+        select a.op_sampling_plan_sample_id,
+        a.sampling_plan_id,
+        a.sample_no,
+        a.invill_id,
+        a.invbill_code,
+        a.invbill_name,
+        a.model,
+        a.ijweight,
+        a.production_date,
+        a.shelf_life,
+        a.weight,
+        a.status,
+        a.sequence,
+        a.is_delete,
+        a.create_time,
+        a.create_by,
+        a.update_time,
+        a.update_by,
+        a.is_receive,
+        a.receive_time,
+        a.receiver_id,
+        a.report_id,
+        a.gg_quality_result,
+        a.gg_quality_describe,
+        a.receiver_name,
+        a.whether_qualified,
+        a.dept_id,
+        a.is_push_sap,
+        a.PRUEFLOS,
+        a.sampling_location,
+        a.remark,
+        a.file_info,
+        a.sampling_type,
+        a.new_sampling_types,
+        a.is_main_sample,
+        a.production_order_number,
+        a.outsourced_factory,
+        a.is_destroy,
+        a.warehouse_code,
+        a.warehouse_name,
+        a.batch,
+        a.storage_location,
+        p.sampler_name,
+        p.sample_time
+        from op_sampling_plan_sample a
+        left join sys_dept d on d.dept_id = a.dept_id
+        left join op_sampling_plan p on p.op_sampling_plan_id = a.sampling_plan_id
+        <where>
+            and a.is_receive = '0' and a.is_delete = '0'
+            <if test="deptId != null and deptId != ''">
+                and d.dept_id = #{deptId}
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                and a.sample_no like concat('%', #{sampleNo}, '%')
+            </if>
+            <if test="newSamplingTypes != null and newSamplingTypes != ''">
+                and a.new_sampling_types = #{newSamplingTypes}
+            </if>
+            <if test="samplingTypeList != null and samplingTypeList != ''">
+                and a.sampling_type in
+                <foreach collection="samplingTypeList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invbillName != null and invbillName != ''">
+                and invbill_name like concat('%',#{invbillName},'%')
+            </if>
+        </where>
+        ORDER BY
+        CASE WHEN a.is_receive = 1 THEN a.receive_time ELSE a.create_time END DESC
+    </select>
+
+    <!-- 主表ResultMap：OpSamplingPlanSample -->
+    <resultMap id="OpSamplingPlanSampleInfo" type="com.gmlimsqi.business.samplingplan.pojo.vo.OpSamplingPlanSampleInfoVO">
+        <!-- 主键映射 -->
+        <id column="op_sampling_plan_sample_id" property="opSamplingPlanSampleId" jdbcType="VARCHAR"/>
+
+        <!-- 基本字段映射 -->
+        <result column="sampling_plan_id" property="samplingPlanId" jdbcType="VARCHAR"/>
+        <result column="sample_no" property="sampleNo" jdbcType="VARCHAR"/>
+        <result column="invill_id" property="invillId" jdbcType="VARCHAR"/>
+        <result column="invbill_code" property="invbillCode" jdbcType="VARCHAR"/>
+        <result column="invbill_name" property="invbillName" jdbcType="VARCHAR"/>
+        <result column="model" property="model" jdbcType="VARCHAR"/>
+        <result column="ijweight" property="ijweight" jdbcType="DECIMAL"/>
+        <result column="production_date" property="productionDate" jdbcType="VARCHAR"/>
+        <result column="shelf_life" property="shelfLife" jdbcType="VARCHAR"/>
+        <result column="weight" property="weight" jdbcType="DECIMAL"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="sequence" property="sequence" jdbcType="BIGINT"/>
+        <result column="is_delete" property="isDelete" jdbcType="VARCHAR"/>
+        <result column="is_receive" property="isReceive" jdbcType="VARCHAR"/>
+        <result column="receive_time" property="receiveTime" jdbcType="DATE"/>
+        <result column="receiver_id" property="receiverId" jdbcType="VARCHAR"/>
+        <result column="report_id" property="reportId" jdbcType="VARCHAR"/>
+        <result column="gg_quality_result" property="ggQualityResult" jdbcType="VARCHAR"/>
+        <result column="gg_quality_describe" property="ggQualityDescribe" jdbcType="VARCHAR"/>
+        <result column="receiver_name" property="receiverName" jdbcType="VARCHAR"/>
+        <result column="gg_quality_file_ids" property="ggQualityFileIds" jdbcType="VARCHAR"/>
+        <result column="gg_quality_file_urls" property="ggQualityFileUrls" jdbcType="VARCHAR"/>
+        <result column="quality_describe" property="qualityDescribe" jdbcType="VARCHAR"/>
+        <result column="quality_type" property="qualityType" jdbcType="VARCHAR"/>
+        <result column="debit_result" property="debitResult" jdbcType="VARCHAR"/>
+        <result column="debit_amount" property="debitAmount" jdbcType="DECIMAL"/>
+        <result column="debit_weight" property="debitWeight" jdbcType="DECIMAL"/>
+        <result column="quality_file_ids" property="qualityFileIds" jdbcType="VARCHAR"/>
+        <result column="whether_qualified" property="whetherQualified" jdbcType="VARCHAR"/>
+        <result column="is_push_sap" property="isPushSap" jdbcType="VARCHAR"/>
+        <result column="prueflos" property="PRUEFLOS" jdbcType="VARCHAR"/>
+        <result column="sampling_location" property="samplingLocation" jdbcType="VARCHAR"/>
+        <result column="file_info" property="fileInfo" jdbcType="VARCHAR"/>
+        <result column="sampling_type" property="samplingType" jdbcType="VARCHAR"/>
+        <result column="new_sampling_types" property="newSamplingTypes" jdbcType="VARCHAR"/>
+        <result column="is_main_sample" property="isMainSample" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" />
+        <result column="production_order_number" property="productionOrderNumber" jdbcType="VARCHAR"/>
+        <result column="outsourced_factory" property="outsourcedFactory" jdbcType="VARCHAR"/>
+        <result column="is_destroy" property="isDestroy" jdbcType="VARCHAR"/>
+        <result column="warehouse_code" property="warehouseCode" jdbcType="VARCHAR"/>
+        <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
+        <result column="batch" property="batch" jdbcType="VARCHAR"/>
+        <result column="storage_location" property="storageLocation" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectOpSamplingPlanSampleDetail"
+            resultMap="OpSamplingPlanSampleResult">
+        <include refid="selectOpSamplingPlanSampleVo"/>
+        where op_sampling_plan_sample_id = #{opSamplingPlanSampleId}
+    </select>
+
+    <select id="selectDestroyList"
+            resultMap="OpSamplingPlanSampleResult">
+        select op_sampling_plan_sample_id,
+        sampling_plan_id,
+        sample_no,
+        invill_id,
+        invbill_code,
+        invbill_name,
+        model,
+        ijweight,
+        production_date,
+        shelf_life,
+        weight,
+        status,
+        sequence,
+        is_delete,
+        create_time,
+        create_by,
+        update_time,
+        update_by,
+        is_receive,
+        receive_time,
+        receiver_id,
+        report_id,
+        gg_quality_result,
+        gg_quality_describe,
+        receiver_name,
+        whether_qualified,
+        dept_id,
+        is_push_sap,
+        PRUEFLOS,
+        sampling_location,
+        remark,
+        sampling_type,
+        file_info,
+        supplier_id,
+        supplier_name,
+        driver_name,
+        driver_phone,
+        driver_code,
+        car_in_time,
+        car_out_time,
+        toxicide,
+        density,
+        disinfection,
+        new_sampling_types,
+        is_main_sample,
+        production_order_number,
+        outsourced_factory,
+        is_destroy,
+        warehouse_code,
+        warehouse_name,
+        batch,
+        storage_location
+        from op_sampling_plan_sample
+        <where>
+            is_delete = '0'
+            AND receive_time IS NOT NULL
+            AND shelf_life IS NOT NULL
+            AND shelf_life != ''
+            AND REGEXP_REPLACE(shelf_life, '[^0-9]', '') != ''
+            AND DATE_ADD(receive_time, INTERVAL CAST(REGEXP_REPLACE(shelf_life, '[^0-9]', '') AS UNSIGNED) DAY) &lt; NOW()
+            <if test="samplingPlanId != null  and samplingPlanId != ''"> and sampling_plan_id = #{samplingPlanId}</if>
+            <if test="sampleNo != null  and sampleNo != ''"> and sample_no = #{sampleNo}</if>
+            <if test="invillId != null  and invillId != ''"> and invill_id = #{invillId}</if>
+            <if test="invbillName != null  and invbillName != ''"> and invbill_name like concat('%', #{invbillName}, '%')</if>
+            <if test="model != null  and model != ''"> and model = #{model}</if>
+            <if test="ijweight != null "> and ijweight = #{ijweight}</if>
+            <if test="productionDate != null  and productionDate != ''"> and production_date = #{productionDate}</if>
+            <if test="shelfLife != null  and shelfLife != ''"> and shelf_life = #{shelfLife}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="sequence != null "> and sequence = #{sequence}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="isReceive != null  and isReceive != ''"> and is_receive = #{isReceive}</if>
+            <if test="receiveTime != null "> and receive_time = #{receiveTime}</if>
+            <if test="receiverId != null  and receiverId != ''"> and receiver_id = #{receiverId}</if>
+            <if test="reportId != null  and reportId != ''"> and report_id = #{reportId}</if>
+            <if test="ggQualityResult != null  and ggQualityResult != ''"> and gg_quality_result = #{ggQualityResult}</if>
+            <if test="ggQualityDescribe != null  and ggQualityDescribe != ''"> and gg_quality_describe = #{ggQualityDescribe}</if>
+            <if test="receiverName != null  and receiverName != ''"> and receiver_name = #{receiverName}</if>
+            <if test="whetherQualified != null  and whetherQualified != ''"> and whether_qualified = #{whetherQualified}</if>
+            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+            <if test="isDestroy != null and isDestroy != ''"> and is_destroy = #{isDestroy}</if>
+            <if test="newSamplingTypes != null and newSamplingTypes != ''">
+                and new_sampling_types = #{newSamplingTypes}
+            </if>
+            <if test="samplingType != null and samplingType != ''">
+                and sampling_type = #{samplingType}
+            </if>
+            <if test="warehouseCode != null and warehouseCode != ''">
+                and warehouse_code like concat('%',#{warehouseCode},'%')
+            </if>
+            <if test="warehouseName != null and warehouseName != ''">
+                and warehouse_name like concat('%',#{warehouseName},'%')
+            </if>
+            <if test="batch != null and batch != ''">
+                and batch = #{batch}
+            </if>
+            <if test="storageLocation != null and storageLocation != ''">
+                and storage_location = #{storageLocation}
+            </if>
+        </where>
+    </select>
+    <select id="selectOpSamplingPlanByOpSamplingPlanId"
+            resultType="com.gmlimsqi.business.ranch.domain.OpSamplingPlan">
+
+    </select>
+    <select id="checkSampleNoUnique" resultType="java.lang.Integer">
+        select count(*) from op_sampling_plan_sample
+        where sample_no = #{sampleNo}
+    </select>
+    <select id="selectOpSamplingBySampleNo"
+            resultType="com.gmlimsqi.business.ranch.domain.OpSamplingPlanSample">
+        select
+            op_sampling_plan_sample_id
+            from op_sampling_plan_sample
+        where sample_no = #{sampleNo}
+    </select>
+</mapper>

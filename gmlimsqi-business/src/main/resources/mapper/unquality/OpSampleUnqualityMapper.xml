@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.unquality.mapper.OpSampleUnqualityMapper">
+
+    <resultMap type="OpSampleUnquality" id="OpSampleUnqualityResult">
+            <result property="opSampleUnqualityId"    column="op_sample_unquality_id"    />
+            <result property="unqualityNo"    column="unquality_no"    />
+            <result property="sourceId"    column="source_id"    />
+            <result property="materialId"    column="material_id"    />
+            <result property="materialCode"    column="material_code"    />
+            <result property="materialName"    column="material_name"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="testUserId"    column="test_user_id"    />
+            <result property="testResult"    column="test_result"    />
+            <result property="status"    column="status"    />
+            <result property="deptId" column="dept_id"    />
+            <result property="ccltype" column="ccltype" />
+            <result property="ctype" column="ctype" />
+            <result property="ikjweight" column="ikjweight" />
+            <result property="ikjmoney" column="ikjmoney" />
+            <result property="cunqualityinfo" column="cunqualityinfo" />
+            <result property="processingType" column="processing_type" />
+            <result property="sapName" column="sap_name" />
+            <result property="cfilepath" column="cfilepath" />
+            <result property="iProportionkjweight" column="i_proportionkjweight" />
+            <result property="supplierCode" column="supplier_code" />
+            <result property="supplierName" column="supplier_name" />
+            <result property="signInId" column="sign_in_id" />
+            <result property="batch" column="batch" />
+            <result property="originalCweightno" column="original_cweightno" />
+            <result property="writeOffCweightno" column="write_off_cweightno" />
+    </resultMap>
+
+        <resultMap id="OpSampleUnqualityOpSampleUnqualityDetailResult" type="OpSampleUnquality" extends="OpSampleUnqualityResult">
+            <collection property="opSampleUnqualityDetailList" ofType="OpSampleUnqualityDetail" column="op_sample_unquality_id" select="selectOpSampleUnqualityDetailList" />
+        </resultMap>
+
+        <resultMap type="OpSampleUnqualityDetail" id="OpSampleUnqualityDetailResult">
+                <result property="opSampleUnqualityDetailId"    column="op_sample_unquality_detail_id"    />
+                <result property="opSampleUnqualityId"    column="op_sample_unquality_id"    />
+                <result property="itemId"    column="item_id"    />
+                <result property="itemCode"    column="item_code"    />
+                <result property="itemName"    column="item_name"    />
+                <result property="ctx"    column="ctx"    />
+                <result property="ctestresult"    column="ctestresult"    />
+                <result property="chg"    column="chg"    />
+        </resultMap>
+    <resultMap id="ProResultMap" type="java.util.Map">
+        <result column="code" property="code" javaType="java.lang.Integer"/>
+        <result column="msg" property="msg" javaType="java.lang.String"/>
+    </resultMap>
+
+    <select id="callProTransCreateUnquality" statementType="CALLABLE" resultMap="ProResultMap">
+        {call Pro_Trans_CreateUnquality(
+                #{ctype, mode=IN, jdbcType=VARCHAR},
+                #{keyid, mode=IN, jdbcType=VARCHAR}
+            )}
+    </select>
+    <sql id="selectOpSampleUnqualityVo">
+        select op_sample_unquality_id,
+               unquality_no,
+               source_id,
+               material_id,
+               material_code,
+               material_name,
+               is_delete,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               test_user_id,
+               test_result,
+               status,
+               dept_id,
+               ccltype,
+               ctype,
+               ikjweight,
+               ikjmoney,
+               cunqualityinfo,
+               processing_type,
+               sap_name,
+               cfilepath,
+               i_proportionkjweight,
+               supplier_code,
+               supplier_name,
+               sign_in_id,
+               batch,
+               original_cweightno,
+               write_off_cweightno
+               supplier_name
+        from op_sample_unquality d
+    </sql>
+
+    <select id="selectOpSampleUnqualityList" parameterType="OpSampleUnquality" resultMap="OpSampleUnqualityResult">
+        <include refid="selectOpSampleUnqualityVo"/>
+        <where>
+            is_delete = '0'
+                        <if test="unqualityNo != null  and unqualityNo != ''"> and d.unquality_no = #{unqualityNo}</if>
+                        <if test="sourceId != null  and sourceId != ''"> and d.source_id = #{sourceId}</if>
+                        <if test="materialId != null  and materialId != ''"> and d.material_id = #{materialId}</if>
+                        <if test="materialCode != null  and materialCode != ''"> and d.material_code = #{materialCode}</if>
+                        <if test="materialName != null  and materialName != ''"> and d.material_name like concat('%', #{materialName}, '%')</if>
+                        <if test="isDelete != null  and isDelete != ''"> and d.is_delete = #{isDelete}</if>
+                        <if test="testUserId != null  and testUserId != ''"> and d.test_user_id = #{testUserId}</if>
+                        <if test="testResult != null  and testResult != ''"> and d.test_result = #{testResult}</if>
+                        <if test="status != null  and status != ''"> and d.status = #{status}</if>
+                        <if test="processingType != null and processingType != ''">and d.processing_type = #{processingType}</if>
+            ${params.dataScope}
+        </where>
+        ORDER BY d.create_time DESC
+    </select>
+
+    <select id="selectOpSampleUnqualityByOpSampleUnqualityId" parameterType="String" resultMap="OpSampleUnqualityOpSampleUnqualityDetailResult">
+        <include refid="selectOpSampleUnqualityVo"/>
+        where op_sample_unquality_id = #{opSampleUnqualityId}
+        and is_delete = '0'
+    </select>
+
+    <select id="selectOpSampleUnqualityDetailList" resultType="OpSampleUnqualityDetail"
+            resultMap="OpSampleUnqualityDetailResult">
+        select op_sample_unquality_detail_id,
+               op_sample_unquality_id,
+               item_id,
+               item_code,
+               item_name,
+               ctx,
+               ctestresult,
+               chg
+        from op_sample_unquality_detail
+        where op_sample_unquality_id = #{opSampleUnqualityId}
+    </select>
+
+    <insert id="insertOpSampleUnquality" parameterType="OpSampleUnquality">
+        insert into op_sample_unquality
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="opSampleUnqualityId != null">op_sample_unquality_id,</if>
+                    <if test="unqualityNo != null">unquality_no,</if>
+                    <if test="sourceId != null and sourceId != ''">source_id,</if>
+                    <if test="materialId != null">material_id,</if>
+                    <if test="materialCode != null">material_code,</if>
+                    <if test="materialName != null">material_name,</if>
+                    <if test="isDelete != null">is_delete,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="createBy != null and createBy != ''">create_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="testUserId != null">test_user_id,</if>
+                    <if test="testResult != null">test_result,</if>
+                    <if test="status != null">status,</if>
+                    <if test="deptId != null">dept_id,</if>
+                    <if test="ccltype != null">ccltype,</if>
+                    <if test="ctype != null">ctype,</if>
+                    <if test="ikjweight != null">ikjweight,</if>
+                    <if test="ikjmoney != null">ikjmoney,</if>
+                    <if test="cunqualityinfo != null">cunqualityinfo,</if>
+                    <if test="processingType != null">processing_type,</if>
+                    <if test="sapName != null">sap_name,</if>
+                    <if test="cfilepath != null">cfilepath,</if>
+                    <if test="iProportionkjweight != null">i_proportionkjweight,</if>
+                    <if test="supplierCode != null and supplierCode != ''">supplier_code,</if>
+                    <if test="supplierName != null and supplierName != ''">supplier_name,</if>
+                    <if test="batch != null">batch,</if>
+                    <if test="originalCweightno != null">original_cweightno,</if>
+                    <if test="writeOffCweightno != null">write_off_cweightno,</if>
+                    <if test="signInId != null">sign_in_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="opSampleUnqualityId != null">#{opSampleUnqualityId},</if>
+                    <if test="unqualityNo != null">#{unqualityNo},</if>
+                    <if test="sourceId != null and sourceId != ''">#{sourceId},</if>
+                    <if test="materialId != null">#{materialId},</if>
+                    <if test="materialCode != null">#{materialCode},</if>
+                    <if test="materialName != null">#{materialName},</if>
+                    <if test="isDelete != null">#{isDelete},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="createBy != null and createBy != ''">#{createBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="testUserId != null">#{testUserId},</if>
+                    <if test="testResult != null">#{testResult},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="deptId != null">#{deptId},</if>
+                    <if test="ccltype != null">#{ccltype},</if>
+                    <if test="ctype != null">#{ctype},</if>
+                    <if test="ikjweight != null">#{ikjweight},</if>
+                    <if test="ikjmoney != null">#{ikjmoney},</if>
+                    <if test="cunqualityinfo != null">#{cunqualityinfo},</if>
+                    <if test="processingType != null">#{processingType},</if>
+                    <if test="sapName != null">#{sapName},</if>
+                    <if test="cfilepath != null">#{cfilepath},</if>
+                    <if test="iProportionkjweight != null">#{iProportionkjweight},</if>
+                    <if test="supplierCode != null and supplierCode != ''">#{supplierCode},</if>
+                    <if test="supplierName != null and supplierName != ''">#{supplierName},</if>
+                    <if test="batch != null">#{batch},</if>
+                    <if test="originalCweightno != null">#{originalCweightno},</if>
+                    <if test="writeOffCweightno != null">#{writeOffCweightno},</if>
+                    <if test="signInId != null">#{signInId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpSampleUnquality" parameterType="OpSampleUnquality">
+        update op_sample_unquality
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="unqualityNo != null">unquality_no = #{unqualityNo},</if>
+                    <if test="sourceId != null and sourceId != ''">source_id = #{sourceId},</if>
+                    <if test="materialId != null">material_id = #{materialId},</if>
+                    <if test="materialCode != null">material_code = #{materialCode},</if>
+                    <if test="materialName != null">material_name = #{materialName},</if>
+                    <if test="isDelete != null">is_delete = #{isDelete},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="testUserId != null">test_user_id = #{testUserId},</if>
+                    <if test="testResult != null">test_result = #{testResult},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="deptId != null">dept_id = #{deptId},</if>
+                    <if test="ccltype != null">ccltype = #{ccltype},</if>
+                    <if test="ctype != null">ctype = #{ctype},</if>
+                    <if test="ikjweight != null">ikjweight = #{ikjweight},</if>
+                    <if test="ikjmoney != null">ikjmoney = #{ikjmoney},</if>
+                    <if test="cunqualityinfo != null">cunqualityinfo = #{cunqualityinfo},</if>
+                    <if test="processingType != null">processing_type = #{processingType},</if>
+                    <if test="sapName != null">sap_name = #{sapName},</if>
+                    <if test="cfilepath != null">cfilepath = #{cfilepath},</if>
+                    <if test="iProportionkjweight != null">i_proportionkjweight = #{iProportionkjweight},</if>
+                    <if test="supplierCode != null and supplierCode != ''">supplier_code = #{supplierCode},</if>
+                    <if test="supplierName != null and supplierName != ''">supplier_name = #{supplierName},</if>
+                    <if test="batch != null">batch = #{batch},</if>
+                    <if test="originalCweightno != null">original_cweightno = #{originalCweightno},</if>
+                    <if test="writeOffCweightno != null">write_off_cweightno = #{writeOffCweightno},</if>
+                    <if test="signInId != null">sign_in_id = #{signInId},</if>
+        </trim>
+        where op_sample_unquality_id = #{opSampleUnqualityId}
+    </update>
+
+
+    <update id="updateDeleteFlagById">
+        update op_sample_unquality
+        set is_delete  = op_sample_unquality_id,
+            update_time= now(),
+            update_by=#{updateUserId}
+        where op_sample_unquality_id = #{opSampleUnqualityId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_sample_unquality set is_delete = op_sample_unquality_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_sample_unquality_id in
+        <foreach item="opSampleUnqualityId" collection="array" open="(" separator="," close=")">
+            #{opSampleUnqualityId}
+        </foreach>
+    </update>
+
+        <update id="updateDeleteFlagByOpSampleUnqualityIds" >
+            update  op_sample_unquality_detail set is_delete = op_sample_unquality_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+            where op_sample_unquality_id in
+            <foreach item="opSampleUnqualityId" collection="array" open="(" separator="," close=")">
+                #{opSampleUnqualityId}
+            </foreach>
+        </update>
+
+        <update id="updateDeleteFlagByByOpSampleUnqualityId" >
+            update  op_sample_unquality_detail set is_delete = #{opSampleUnqualityId}  ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+            where op_sample_unquality_id = #{opSampleUnqualityId}
+        </update>
+
+    <insert id="batchOpSampleUnqualityDetail">
+        insert into op_sample_unquality_detail(op_sample_unquality_detail_id, op_sample_unquality_id, item_id,
+                                               item_code, item_name,
+                                               ctx, ctestresult, chg) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.opSampleUnqualityDetailId}, #{item.opSampleUnqualityId}, #{item.itemId}, #{item.itemCode},
+             #{item.itemName}, #{item.ctx}, #{item.ctestresult}, #{item.chg})
+        </foreach>
+    </insert>
+
+    <select id="selectOpSampleUnqualityBySignId" resultMap="OpSampleUnqualityResult">
+        select a.op_sample_unquality_id,
+               a.unquality_no,
+               a.source_id,
+               a.material_id,
+               a.material_code,
+               a.material_name,
+               a.is_delete,
+               a.create_time,
+               a.create_by,
+               a.update_time,
+               a.update_by,
+               a.test_user_id,
+               a.test_result,
+               a.status,
+               a.dept_id,
+               a.ccltype,
+               a.ctype,
+               a.ikjweight,
+               a.ikjmoney,
+               a.cunqualityinfo,
+               a.processing_type,
+               a.sap_name,
+               a.cfilepath,
+               a.i_proportionkjweight,
+               a.supplier_code,
+               a.supplier_name,
+               a.batch,
+               a.original_cweightno,
+               a.write_off_cweightno,
+               a.sign_in_id
+        from op_sample_unquality a
+        left join op_sampling_plan_sample b on a.source_id = b.op_sampling_plan_sample_id AND b.is_delete = 0
+        left join op_sampling_plan c on b.sampling_plan_id = c.op_sampling_plan_id AND c.delete_id = 0
+        <where>
+            AND a.status = '0' AND a.processing_type = '1'
+            <if test="signId != null">AND a.sign_in_id = #{signId}</if>
+            <if test="sapName != null">AND a.sap_name = #{sapName}</if>
+            <if test="materialCode != null">AND a.material_code like concat('%',#{materialCode},'%')</if>
+            <if test="materialName != null">AND a.material_name like concat('%',#{materialName},'%')</if>
+        </where>
+    </select>
+
+    <select id="selectOpSampleUnqualityBySourceId"
+            resultMap="OpSampleUnqualityResult">
+        <include refid="selectOpSampleUnqualityVo"/>
+        where source_id = #{sourceId} and is_delete = '0'
+    </select>
+
+    <delete id="deleteOpSampleUnqualityDetailByOpSampleUnqualityId">
+        delete from op_sample_unquality_detail where op_sample_unquality_id = #{opSampleUnqualityId}
+        AND ctype = #{ctype}
+    </delete>
+
+    <select id="selectOpSampleUnqualityDetailByOpSampleUnqualityId"
+            resultMap="OpSampleUnqualityDetailResult">
+        select * from op_sample_unquality_detail where op_sample_unquality_id = #{opSampleUnqualityId}
+    </select>
+
+    <insert id="insertOpSampleUnqualityDetail">
+        insert into op_sample_unquality_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="itemId != null and itemId != ''">item_id,</if>
+            <if test="itemCode != null and itemCode != ''">item_code,</if>
+            <if test="itemName != null and itemName != ''">item_name,</if>
+            <if test="ctx != null and ctx != ''">ctx,</if>
+            <if test="ctestresult != null and ctestresult != ''">ctestresult,</if>
+            <if test="chg != null and chg != ''">chg,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="itemId != null and itemId != ''">#{itemId},</if>
+            <if test="itemCode != null and itemCode != ''">#{itemCode},</if>
+            <if test="itemName != null and itemName != ''">#{itemName},</if>
+            <if test="ctx != null and ctx != ''">#{ctx},</if>
+            <if test="ctestresult != null and ctestresult != ''">#{ctestresult},</if>
+            <if test="chg != null and chg != ''">#{chg},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpSampleUnqualityDetail">
+        update op_sample_unquality_detail
+        <trim prefix="set" suffixOverrides=",">
+            <if test="itemId != null and itemId != ''">item_id = #{itemId},</if>
+            <if test="itemCode != null and itemCode != ''">item_code = #{itemCode},</if>
+            <if test="itemName != null and itemName != ''">item_name = #{itemName},</if>
+            <if test="ctx != null and ctx != ''">ctx = #{ctx},</if>
+            <if test="ctestresult != null and ctestresult != ''">ctestresult = #{ctestresult},</if>
+            <if test="chg != null and chg != ''">chg = #{chg},</if>
+        </trim>
+        where op_sample_unquality_detail_id = #{opSampleUnqualityDetailId}
+    </update>
+
+    <update id="updateOpSampleUnqualityByDiBang">
+        update op_sample_unquality
+        set processing_type = 2, update_time = now()
+        where op_sample_unquality_id in
+        <foreach item="item" index="index" collection="list" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+    <update id="updateOpSampleUnqualityManually">
+        update op_sample_unquality
+        set processing_type = 3,update_time = now(),status = 1
+        where op_sample_unquality_id = #{opSampleUnqualityIdS}
+    </update>
+
+    <update id="deleteOpSampleUnqualityBySourceId">
+        update op_sample_unquality set is_delete = #{sourceId}  ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where source_id = #{sourceId}
+    </update>
+</mapper>

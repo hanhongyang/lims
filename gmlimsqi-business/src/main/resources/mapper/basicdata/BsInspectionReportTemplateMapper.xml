@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsInspectionReportTemplateMapper">
+
+    <resultMap type="BsInspectionReportTemplate" id="BsInspectionReportTemplateResult">
+            <result property="id"    column="id"    />
+            <result property="templateCode"    column="template_code"    />
+            <result property="templateName"    column="template_name"    />
+            <result property="templateType"    column="template_type"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="fileInfo"    column="file_info"    />
+            <result property="remark"    column="remark"    />
+            <result property="basisForJudgment"    column="basis_for_judgment"    />
+            <result property="mainInstruments"    column="main_instruments"    />
+            <result property="inspectionMethod"    column="inspection_method"    />
+            <result property="sensoryTraits"    column="sensory_traits"    />
+            <result property="inspectionCategory"    column="inspection_category"    />
+            <result property="packagingSpecifications"    column="packaging_specifications"    />
+            <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+
+
+    <sql id="selectBsInspectionReportTemplateVo">
+        select id,
+               template_code,
+               template_name,
+               template_type,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               is_delete,
+               file_info,
+               remark,
+               basis_for_judgment,
+               main_instruments,
+               inspection_method,
+               sensory_traits,
+               inspection_category,
+               packaging_specifications,
+               dept_id
+        from bs_inspection_report_template
+    </sql>
+
+    <select id="selectBsInspectionReportTemplateList" parameterType="BsInspectionReportTemplate" resultMap="BsInspectionReportTemplateResult">
+        <include refid="selectBsInspectionReportTemplateVo"/>
+        <where>
+            is_delete = '0'
+                        <if test="templateCode != null  and templateCode != ''"> and template_code = #{templateCode}</if>
+                        <if test="templateName != null  and templateName != ''"> and template_name like concat('%', #{templateName}, '%')</if>
+                        <if test="templateType != null  and templateType != ''"> and template_type = #{templateType}</if>
+                        <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+                        <if test="fileInfo != null  and fileInfo != ''"> and file_info = #{fileInfo}</if>
+        </where>
+    </select>
+
+    <select id="selectBsInspectionReportTemplateById" parameterType="String" resultMap="BsInspectionReportTemplateResult">
+        <include refid="selectBsInspectionReportTemplateVo"/>
+        where id = #{id}
+        and is_delete = '0'
+    </select>
+
+    <insert id="insertBsInspectionReportTemplate" parameterType="BsInspectionReportTemplate">
+        insert into bs_inspection_report_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">id,</if>
+                    <if test="templateCode != null">template_code,</if>
+                    <if test="templateName != null">template_name,</if>
+                    <if test="templateType != null">template_type,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="isDelete != null and isDelete != ''">is_delete,</if>
+                    <if test="fileInfo != null">file_info,</if>
+                    <if test="remark != null">remark,</if>
+                    <if test="basisForJudgment != null">basis_for_judgment,</if>
+                    <if test="mainInstruments != null">main_instruments,</if>
+                    <if test="inspectionMethod != null">inspection_method,</if>
+                    <if test="sensoryTraits != null">sensory_traits,</if>
+                    <if test="inspectionCategory != null">inspection_category,</if>
+                    <if test="packagingSpecifications != null">packaging_specifications,</if>
+                    <if test="deptId != null">dept_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">#{id},</if>
+                    <if test="templateCode != null">#{templateCode},</if>
+                    <if test="templateName != null">#{templateName},</if>
+                    <if test="templateType != null">#{templateType},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+                    <if test="fileInfo != null">#{fileInfo},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="basisForJudgment != null">#{basisForJudgment},</if>
+                    <if test="mainInstruments != null">#{mainInstruments},</if>
+                    <if test="inspectionMethod != null">#{inspectionMethod},</if>
+                    <if test="sensoryTraits != null">#{sensoryTraits},</if>
+                    <if test="inspectionCategory != null">#{inspectionCategory},</if>
+                    <if test="packagingSpecifications != null">#{packagingSpecifications},</if>
+                    <if test="deptId != null">#{deptId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsInspectionReportTemplate" parameterType="BsInspectionReportTemplate">
+        update bs_inspection_report_template
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="templateCode != null">template_code = #{templateCode},</if>
+                    <if test="templateName != null">template_name = #{templateName},</if>
+                    <if test="templateType != null">template_type = #{templateType},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+                    <if test="fileInfo != null">file_info = #{fileInfo},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+                    <if test="basisForJudgment != null">basis_for_judgment = #{basisForJudgment},</if>
+                    <if test="mainInstruments != null">main_instruments = #{mainInstruments},</if>
+                    <if test="inspectionMethod != null">inspection_method = #{inspectionMethod},</if>
+                    <if test="sensoryTraits != null">sensory_traits = #{sensoryTraits},</if>
+                    <if test="inspectionCategory != null">inspection_category = #{inspectionCategory},</if>
+                    <if test="packagingSpecifications != null">packaging_specifications = #{packagingSpecifications},</if>
+                    <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagById" >
+        update bs_inspection_report_template set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update bs_inspection_report_template set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

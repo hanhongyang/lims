@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsContactInfoMapper">
+
+    <resultMap type="BsContactInfo" id="ContactInfoResult">
+        <result property="bsContactId"    column="bs_contact_id"    />
+        <result property="bsContactInfoId"    column="bs_contact_info_id"    />
+        <result property="contactPerson"    column="contact_person"    />
+        <result property="contactPhone"    column="contact_phone"    />
+        <result property="contactEmail"    column="contact_email"    />
+        <result property="isReceive"    column="is_receive"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+
+        <result property="isDefaultSendSampleUser"    column="is_default_send_sample_user"    />
+
+    </resultMap>
+
+    <sql id="selectBsContactInfoVo">
+        select bs_contact_id, bs_contact_info_id, contact_person, contact_phone, contact_email, is_receive,
+               is_delete, create_time, create_by, update_time, update_by ,is_default_send_sample_user
+        from bs_contact_info
+    </sql>
+
+    <select id="selectBsContactInfoList" parameterType="BsContactInfo" resultMap="ContactInfoResult">
+        <include refid="selectBsContactInfoVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="bsContactId != null  and bsContactId != ''"> and bs_contact_id = #{bsContactId}</if>
+            <if test="contactPerson != null  and contactPerson != ''"> and contact_person = #{contactPerson}</if>
+            <if test="contactPhone != null  and contactPhone != ''"> and contact_phone = #{contactPhone}</if>
+            <if test="contactEmail != null  and contactEmail != ''"> and contact_email = #{contactEmail}</if>
+            <if test="isReceive != null  and isReceive != ''"> and is_receive = #{isReceive}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+
+    <select id="selectBsContactInfoByBsContactInfoId" parameterType="String" resultMap="ContactInfoResult">
+        <include refid="selectBsContactInfoVo"/>
+        where bs_contact_info_id = #{bsContactInfoId}
+    </select>
+
+    <insert id="insertBsContactInfo" parameterType="BsContactInfo">
+        insert into bs_contact_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsContactId != null and bsContactId != ''">bs_contact_id,</if>
+            <if test="bsContactInfoId != null">bs_contact_info_id,</if>
+            <if test="contactPerson != null">contact_person,</if>
+            <if test="contactPhone != null">contact_phone,</if>
+            <if test="contactEmail != null">contact_email,</if>
+            <if test="isReceive != null">is_receive,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="isDefaultSendSampleUser != null">is_default_send_sample_user,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsContactId != null and bsContactId != ''">#{bsContactId},</if>
+            <if test="bsContactInfoId != null">#{bsContactInfoId},</if>
+            <if test="contactPerson != null">#{contactPerson},</if>
+            <if test="contactPhone != null">#{contactPhone},</if>
+            <if test="contactEmail != null">#{contactEmail},</if>
+            <if test="isReceive != null">#{isReceive},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="isDefaultSendSampleUser != null">#{isDefaultSendSampleUser},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsContactInfo" parameterType="BsContactInfo">
+        update bs_contact_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bsContactId != null and bsContactId != ''">bs_contact_id = #{bsContactId},</if>
+            <if test="contactPerson != null">contact_person = #{contactPerson},</if>
+            <if test="contactPhone != null">contact_phone = #{contactPhone},</if>
+            <if test="contactEmail != null">contact_email = #{contactEmail},</if>
+            <if test="isReceive != null">is_receive = #{isReceive},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isDefaultSendSampleUser != null">is_default_send_sample_user = #{isDefaultSendSampleUser},</if>
+        </trim>
+        where bs_contact_info_id = #{bsContactInfoId}
+    </update>
+
+    <delete id="deleteBsContactInfoByBsContactInfoId" parameterType="String">
+        delete from bs_contact_info where bs_contact_info_id = #{bsContactInfoId}
+    </delete>
+
+    <delete id="deleteBsContactInfoByBsContactInfoIds" parameterType="String">
+        delete from bs_contact_info where bs_contact_info_id in
+        <foreach item="bsContactInfoId" collection="array" open="(" separator="," close=")">
+            #{bsContactInfoId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update bs_contact_info set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where bs_contact_info_id = #{bsContactInfoId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  bs_contact_info set is_delete=1 ,update_time=#{nowTime,jdbcType=TIMESTAMP},update_by=#{usertId}  where bs_contact_info_id in
+        <foreach item="bsContactInfoId" collection="array" open="(" separator="," close=")">
+            #{bsContactInfoId}
+        </foreach>
+    </update>
+
+    <update id="deleteWithParentId">
+        update bs_contact_info set is_delete=1 ,update_time=#{nowTime},update_by=#{usertId} where bs_contact_id = #{contactId}
+    </update>
+
+    <select id="selectWithParentId" resultMap="ContactInfoResult">
+        <include refid="selectBsContactInfoVo"/>
+
+        where bs_contact_id = #{contactId}
+        and is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <insert id="batchInsertBsContactInfo">
+        insert into bs_contact_info
+        (bs_contact_id, bs_contact_info_id, contact_person, contact_phone, contact_email, is_receive,create_time,
+         create_by,update_time,update_by,is_default_send_sample_user)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.bsContactId},
+            #{item.bsContactInfoId},
+            #{item.contactPerson},
+            #{item.contactPhone},
+            #{item.contactEmail},
+            #{item.isReceive},
+            #{item.createTime},
+            #{item.createBy},
+            #{item.updateTime},
+            #{item.updateBy},
+            #{item.isDefaultSendSampleUser}
+            )
+        </foreach>
+    </insert>
+</mapper>

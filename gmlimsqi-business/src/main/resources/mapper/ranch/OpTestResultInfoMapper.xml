@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.ranch.mapper.OpTestResultInfoMapper">
+
+    <resultMap type="OpTestResultInfo" id="OpTestResultInfoResult">
+        <result property="id"    column="id"    />
+        <result property="baseId"    column="base_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="sampleId"    column="sample_id"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="invbillId"    column="invbill_id"    />
+        <result property="invbillName"    column="invbill_name"    />
+        <result property="planId"    column="plan_id"    />
+        <result property="planSampleId"    column="plan_sample_id"    />
+        <result property="planItemId"    column="plan_item_id"    />
+        <result property="result"    column="result"    />
+        <result property="sjph"    column="sjph"    />
+        <result property="sjtFileId"    column="sjt_file_id"    />
+        <result property="checkResult"    column="check_result"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="sjtFileUrl"    column="sjt_file_url"    />
+        <result property="invbillCode"    column="invbill_code"    />
+        <result property="retestFlag"    column="retest_flag"    />
+        <result property="isPushSap"    column="is_push_sap"    />
+        <result property="pushPersonId"    column="push_person_id"    />
+        <result property="pushPersonName"    column="push_person_name"    />
+        <result property="pushTime"    column="push_time"    />
+        <result property="featureName" column="feature_name"/>
+        <result property="referenceRange" column="reference_range"/>
+        <result property="featureId" column="feature_id"/>
+        <result property="upperLimit" column="upper_limit"/>
+        <result property="lowerLimit" column="lower_limit"/>
+        <result property="qualitativeOrQuantitative" column="qualitative_or_quantitative"/>
+    </resultMap>
+
+    <sql id="selectOpTestResultInfoVo">
+        select d.id,
+               d.base_id,
+               d.dept_id,
+               d.dept_name,
+               d.sample_id,
+               d.sample_no,
+               d.sample_name,
+               d.item_name,
+               d.item_id,
+               d.invbill_id,
+               d.invbill_name,
+               d.plan_id,
+               d.plan_sample_id,
+               d.plan_item_id,
+               d.result,
+               d.sjph,
+               d.sjt_file_id,
+               d.check_result,
+               d.create_time,
+               d.create_by,
+               d.update_time,
+               d.update_by,
+               d.delete_id,
+               d.sjt_file_url,
+               d.invbill_code,
+               d.retest_flag,
+               d.is_push_sap,
+               d.push_person_id,
+               d.push_person_name,
+               d.push_time,
+               d.feature_name,
+               d.reference_range,
+               d.feature_id,
+               d.upper_limit,
+               d.lower_limit,
+               d.qualitative_or_quantitative
+        from op_test_result_info d
+    </sql>
+
+    <select id="selectOpTestResultInfoList" parameterType="OpTestResultInfo" resultMap="OpTestResultInfoResult">
+        <include refid="selectOpTestResultInfoVo"/>
+        <where>
+            d.delete_id = '0'
+            <if test="baseId != null  and baseId != ''"> and d.base_id = #{baseId}</if>
+            <if test="deptId != null  and deptId != ''"> and d.dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''"> and d.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="sampleId != null  and sampleId != ''"> and d.sample_id = #{sampleId}</if>
+            <if test="sampleNo != null  and sampleNo != ''"> and d.sample_no = #{sampleNo}</if>
+            <if test="sampleName != null  and sampleName != ''"> and d.sample_name like concat('%', #{sampleName}, '%')</if>
+            <if test="itemName != null  and itemName != ''"> and d.item_name like concat('%', #{itemName}, '%')</if>
+            <if test="itemId != null  and itemId != ''"> and d.item_id = #{itemId}</if>
+            <if test="invbillId != null  and invbillId != ''"> and d.invbill_id = #{invbillId}</if>
+            <if test="invbillName != null  and invbillName != ''"> and d.invbill_name like concat('%', #{invbillName}, '%')</if>
+            <if test="planId != null  and planId != ''"> and d.plan_id = #{planId}</if>
+            <if test="planSampleId != null  and planSampleId != ''"> and d.plan_sample_id = #{planSampleId}</if>
+            <if test="planItemId != null  and planItemId != ''"> and d.plan_item_id = #{planItemId}</if>
+            <if test="result != null  and result != ''"> and d.result = #{result}</if>
+            <if test="sjph != null  and sjph != ''"> and d.sjph = #{sjph}</if>
+            <if test="sjtFileId != null  and sjtFileId != ''"> and d.sjt_file_id = #{sjtFileId}</if>
+            <if test="checkResult != null  and checkResult != ''"> and d.check_result = #{checkResult}</if>
+            <if test="isPushSap != null and isPushSap != ''"> and d.is_push_sap = #{isPushSap}</if>
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectOpTestResultInfoById" parameterType="String" resultMap="OpTestResultInfoResult">
+        <include refid="selectOpTestResultInfoVo"/>
+        where d.id = #{id}
+        and d.delete_id = '0'
+    </select>
+
+    <select id="selectOpTestResultInfoByBaseId" parameterType="java.lang.String" resultMap="OpTestResultInfoResult">
+        <include refid="selectOpTestResultInfoVo"/>
+        where d.base_id = #{baseId}
+        and d.delete_id = '0'
+    </select>
+
+    <insert id="insertOpTestResultInfo" parameterType="OpTestResultInfo">
+        insert into op_test_result_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="baseId != null and baseId != ''">base_id,</if>
+            <if test="deptId != null and deptId != ''">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="sampleId != null">sample_id,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="sampleName != null">sample_name,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="invbillId != null">invbill_id,</if>
+            <if test="invbillName != null">invbill_name,</if>
+            <if test="planId != null">plan_id,</if>
+            <if test="planSampleId != null">plan_sample_id,</if>
+            <if test="planItemId != null">plan_item_id,</if>
+            <if test="result != null">result,</if>
+            <if test="sjph != null">sjph,</if>
+            <if test="sjtFileId != null">sjt_file_id,</if>
+            <if test="checkResult != null">check_result,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deleteId != null">delete_id,</if>
+            <if test="sjtFileUrl != null">sjt_file_url,</if>
+            <if test="invbillCode != null">invbill_code,</if>
+            <if test="retestFlag != null">retest_flag,</if>
+            <if test="isPushSap != null">is_push_sap,</if>
+            <if test="pushPersonId != null">push_person_id,</if>
+            <if test="pushPersonName != null">push_person_name,</if>
+            <if test="pushTime != null">push_time,</if>
+            <if test="featureName != null">
+                feature_name,
+            </if>
+            <if test="referenceRange != null">
+                reference_range,
+            </if>
+            <if test="featureId != null">
+                feature_id,
+            </if>
+            <if test="upperLimit != null">
+                upper_limit,
+            </if>
+            <if test="lowerLimit != null">
+                lower_limit,
+            </if>
+            <if test="qualitativeOrQuantitative != null">
+                qualitative_or_quantitative,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="baseId != null and baseId != ''">#{baseId},</if>
+            <if test="deptId != null and deptId != ''">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="sampleId != null">#{sampleId},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="sampleName != null">#{sampleName},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="invbillId != null">#{invbillId},</if>
+            <if test="invbillName != null">#{invbillName},</if>
+            <if test="planId != null">#{planId},</if>
+            <if test="planSampleId != null">#{planSampleId},</if>
+            <if test="planItemId != null">#{planItemId},</if>
+            <if test="result != null">#{result},</if>
+            <if test="sjph != null">#{sjph},</if>
+            <if test="sjtFileId != null">#{sjtFileId},</if>
+            <if test="checkResult != null">#{checkResult},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deleteId != null">#{deleteId},</if>
+            <if test="sjtFileUrl != null">#{sjtFileUrl},</if>
+            <if test="invbillCode != null">#{invbillCode},</if>
+            <if test="retestFlag != null">#{retestFlag},</if>
+            <if test="isPushSap != null">#{isPushSap},</if>
+            <if test="pushPersonId != null">#{pushPersonId},</if>
+            <if test="pushPersonName != null">#{pushPersonName},</if>
+            <if test="pushTime != null">#{pushTime},</if>
+            <if test="featureName != null">
+                #{featureName},
+            </if>
+            <if test="referenceRange != null">
+                #{referenceRange},
+            </if>
+            <if test="featureId != null">
+                #{featureId},
+            </if>
+            <if test="upperLimit != null">
+                #{upperLimit},
+            </if>
+            <if test="lowerLimit != null">
+                #{lowerLimit},
+            </if>
+            <if test="qualitativeOrQuantitative != null">
+                #{qualitativeOrQuantitative},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOpTestResultInfo" parameterType="OpTestResultInfo">
+        update op_test_result_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="baseId != null and baseId != ''">base_id = #{baseId},</if>
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="sampleId != null">sample_id = #{sampleId},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="sampleName != null">sample_name = #{sampleName},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="invbillId != null">invbill_id = #{invbillId},</if>
+            <if test="invbillName != null">invbill_name = #{invbillName},</if>
+            <if test="planId != null">plan_id = #{planId},</if>
+            <if test="planSampleId != null">plan_sample_id = #{planSampleId},</if>
+            <if test="planItemId != null">plan_item_id = #{planItemId},</if>
+            <if test="result != null">result = #{result},</if>
+            <if test="sjph != null">sjph = #{sjph},</if>
+            <if test="sjtFileId != null">sjt_file_id = #{sjtFileId},</if>
+            <if test="checkResult != null">check_result = #{checkResult},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deleteId != null">delete_id = #{deleteId},</if>
+            <if test="sjtFileUrl != null">sjt_file_url = #{sjtFileUrl},</if>
+            <if test="invbillCode != null">invbill_code = #{invbillCode},</if>
+            <if test="retestFlag != null">retest_flag = #{retestFlag},</if>
+            <if test="isPushSap != null">is_push_sap = #{isPushSap},</if>
+            <if test="pushPersonId != null">push_person_id = #{pushPersonId},</if>
+            <if test="pushPersonName != null">push_person_name = #{pushPersonName},</if>
+            <if test="pushTime != null">push_time = #{pushTime},</if>
+            <if test="featureName != null">
+                feature_name = #{featureName},
+            </if>
+            <if test="referenceRange != null">
+                reference_range = #{referenceRange},
+            </if>
+            <if test="featureId != null">
+                feature_id = #{featureId},
+            </if>
+            <if test="upperLimit != null">
+                upper_limit = #{upperLimit},
+            </if>
+            <if test="lowerLimit != null">
+                lower_limit = #{lowerLimit},
+            </if>
+            <if test="qualitativeOrQuantitative != null">
+                qualitative_or_quantitative = #{qualitativeOrQuantitative},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+
+    <update id="updateDeleteFlagById" >
+        update op_test_result_info set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_test_result_info set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="updateDeleteFlagByBaseId">
+        update op_test_result_info set
+                                       delete_id = id,
+                                       update_time = sysdate(),
+                                       update_by = #{updateBy}
+        where base_id = #{baseId} and delete_id = '0'
+    </update>
+
+
+    <update id="updateRetestFlagById" >
+        update op_test_result_info set retest_flag = '1' ,update_time=now(),update_by=#{updateUser}
+        where id = #{id}
+    </update>
+</mapper>

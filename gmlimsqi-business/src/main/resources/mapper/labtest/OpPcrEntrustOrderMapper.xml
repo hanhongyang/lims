@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpPcrEntrustOrderMapper">
+
+    <resultMap type="OpPcrEntrustOrder" id="OpPcrEntrustOrderResult">
+        <result property="opPcrEntrustOrderId"    column="op_pcr_entrust_order_id"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="entrustDeptId"    column="entrust_dept_id"    />
+        <result property="entrustDeptName"    column="entrust_dept_name"    />
+        <result property="entrustContactInfoId"    column="entrust_contact_info_id"    />
+        <result property="entrustContact"    column="entrust_contact"    />
+        <result property="entrustContactPhone"    column="entrust_contact_phone"    />
+        <result property="entrustContactEmail"    column="entrust_contact_email"    />
+        <result property="sendSampleDate"    column="send_sample_date"    />
+        <result property="sendSampleUserId"    column="send_sample_user_id"    />
+        <result property="sendSampleUserName"    column="send_sample_user_name"    />
+        <result property="totalSampleQuantity"    column="total_sample_quantity"    />
+        <result property="rejectReason"    column="reject_reason"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="receiver"    column="receiver"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="address"    column="address"    />
+        <result property="examineUser"    column="examine_user"    />
+        <result property="examineUserId"    column="examine_user_id"    />
+        <result property="examineTime"    column="examine_time"    />
+        <result property="isReturn"    column="is_return"    />
+        <result property="returnTime"    column="return_time"    />
+        <result property="returnReason"    column="return_reason"    />
+    </resultMap>
+
+    <resultMap type="com.gmlimsqi.business.labtest.vo.OpPcrReportListVo" id="OpPcrReportVo">
+    <result property="opPcrEntrustOrderId"    column="op_pcr_entrust_order_id"    />
+    <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="pcrTaskItemType"    column="pcr_task_item_type"    />
+    <result property="entrustDeptName"    column="entrust_dept_name"    />
+    <result property="examineTime"    column="examine_time"    />
+        <result property="testTime"    column="test_time"    />
+        <result property="testUser"    column="test_user"    />
+        <result property="sampleQuantity"    column="sample_quantity"    />
+    </resultMap>
+
+
+    <resultMap id="OpPcrEntrustOrderOpPcrEntrustOrderSampleResult" type="OpPcrEntrustOrder" extends="OpPcrEntrustOrderResult">
+        <collection property="sampleList" ofType="OpPcrEntrustOrderSample" column="op_pcr_entrust_order_id" select="selectOpPcrEntrustOrderSampleList" />
+    </resultMap>
+
+    <resultMap type="OpPcrEntrustOrderSample" id="OpPcrEntrustOrderSampleResult">
+        <result property="opPcrEntrustOrderSampleId"    column="op_pcr_entrust_order_sample_id"    />
+        <result property="pcrEntrustOrderId"    column="pcr_entrust_order_id"    />
+        <result property="invbillCode"    column="invbill_code"    />
+        <result property="name"    column="name"    />
+        <result property="remark"    column="remark"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectOpPcrEntrustOrderVo">
+        select op_pcr_entrust_order_id, entrust_order_no, entrust_dept_id, entrust_contact_info_id, entrust_contact,
+               entrust_contact_phone, entrust_contact_email, send_sample_date, send_sample_user_id, send_sample_user_name,
+               total_sample_quantity, reject_reason, status, create_time, create_by, update_time, update_by,
+               delete_id ,address, examine_user,
+               examine_user_id, examine_time, is_return, return_time, return_reason
+        from op_pcr_entrust_order
+    </sql>
+
+    <select id="selectOpPcrEntrustOrderList" parameterType="OpPcrEntrustOrder" resultMap="OpPcrEntrustOrderResult">
+        select
+            o.*,
+            d.dept_name as entrust_dept_name
+            from op_pcr_entrust_order o
+            left join sys_dept d  on o.entrust_dept_id = d.dept_id and d.del_flag='0'
+        <where>
+            and o.delete_id = '0'
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and o.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="entrustDeptId != null "> and o.entrust_dept_id = #{entrustDeptId}</if>
+            <if test="entrustContactInfoId != null  and entrustContactInfoId != ''"> and o.entrust_contact_info_id = #{entrustContactInfoId}</if>
+            <if test="entrustContact != null  and entrustContact != ''"> and o.entrust_contact = #{entrustContact}</if>
+            <if test="entrustContactPhone != null  and entrustContactPhone != ''"> and o.entrust_contact_phone = #{entrustContactPhone}</if>
+            <if test="entrustContactEmail != null  and entrustContactEmail != ''"> and o.entrust_contact_email = #{entrustContactEmail}</if>
+            <!-- 修改为范围查询 -->
+            <if test="sendSampleDateStart != null"> and o.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and o.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="sendSampleUserId != null  and sendSampleUserId != ''">and o.send_sample_user_id = #{sendSampleUserId}</if>
+            <if test="sendSampleUserName != null  and sendSampleUserName != ''"> and o.send_sample_user_name like concat('%', #{sendSampleUserName}, '%')</if>
+            <if test="totalSampleQuantity != null "> and o.total_sample_quantity = #{totalSampleQuantity}</if>
+            <if test="rejectReason != null  and rejectReason != ''"> and o.reject_reason = #{rejectReason}</if>
+            <if test="status != null  and status != ''"> and o.status = #{status}</if>
+        </where>
+        order by o.create_time desc
+    </select>
+
+    <select id="selectOpPcrEntrustOrderByOpPcrEntrustOrderId" parameterType="String"
+            resultMap="OpPcrEntrustOrderOpPcrEntrustOrderSampleResult">
+        select op_pcr_entrust_order_id,
+               entrust_order_no,
+               entrust_dept_id,
+               entrust_contact_info_id,
+               entrust_contact,
+               entrust_contact_phone,
+               entrust_contact_email,
+               send_sample_date,
+               send_sample_user_id,
+               send_sample_user_name,
+               total_sample_quantity,
+               reject_reason,
+               status,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               delete_id,
+               is_return,
+               return_time,
+               return_reason
+        from op_pcr_entrust_order
+        where op_pcr_entrust_order_id = #{opPcrEntrustOrderId}
+          and delete_id = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <select id="selectOpPcrEntrustOrderSampleList" resultType="OpPcrEntrustOrderSample" resultMap="OpPcrEntrustOrderSampleResult">
+        select op_pcr_entrust_order_sample_id, pcr_entrust_order_id, invbill_code, name, remark, sequence, is_delete, create_time, create_by, update_time, update_by
+        from op_pcr_entrust_order_sample
+        where pcr_entrust_order_id = #{pcr_entrust_order_id}
+    </select>
+
+    <insert id="insertOpPcrEntrustOrder" parameterType="OpPcrEntrustOrder">
+        insert into op_pcr_entrust_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opPcrEntrustOrderId != null">op_pcr_entrust_order_id,</if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">entrust_order_no,</if>
+            <if test="entrustDeptId != null">entrust_dept_id,</if>
+            <if test="entrustContactInfoId != null">entrust_contact_info_id,</if>
+            <if test="entrustContact != null">entrust_contact,</if>
+            <if test="entrustContactPhone != null">entrust_contact_phone,</if>
+            <if test="entrustContactEmail != null">entrust_contact_email,</if>
+            <if test="sendSampleDate != null">send_sample_date,</if>
+            <if test="sendSampleUserId != null">send_sample_user_id,</if>
+            <if test="sendSampleUserName != null">send_sample_user_name,</if>
+            <if test="totalSampleQuantity != null">total_sample_quantity,</if>
+            <if test="rejectReason != null">reject_reason,</if>
+            <if test="receiverId != null">receiver_id,</if>
+            <if test="receiver != null">receiver,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="address != null">address,</if>
+            <if test="examineUser != null">examine_user,</if>
+            <if test="examineUserId != null">examine_user_id,</if>
+            <if test="examineTime != null">examine_time,</if>
+            <if test="isReturn != null">is_return,</if>
+            <if test="returnTime != null">return_time,</if>
+            <if test="returnReason != null">return_reason,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opPcrEntrustOrderId != null">#{opPcrEntrustOrderId},</if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">#{entrustOrderNo},</if>
+            <if test="entrustDeptId != null">#{entrustDeptId},</if>
+            <if test="entrustContactInfoId != null">#{entrustContactInfoId},</if>
+            <if test="entrustContact != null">#{entrustContact},</if>
+            <if test="entrustContactPhone != null">#{entrustContactPhone},</if>
+            <if test="entrustContactEmail != null">#{entrustContactEmail},</if>
+            <if test="sendSampleDate != null">#{sendSampleDate},</if>
+            <if test="sendSampleUserId != null">#{sendSampleUserId},</if>
+            <if test="sendSampleUserName != null">#{sendSampleUserName},</if>
+            <if test="totalSampleQuantity != null">#{totalSampleQuantity},</if>
+            <if test="rejectReason != null">#{rejectReason},</if>
+            <if test="receiverId != null">#{receiverId},</if>
+            <if test="receiver != null">#{receiver},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="address != null">#{address},</if>
+            <if test="examineUser != null">#{examineUser},</if>
+            <if test="examineUserId != null">#{examineUserId},</if>
+            <if test="examineTime != null">#{examineTime},</if>
+            <if test="isReturn != null">#{isReturn},</if>
+            <if test="returnTime != null">#{returnTime},</if>
+            <if test="returnReason != null">#{returnReason},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpPcrEntrustOrder" parameterType="OpPcrEntrustOrder">
+        update op_pcr_entrust_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entrustOrderNo != null">entrust_order_no = #{entrustOrderNo},</if>
+            <if test="entrustDeptId != null">entrust_dept_id = #{entrustDeptId},</if>
+            <if test="entrustContactInfoId != null">entrust_contact_info_id = #{entrustContactInfoId},</if>
+            <if test="entrustContact != null">entrust_contact = #{entrustContact},</if>
+            <if test="entrustContactPhone != null">entrust_contact_phone = #{entrustContactPhone},</if>
+            <if test="entrustContactEmail != null">entrust_contact_email = #{entrustContactEmail},</if>
+            <if test="sendSampleDate != null">send_sample_date = #{sendSampleDate},</if>
+            <if test="sendSampleUserId != null">send_sample_user_id = #{sendSampleUserId},</if>
+            <if test="sendSampleUserName != null">send_sample_user_name = #{sendSampleUserName},</if>
+            <if test="totalSampleQuantity != null">total_sample_quantity = #{totalSampleQuantity},</if>
+            <if test="rejectReason != null">reject_reason = #{rejectReason},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="receiverId != null">receiver_id = #{receiverId},</if>
+            <if test="receiver != null">receiver = #{receiver},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="examineUser != null">examine_user = #{examineUser},</if>
+            <if test="examineUserId != null">examine_user_id = #{examineUserId},</if>
+            <if test="examineTime != null">examine_time = #{examineTime},</if>
+            <if test="isReturn != null">is_return = #{isReturn},</if>
+            <if test="returnTime != null">return_time = #{returnTime},</if>
+            <if test="returnReason != null">return_reason = #{returnReason},</if>
+        </trim>
+        where op_pcr_entrust_order_id = #{opPcrEntrustOrderId}
+    </update>
+
+
+    <!-- 查询委托单详情（包含样品和项目信息） -->
+    <select id="selectOrderDetailById" parameterType="String" resultMap="OrderDetailResultMap">
+        SELECT
+            o.*,
+            s.op_pcr_entrust_order_sample_id,
+            s.invbill_code,
+            s.name as sample_name,
+            s.remark,
+            s.sequence,
+            ib.invbill_name,
+            i.item_id,
+            it.item_name,
+            it.item_code,
+            d.dept_name as entrust_dept_name,
+            s.pcr_task_item_type,
+            s.sample_no,
+            i.test_result,
+            i.tqsjh,
+            i.kzsjh,
+            i.pcr_entrust_order_sample_id
+        FROM op_pcr_entrust_order o
+                 LEFT JOIN op_pcr_entrust_order_sample s ON o.op_pcr_entrust_order_id = s.pcr_entrust_order_id AND s.is_delete = '0'
+                 left join business_invbill ib on s.invbill_code=ib.sap_code and ib.del_flag='0'
+                 LEFT JOIN op_pcr_entrust_order_item i ON s.op_pcr_entrust_order_sample_id = i.pcr_entrust_order_sample_id AND i.is_delete = '0'
+                 LEFT JOIN bs_labtest_items it ON i.item_id = it.bs_labtest_items_id
+        left join sys_dept d on d.dept_id=o.entrust_dept_id and d.del_flag='0'
+        WHERE o.op_pcr_entrust_order_id = #{opPcrEntrustOrderId} AND o.delete_id = '0'
+        ORDER BY s.sequence
+    </select>
+
+    <!-- 委托单详情结果映射 -->
+    <resultMap id="OrderDetailResultMap" type="com.gmlimsqi.business.labtest.domain.OpPcrEntrustOrder">
+        <result property="opPcrEntrustOrderId"    column="op_pcr_entrust_order_id"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="entrustDeptId"    column="entrust_dept_id"    />
+        <result property="entrustDeptName"    column="entrust_dept_name"    />
+        <result property="address"    column="address"    />
+        <result property="entrustContactInfoId"    column="entrust_contact_info_id"    />
+        <result property="entrustContact"    column="entrust_contact"    />
+        <result property="entrustContactPhone"    column="entrust_contact_phone"    />
+        <result property="entrustContactEmail"    column="entrust_contact_email"    />
+        <result property="sendSampleDate"    column="send_sample_date"    />
+        <result property="sendSampleUserId"    column="send_sample_user_id"    />
+        <result property="sendSampleUserName"    column="send_sample_user_name"    />
+        <result property="totalSampleQuantity"    column="total_sample_quantity"    />
+        <result property="rejectReason"    column="reject_reason"    />
+        <result property="status"    column="status"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="receiver"    column="receiver"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="isReturn"    column="is_return"    />
+        <result property="returnTime"    column="return_time"    />
+        <result property="returnReason"    column="return_reason"    />
+
+
+        <collection property="sampleList" ofType="com.gmlimsqi.business.labtest.domain.OpPcrEntrustOrderSample">
+            <result property="opPcrEntrustOrderSampleId"    column="op_pcr_entrust_order_sample_id"    />
+            <result property="pcrEntrustOrderId"    column="pcr_entrust_order_id"    />
+            <result property="invbillCode"    column="invbill_code"    />
+            <result property="invbillName" column="invbill_name"/>
+            <result property="name" column="sample_name"/>
+            <result property="remark"    column="remark"    />
+            <result property="sequence"    column="sequence"    />
+            <result property="pcrTaskItemType"    column="pcr_task_item_type"    />
+            <result property="sampleNo"    column="sample_no"    />
+            <collection property="testItem" ofType="com.gmlimsqi.business.labtest.domain.OpPcrEntrustOrderItem">
+                <result property="itemId" column="item_id"/>
+                <result property="itemName" column="item_name"/>
+                <result property="testResult" column="test_result"/>
+                <result property="tqsjh" column="tqsjh"/>
+                <result property="kzsjh" column="kzsjh"/>
+            </collection>
+        </collection>
+
+    </resultMap>
+
+
+    <select id="selectByNo" parameterType="String" resultMap="OpPcrEntrustOrderResult">
+        <include refid="selectOpPcrEntrustOrderVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            and entrust_order_no =#{entrustOrderNo}
+        </where>
+    </select>
+
+
+
+    <select id="selectOrderListBySampleIdList" parameterType="java.util.List" resultMap="OpPcrEntrustOrderResult">
+        SELECT
+         o.*
+        FROM op_pcr_entrust_order o
+        LEFT JOIN op_pcr_entrust_order_sample s ON o.op_pcr_entrust_order_id = s.pcr_entrust_order_id AND s.is_delete = '0'
+        WHERE
+        op_pcr_entrust_order_sample_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND o.delete_id = '0'
+    </select>
+
+    <update id="updateOrderStatusBySampleIdList" parameterType="OpPcrEntrustOrder">
+        UPDATE op_pcr_entrust_order o
+        JOIN op_pcr_entrust_order_sample s ON o.op_pcr_entrust_order_id = s.pcr_entrust_order_id
+        SET o.status = '2',
+        o.update_time = NOW()
+        WHERE s.is_delete = '0'
+        AND s.op_pcr_entrust_order_sample_id  in
+            <foreach collection="sampleIdList" item="item" open="(" separator="," close=")">
+             #{item}
+            </foreach>
+        AND o.delete_id = '0' and o.status ='1'
+    </update>
+
+    <update id="updateOrderStatusByNoList" parameterType="OpPcrEntrustOrder">
+        UPDATE op_pcr_entrust_order o
+        JOIN op_pcr_entrust_order_sample s ON o.op_pcr_entrust_order_id = s.pcr_entrust_order_id
+        SET o.status = '2',
+        o.update_time = NOW()
+        WHERE s.is_delete = '0'
+        AND o.entrust_order_no  in
+        <foreach collection="entrustOrderNoList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+          and s.pcr_task_item_type=#{pcrTaskItemType}
+        AND o.delete_id = '0' and o.status ='1'
+    </update>
+
+    <update id="updateStatusById">
+        UPDATE op_pcr_entrust_order
+        set
+            status = #{status},
+            update_time = #{updateTime},
+            update_by = #{updateBy},
+            examine_user = #{examineUser},
+            examine_user_id = #{examineUserId},
+            examine_time = #{examineTime}
+
+        WHERE op_pcr_entrust_order_id = #{opPcrEntrustOrderId}
+          AND delete_id = '0'
+    </update>
+
+    <select id="selectItemTypeByEntrustOrderId" resultType="java.lang.String">
+        SELECT DISTINCT pcr_task_item_type
+        FROM op_pcr_entrust_order o
+                 LEFT JOIN op_pcr_entrust_order_sample s on o.op_pcr_entrust_order_id = s.pcr_entrust_order_id
+                 LEFT JOIN op_pcr_entrust_order_item i on s.op_pcr_entrust_order_sample_id = i.pcr_entrust_order_sample_id
+        where o.op_pcr_entrust_order_id = #{pcrEntrustOrderId}
+    </select>
+
+
+    <select id="selectPcrAuditedList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpPcrReportVo">
+        SELECT
+        o.op_pcr_entrust_order_id,
+        o.entrust_order_no,
+        s.pcr_task_item_type,
+        d.dept_name AS entrust_dept_name,
+        s.test_time,
+        ru.nick_name as test_user,
+        o.status,
+        count(s.op_pcr_entrust_order_sample_id) as sample_quantity
+        FROM
+        op_pcr_entrust_order o
+        left join op_pcr_entrust_order_sample s on o.op_pcr_entrust_order_id = s.pcr_entrust_order_id and s.is_delete='0'
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id AND d.del_flag = '0'
+        LEFT JOIN sys_user ru ON s.test_user_id = ru.user_id AND ru.del_flag = '0' AND ru.STATUS = '0'
+        <where>
+            o.delete_id = '0'
+
+            <if test="status != null and (status == '4' or status == 4)">
+                AND s.examine_user is not null and is_send='0'
+            </if>
+            <if test="status != null and (status == '5' or status == 5)">
+                 and is_send='1'
+            </if>
+            <if test="pcrTaskItemType != null and pcrTaskItemType != ''">
+                AND s.pcr_task_item_type = #{pcrTaskItemType}
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND o.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="beginExamineTime != null ">
+                AND examine_time &gt;= #{beginExamineTime}
+            </if>
+            <if test="endExamineTime != null">
+                AND examine_time &lt;= #{endExamineTime}
+            </if>
+            <if test="begintestTime != null ">
+                AND test_time &gt;= #{begintestTime}
+            </if>
+            <if test="endtestTime != null ">
+                AND test_time &lt;= #{endtestTime}
+            </if>
+        </where>
+        group by
+        o.op_pcr_entrust_order_id,
+        o.entrust_order_no,
+        s.pcr_task_item_type,
+        d.dept_name ,
+        s.test_time,
+        ru.nick_name ,
+        o.status
+        ORDER BY test_time DESC
+    </select>
+
+    <update id="updateSendStatusByIdList">
+        UPDATE op_pcr_entrust_order o
+        SET o.status = '5',
+        o.update_time = NOW()
+        WHERE
+         o.delete_id = '0' and o.op_pcr_entrust_order_id  in
+        <foreach collection="successId" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

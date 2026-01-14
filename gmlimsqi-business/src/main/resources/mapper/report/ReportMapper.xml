@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.report.mapper.ReportMapper">
+
+    <!-- 报表公共头信息VO的resultMap -->
+    <resultMap id="ReportPublicHeaderVOResultMap" type="com.gmlimsqi.business.report.domain.vo.ReportPublicHeaderVO">
+        <!-- 饲料工厂名称 -->
+        <result property="feedFactoryName" column="feed_factory_name"/>
+        <!-- 年份 -->
+        <result property="year" column="year"/>
+        <!-- 月份 -->
+        <result property="month" column="month"/>
+        <!-- 样品编号 -->
+        <result property="sampleNo" column="sample_no"/>
+        <!-- 样品名称 -->
+        <result property="sampleName" column="sample_name"/>
+        <!-- 生产日期 -->
+        <result property="productionDate" column="production_date"/>
+        <!-- 检测日期 -->
+        <result property="testDate" column="test_date"/>
+        <!-- 供应商名称 -->
+        <result property="supplierName" column="supplier_name"/>
+    </resultMap>
+
+    <select id="queryReportPublicHeaderVO" resultMap="ReportPublicHeaderVOResultMap">
+        SELECT
+            s.op_sampling_plan_sample_id,
+            s.dept_id,
+            DATE_FORMAT(s.receive_time, '%Y') AS year,
+            DATE_FORMAT(s.receive_time, '%m') AS month,
+            s.sample_no,
+            s.invbill_name as sample_name,
+            s.production_date,
+            s.supplier_name,
+            s.receive_time as test_date,
+            d.dept_name as feed_factory_name
+        FROM
+            op_sampling_plan_sample s
+                LEFT JOIN
+            op_sampling_plan_item i ON s.op_sampling_plan_sample_id = i.sampling_plan_sample_id
+                AND i.is_delete = '0'
+        LEFT JOIN
+        sys_dept d ON s.dept_id = d.dept_id
+        <where>
+            s.is_delete = '0'
+            <if test="samplingType != null and samplingType != ''">
+                AND s.sampling_type = #{samplingType}
+            </if>
+            <if test="outsourcedFactory != null and outsourcedFactory != ''">
+                AND s.outsourced_factory = #{outsourcedFactory}
+            </if>
+            <if test="deptId != null and deptId != ''">
+                AND s.dept_id = #{deptId}
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                AND s.sample_no = #{sampleNo}
+            </if>
+            <if test="sampleName != null and sampleName != ''">
+                AND s.invbill_name LIKE CONCAT('%', #{sampleName}, '%')
+            </if>
+            <if test="testStartDate != null">
+                AND s.receive_time >= #{testStartDate}
+            </if>
+            <if test="testEndDate != null">
+                AND s.receive_time &lt;= #{testEndDate}
+            </if>
+        </where>
+        group by s.op_sampling_plan_sample_id;
+    </select>
+</mapper>

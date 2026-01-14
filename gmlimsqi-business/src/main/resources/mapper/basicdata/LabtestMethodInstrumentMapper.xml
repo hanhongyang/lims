@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.LabtestMethodInstrumentMapper">
+    
+    <resultMap type="LabtestMethodInstrument" id="LabtestMethodInstrumentResult">
+        <result property="labtestMethodInstrumentId"    column="bs_labtest_method_instrument_id"    />
+        <result property="labtestMethodsId"    column="bs_labtest_methods_id"    />
+        <result property="instrumentsId"    column="bs_instruments_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectLabtestMethodInstrumentVo">
+        select bs_labtest_method_instrument_id, bs_labtest_methods_id, bs_instruments_id, is_delete, create_time, create_by, update_time, update_by from bs_labtest_method_instrument
+    </sql>
+
+    <select id="selectLabtestMethodInstrumentList" parameterType="LabtestMethodInstrument" resultMap="LabtestMethodInstrumentResult">
+        <include refid="selectLabtestMethodInstrumentVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+        </where>
+    </select>
+    
+    <select id="selectLabtestMethodInstrumentByLabtestMethodInstrumentId" parameterType="String" resultMap="LabtestMethodInstrumentResult">
+        <include refid="selectLabtestMethodInstrumentVo"/>
+        where bs_labtest_method_instrument_id = #{labtestMethodInstrumentId}
+    </select>
+
+    <insert id="insertLabtestMethodInstrument" parameterType="LabtestMethodInstrument">
+        insert into bs_labtest_method_instrument
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="labtestMethodInstrumentId != null">bs_labtest_method_instrument_id,</if>
+            <if test="labtestMethodsId != null and labtestMethodsId != ''">bs_labtest_methods_id,</if>
+            <if test="instrumentsId != null and instrumentsId != ''">bs_instruments_id,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="labtestMethodInstrumentId != null">#{labtestMethodInstrumentId},</if>
+            <if test="labtestMethodsId != null and labtestMethodsId != ''">#{labtestMethodsId},</if>
+            <if test="instrumentsId != null and instrumentsId != ''">#{instrumentsId},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLabtestMethodInstrument" parameterType="LabtestMethodInstrument">
+        update bs_labtest_method_instrument
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="labtestMethodsId != null and labtestMethodsId != ''">bs_labtest_methods_id = #{labtestMethodsId},</if>
+            <if test="instrumentsId != null and instrumentsId != ''">bs_instruments_id = #{instrumentsId},</if>
+            <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_labtest_method_instrument_id = #{labtestMethodInstrumentId}
+    </update>
+
+    <delete id="deleteLabtestMethodInstrumentByLabtestMethodInstrumentId" parameterType="String">
+        delete from bs_labtest_method_instrument where bs_labtest_method_instrument_id = #{labtestMethodInstrumentId}
+    </delete>
+
+    <delete id="deleteLabtestMethodInstrumentByLabtestMethodInstrumentIds" parameterType="String">
+        delete from bs_labtest_method_instrument where bs_labtest_method_instrument_id in 
+        <foreach item="labtestMethodInstrumentId" collection="array" open="(" separator="," close=")">
+            #{labtestMethodInstrumentId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteById" >
+        update bs_labtest_method_instrument set is_delete=1,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where bs_labtest_method_instrument_id = #{labtestMethodInstrumentId}
+    </update>
+
+    <update id="updateDeleteByMethodId" >
+        update bs_labtest_method_instrument set is_delete=1,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where bs_labtest_methods_id = #{labtestMethodInstrumentId}
+    </update>
+
+    <update id="updateDeleteByIds" >
+        update  bs_labtest_method_instrument set is_delete=1,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where bs_labtest_method_instrument_id in
+        <foreach item="labtestMethodInstrumentId" collection="array" open="(" separator="," close=")">
+            #{labtestMethodInstrumentId}
+        </foreach>
+    </update>
+
+
+</mapper>

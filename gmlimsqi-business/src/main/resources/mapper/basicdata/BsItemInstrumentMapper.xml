@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsItemInstrumentMapper">
+
+    <resultMap type="BsItemInstrument" id="BsItemInstrumentResult">
+        <result property="bsItemInstrumentId"    column="bs_item_instrument_id"    />
+        <result property="instrumentId"    column="instrument_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBsItemInstrumentVo">
+        select bs_item_instrument_id, instrument_id, item_id, is_delete, create_time, create_by, update_time, update_by from bs_item_instrument
+    </sql>
+
+    <select id="selectBsItemInstrumentList" parameterType="BsItemInstrument" resultMap="BsItemInstrumentResult">
+        <include refid="selectBsItemInstrumentVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="instrumentId != null "> and instrument_id = #{instrumentId}</if>
+            <if test="itemId != null  and itemId != ''"> and item_id = #{itemId}</if>
+        </where>
+    </select>
+
+    <select id="selectBsItemInstrumentByBsItemInstrumentId" parameterType="String" resultMap="BsItemInstrumentResult">
+        <include refid="selectBsItemInstrumentVo"/>
+        where bs_item_instrument_id = #{bsItemInstrumentId}
+    </select>
+
+    <insert id="insertBsItemInstrument" parameterType="BsItemInstrument">
+        insert into bs_item_instrument
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsItemInstrumentId != null">bs_item_instrument_id,</if>
+            <if test="instrumentId != null">instrument_id,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsItemInstrumentId != null">#{bsItemInstrumentId},</if>
+            <if test="instrumentId != null">#{instrumentId},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsItemInstrument" parameterType="BsItemInstrument">
+        update bs_item_instrument
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="instrumentId != null">instrument_id = #{instrumentId},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_item_instrument_id = #{bsItemInstrumentId}
+    </update>
+
+
+
+    <update id="updateDeleteFlagById" >
+        update bs_item_instrument set is_delete=1 ,update_time=now(),update_by=#{updateUserId} where bs_item_instrument_id = #{bsItemInstrumentId}
+    </update>
+
+    <update id="updateDeleteFlagByItemId">
+        update  bs_item_instrument set is_delete=1 ,update_time=now(),update_by=#{updateUserId}  where item_id =#{itemId}
+    </update>
+
+
+</mapper>

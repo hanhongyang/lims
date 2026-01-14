@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BusinessInvbillMapper">
+    <resultMap
+            type="com.gmlimsqi.business.basicdata.domain.BusinessInvbill"
+            id="BusinessInvbillResult">
+        <result property="id" column="id"/>
+        <result property="sapCode" column="sap_code"/>
+        <result property="invbillName" column="invbill_name"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="tag"    column="tag"    />
+        <result property="createTime" column="create_time"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="cclasscode" column="cclasscode"/>
+        <result property="cclassname" column="cclassname"/>
+        <result property="cremark" column="cremark"/>
+        <result property="ikz" column="ikz"/>
+        <result property="izj" column="izj"/>
+        <result property="isUploadReport" column="is_upload_report"/>
+        <result property="isSapType" column="is_sap_type"/>
+        <result property="sampleState" column="sample_state"/>
+        <result property="invbillCode" column="invbill_code"/>
+        <result property="materialType" column="material_type"/>
+        <collection property="invbillDepts" ofType="com.gmlimsqi.business.basicdata.domain.BsInvbillDept">
+            <result property="deptSapCode"    column="dept_sap_code"    />
+            <result property="deptName"    column="dept_name"    />
+            <result property="invbillSapCode"    column="invbill_sap_code"    />
+        </collection>
+    </resultMap>
+
+    <!-- resultMap for the child table -->
+    <resultMap id="InfoResultMap" type="com.gmlimsqi.business.basicdata.domain.BusinessInvbillInfo">
+        <id column="sub_id" property="id"/>
+        <result column="sub_invbill_id" property="invbillId"/>
+        <result column="sub_dept_id" property="deptId"/>
+        <result column="sub_dept_name" property="deptName"/>
+        <result column="sub_izj" property="izj"/>
+        <result column="sub_create_by" property="createBy"/>
+        <result column="sub_create_time" property="createTime"/>
+        <result column="sub_update_time" property="updateTime"/>
+        <result column="sub_update_by" property="updateBy"/>
+        <result column="sub_sap_name" property="sapName"/>
+    </resultMap>
+
+    <!-- resultMap that combines both tables -->
+    <resultMap id="BusinessInvbillWithInfoResultMap" type="com.gmlimsqi.business.basicdata.domain.BusinessInvbill" extends="BusinessInvbillResult">
+        <association property="businessInvbillInfoList" javaType="java.util.List" resultMap="InfoResultMap"/>
+    </resultMap>
+
+    <sql id="selectBusinessInvbillVo">
+        select id,
+               sap_code,
+               invbill_name,
+               del_flag,
+               create_by,
+               create_time,
+               dept_id,
+               update_by,
+               update_time,
+               cclasscode,
+               cclassname,
+               cremark,
+               ikz,
+               izj,
+               is_sap_type,
+               sample_state,
+               invbill_code,
+               material_type
+        from business_invbill
+    </sql>
+
+    <select id="selectBusinessInvbillList"
+            parameterType="com.gmlimsqi.business.basicdata.domain.BusinessInvbill"
+            resultMap="BusinessInvbillResult">
+        select id,
+            i.sap_code,
+        i.invbill_name,
+        i.del_flag,
+        i.create_by,
+        i.create_time,
+        i.dept_id,
+        i.update_by,
+        i.update_time,
+        i.cclasscode,
+        i.cclassname,
+        i.cremark,
+        i.ikz,
+        i.izj,
+        i.is_sap_type,
+        i.sample_state,
+        i.invbill_code,
+        i.material_type,
+        ii.is_upload_report,ii.tag
+        from business_invbill i
+        left join bs_invbill_info ii on ii.sap_code=i.sap_code and ii.delete_id='0'
+        <where>
+        i.del_flag='0'
+            <if test="sapCode != null  and sapCode != ''">
+                and i.sap_code = #{sapCode}
+            </if>
+            <if test="invbillName != null  and invbillName != ''">
+                and i.invbill_name like concat('%', #{invbillName}, '%')
+            </if>
+            <if test="materialType != null  and materialType != ''">
+                and i.material_type like concat('%', #{materialType}, '%')
+            </if>
+            <if test="cclasscode != null  and cclasscode != ''">
+                and i.cclasscode = #{cclasscode}
+            </if>
+            <if test="cclassname != null  and cclassname != ''">
+                and i.cclassname like concat('%', #{cclassname}, '%')
+            </if>
+            <if test="cremark != null  and cremark != ''">
+                and i.cremark = #{cremark}
+            </if>
+            <if test="izj != null  and izj != ''">
+                and i.izj = #{izj}
+            </if>
+            <if test="isUploadReport != null  and isUploadReport != ''">
+                and ii.is_upload_report = #{isUploadReport}
+            </if>
+            <if test="tag != null  and tag != ''">
+                and ii.tag = #{tag}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBusinessInvbillById" parameterType="String"
+            resultMap="BusinessInvbillResult">
+        select id,
+               i.sap_code,
+               i.invbill_name,
+               i.del_flag,
+               i.create_by,
+               i.create_time,
+               i.dept_id,
+               i.update_by,
+               i.update_time,
+               i.cclasscode,
+               i.cclassname,
+               i.cremark,
+               i.ikz,
+               i.izj,
+               i.is_sap_type,
+               i.sample_state,
+               i.invbill_code,
+               i.material_type,
+               ii.is_upload_report,ii.tag
+        from business_invbill i
+                 left join bs_invbill_info ii on ii.sap_code=i.sap_code and ii.delete_id='0'
+        where i.id = #{id}
+    </select>
+
+    <insert id="insertBusinessInvbill"
+            parameterType="com.gmlimsqi.business.basicdata.domain.BusinessInvbill">
+        insert into business_invbill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="sapCode != null">
+                sap_code,
+            </if>
+            <if test="invbillName != null">
+                invbill_name,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="deptId != null">
+                dept_id,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="cclasscode != null">
+                cclasscode,
+            </if>
+            <if test="cclassname != null">
+                cclassname,
+            </if>
+            <if test="cremark != null">
+                cremark,
+            </if>
+            <if test="ikz != null">
+                ikz,
+            </if>
+            <if test="izj != null">
+                izj,
+            </if>
+            <if test="isSapType != null">
+                is_sap_type,
+            </if>
+            <if test="sampleState != null">
+                sample_state,
+            </if>
+            <if test="invbillCode != null">
+                invbill_code,
+            </if>
+            <if test="materialType != null">
+                material_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="sapCode != null">
+                #{sapCode},
+            </if>
+            <if test="invbillName != null">
+                #{invbillName},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="deptId != null">
+                #{deptId},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="cclasscode != null">
+                #{cclasscode},
+            </if>
+            <if test="cclassname != null">
+                #{cclassname},
+            </if>
+            <if test="cremark != null">
+                #{cremark},
+            </if>
+            <if test="ikz != null">
+                #{ikz},
+            </if>
+            <if test="izj != null">
+                #{izj},
+            </if>
+            <if test="isSapType != null">
+                #{isSapType},
+            </if>
+            <if test="sampleState != null">
+                #{sampleState},
+            </if>
+            <if test="invbillCode != null">
+                #{invbillCode},
+            </if>
+            <if test="materialType != null">
+                #{materialType},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBusinessInvbill"
+            parameterType="com.gmlimsqi.business.basicdata.domain.BusinessInvbill">
+        update business_invbill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sapCode != null">
+                sap_code = #{sapCode},
+            </if>
+            <if test="invbillName != null">
+                invbill_name = #{invbillName},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="cclasscode != null">
+                cclasscode = #{cclasscode},
+            </if>
+            <if test="cclassname != null">
+                cclassname = #{cclassname},
+            </if>
+            <if test="cremark != null">
+                cremark = #{cremark},
+            </if>
+            <if test="ikz != null">
+                ikz = #{ikz},
+            </if>
+            <if test="izj != null">
+                izj = #{izj},
+            </if>
+            <if test="isSapType != null">
+                is_sap_type = #{isSapType},
+            </if>
+            <if test="sampleState != null">
+                sample_state = #{sampleState},
+            </if>
+            <if test="invbillCode != null">
+                invbill_code = #{invbillCode},
+            </if>
+            <if test="materialType != null">
+                material_type = #{materialType},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessInvbillById" parameterType="String">
+        delete
+        from business_invbill
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessInvbillByIds" parameterType="String">
+        delete from business_invbill where id in
+        <foreach item="id" collection="array" open="(" separator=","
+                 close=")">
+        #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertBusinessInvbillBatch">
+        insert into business_invbill
+        (
+        id,
+        sap_code,
+        invbill_name,
+        cclasscode,
+        cclassname,
+        cremark,
+        ikz,
+        dept_id,
+         create_time,
+         is_sap_type,
+         sample_state,
+         invbill_code,
+        material_type
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.id},
+                #{item.sapCode},
+                #{item.invbillName},
+                #{item.cclasscode},
+                #{item.cclassname},
+                #{item.cremark},
+                #{item.ikz},
+                #{item.deptId},
+                now(),
+                #{item.isSapType},
+                #{item.sampleState},
+                #{item.invbillCode},
+                #{item.materialType}
+            </trim>
+        </foreach>
+    </insert>
+
+    <select id="selectInfoByMaterialCode" resultType="java.lang.String">
+        select izj from business_invbill
+        where sap_code = #{materialCode} limit 1
+    </select>
+
+    <!-- SQL to select data from both tables -->
+    <select id="getBusinessInvbillWithInfoById" resultMap="BusinessInvbillResult" parameterType="String">
+        SELECT
+        b.id, b.sap_code, b.invbill_name,
+        b.del_flag,
+        b.create_by,
+        b.create_time,
+        b.dept_id,
+        b.update_by,
+        b.update_time,
+        b.cclasscode,
+        b.cclassname,
+        b.cremark,
+        b.ikz,
+        b.is_sap_type,
+        b.sample_state,
+        b.invbill_code,
+        b.material_type,
+        ii.is_upload_report ,
+        b.izj,
+        ii.tag,
+        d.dept_name,
+        id.dept_sap_code
+        FROM business_invbill b
+        LEFT JOIN bs_invbill_dept id ON b.sap_code = id.invbill_sap_code and id.is_delete='0'
+        LEFT JOIN sys_dept d ON id.dept_sap_code = d.sap_name and d.del_flag='0'
+        left join bs_invbill_info ii on ii.sap_code=b.sap_code and ii.delete_id='0'
+        <where>
+            <if test="id != null">
+                b.id = #{id}
+            </if>
+            <if test="sapCode != null">
+                AND b.sap_code = #{sapCode}
+            </if>
+            <if test="deptName != null">
+                AND d.dept_name = #{deptName}
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectInfoWithCodeAndSap"
+            resultMap="BusinessInvbillResult">
+        <include refid="selectBusinessInvbillVo"/>
+        where sap_code = #{matnr} and
+        dept_id = #{werks}
+    </select>
+    <select id="selectInfoBySapCode"
+            resultMap="BusinessInvbillResult">
+        <include refid="selectBusinessInvbillVo"/>
+        where sap_code = #{matnr}
+    </select>
+    <select id="selectSapCodeWithName" resultType="java.lang.String">
+        select sap_code
+        from business_invbill
+        where invbill_name = #{materialName}
+        and dept_id = #{sapCode}
+        limit 1
+    </select>
+</mapper>

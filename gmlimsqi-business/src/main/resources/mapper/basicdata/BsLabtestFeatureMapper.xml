@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsLabtestFeatureMapper">
+
+    <resultMap type="BsLabtestFeature" id="BsLabtestFeatureResult">
+        <result property="bsLabtestFeatureId"    column="bs_labtest_feature_id"    />
+        <result property="name"    column="name"    />
+        <result property="info"    column="info"    />
+        <result property="upperLimit"    column="upper_limit"    />
+        <result property="lowerLimit"    column="lower_limit"    />
+        <result property="unitOfMeasurement"    column="unit_of_measurement"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="qualitativeOrQuantitative"    column="qualitative_or_quantitative"    />
+        <result property="qualitativeType"    column="qualitative_type"    />
+        <result property="allowError"    column="allow_error"    />
+        <result property="errorInfo"    column="error_info"    />
+        <result property="firstUpperLimit"    column="first_upper_limit"    />
+        <result property="firstLowerLimit"    column="first_lower_limit"    />
+    </resultMap>
+
+    <sql id="selectBsLabtestFeatureVo">
+        select bs_labtest_feature_id, name, info, upper_limit, lower_limit, unit_of_measurement, dept_id, create_time,
+               create_by, update_time, update_by, is_delete, is_enable, qualitative_or_quantitative, qualitative_type,
+               allow_error,error_info,first_upper_limit,first_lower_limit
+        from bs_labtest_feature
+    </sql>
+
+    <select id="selectBsLabtestFeatureList" parameterType="BsLabtestFeature" resultMap="BsLabtestFeatureResult">
+        <include refid="selectBsLabtestFeatureVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="info != null  and info != ''"> and info = #{info}</if>
+            <if test="upperLimit != null "> and upper_limit = #{upperLimit}</if>
+            <if test="lowerLimit != null "> and lower_limit = #{lowerLimit}</if>
+            <if test="unitOfMeasurement != null  and unitOfMeasurement != ''"> and unit_of_measurement = #{unitOfMeasurement}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="isEnable != null  and isEnable != ''"> and is_enable = #{isEnable}</if>
+            <if test="qualitativeOrQuantitative != null  and qualitativeOrQuantitative != ''"> and qualitative_or_quantitative = #{qualitativeOrQuantitative}</if>
+            <if test="qualitativeType != null  and qualitativeType != ''"> and qualitative_type = #{qualitativeType}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectBsLabtestFeatureByBsLabtestFeatureId" parameterType="String" resultMap="BsLabtestFeatureResult">
+        <include refid="selectBsLabtestFeatureVo"/>
+        where bs_labtest_feature_id = #{bsLabtestFeatureId}
+    </select>
+
+    <insert id="insertBsLabtestFeature" parameterType="BsLabtestFeature">
+        insert into bs_labtest_feature
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestFeatureId != null">bs_labtest_feature_id,</if>
+            <if test="name != null">name,</if>
+            <if test="info != null and info != ''">info,</if>
+            <if test="upperLimit != null">upper_limit,</if>
+            <if test="lowerLimit != null">lower_limit,</if>
+            <if test="unitOfMeasurement != null">unit_of_measurement,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="isEnable != null and isEnable != ''">is_enable,</if>
+            <if test="qualitativeOrQuantitative != null">qualitative_or_quantitative,</if>
+            <if test="qualitativeType != null">qualitative_type,</if>
+            <if test="allowError != null">allow_error,</if>
+            <if test="errorInfo != null">error_info,</if>
+            <if test="firstUpperLimit != null">first_upper_limit,</if>
+            <if test="firstLowerLimit != null">first_lower_limit,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestFeatureId != null">#{bsLabtestFeatureId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="info != null and info != ''">#{info},</if>
+            <if test="upperLimit != null">#{upperLimit},</if>
+            <if test="lowerLimit != null">#{lowerLimit},</if>
+            <if test="unitOfMeasurement != null">#{unitOfMeasurement},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+            <if test="qualitativeOrQuantitative != null">#{qualitativeOrQuantitative},</if>
+            <if test="qualitativeType != null">#{qualitativeType},</if>
+            <if test="allowError != null">#{allowError},</if>
+            <if test="errorInfo != null">#{errorInfo},</if>
+            <if test="firstUpperLimit != null">#{firstUpperLimit},</if>
+            <if test="firstLowerLimit != null">#{firstLowerLimit},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsLabtestFeature" parameterType="BsLabtestFeature">
+        update bs_labtest_feature
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="info != null and info != ''">info = #{info},</if>
+            <if test="upperLimit != null">upper_limit = #{upperLimit},</if>
+            <if test="lowerLimit != null">lower_limit = #{lowerLimit},</if>
+            <if test="unitOfMeasurement != null">unit_of_measurement = #{unitOfMeasurement},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+            <if test="qualitativeOrQuantitative != null">qualitative_or_quantitative = #{qualitativeOrQuantitative},</if>
+            <if test="qualitativeType != null">qualitative_type = #{qualitativeType},</if>
+            <if test="allowError != null">allow_error = #{allowError},</if>
+            <if test="errorInfo != null">error_info = #{errorInfo},</if>
+            <if test="firstUpperLimit != null">first_upper_limit = #{firstUpperLimit},</if>
+            <if test="firstLowerLimit != null">first_lower_limit = #{firstLowerLimit},</if>
+        </trim>
+        where bs_labtest_feature_id = #{bsLabtestFeatureId}
+    </update>
+
+    <delete id="deleteBsLabtestFeatureByBsLabtestFeatureId" parameterType="String">
+        delete from bs_labtest_feature where bs_labtest_feature_id = #{bsLabtestFeatureId}
+    </delete>
+
+    <delete id="deleteBsLabtestFeatureByBsLabtestFeatureIds" parameterType="String">
+        delete from bs_labtest_feature where bs_labtest_feature_id in
+        <foreach item="bsLabtestFeatureId" collection="array" open="(" separator="," close=")">
+            #{bsLabtestFeatureId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update bs_labtest_feature set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where bs_labtest_feature_id = #{bsLabtestFeatureId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  bs_labtest_feature set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where bs_labtest_feature_id in
+        <foreach item="bsLabtestFeatureId" collection="array" open="(" separator="," close=")">
+            #{bsLabtestFeatureId}
+        </foreach>
+    </update>
+
+    <update id="updateEnableById" parameterType="BsLabtestFeature">
+        update bs_labtest_feature
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="isEnable != null">is_enable = #{isEnable},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_labtest_feature_id = #{bsLabtestFeatureId}
+    </update>
+
+</mapper>

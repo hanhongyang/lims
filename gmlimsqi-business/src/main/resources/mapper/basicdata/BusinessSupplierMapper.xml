@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BusinessSupplierMapper">
+    <resultMap type="com.gmlimsqi.business.basicdata.domain.BusinessSupplier"
+               id="BusinessSupplierResult">
+        <result property="id" column="id"/>
+        <result property="sapCode" column="sap_code"/>
+        <result property="name" column="name"/>
+        <result property="abbreviation" column="abbreviation"/>
+        <result property="linkman" column="linkman"/>
+        <result property="mailbox" column="mailbox"/>
+        <result property="companyTel" column="company_tel"/>
+        <result property="phone" column="phone"/>
+        <result property="bankCard" column="bank_card"/>
+        <result property="bankName" column="bank_name"/>
+        <result property="bankAccount" column="bank_account"/>
+        <result property="dutyParagraph" column="duty_paragraph"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="signInRadius" column="sign_in_radius"/>
+        <result property="ifDiscontinue" column="if_discontinue"/>
+        <result property="discontinueUser" column="discontinue_user"/>
+        <result property="discontinueTime" column="discontinue_time"/>
+        <result property="discontinueCause" column="discontinue_cause"/>
+        <result property="ifAccount" column="if_account"/>
+        <result property="userNickname" column="user_nickname"/>
+        <result property="userId" column="user_id"/>
+        <result property="type" column="type"/>
+        <result property="userId" column="user_id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="cifcarrier" column="cifcarrier"/>
+    </resultMap>
+
+    <sql id="selectBusinessSupplierVo">
+        select id,
+               sap_code,
+               name,
+               abbreviation,
+               linkman,
+               mailbox,
+               company_tel,
+               phone,
+               bank_card,
+               bank_name,
+               bank_account,
+               duty_paragraph,
+               longitude,
+               latitude,
+               sign_in_radius,
+               if_discontinue,
+               discontinue_user,
+               discontinue_time,
+               discontinue_cause,
+               if_account,
+               user_nickname,
+               user_id,
+               type,
+               user_id,
+               dept_id,
+               remark,
+               del_flag,
+               create_by,
+               create_time,
+               update_by,
+               cifcarrier,
+               update_time
+        from business_supplier
+    </sql>
+
+    <select id="selectBusinessSupplierList"
+            parameterType="com.gmlimsqi.business.basicdata.domain.BusinessSupplier"
+            resultMap="BusinessSupplierResult">
+        <include refid="selectBusinessSupplierVo"/>
+        <where>
+            <if test="sapCode != null  and sapCode != ''">
+                and sap_code  like concat('%', #{sapCode}, '%')
+            </if>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="abbreviation != null  and abbreviation != ''">
+                and abbreviation = #{abbreviation}
+            </if>
+            <if test="linkman != null  and linkman != ''">
+                and linkman = #{linkman}
+            </if>
+            <if test="mailbox != null  and mailbox != ''">
+                and mailbox = #{mailbox}
+            </if>
+            <if test="companyTel != null  and companyTel != ''">
+                and company_tel = #{companyTel}
+            </if>
+            <if test="phone != null  and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="bankCard != null  and bankCard != ''">
+                and bank_card = #{bankCard}
+            </if>
+            <if test="bankName != null  and bankName != ''">
+                and bank_name like concat('%', #{bankName}, '%')
+            </if>
+            <if test="bankAccount != null  and bankAccount != ''">
+                and bank_account = #{bankAccount}
+            </if>
+            <if test="dutyParagraph != null  and dutyParagraph != ''">
+                and duty_paragraph = #{dutyParagraph}
+            </if>
+            <if test="longitude != null  and longitude != ''">
+                and longitude = #{longitude}
+            </if>
+            <if test="latitude != null  and latitude != ''">
+                and latitude = #{latitude}
+            </if>
+            <if test="signInRadius != null">
+                and sign_in_radius = #{signInRadius}
+            </if>
+            <if test="ifDiscontinue != null  and ifDiscontinue != ''">
+                and if_discontinue = #{ifDiscontinue}
+            </if>
+            <if test="discontinueUser != null  and discontinueUser != ''">
+                and discontinue_user = #{discontinueUser}
+            </if>
+            <if test="discontinueTime != null">
+                and discontinue_time = #{discontinueTime}
+            </if>
+            <if test="discontinueCause != null  and discontinueCause != ''">
+                and discontinue_cause = #{discontinueCause}
+            </if>
+            <if test="ifAccount != null  and ifAccount != ''">
+                and if_account = #{ifAccount}
+            </if>
+            <if test="userNickname != null  and userNickname != ''">
+                and user_nickname like concat('%', #{userNickname}, '%')
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="type != null  and type != ''">
+                and type = #{type}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="deptId != null">
+                and dept_id = #{deptId}
+            </if>
+            <if test="cifcarrier != null">
+                and cifcarrier = #{cifcarrier}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectBusinessSupplierById" parameterType="String"
+            resultMap="BusinessSupplierResult">
+        <include refid="selectBusinessSupplierVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBusinessSupplier"
+            parameterType="com.gmlimsqi.business.basicdata.domain.BusinessSupplier">
+        insert into business_supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="sapCode != null">
+                sap_code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="abbreviation != null">
+                abbreviation,
+            </if>
+            <if test="linkman != null">
+                linkman,
+            </if>
+            <if test="mailbox != null">
+                mailbox,
+            </if>
+            <if test="companyTel != null">
+                company_tel,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="bankCard != null">
+                bank_card,
+            </if>
+            <if test="bankName != null">
+                bank_name,
+            </if>
+            <if test="bankAccount != null">
+                bank_account,
+            </if>
+            <if test="dutyParagraph != null">
+                duty_paragraph,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="signInRadius != null">
+                sign_in_radius,
+            </if>
+            <if test="ifDiscontinue != null">
+                if_discontinue,
+            </if>
+            <if test="discontinueUser != null">
+                discontinue_user,
+            </if>
+            <if test="discontinueTime != null">
+                discontinue_time,
+            </if>
+            <if test="discontinueCause != null">
+                discontinue_cause,
+            </if>
+            <if test="ifAccount != null">
+                if_account,
+            </if>
+            <if test="userNickname != null">
+                user_nickname,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="deptId != null">
+                dept_id,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="cifcarrier != null">
+                cifcarrier,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="sapCode != null">
+                #{sapCode},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="abbreviation != null">
+                #{abbreviation},
+            </if>
+            <if test="linkman != null">
+                #{linkman},
+            </if>
+            <if test="mailbox != null">
+                #{mailbox},
+            </if>
+            <if test="companyTel != null">
+                #{companyTel},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="bankCard != null">
+                #{bankCard},
+            </if>
+            <if test="bankName != null">
+                #{bankName},
+            </if>
+            <if test="bankAccount != null">
+                #{bankAccount},
+            </if>
+            <if test="dutyParagraph != null">
+                #{dutyParagraph},
+            </if>
+            <if test="longitude != null">
+                #{longitude},
+            </if>
+            <if test="latitude != null">
+                #{latitude},
+            </if>
+            <if test="signInRadius != null">
+                #{signInRadius},
+            </if>
+            <if test="ifDiscontinue != null">
+                #{ifDiscontinue},
+            </if>
+            <if test="discontinueUser != null">
+                #{discontinueUser},
+            </if>
+            <if test="discontinueTime != null">
+                #{discontinueTime},
+            </if>
+            <if test="discontinueCause != null">
+                #{discontinueCause},
+            </if>
+            <if test="ifAccount != null">
+                #{ifAccount},
+            </if>
+            <if test="userNickname != null">
+                #{userNickname},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="deptId != null">
+                #{deptId},
+            </if>
+            <if test="remark != null">
+                #{remark},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="cifcarrier != null">
+                #{cifcarrier},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBusinessSupplier"
+            parameterType="com.gmlimsqi.business.basicdata.domain.BusinessSupplier">
+        update business_supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sapCode != null">
+                sap_code = #{sapCode},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="abbreviation != null">
+                abbreviation = #{abbreviation},
+            </if>
+            <if test="linkman != null">
+                linkman = #{linkman},
+            </if>
+            <if test="mailbox != null">
+                mailbox = #{mailbox},
+            </if>
+            <if test="companyTel != null">
+                company_tel = #{companyTel},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="bankCard != null">
+                bank_card = #{bankCard},
+            </if>
+            <if test="bankName != null">
+                bank_name = #{bankName},
+            </if>
+            <if test="bankAccount != null">
+                bank_account = #{bankAccount},
+            </if>
+            <if test="dutyParagraph != null">
+                duty_paragraph = #{dutyParagraph},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude},
+            </if>
+            <if test="signInRadius != null">
+                sign_in_radius = #{signInRadius},
+            </if>
+            <if test="ifDiscontinue != null">
+                if_discontinue = #{ifDiscontinue},
+            </if>
+            <if test="discontinueUser != null">
+                discontinue_user = #{discontinueUser},
+            </if>
+            <if test="discontinueTime != null">
+                discontinue_time = #{discontinueTime},
+            </if>
+            <if test="discontinueCause != null">
+                discontinue_cause = #{discontinueCause},
+            </if>
+            <if test="ifAccount != null">
+                if_account = #{ifAccount},
+            </if>
+            <if test="userNickname != null">
+                user_nickname = #{userNickname},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="cifcarrier != null">
+                cifcarrier = #{cifcarrier},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessSupplierById" parameterType="Long">
+        delete
+        from business_supplier
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessSupplierByIds" parameterType="String">
+        delete
+        from business_supplier where id in
+        <foreach item="id" collection="array" open="(" separator=","
+                 close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectSupplierListBySqlServer"
+            resultType="com.gmlimsqi.business.basicdata.vo.SupplierSapVO">
+        select ccustomercode, ccustomername, cifcarrier, type = 0
+        from Base_Customer where bsysdel = '0'
+        <if test="username != null and username != ''">
+            and ccustomercode = #{username}
+        </if>
+    </select>
+
+    <select id="selectClientListBySqlServer"
+            resultType="com.gmlimsqi.business.basicdata.vo.SupplierSapVO">
+        select cuscode as ccustomercode, cusname as ccustomername, type = 1
+        from bs_custom where bsysdel = '0'
+        <if test="username != null and username != ''">
+            and cusname = #{username}
+        </if>
+    </select>
+
+    <insert id="insertBusinessSupplierBatch">
+        insert into business_supplier (id,sap_code,name,abbreviation,linkman,mailbox,company_tel,phone,bank_card,bank_name,bank_account,duty_paragraph,
+                                       longitude,latitude,sign_in_radius,discontinue_user,discontinue_time,discontinue_cause,
+                                       user_nickname,type,user_id,dept_id,remark,create_by,create_time,update_by,update_time,cifcarrier)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.sapCode},#{item.name},#{item.abbreviation},#{item.linkman},#{item.mailbox},#{item.companyTel},#{item.phone},#{item.bankCard},#{item.bankName},#{item.bankAccount},#{item.dutyParagraph},
+            #{item.longitude},#{item.latitude},#{item.signInRadius},#{item.discontinueUser},#{item.discontinueTime},#{item.discontinueCause},#{item.userNickname},
+            #{item.type},#{item.userId},#{item.deptId},#{item.remark},#{item.createBy},now(),#{item.updateBy},now(),#{item.cifcarrier})
+
+        </foreach>
+    </insert>
+</mapper>

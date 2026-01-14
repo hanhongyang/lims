@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.instrument.mapper.InstrumentsMapper">
+    
+    <resultMap type="Instruments" id="BsInstrumentsResult">
+        <result property="bsInstrumentsId"    column="bs_instruments_id"    />
+        <result property="instrumentName"    column="instrument_name"    />
+        <result property="instrumentCode"    column="instrument_code"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="type"    column="type"    />
+        <result property="responsiblePerson"    column="responsible_person"    />
+        <result property="modelNumber"    column="model_number"    />
+        <result property="remark"    column="remark"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="installationLocation"    column="installation_location"    />
+        <result property="purpose"    column="purpose"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectBsInstrumentsVo">
+        select bs_instruments_id,
+               instrument_name,
+               instrument_code,
+               dept_id,
+               type,
+               responsible_person,
+               model_number,
+               remark,
+               is_enable,
+               is_delete,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               installation_location,
+               purpose,
+               status
+        from bs_instruments
+    </sql>
+
+    <select id="selectBsInstrumentsList" parameterType="Instruments" resultMap="BsInstrumentsResult">
+        select i.bs_instruments_id,
+               i.instrument_name,
+               i.instrument_code,
+               i.dept_id,
+               i.type,
+               i.responsible_person,
+               i.model_number,
+               i.remark,
+               i.is_enable,
+               i.is_delete,
+               i.create_time,
+               i.create_by,
+               i.update_time,
+               i.update_by,
+               i.installation_location,
+               i.purpose,
+               i.status,
+               d.dept_name
+        from bs_instruments i
+                 left join sys_dept d on i.dept_id = d.dept_id
+        <where>
+            and i.is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="instrumentName != null  and instrumentName != ''"> and i.instrument_name like concat('%', #{instrumentName}, '%')</if>
+            <if test="instrumentCode != null  and instrumentCode != ''"> and i.instrument_code like concat('%', #{instrumentCode}, '%')</if>
+            <if test="deptId != null  and deptId != ''"> and i.dept_id = #{deptId}</if>
+            <if test="type != null  and type != ''"> and i.type = #{type}</if>
+            <if test="responsiblePerson != null  and responsiblePerson != ''"> and i.responsible_person like concat('%', #{responsiblePerson}, '%')</if>
+            <if test="modelNumber != null  and modelNumber != ''"> and i.model_number like concat('%', #{modelNumber}, '%')</if>
+            <if test="isEnable != null  and isEnable != ''"> and i.is_enable = #{isEnable}</if>
+            <if test="installationLocation != null  and installationLocation != ''"> and i.installation_location like concat('%', #{installationLocation}, '%')</if>
+            <if test="purpose != null  and purpose != ''"> and i.purpose like concat('%', #{purpose}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectBsInstrumentsByBsInstrumentsId" parameterType="String" resultMap="BsInstrumentsResult">
+        <include refid="selectBsInstrumentsVo"/>
+        where bs_instruments_id = #{bsInstrumentsId} and is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <insert id="insertBsInstruments" parameterType="Instruments">
+        insert into bs_instruments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsInstrumentsId != null">bs_instruments_id,</if>
+            <if test="instrumentName != null and instrumentName != ''">instrument_name,</if>
+            <if test="instrumentCode != null and instrumentCode != ''">instrument_code,</if>
+            <if test="deptId != null and deptId != ''">dept_id,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="responsiblePerson != null">responsible_person,</if>
+            <if test="modelNumber != null">model_number,</if>
+            <if test="remark != null">remark,</if>
+            <if test="isEnable != null and isEnable != ''">is_enable,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="installationLocation != null">installation_location,</if>
+            <if test="purpose != null">purpose,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsInstrumentsId != null">#{bsInstrumentsId},</if>
+            <if test="instrumentName != null and instrumentName != ''">#{instrumentName},</if>
+            <if test="instrumentCode != null and instrumentCode != ''">#{instrumentCode},</if>
+            <if test="deptId != null and deptId != ''">#{deptId},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="responsiblePerson != null">#{responsiblePerson},</if>
+            <if test="modelNumber != null">#{modelNumber},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="installationLocation != null">#{installationLocation},</if>
+            <if test="purpose != null">#{purpose},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsInstruments" parameterType="Instruments">
+        update bs_instruments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="instrumentName != null and instrumentName != ''">instrument_name = #{instrumentName},</if>
+            <if test="instrumentCode != null and instrumentCode != ''">instrument_code = #{instrumentCode},</if>
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="responsiblePerson != null">responsible_person = #{responsiblePerson},</if>
+            <if test="modelNumber != null">model_number = #{modelNumber},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+<!--            <if test="createTime != null">create_time = #{createTime},</if>-->
+<!--            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>-->
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="installationLocation != null">installation_location = #{installationLocation},</if>
+            <if test="purpose != null">purpose = #{purpose},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where bs_instruments_id = #{bsInstrumentsId}
+    </update>
+
+    <delete id="deleteBsInstrumentsByBsInstrumentsId" parameterType="String">
+        delete from bs_instruments where bs_instruments_id = #{bsInstrumentsId}
+    </delete>
+
+    <delete id="deleteBsInstrumentsByBsInstrumentsIds" parameterType="String">
+        delete from bs_instruments where bs_instruments_id in 
+        <foreach item="bsInstrumentsId" collection="array" open="(" separator="," close=")">
+            #{bsInstrumentsId}
+        </foreach>
+    </delete>
+</mapper>

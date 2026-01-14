@@ -1,0 +1,822 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxFeedReportBaseMapper">
+
+    <resultMap type="com.gmlimsqi.business.labtest.domain.OpJczxFeedReportBase" id="OpJczxFeedReportBaseResult">
+        <result property="opJczxFeedReportBaseId" column="op_jczx_feed_report_base_id"/>
+        <result property="reportNo" column="report_no"/>
+        <result property="status" column="status"/>
+        <result property="sampleName" column="sample_name"/>
+        <result property="sampleNo" column="sample_no"/>
+        <result property="entrustDeptName" column="entrust_dept_name"/>
+        <result property="sampleModel" column="sample_model"/>
+        <result property="sampleState" column="sample_state"/>
+        <result property="trademark" column="trademark"/>
+        <result property="sampleAmount" column="sample_amount"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="testTime" column="test_time"/>
+        <result property="mainInsturment" column="main_insturment"/>
+        <result property="mainInstrument" column="main_instrument"/>
+        <result property="conclusion" column="conclusion"/>
+        <result property="remark" column="remark"/>
+        <result property="editUserId" column="edit_user_id"/>
+        <result property="checkUserId" column="check_user_id"/>
+        <result property="checkTime" column="check_time"/>
+        <result property="approveUserId" column="approve_user_id"/>
+        <result property="approveTime" column="approve_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="deleteId" column="delete_id"/>
+        <result property="editUser" column="edit_user"/>
+        <result property="checkUser" column="check_user"/>
+        <result property="approveUser" column="approve_user"/>
+        <result property="sampleBatchNo" column="sample_batch_no"/>
+        <result property="testType" column="test_type"/>
+        <result property="sampleSource" column="sample_source"/>
+        <result property="testLocation" column="test_location"/>
+        <result property="itemName" column="item_name"/>
+        <result property="opJczxFeedResultBaseId" column="op_jczx_feed_result_base_id"/>
+        <result property="pdfFileInfo" column="pdf_file_info"/>
+        <result property="issuanceTime" column="issuance_time"/>
+        <result property="feedEntrustOrderId" column="feed_entrust_order_id"/>
+        <result property="feedEntrustOrderSampleId" column="feed_entrust_order_sample_id"/>
+        <result property="returnReason" column="return_reason"/>
+        <result property="address" column="address"/>
+        <result property="sendEmailTime" column="send_email_time"/>
+        <result property="sendEmailUserId" column="send_email_user_id"/>
+
+    </resultMap>
+
+    <resultMap id="OpJczxFeedReportBaseOpJczxFeedReportInfoResult" type="OpJczxFeedReportBase"
+               extends="OpJczxFeedReportBaseResult">
+        <collection property="opJczxFeedReportInfoList" ofType="OpJczxFeedReportInfo"
+                    column="op_jczx_feed_report_base_id" select="selectOpJczxFeedReportInfoList"/>
+    </resultMap>
+
+    <resultMap type="OpJczxFeedReportInfo" id="OpJczxFeedReportInfoResult">
+        <result property="opJczxFeedReportInfoId" column="op_jczx_feed_report_info_id"/>
+        <result property="baseId" column="base_id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="itemName" column="item_name"/>
+        <result property="unit" column="unit"/>
+        <result property="sapecification" column="sapecification"/>
+        <result property="valueOfTest" column="value_of_test"/>
+        <result property="standard" column="standard"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="deleteId" column="delete_id"/>
+        <result property="modelNo" column="model_no"/>
+        <result property="sampleNo" column="sample_no"/>
+        <result property="entrustOrderItemId" column="entrust_order_item_id"/>
+    </resultMap>
+
+    <resultMap type="com.gmlimsqi.business.labtest.vo.OpFeedReportListVo" id="OpJczxFeedReportListVo">
+        <result property="reportNo"    column="report_no"    />
+        <result property="reportTime"    column="create_time"    />
+        <result property="opJczxFeedReportBaseId"    column="op_jczx_feed_report_base_id"    />
+        <result property="status"    column="status"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="sendSampleDate"    column="send_sample_date"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="entrustDeptName"    column="entrust_dept_name"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="testTime"    column="test_time"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="editUser"    column="edit_user"    />
+        <result property="checkUser"    column="check_user"    />
+        <result property="approveUser"    column="approve_user"    />
+        <result property="issuanceTime"    column="issuance_time"    />
+        <result property="feedEntrustOrderSampleId"    column="feed_entrust_order_sample_id"    />
+        <result property="feedEntrustOrderId"    column="feed_entrust_order_id"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="returnReason"    column="return_reason"    />
+        <result property="pdfFileInfo"    column="pdf_file_info"    />
+        <result property="returnReason"    column="return_reason"    />
+    </resultMap>
+
+    <sql id="selectOpJczxFeedReportBaseVo">
+        select op_jczx_feed_report_base_id,
+               report_no,
+               sample_name,
+               sample_no,
+               entrust_dept_name,
+               sample_model,
+               sample_state,
+               trademark,
+               status,
+               sample_amount,
+               receive_time,
+               test_time,
+               main_insturment,
+               conclusion,
+               remark,
+               edit_user_id,
+               check_user_id,
+               check_time,
+               approve_user_id,
+               approve_time,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               delete_id,
+               edit_user,
+               pdf_file_info,
+               check_user,
+               approve_user,
+               issuance_time,
+               return_reason,
+               address,
+               send_email_user_id,
+               send_email_time
+        from op_jczx_feed_report_base
+    </sql>
+
+    <select id="selectOpJczxFeedReportBaseListStatus0"
+            parameterType="com.gmlimsqi.business.labtest.dto.OpJczxFeedReportDto" resultMap="OpJczxFeedReportListVo">
+        SELECT
+        s.op_feed_entrust_order_sample_id feed_entrust_order_sample_id,
+        '' as report_no,
+        '0' as status,
+        s.name as sample_name,
+        o.entrust_order_no,
+        s.sample_no,
+        d.dept_name as entrust_dept_name,
+        s.receive_time,
+        o.send_sample_date,
+        '' testTime,
+        o.op_feed_entrust_order_id feed_entrust_order_id,
+        '根据委托方的要求，仅提供实测数据，详见检测结果汇总页' as conclusion,
+        '样品信息为客户提供，实验室不对其负责。' as remark,
+        s.return_reason
+        FROM
+        op_feed_entrust_order_sample s
+        LEFT JOIN
+        op_feed_entrust_order o on s.feed_entrust_order_id=o.op_feed_entrust_order_id AND o.delete_id='0'
+        LEFT JOIN
+        sys_dept d on d.dept_id=o.entrust_dept_id
+        <where>
+            s.is_delete = '0'
+            <!-- 过滤报告表不存在的数据 -->
+            AND s.sample_no NOT IN (
+            SELECT b.sample_no
+            FROM op_jczx_feed_report_base b
+            WHERE b.sample_no IS NOT NULL and b.delete_id='0' and b.status!='6'
+            )
+            <!-- 过滤化验单已校对的数据 -->
+            AND EXISTS ( -- 必须有检测信息记录
+                SELECT 1
+                FROM op_jczx_feed_result_info i
+                WHERE i.entrust_order_sample_id = s.op_feed_entrust_order_sample_id and i.delete_id='0' and i.is_reset='0'
+            )
+            AND NOT EXISTS (
+            -- 只要能查到任何一个“不合格”的项目，就排除整个样品
+            SELECT 1
+            FROM op_feed_entrust_order_item oi
+            -- 【关键点1】关联时，只关联“当前有效”且“未删除”的结果记录
+            LEFT JOIN op_jczx_feed_result_info i
+            ON i.entrust_order_sample_id = oi.op_feed_entrust_order_sample_id
+            AND oi.op_feed_entrust_order_item_id = i.entrust_order_item_id
+            AND i.delete_id = '0'
+            AND i.is_reset = '0'  -- --- 这里直接过滤掉历史复检数据，只看最新的！
+            WHERE oi.op_feed_entrust_order_sample_id = s.op_feed_entrust_order_sample_id
+            AND oi.is_delete = '0'
+            -- 【关键点2】什么叫不合格？
+            -- 1. i.op_jczx_feed_result_info_id IS NULL：连结果都没录入（LEFT JOIN 没连上）
+            -- 2. i.check_user IS NULL：录入了，但是审核人为空
+            AND (i.op_jczx_feed_result_info_id IS NULL OR i.check_user IS NULL)
+            )
+            <if test="sampleName != null  and sampleName != ''">and s.name like concat('%', #{sampleName}, '%')</if>
+            <if test="sampleNo != null  and sampleNo != ''">and s.sample_no like concat('%', #{sampleNo}, '%')</if>
+            <if test="testMethod != null  and testMethod != ''">and s.test_method =#{testMethod}</if>
+            <if test="entrustDeptName != null  and entrustDeptName != ''">and d.dept_name like concat('%',
+                #{entrustDeptName}, '%')
+            </if>
+            <if test="beginReceiveTime != null">
+                and DATE(s.receive_time) >= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null">
+                and DATE(s.receive_time) &lt;= #{endReceiveTime}
+            </if>
+            <if test="beginSendSampleTime != null">
+                and DATE(o.send_sample_date) >= #{beginSendSampleTime}
+            </if>
+            <if test="endSendSampleTime != null">
+                and DATE(o.send_sample_date) &lt;= #{endSendSampleTime}
+            </if>
+
+        </where>
+        order by s.receive_time desc
+    </select>
+
+    <select id="selectOpJczxFeedReportBaseList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxFeedReportDto"
+            resultMap="OpJczxFeedReportListVo">
+        select
+        b.op_jczx_feed_report_base_id,
+        b.report_no,
+        b.sample_name,
+        b.sample_no,
+        b.entrust_dept_name,
+        o.entrust_order_no,
+        b.status,
+        b.receive_time,
+        b.test_time,
+        b.check_time,
+        b.approve_time,
+        b.edit_user,
+        b.check_user,
+        b.approve_user,
+        b.pdf_file_info,
+        b.create_time,
+        b.issuance_time,
+        b.feed_entrust_order_sample_id,
+        b.return_reason,
+        b.address,
+        b.pdf_file_info
+        from op_jczx_feed_report_base b
+        left join op_feed_entrust_order o on b.feed_entrust_order_id=o.op_feed_entrust_order_id and o.delete_id='0'
+        <where>
+            b.delete_id = '0'
+            <if test="reportNo != null  and reportNo != ''">and b.report_no like concat('%', #{reportNo}, '%')</if>
+            <if test="sampleName != null  and sampleName != ''">and b.sample_name like concat('%', #{sampleName}, '%')
+            </if>
+            <if test="sampleNo != null  and sampleNo != ''">and b.sample_no like concat('%', #{sampleNo}, '%')</if>
+            <if test="entrustDeptName != null  and entrustDeptName != ''">and b.entrust_dept_name like concat('%',
+                #{entrustDeptName}, '%')
+            </if>
+            <if test="beginReceiveTime != null and beginReceiveTime != '' and endReceiveTime != null and endReceiveTime != ''">
+                and DATE(b.receive_time) between #{beginReceiveTime} and #{endReceiveTime}
+            </if>
+            <if test="beginTestTime != null and beginTestTime != '' and endTestTime != null and endTestTime != ''">
+                and DATE(b.test_time) between #{beginTestTime} and #{endTestTime}
+            </if>
+            <if test="beginCheckTime != null and beginCheckTime != '' and endCheckTime != null and endCheckTime != ''">
+                and DATE(b.check_time) between #{beginCheckTime} and #{endCheckTime}
+            </if>
+            <if test="beginApproveTime != null and beginApproveTime != '' and endApproveTime != null and endApproveTime != ''">
+                and DATE(b.approve_time) between #{beginApproveTime} and #{endApproveTime}
+            </if>
+            <if test="editUser != null  and editUser != ''">and b.edit_user like concat('%', #{editUser}, '%')</if>
+            <if test="checkUser != null  and checkUser != ''">and b.check_user like concat('%', #{checkUser}, '%')</if>
+            <if test="approveUser != null  and approveUser != ''">and b.approve_user like concat('%', #{approveUser},
+                '%')
+            </if>
+            <if test="status != null  and status != ''">and b.status =#{status}</if>
+            <if test="beginReportTime != null">
+                and DATE(b.create_time) >= #{beginReportTime}
+            </if>
+            <if test="endReportTime != null">
+                and DATE(b.create_time) &lt;= #{endReportTime}
+            </if>
+            <if test="beginIssuanceTime != null">
+                and DATE(b.issuance_time) >= #{beginIssuanceTime}
+            </if>
+            <if test="endIssuanceTime != null">
+                and DATE(b.issuance_time) &lt;= #{endIssuanceTime}
+            </if>
+        </where>
+        order by b.create_time desc
+    </select>
+
+    <select id="selectOpJczxFeedReportBaseByOpJczxFeedReportBaseId" parameterType="String"
+            resultMap="OpJczxFeedReportBaseOpJczxFeedReportInfoResult">
+        select op_jczx_feed_report_base_id,
+        report_no,
+        sample_name,
+        sample_no,
+        entrust_dept_name,
+        sample_model,
+        sample_state,
+        trademark,
+        status,
+        sample_amount,
+        receive_time,
+        DATE_FORMAT(test_time, '%Y-%m-%d') test_time,
+        main_insturment as main_insturment,
+        main_insturment as main_instrument,
+        conclusion,
+        remark,
+        edit_user_id,
+        check_user_id,
+        check_time,
+        approve_user_id,
+        approve_time,
+        create_time,
+        create_by,
+        update_time,
+        update_by,
+        delete_id,
+        edit_user,
+        check_user,
+        pdf_file_info,
+        issuance_time,
+        approve_user,
+        test_type,
+        item_name,
+        test_location,
+        issuance_time,
+        address
+        from op_jczx_feed_report_base
+        where op_jczx_feed_report_base_id = #{opJczxFeedReportBaseId}
+        and delete_id = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <select id="selectOpJczxFeedReportInfoList" resultType="OpJczxFeedReportInfo"
+            resultMap="OpJczxFeedReportInfoResult">
+        select op_jczx_feed_report_info_id,
+               base_id,
+               item_id,
+               item_name,
+               unit,
+               sapecification,
+               value_of_test,
+               standard,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               delete_id
+        from op_jczx_feed_report_info
+        where base_id = #{base_id}
+    </select>
+
+    <insert id="insertOpJczxFeedReportBase" parameterType="OpJczxFeedReportBase">
+        insert into op_jczx_feed_report_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxFeedReportBaseId != null">op_jczx_feed_report_base_id,</if>
+            <if test="reportNo != null">report_no,</if>
+            <if test="sampleName != null">sample_name,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="entrustDeptName != null">entrust_dept_name,</if>
+            <if test="sampleModel != null">sample_model,</if>
+            <if test="sampleState != null">sample_state,</if>
+            <if test="trademark != null">trademark,</if>
+            <if test="status != null">status,</if>
+            <if test="sampleAmount != null">sample_amount,</if>
+            <if test="receiveTime != null">receive_time,</if>
+            <if test="testTime != null">test_time,</if>
+            <if test="mainInsturment != null">main_insturment,</if>
+            <if test="conclusion != null">conclusion,</if>
+            <if test="remark != null">remark,</if>
+            <if test="editUserId != null">edit_user_id,</if>
+            <if test="checkUserId != null">check_user_id,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="approveUserId != null">approve_user_id,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="editUser != null">edit_user,</if>
+            <if test="checkUser != null">check_user,</if>
+            <if test="approveUser != null">approve_user,</if>
+            <if test="feedEntrustOrderSampleId != null">feed_entrust_order_sample_id,</if>
+            <if test="pdfFileInfo != null">pdf_file_info,</if>
+            <if test="feedEntrustOrderId != null">feed_entrust_order_id,</if>
+            <if test="issuanceTime != null">issuance_time,</if>
+            <if test="address != null">address,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="testType != null">test_type,</if>
+            <if test="testLocation != null">test_location,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxFeedReportBaseId != null">#{opJczxFeedReportBaseId},</if>
+            <if test="reportNo != null">#{reportNo},</if>
+            <if test="sampleName != null">#{sampleName},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="entrustDeptName != null">#{entrustDeptName},</if>
+            <if test="sampleModel != null">#{sampleModel},</if>
+            <if test="sampleState != null">#{sampleState},</if>
+            <if test="trademark != null">#{trademark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sampleAmount != null">#{sampleAmount},</if>
+            <if test="receiveTime != null">#{receiveTime},</if>
+            <if test="testTime != null">#{testTime},</if>
+            <if test="mainInsturment != null">#{mainInsturment},</if>
+            <if test="conclusion != null">#{conclusion},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="editUserId != null">#{editUserId},</if>
+            <if test="checkUserId != null">#{checkUserId},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="approveUserId != null">#{approveUserId},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="editUser != null">#{editUser},</if>
+            <if test="checkUser != null">#{checkUser},</if>
+            <if test="approveUser != null">#{approveUser},</if>
+            <if test="feedEntrustOrderSampleId != null">#{feedEntrustOrderSampleId},</if>
+            <if test="pdfFileInfo != null">#{pdfFileInfo},</if>
+            <if test="issuanceTime != null">#{issuanceTime},</if>
+            <if test="feedEntrustOrderId != null">#{feedEntrustOrderId},</if>
+            <if test="address != null">#{address},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="testType != null">#{testType},</if>
+            <if test="testLocation != null">#{testLocation},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpJczxFeedReportBase" parameterType="OpJczxFeedReportBase">
+        update op_jczx_feed_report_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportNo != null">report_no = #{reportNo},</if>
+            <if test="sampleName != null">sample_name = #{sampleName},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="entrustDeptName != null">entrust_dept_name = #{entrustDeptName},</if>
+            <if test="sampleModel != null">sample_model = #{sampleModel},</if>
+            <if test="sampleState != null">sample_state = #{sampleState},</if>
+            <if test="trademark != null">trademark = #{trademark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sampleAmount != null">sample_amount = #{sampleAmount},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="testTime != null">test_time = #{testTime},</if>
+            <if test="mainInsturment != null">main_insturment = #{mainInsturment},</if>
+            <if test="conclusion != null">conclusion = #{conclusion},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="editUserId != null">edit_user_id = #{editUserId},</if>
+            <if test="checkUserId != null">check_user_id = #{checkUserId},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="approveUserId != null">approve_user_id = #{approveUserId},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="editUser != null">edit_user = #{editUser},</if>
+            <if test="checkUser != null">check_user = #{checkUser},</if>
+            <if test="approveUser != null">approve_user = #{approveUser},</if>
+            <if test="feedEntrustOrderSampleId != null">feed_entrust_order_sample_id = #{feedEntrustOrderSampleId},</if>
+            <if test="pdfFileInfo != null">pdf_file_info = #{pdfFileInfo},</if>
+            <if test="issuanceTime != null">issuance_time = #{issuanceTime},</if>
+            <if test="returnReason != null">return_reason = #{returnReason},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="testType != null">test_type = #{testType},</if>
+            <if test="sendEmailTime != null">send_email_time = #{sendEmailTime},</if>
+            <if test="sendEmailUserId != null">send_email_user_id = #{sendEmailUserId},</if>
+        </trim>
+        where op_jczx_feed_report_base_id = #{opJczxFeedReportBaseId}
+    </update>
+
+
+    <update id="updateDeleteFlagById">
+        update op_jczx_feed_report_base
+        set delete_id=op_jczx_feed_report_base_id,
+            update_time=now(),
+            update_by=#{updateUserId}
+        where op_jczx_feed_report_base_id = #{opJczxFeedReportBaseId}
+    </update>
+
+    <update id="updateInfoDeleteByBaseId">
+        update op_jczx_feed_report_info
+        set delete_id=op_jczx_feed_report_info_id,
+            update_time=now(),
+            update_by=#{updateUserId}
+        where base_id = #{opJczxFeedReportBaseId}
+    </update>
+
+    <insert id="batchOpJczxFeedReportInfo">
+        insert into op_jczx_feed_report_info(
+        op_jczx_feed_report_info_id, base_id, item_id, item_name, unit,
+        sapecification, value_of_test, standard, create_time, create_by,
+        update_time, update_by,entrust_order_item_id,sample_no
+        ) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.opJczxFeedReportInfoId}, #{item.baseId}, #{item.itemId}, #{item.itemName}, #{item.unit},
+            #{item.sapecification}, #{item.valueOfTest}, #{item.standard}, #{item.createTime}, #{item.createBy},
+            #{item.updateTime}, #{item.updateBy}, #{item.entrustOrderItemId}, #{item.sampleNo})
+        </foreach>
+    </insert>
+    <resultMap type="com.gmlimsqi.business.labtest.vo.OpFeedReportBaseVo" id="OpJczxFeedReportVo">
+        <result property="reportNo" column="report_no"/>
+        <result property="sampleNo" column="sample_no"/>
+        <result property="sampleState" column="sample_state"/>
+        <result property="sampleName" column="sample_name"/>
+        <result property="sampleNo" column="sample_no"/>
+        <result property="entrustDeptName" column="entrust_dept_name"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="testTime" column="test_time"/>
+        <result property="sampleModel" column="sample_model"/>
+        <result property="sampleAmount" column="sample_amount"/>
+        <result property="entrustDeptName" column="entrust_dept_name"/>
+        <result property="entrustDeptId" column="entrust_dept_id"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="sampleBatchNo" column="sample_batch_no"/>
+        <result property="testType" column="test_type"/>
+        <result property="testTime" column="test_time"/>
+        <result property="testLocation" column="test_location"/>
+        <result property="itemName" column="item_name"/>
+        <result property="mainInstrument" column="main_insturment"/>
+        <result property="itemName" column="item_name"/>
+        <result property="opFeedEntrustOrderSampleId" column="op_feed_entrust_order_sample_id"/>
+        <result property="feedEntrustOrderId" column="op_feed_entrust_order_id"/>
+    </resultMap>
+    <select id="selectReportBaseBySampleId" resultMap="OpJczxFeedReportBaseResult" parameterType="String">
+        SELECT DISTINCT s.sample_no,
+                        ''                                            as report_no,
+                        s.name                                        as sample_name,
+                        s.model                                       as sample_model,
+                        s.status                                      as sample_state,
+                        s.model                                       as sample_amount,
+                        d.dept_name                                   as entrust_dept_name,
+                        d.address,
+                        o.entrust_dept_id,
+                        ''                                               sample_source,
+                        batch_no                                      as sample_batch_no,
+                        s.receive_time,
+                        '委托检测'                                    as test_type,
+                        DATE_FORMAT(opjfrb.test_end_time, '%Y-%m-%d') as test_time,
+                        opjfrb.test_location,
+                        i.item_name,
+                        opjfrb.instrument_name                        as main_insturment,
+                        opjfrb.instrument_name                        as main_instrument,
+                        ''                                            as conclusion,
+                        ''                                            as remark,
+                        s.op_feed_entrust_order_sample_id               as feed_entrust_order_sample_id,
+                        o.op_feed_entrust_order_id                    as feed_entrust_order_id
+        FROM op_feed_entrust_order_sample s
+                 LEFT JOIN op_feed_entrust_order o ON s.feed_entrust_order_id = o.op_feed_entrust_order_id   AND o.delete_id = '0'
+                 LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id
+                 INNER JOIN op_jczx_feed_result_info opjfri
+                            on s.op_feed_entrust_order_sample_id = opjfri.entrust_order_sample_id and opjfri.delete_id = '0'
+                 LEFT JOIN
+             op_jczx_feed_result_base opjfrb on opjfri.base_id = op_jczx_feed_result_base_id and opjfrb.delete_id = '0'
+                 left join bs_labtest_items i on opjfrb.item_id = i.bs_labtest_items_id and i.is_delete = '0'
+                 inner join op_feed_entrust_order_item eoi on eoi.op_feed_entrust_order_item_id = opjfri.entrust_order_item_id and eoi.is_delete='0'
+        WHERE s.is_delete = '0'
+          and opjfrb.status != '6' -- 排除已作废的检测结果
+          and ifnull(sample_no, '') != ''
+          and s.op_feed_entrust_order_sample_id = #{entrustOrderSampleId}
+            and opjfri.is_reset='0'
+    </select>
+
+    <select id="selectReportBaseBySampleId2" resultMap="OpJczxFeedReportBaseResult" parameterType="String">
+        SELECT *
+        from op_jczx_feed_report_base
+        WHERE feed_entrust_order_sample_id = #{entrustOrderSampleId}
+          and delete_id = '0'
+          and status != '6'
+    </select>
+    <select id="selectReportInfoBySampleId" resultType="com.gmlimsqi.business.labtest.dto.OpJczxFeedResultInfoDto"
+            parameterType="String">
+        SELECT
+        opjfrb.item_id as itemId,
+            i.item_name as itemName,
+            model_no as modelNo,
+            average,
+            ypzxxhl,
+            xyzhl,
+            jcjg,
+            opjfri.jcjgfw,
+            s.sample_no as sampleNo,
+            opjfri.entrust_order_item_id as entrustOrderItemId,
+            test_basis as standard,
+            (
+                -- 标量子查询：只返回一条记录的 unit 值
+                SELECT
+                    blf.unit_of_measurement
+                FROM
+                    bs_labtest_item_feature blif
+                        INNER JOIN
+                    bs_labtest_feature blf ON blif.feature_id = blf.bs_labtest_feature_id and blif.is_delete='0'
+                WHERE
+                    blif.item_id = i.bs_labtest_items_id -- 关联到外部查询的当前 Item ID
+                and blf.unit_of_measurement is not null
+                -- **关键点：必须确保只返回一条数据**
+                ORDER BY
+                    blf.bs_labtest_feature_id  -- 替换为您确定的“首选”或“默认”特征的排序依据
+                LIMIT 1
+            ) as unit
+        FROM
+        op_feed_entrust_order_sample s
+        LEFT JOIN
+        op_feed_entrust_order o ON s.feed_entrust_order_id = o.op_feed_entrust_order_id and o.delete_id = '0'
+        LEFT JOIN
+        sys_dept d ON d.dept_id = o.entrust_dept_id
+        INNER JOIN
+        op_jczx_feed_result_info opjfri on s.op_feed_entrust_order_sample_id = opjfri.entrust_order_sample_id and
+        opjfri.delete_id = '0'
+        LEFT JOIN op_jczx_feed_result_base opjfrb on opjfri.base_id = op_jczx_feed_result_base_id and opjfrb.delete_id =
+        '0'
+        left join bs_labtest_items i on opjfrb.item_id=i.bs_labtest_items_id and i.is_delete='0'
+        inner join op_feed_entrust_order_item eoi on eoi.op_feed_entrust_order_item_id = opjfri.entrust_order_item_id and eoi.is_delete='0'
+        WHERE
+        s.is_delete = '0'
+        and (opjfri.is_reset='0' or opjfri.is_reset is null)
+        and s.op_feed_entrust_order_sample_id = #{entrustOrderSampleId}
+        and (i.item_name not like '%初水分%' OR i.item_name IS NULL)
+        and opjfrb.model_name !='近红外'
+        union all
+        <!-- 近红外-->
+        SELECT
+        fi.item_id as itemId,
+        i.item_name as itemName,
+        model_no as modelNo,
+        average,
+        ypzxxhl,
+        xyzhl,
+        jcjg,
+        '' as jcjgfw,
+        s.sample_no as sampleNo,
+        opjfri.entrust_order_item_id as entrustOrderItemId,
+        test_basis as standard,
+        (
+        -- 标量子查询：只返回一条记录的 unit 值
+        SELECT
+        blf.unit_of_measurement
+        FROM
+        bs_labtest_item_feature blif
+        INNER JOIN
+        bs_labtest_feature blf ON blif.feature_id = blf.bs_labtest_feature_id  and blif.is_delete='0'
+        WHERE
+        blif.item_id = i.bs_labtest_items_id -- 关联到外部查询的当前 Item ID
+        and blf.unit_of_measurement is not null
+        -- **关键点：必须确保只返回一条数据**
+        ORDER BY
+        blf.bs_labtest_feature_id -- 替换为您确定的“首选”或“默认”特征的排序依据
+        LIMIT 1
+        ) as unit
+        FROM
+        op_feed_entrust_order_sample s
+        LEFT JOIN
+        op_feed_entrust_order o ON s.feed_entrust_order_id = o.op_feed_entrust_order_id and o.delete_id = '0'
+        LEFT JOIN
+        sys_dept d ON d.dept_id = o.entrust_dept_id
+        INNER JOIN
+        op_jczx_feed_result_info opjfri on s.op_feed_entrust_order_sample_id = opjfri.entrust_order_sample_id and
+        opjfri.delete_id = '0'
+        LEFT JOIN op_jczx_feed_result_base opjfrb on opjfri.base_id = op_jczx_feed_result_base_id and opjfrb.delete_id =
+        '0'
+        left join op_feed_entrust_order_item fi on fi.op_feed_entrust_order_item_id=opjfri.entrust_order_item_id and
+        fi.is_delete='0'
+        left join bs_labtest_items i on fi.item_id=i.bs_labtest_items_id and i.is_delete='0'
+        WHERE
+        s.is_delete = '0'
+        and (opjfri.is_reset='0' or opjfri.is_reset is null)
+        and s.op_feed_entrust_order_sample_id = #{entrustOrderSampleId}
+        and (i.item_name not like '%初水分%' OR i.item_name IS NULL)
+        and opjfrb.model_name ='近红外'
+    </select>
+
+    <delete id="deleteByOpJczxFeedResultSampleId" parameterType="String">
+        update op_jczx_feed_report_base
+        set delete_id = op_jczx_feed_report_base_id
+        where feed_entrust_order_sample_id = #{sampleId}
+    </delete>
+
+    <select id="selectReportInfoByBaseId" resultMap="OpJczxFeedReportInfoResult" parameterType="String">
+        select item_id, item_name, unit, sapecification, value_of_test, standard,sample_no,
+               entrust_order_item_id
+        from op_jczx_feed_report_info
+        WHERE delete_id = '0'
+          and base_id = #{opJczxFeedReportBaseId}
+          and item_name not like '%初水分%'
+    </select>
+
+    <select id="selectOpJczxFeedReportBaseListStatus4" resultMap="OpJczxFeedReportListVo"
+            parameterType="com.gmlimsqi.business.labtest.dto.OpJczxFeedReportDto">
+        WITH base_orders AS (
+        SELECT DISTINCT
+        b.feed_entrust_order_id,
+        b.entrust_dept_name,
+        b.receive_time,
+        o.entrust_order_no
+        FROM op_jczx_feed_report_base b
+        LEFT JOIN op_feed_entrust_order o
+        on b.feed_entrust_order_id = o.op_feed_entrust_order_id
+        WHERE b.status = '4'
+        AND b.delete_id = '0'
+        ),
+        <!-- 委托单样品的数量 -->
+        report_counts AS (
+        SELECT
+        feed_entrust_order_id,
+        COUNT(1) as report_count
+        FROM op_feed_entrust_order_sample
+        WHERE is_delete = '0'
+        GROUP BY feed_entrust_order_id
+        ),
+        <!-- 已批准报告的数量 -->
+        pending_samples AS (
+        SELECT
+        feed_entrust_order_id,
+        COUNT(1) as pending_count
+        FROM op_jczx_feed_report_base
+        WHERE
+        delete_id = '0'
+        and op_jczx_feed_report_base.status = '4'
+        GROUP BY feed_entrust_order_id
+        )
+        SELECT
+        bo.*,
+        COALESCE(rc.report_count, 0) as ypzCount,
+        COALESCE(ps.pending_count, 0) as wpzCount
+        FROM base_orders bo
+        LEFT JOIN report_counts rc ON bo.feed_entrust_order_id = rc.feed_entrust_order_id
+        LEFT JOIN pending_samples ps ON bo.feed_entrust_order_id = ps.feed_entrust_order_id
+        WHERE COALESCE(ps.pending_count, 0) > 0
+        <if test="entrustDeptName != null  and entrustDeptName != ''">and bo.entrust_dept_name like concat('%',
+            #{entrustDeptName}, '%')
+        </if>
+        <if test="entrustOrderNo != null  and entrustOrderNo != ''">and bo.entrust_order_no like concat('%',
+            #{entrustOrderNo}, '%')
+        </if>
+        ORDER BY bo.receive_time ASC
+    </select>
+
+    <select id="selectReportBaseByOrderId" resultMap="OpJczxFeedReportBaseResult">
+        <include refid="selectOpJczxFeedReportBaseVo"></include>
+        where feed_entrust_order_id = #{feedEntrustOrderId} and delete_id='0' and status !='6'
+    </select>
+    <select id="getStatus0Count" resultType="int">
+        SELECT count(*) from op_feed_entrust_order_sample s
+        LEFT JOIN
+        op_feed_entrust_order o on s.feed_entrust_order_id=o.op_feed_entrust_order_id  AND o.delete_id='0'
+        where s.is_delete = '0'
+        <!-- 过滤报告表不存在的数据 -->
+        AND s.sample_no NOT IN (
+        SELECT b.sample_no
+        FROM op_jczx_feed_report_base b
+        WHERE b.sample_no IS NOT NULL and b.delete_id='0' and b.status!='6'
+        )
+        <!-- 过滤化验单已校对的数据 -->
+        AND EXISTS ( -- 必须有检测信息记录
+        SELECT 1
+        FROM op_jczx_feed_result_info i
+        WHERE i.entrust_order_sample_id = s.op_feed_entrust_order_sample_id and i.delete_id='0' and i.is_reset='0'
+        )
+        AND NOT EXISTS ( -- 不能有任何未审核记录
+        SELECT 1
+        FROM
+        op_feed_entrust_order_item oi
+        LEFT JOIN op_jczx_feed_result_info i ON i.entrust_order_sample_id = oi.op_feed_entrust_order_sample_id
+        AND oi.op_feed_entrust_order_item_id = i.entrust_order_item_id
+        AND i.delete_id = '0'
+        AND i.is_reset = '0'
+        WHERE oi.op_feed_entrust_order_sample_id = s.op_feed_entrust_order_sample_id
+        and oi.is_delete='0'
+        -- 判断 is_reset = '1'，满足任意一种情况都视为“未完成”
+        AND (i.op_jczx_feed_result_info_id IS NULL OR i.check_user IS NULL)
+        )
+        <if test="beginReceiveTime != null">
+            and DATE(s.receive_time) >= #{beginReceiveTime}
+        </if>
+        <if test="endReceiveTime != null">
+            and DATE(s.receive_time) &lt;= #{endReceiveTime}
+        </if>
+        <if test="beginSendSampleTime != null">
+            and DATE(o.send_sample_date) >= #{beginSendSampleTime}
+        </if>
+        <if test="endSendSampleTime != null">
+            and DATE(o.send_sample_date) &lt;= #{endSendSampleTime}
+        </if>
+    </select>
+
+    <select id="getStatusCount" resultType="java.util.Map">
+        SELECT b.status, COUNT(*) as count
+        FROM op_jczx_feed_report_base b
+        LEFT JOIN op_feed_entrust_order o
+        on b.feed_entrust_order_id = o.op_feed_entrust_order_id
+        where b.delete_id = '0'
+        <if test="beginReceiveTime != null and beginReceiveTime != '' and endReceiveTime != null and endReceiveTime != ''">
+            and DATE(b.receive_time) between #{beginReceiveTime} and #{endReceiveTime}
+        </if>
+        <if test="beginTestTime != null and beginTestTime != '' and endTestTime != null and endTestTime != ''">
+            and DATE(b.test_time) between #{beginTestTime} and #{endTestTime}
+        </if>
+        <if test="beginCheckTime != null and beginCheckTime != '' and endCheckTime != null and endCheckTime != ''">
+            and DATE(b.check_time) between #{beginCheckTime} and #{endCheckTime}
+        </if>
+        <if test="beginApproveTime != null and beginApproveTime != '' and endApproveTime != null and endApproveTime != ''">
+            and DATE(b.approve_time) between #{beginApproveTime} and #{endApproveTime}
+        </if>
+        <if test="beginReportTime != null">
+            and DATE(b.create_time) >= #{beginReportTime}
+        </if>
+        <if test="endReportTime != null">
+            and DATE(b.create_time) &lt;= #{endReportTime}
+        </if>
+        <if test="beginIssuanceTime != null">
+            and DATE(b.issuance_time) >= #{beginIssuanceTime}
+        </if>
+        <if test="endIssuanceTime != null">
+            and DATE(b.issuance_time) &lt;= #{endIssuanceTime}
+        </if>
+
+        GROUP BY b.status
+    </select>
+
+    <update id="updateSampleId" parameterType="String">
+        update op_jczx_feed_report_base set feed_entrust_order_sample_id=#{newSampleId} where feed_entrust_order_sample_id=#{oldSampleId} and delete_id='0'
+    </update>
+
+    <update id="updateStatus6ById" parameterType="String">
+        update op_jczx_feed_report_base set status=6,update_by=#{updateUserId},update_time = now() where op_jczx_feed_report_base_id=#{opJczxFeedReportBaseId}
+    </update>
+</mapper>

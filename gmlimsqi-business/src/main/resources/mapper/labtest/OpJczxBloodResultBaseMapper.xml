@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxBloodResultBaseMapper">
+
+    <resultMap type="OpJczxBloodResultBase" id="OpJczxBloodResultBaseResult">
+        <result property="opJczxBloodResultBaseId"    column="op_jczx_blood_result_base_id"    />
+        <result property="resultNo"    column="result_no"    />
+        <result property="bloodTaskItemType"    column="blood_task_item_type"    />
+        <result property="testUser"    column="test_user"    />
+        <result property="testUserId"    column="test_user_id"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="testDate"    column="test_date"    />
+        <result property="testEndTime"    column="test_end_time"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="examineUser"    column="examine_user"    />
+        <result property="examineUserId"    column="examine_user_id"    />
+        <result property="examineTime"    column="examine_time"    />
+        <result property="exportFileName"    column="export_file_name"    />
+        <result property="examinePassFlag"    column="examine_pass_flag"    />
+    </resultMap>
+    <resultMap id="OpJczxBloodResultBaseOpJczxBloodResultInfoResult" type="OpJczxBloodResultBase" extends="OpJczxBloodResultBaseResult">
+        <collection property="opJczxBloodResultInfoList" ofType="OpJczxBloodResultInfo" column="op_jczx_blood_result_base_id" select="selectOpJczxBloodResultInfoList" />
+    </resultMap>
+
+    <sql id="selectOpJczxBloodResultBaseVo">
+        select op_jczx_blood_result_base_id, result_no, blood_task_item_type, test_user, test_user_id, status, remark,
+               test_date, test_end_time, file_id, create_time, create_by, update_time, update_by, delete_id, examine_user,
+               examine_user_id ,examine_time ,export_file_name,examine_pass_flag
+        from op_jczx_blood_result_base
+    </sql>
+
+    <select id="selectOpJczxBloodResultBaseList" parameterType="OpJczxBloodResultBase" resultMap="OpJczxBloodResultBaseResult">
+        <include refid="selectOpJczxBloodResultBaseVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            <if test="resultNo != null  and resultNo != ''"> and result_no = #{resultNo}</if>
+            <if test="bloodTaskItemType != null  and bloodTaskItemType != ''"> and blood_task_item_type = #{bloodTaskItemType}</if>
+            <if test="testUser != null  and testUser != ''"> and test_user = #{testUser}</if>
+            <if test="testUserId != null  and testUserId != ''"> and test_user_id = #{testUserId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="testDate != null "> and test_date = #{testDate}</if>
+            <if test="testEndTime != null "> and test_end_time = #{testEndTime}</if>
+            <if test="fileId != null  and fileId != ''"> and file_id = #{fileId}</if>
+            <if test="deleteId != null  and deleteId != ''"> and delete_id = #{deleteId}</if>
+            <if test="examineUser != null  and examineUser != ''"> and examine_user = #{examineUser}</if>
+            <if test="examineUserId != null  and examineUserId != ''"> and examine_user_id = #{examineUserId}</if>
+        </where>
+    </select>
+
+    <select id="selectOpJczxBloodResultBaseByOpJczxBloodResultBaseId" parameterType="String" resultMap="OpJczxBloodResultBaseResult">
+        <include refid="selectOpJczxBloodResultBaseVo"/>
+        where op_jczx_blood_result_base_id = #{opJczxBloodResultBaseId}
+    </select>
+
+    <insert id="insertOpJczxBloodResultBase" parameterType="OpJczxBloodResultBase">
+        insert into op_jczx_blood_result_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxBloodResultBaseId != null">op_jczx_blood_result_base_id,</if>
+            <if test="resultNo != null">result_no,</if>
+            <if test="bloodTaskItemType != null">blood_task_item_type,</if>
+            <if test="testUser != null">test_user,</if>
+            <if test="testUserId != null">test_user_id,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="testDate != null">test_date,</if>
+            <if test="testEndTime != null">test_end_time,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deleteId != null and deleteId != ''">delete_id,</if>
+            <if test="examineUser != null">examine_user,</if>
+            <if test="examineUserId != null">examine_user_id,</if>
+            <if test="examineTime != null">examine_time,</if>
+            <if test="exportFileName != null">export_file_name,</if>
+            <if test="examinePassFlag != null">examine_pass_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxBloodResultBaseId != null">#{opJczxBloodResultBaseId},</if>
+            <if test="resultNo != null">#{resultNo},</if>
+            <if test="bloodTaskItemType != null">#{bloodTaskItemType},</if>
+            <if test="testUser != null">#{testUser},</if>
+            <if test="testUserId != null">#{testUserId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="testDate != null">#{testDate},</if>
+            <if test="testEndTime != null">#{testEndTime},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">#{deleteId},</if>
+            <if test="examineUser != null">#{examineUser},</if>
+            <if test="examineUserId != null">#{examineUserId},</if>
+            <if test="examineTime != null">#{examineTime},</if>
+            <if test="exportFileName != null">#{exportFileName},</if>
+            <if test="examinePassFlag != null">#{examinePassFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpJczxBloodResultBase" parameterType="OpJczxBloodResultBase">
+        update op_jczx_blood_result_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resultNo != null">result_no = #{resultNo},</if>
+            <if test="bloodTaskItemType != null">blood_task_item_type = #{bloodTaskItemType},</if>
+            <if test="testUser != null">test_user = #{testUser},</if>
+            <if test="testUserId != null">test_user_id = #{testUserId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="testDate != null">test_date = #{testDate},</if>
+            <if test="testEndTime != null">test_end_time = #{testEndTime},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">delete_id = #{deleteId},</if>
+            <if test="examineUser != null">examine_user = #{examineUser},</if>
+            <if test="examineUserId != null">examine_user_id = #{examineUserId},</if>
+            <if test="examineTime != null">examine_time = #{examineTime},</if>
+            <if test="exportFileName != null">export_file_name = #{exportFileName},</if>
+            <if test="examinePassFlag != null">examine_pass_flag = #{examinePassFlag},</if>
+        </trim>
+        where op_jczx_blood_result_base_id = #{opJczxBloodResultBaseId}
+    </update>
+
+    <delete id="deleteOpJczxBloodResultBaseByOpJczxBloodResultBaseId" parameterType="String">
+        delete from op_jczx_blood_result_base where op_jczx_blood_result_base_id = #{opJczxBloodResultBaseId}
+    </delete>
+
+    <delete id="deleteOpJczxBloodResultBaseByOpJczxBloodResultBaseIds" parameterType="String">
+        delete from op_jczx_blood_result_base where op_jczx_blood_result_base_id in
+        <foreach item="opJczxBloodResultBaseId" collection="array" open="(" separator="," close=")">
+            #{opJczxBloodResultBaseId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_blood_result_base set delete_id=op_jczx_blood_result_base_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_jczx_blood_result_base_id = #{opJczxBloodResultBaseId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_jczx_blood_result_base set delete_id=op_jczx_blood_result_base_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where op_jczx_blood_result_base_id in
+        <foreach item="opJczxBloodResultBaseId" collection="array" open="(" separator="," close=")">
+            #{opJczxBloodResultBaseId}
+        </foreach>
+    </update>
+
+    <insert id="batchOpJczxBloodResultInfo">
+        insert into op_jczx_blood_result_info( op_jczx_blood_result_info_id, base_id, dept_name, sample_no,
+        blood_entrust_order_sample_id, item_id, blood_entrust_order_item_id,
+        item_name, test_result, remark, create_time, create_by, update_time,
+        update_by,gh,sample_name,
+        sequence) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.opJczxBloodResultInfoId}, #{item.baseId}, #{item.deptName}, #{item.sampleNo},
+            #{item.bloodEntrustOrderSampleId}, #{item.itemId}, #{item.bloodEntrustOrderItemId}, #{item.itemName},
+            #{item.testResult}, #{item.remark}, #{item.createTime}, #{item.createBy}, #{item.updateTime},
+            #{item.updateBy},#{item.gh},#{item.sampleName},
+            #{item.sequence} )
+        </foreach>
+    </insert>
+
+
+    <select id="selectOpJczxBloodResultBaseListBySampleNoList" parameterType="java.util.List" resultMap="OpJczxBloodResultBaseResult">
+        select
+        b.*
+        from op_jczx_blood_result_base b
+        where exists (
+        select 1 from op_jczx_blood_result_info i
+        where i.base_id = b.op_jczx_blood_result_base_id
+        and i.delete_id = '0'
+        <if test="sampleNoList != null and sampleNoList.size() > 0">
+        and i.sample_no in
+        <foreach collection="sampleNoList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        </if>
+        )
+        and b.delete_id = '0'
+    </select>
+
+    <update id="updateFileNameByResultNo" parameterType="String">
+        update op_jczx_blood_result_base set export_file_name=#{fileName} where result_no=#{resultNo} and delete_id='0'
+    </update>
+    <update id="updateExamineFlagByResultNo" parameterType="String">
+        update op_jczx_blood_result_base
+        set examine_pass_flag=#{examinePassFlag}
+        <if test="examinePassFlag != null and examinePassFlag == '1'.toString()">,status = '3'</if>
+        where result_no=#{resultNo} and delete_id='0'
+    </update>
+
+
+    <select id="selectByNo" parameterType="java.util.List" resultMap="OpJczxBloodResultBaseResult">
+        select
+            b.*
+        from op_jczx_blood_result_base b
+        where b.result_no=#{resultNo}
+          and b.delete_id = '0'
+    </select>
+    <update id="updateCancelExamine" parameterType="String">
+        update op_jczx_blood_result_base
+        set examine_pass_flag=null,status = '2',examine_user=null,examine_user_id=null,examine_time=null
+        where op_jczx_blood_result_base_id=#{opJczxBloodResultBaseId} and delete_id='0'
+    </update>
+</mapper>

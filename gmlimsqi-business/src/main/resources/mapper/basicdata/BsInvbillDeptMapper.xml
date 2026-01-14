@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsInvbillDeptMapper">
+
+    <resultMap type="BsInvbillDept" id="BsInvbillDeptResult">
+        <result property="bsInvbillDeptId"    column="bs_invbill_dept_id"    />
+        <result property="invbillSapCode"    column="invbill_sap_code"    />
+        <result property="deptSapCode"    column="dept_sap_code"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBsInvbillDeptVo">
+        select bs_invbill_dept_id, invbill_sap_code, dept_sap_code, is_delete, create_time, create_by, update_time, update_by from bs_invbill_dept
+    </sql>
+
+    <select id="selectBsInvbillDeptList" parameterType="BsInvbillDept" resultMap="BsInvbillDeptResult">
+        <include refid="selectBsInvbillDeptVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="invbillSapCode != null  and invbillSapCode != ''"> and invbill_sap_code = #{invbillSapCode}</if>
+            <if test="deptSapCode != null  and deptSapCode != ''"> and dept_sap_code = #{deptSapCode}</if>
+        </where>
+    </select>
+
+    <select id="selectBsInvbillDeptByBsInvbillDeptId" parameterType="String" resultMap="BsInvbillDeptResult">
+        <include refid="selectBsInvbillDeptVo"/>
+        where bs_invbill_dept_id = #{bsInvbillDeptId}
+    </select>
+
+    <insert id="insertBsInvbillDept" parameterType="BsInvbillDept">
+        insert into bs_invbill_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsInvbillDeptId != null">bs_invbill_dept_id,</if>
+            <if test="invbillSapCode != null and invbillSapCode != ''">invbill_sap_code,</if>
+            <if test="deptSapCode != null and deptSapCode != ''">dept_sap_code,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsInvbillDeptId != null">#{bsInvbillDeptId},</if>
+            <if test="invbillSapCode != null and invbillSapCode != ''">#{invbillSapCode},</if>
+            <if test="deptSapCode != null and deptSapCode != ''">#{deptSapCode},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsInvbillDept" parameterType="BsInvbillDept">
+        update bs_invbill_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invbillSapCode != null and invbillSapCode != ''">invbill_sap_code = #{invbillSapCode},</if>
+            <if test="deptSapCode != null and deptSapCode != ''">dept_sap_code = #{deptSapCode},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_invbill_dept_id = #{bsInvbillDeptId}
+    </update>
+
+    <update id="updateDeleteFlagBySapCode" parameterType="String">
+        update bs_invbill_dept
+         set is_delete = 1
+        where invbill_sap_code = #{invbillSapCode}
+    </update>
+
+
+</mapper>

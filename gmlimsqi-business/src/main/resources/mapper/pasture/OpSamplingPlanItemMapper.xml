@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.ranch.mapper.OpSamplingPlanItemMapper">
+    <resultMap type="OpSamplingPlanItem" id="OpSamplingPlanItemResult">
+        <result property="opSamplingPlanItemId" column="op_sampling_plan_item_id"/>
+        <result property="samplingPlanSampleId" column="sampling_plan_sample_id"/>
+        <result property="itemName" column="item_name"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemId" column="item_id"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="testUserId" column="test_user_id"/>
+        <result property="testResult" column="test_result"/>
+        <result property="qualitativeType" column="qualitative_type"/>
+        <result property="upperLimit" column="upper_limit"/>
+        <result property="lowerLimit" column="lower_limit"/>
+        <result property="featureName" column="feature_name"/>
+        <result property="qualitativeOrQuantitative" column="qualitative_or_quantitative"/>
+        <result property="referenceRange" column="reference_range"/>
+        <result property="featureId" column="feature_id"/>
+        <result property="bsInvbillItemStandardId" column="bs_invbill_item_standard_id"/>
+        <result property="testStatus" column="test_status"/>
+        <result property="checkResult" column="check_result"/>
+    </resultMap>
+
+    <sql id="selectOpSamplingPlanItemVo">
+        select op_sampling_plan_item_id,
+               sampling_plan_sample_id,
+               item_name,
+               item_code,
+               item_id,
+               is_delete,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               test_user_id,
+               test_result,
+               qualitative_type,
+               upper_limit,
+               lower_limit,
+               qualitative_or_quantitative,
+               feature_name,
+               reference_range,
+               feature_id,
+               bs_invbill_item_standard_id
+        from op_sampling_plan_item
+    </sql>
+
+    <select id="selectOpSamplingPlanItemList" parameterType="OpSamplingPlanItem" resultMap="OpSamplingPlanItemResult">
+        <include refid="selectOpSamplingPlanItemVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="samplingPlanSampleId != null  and samplingPlanSampleId != ''">
+                and sampling_plan_sample_id = #{samplingPlanSampleId}
+            </if>
+            <if test="itemName != null  and itemName != ''">
+                and item_name like concat('%', #{itemName}, '%')
+            </if>
+            <if test="itemCode != null  and itemCode != ''">
+                and item_code = #{itemCode}
+            </if>
+            <if test="itemId != null  and itemId != ''">
+                and item_id = #{itemId}
+            </if>
+            <if test="isDelete != null  and isDelete != ''">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="testUserId != null  and testUserId != ''">
+                and test_user_id = #{testUserId}
+            </if>
+            <if test="testResult != null  and testResult != ''">
+                and test_result = #{testResult}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectOpSamplingPlanItemListByIds" resultMap="OpSamplingPlanItemResult">
+
+        <include refid="selectOpSamplingPlanItemVo"/>
+        WHERE op_sampling_plan_item_id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND is_delete = '0'
+    </select>
+
+    <select id="selectOpSamplingPlanItemByOpSamplingPlanItemId" parameterType="String"
+            resultMap="OpSamplingPlanItemResult">
+        <include refid="selectOpSamplingPlanItemVo"/>
+        where op_sampling_plan_item_id = #{opSamplingPlanItemId} and is_delete='0'
+    </select>
+
+    <insert id="insertOpSamplingPlanItem" parameterType="OpSamplingPlanItem">
+        insert into op_sampling_plan_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opSamplingPlanItemId != null">
+                op_sampling_plan_item_id,
+            </if>
+            <if test="samplingPlanSampleId != null and samplingPlanSampleId != ''">
+                sampling_plan_sample_id,
+            </if>
+            <if test="itemName != null">
+                item_name,
+            </if>
+            <if test="featureName != null">
+                feature_name,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+            <if test="itemId != null and itemId != ''">
+                item_id,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="testUserId != null">
+                test_user_id,
+            </if>
+            <if test="testResult != null">
+                test_result,
+            </if>
+            <if test="qualitativeType != null">
+                qualitative_type,
+            </if>
+            <if test="upperLimit != null">
+                upper_limit,
+            </if>
+            <if test="lowerLimit != null">
+                lower_limit,
+            </if>
+            <if test="qualitativeOrQuantitative != null">
+                qualitative_or_quantitative,
+            </if>
+            <if test="referenceRange != null">
+                reference_range,
+            </if>
+            <if test="featureId != null">
+                feature_id,
+            </if>
+            <if test="bsInvbillItemStandardId != null">
+                bs_invbill_item_standard_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opSamplingPlanItemId != null">
+                #{opSamplingPlanItemId},
+            </if>
+            <if test="samplingPlanSampleId != null and samplingPlanSampleId != ''">
+                #{samplingPlanSampleId},
+            </if>
+            <if test="itemName != null">
+                #{itemName},
+            </if>
+            <if test="featureName != null">
+                #{featureName},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode},
+            </if>
+            <if test="itemId != null and itemId != ''">
+                #{itemId},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                #{createBy},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="testUserId != null">
+                #{testUserId},
+            </if>
+            <if test="testResult != null">
+                #{testResult},
+            </if>
+            <if test="qualitativeType != null">
+                #{qualitativeType},
+            </if>
+            <if test="upperLimit != null">
+                #{upperLimit},
+            </if>
+            <if test="lowerLimit != null">
+                #{lowerLimit},
+            </if>
+            <if test="qualitativeOrQuantitative != null">
+                #{qualitativeOrQuantitative},
+            </if>
+            <if test="referenceRange != null">
+                #{referenceRange},
+            </if>
+            <if test="featureId != null">
+                #{featureId},
+            </if>
+            <if test="bsInvbillItemStandardId != null">
+                #{bsInvbillItemStandardId},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOpSamplingPlanItem" parameterType="OpSamplingPlanItem">
+        update op_sampling_plan_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="samplingPlanSampleId != null and samplingPlanSampleId != ''">
+                sampling_plan_sample_id = #{samplingPlanSampleId},
+            </if>
+            <if test="itemName != null">
+                item_name = #{itemName},
+            </if>
+            <if test="itemCode != null">
+                item_code = #{itemCode},
+            </if>
+            <if test="itemId != null and itemId != ''">
+                item_id = #{itemId},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="testUserId != null">
+                test_user_id = #{testUserId},
+            </if>
+            <if test="testResult != null">
+                test_result = #{testResult},
+            </if>
+            <if test="qualitativeType != null">
+                qualitative_type = #{qualitativeType},
+            </if>
+            <if test="upperLimit != null">
+                upper_limit = #{upperLimit},
+            </if>
+            <if test="lowerLimit != null">
+                lower_limit = #{lowerLimit},
+            </if>
+            <if test="qualitativeOrQuantitative != null">
+                qualitative_or_quantitative = #{qualitativeOrQuantitative},
+            </if>
+            <if test="featureName != null">
+                feature_name = #{featureName},
+            </if>
+            <if test="referenceRange != null">
+                reference_range = #{referenceRange},
+            </if>
+            <if test="featureId != null">
+                feature_id = #{featureId},
+            </if>
+            <if test="bsInvbillItemStandardId != null">
+                bs_invbill_item_standard_id = #{bsInvbillItemStandardId},
+            </if>
+        </trim>
+        where op_sampling_plan_item_id = #{opSamplingPlanItemId}
+    </update>
+
+    <delete id="deleteOpSamplingPlanItemByOpSamplingPlanItemId" parameterType="String">
+        delete
+        from op_sampling_plan_item
+        where op_sampling_plan_item_id = #{opSamplingPlanItemId}
+    </delete>
+
+    <delete id="deleteOpSamplingPlanItemByOpSamplingPlanItemIds" parameterType="String">
+        delete from op_sampling_plan_item where op_sampling_plan_item_id in
+        <foreach item="opSamplingPlanItemId" collection="array" open="(" separator="," close=")">
+            #{opSamplingPlanItemId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById">
+        update op_sampling_plan_item
+        set is_delete=1,
+            update_time=now(),
+            update_by=#{updateUserId}
+        where op_sampling_plan_item_id = #{opSamplingPlanItemId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_sampling_plan_item set is_delete=1 ,update_time=now(),update_by=#{updateUserId} where
+        op_sampling_plan_item_id in
+        <foreach item="opSamplingPlanItemId" collection="array" open="(" separator="," close=")">
+            #{opSamplingPlanItemId}
+        </foreach>
+    </update>
+    <!-- 批量插入检测项目 -->
+    <insert id="batchInsertOpSamplingPlanItem">
+        INSERT INTO op_sampling_plan_item (
+        op_sampling_plan_item_id,
+        sampling_plan_sample_id,
+        item_name,
+        item_code,
+        item_id,
+        is_delete,
+        test_user_id,
+        test_result,
+        create_by,
+        create_time,
+        update_by,
+        update_time,
+        qualitative_type,
+        upper_limit,
+        lower_limit,
+        qualitative_or_quantitative,
+        feature_name,
+        reference_range,
+        feature_id,
+        bs_invbill_item_standard_id
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.opSamplingPlanItemId},
+            #{item.samplingPlanSampleId},
+            #{item.itemName},
+            #{item.itemCode},
+            #{item.itemId},
+            #{item.isDelete},
+            #{item.testUserId},
+            #{item.testResult},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.updateBy},
+            #{item.updateTime},
+            #{item.qualitativeType},
+            #{item.upperLimit},
+            #{item.lowerLimit},
+            #{item.qualitativeOrQuantitative},
+            #{item.featureName},
+            #{item.referenceRange},
+            #{item.featureId},
+            #{item.bsInvbillItemStandardId}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="selectOpSamplingPlanItemBySampleId" parameterType="String" resultMap="OpSamplingPlanItemResult">
+        <include refid="selectOpSamplingPlanItemVo"/>
+        where sampling_plan_sample_id = #{opSamplingPlanSampleId} and is_delete='0'
+    </select>
+
+
+    <update id="updateTestToNullById">
+        update op_sampling_plan_item
+        set test_user_id = null,
+            test_result = null,
+            update_time = now(),
+            update_by = #{updateUser}
+        where op_sampling_plan_item_id = #{planItemId}
+    </update>
+
+    <update id="updateItemDeleteFlagByPlanId">
+        update op_sampling_plan_item
+        set is_delete=1,
+        update_time=now(),
+        update_by=#{updateUserId}
+        where sampling_plan_sample_id = #{samplingPlanSampleId}
+    </update>
+
+    <select id="selectItemMonitorDetail" parameterType="String" resultMap="OpSamplingPlanItemResult">
+        SELECT
+            i.op_sampling_plan_item_id,
+            i.sampling_plan_sample_id,
+            i.item_name,
+            i.item_code,
+            i.item_id,
+            i.is_delete,
+            i.create_time,
+            i.create_by,
+            i.update_time,
+            i.update_by,
+            i.test_user_id,
+            tri.result as test_result,
+            i.qualitative_type,
+            i.upper_limit,
+            i.lower_limit,
+            i.qualitative_or_quantitative,
+            i.feature_name,
+            i.reference_range,
+            i.feature_id,
+            i.bs_invbill_item_standard_id,
+            tri.check_result,
+            trb.status as test_status
+        FROM op_sampling_plan_item i
+        LEFT JOIN op_test_result_info tri ON i.op_sampling_plan_item_id = tri.plan_item_id AND tri.delete_id = '0'
+        LEFT JOIN op_test_result_base trb ON tri.base_id = trb.id AND trb.delete_id = '0'
+        WHERE i.sampling_plan_sample_id = #{sampleId} AND i.is_delete = '0'
+    </select>
+</mapper>

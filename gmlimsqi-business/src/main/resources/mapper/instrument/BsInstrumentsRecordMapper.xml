@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.instrument.mapper.BsInstrumentsRecordMapper">
+
+    <resultMap type="BsInstrumentsRecord" id="BsInstrumentsRecordResult">
+            <result property="bsInstrumentsRecordId"    column="bs_instruments_record_id"    />
+            <result property="bsInstrumentsId"    column="bs_instruments_id"    />
+            <result property="instrumentName"    column="instrument_name"    />
+            <result property="instrumentCode"    column="instrument_code"    />
+            <result property="deptId"    column="dept_id"    />
+            <result property="type"    column="type"    />
+            <result property="modelNumber"    column="model_number"    />
+            <result property="status"    column="status"    />
+            <result property="remark"    column="remark"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="isEnable"    column="is_enable"    />
+            <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectBsInstrumentsRecordVo">
+        select bs_instruments_record_id,
+               bs_instruments_id,
+               instrument_name,
+               instrument_code,
+               dept_id,
+               type,
+               model_number,
+               status,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               is_enable,
+               is_delete
+        from bs_instruments_record
+    </sql>
+
+    <select id="selectBsInstrumentsRecordList" parameterType="BsInstrumentsRecord" resultMap="BsInstrumentsRecordResult">
+        <include refid="selectBsInstrumentsRecordVo"/>
+        <where>
+                        <if test="bsInstrumentsId != null  and bsInstrumentsId != ''"> and bs_instruments_id = #{bsInstrumentsId}</if>
+                        <if test="instrumentName != null  and instrumentName != ''"> and instrument_name like concat('%', #{instrumentName}, '%')</if>
+                        <if test="instrumentCode != null  and instrumentCode != ''"> and instrument_code = #{instrumentCode}</if>
+                        <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+                        <if test="type != null  and type != ''"> and type = #{type}</if>
+                        <if test="modelNumber != null  and modelNumber != ''"> and model_number = #{modelNumber}</if>
+                        <if test="status != null  and status != ''"> and status = #{status}</if>
+                        <if test="isEnable != null  and isEnable != ''"> and is_enable = #{isEnable}</if>
+                        <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+
+    <select id="selectBsInstrumentsRecordByBsInstrumentsRecordId" parameterType="String" resultMap="BsInstrumentsRecordResult">
+        <include refid="selectBsInstrumentsRecordVo"/>
+        where bs_instruments_record_id = #{bsInstrumentsRecordId}
+    </select>
+
+    <insert id="insertBsInstrumentsRecord" parameterType="BsInstrumentsRecord">
+        insert into bs_instruments_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="bsInstrumentsRecordId != null">bs_instruments_record_id,</if>
+                    <if test="bsInstrumentsId != null">bs_instruments_id,</if>
+                    <if test="instrumentName != null and instrumentName != ''">instrument_name,</if>
+                    <if test="instrumentCode != null and instrumentCode != ''">instrument_code,</if>
+                    <if test="deptId != null and deptId != ''">dept_id,</if>
+                    <if test="type != null">type,</if>
+                    <if test="modelNumber != null">model_number,</if>
+                    <if test="status != null">status,</if>
+                    <if test="remark != null">remark,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="isEnable != null and isEnable != ''">is_enable,</if>
+                    <if test="isDelete != null and isDelete != ''">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="bsInstrumentsRecordId != null">#{bsInstrumentsRecordId},</if>
+                    <if test="bsInstrumentsId != null">#{bsInstrumentsId},</if>
+                    <if test="instrumentName != null and instrumentName != ''">#{instrumentName},</if>
+                    <if test="instrumentCode != null and instrumentCode != ''">#{instrumentCode},</if>
+                    <if test="deptId != null and deptId != ''">#{deptId},</if>
+                    <if test="type != null">#{type},</if>
+                    <if test="modelNumber != null">#{modelNumber},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+                    <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsInstrumentsRecord" parameterType="BsInstrumentsRecord">
+        update bs_instruments_record
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="bsInstrumentsId != null">bs_instruments_id = #{bsInstrumentsId},</if>
+                    <if test="instrumentName != null and instrumentName != ''">instrument_name = #{instrumentName},</if>
+                    <if test="instrumentCode != null and instrumentCode != ''">instrument_code = #{instrumentCode},</if>
+                    <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+                    <if test="type != null">type = #{type},</if>
+                    <if test="modelNumber != null">model_number = #{modelNumber},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+                    <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+        </trim>
+        where bs_instruments_record_id = #{bsInstrumentsRecordId}
+    </update>
+
+
+
+    <update id="updateDeleteFlagById" >
+        update bs_instruments_record set delete_id = bs_instruments_record_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where bs_instruments_record_id = #{bsInstrumentsRecordId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update bs_instruments_record set delete_id = bs_instruments_record_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where bs_instruments_record_id in
+        <foreach item="bsInstrumentsRecordId" collection="array" open="(" separator="," close=")">
+            #{bsInstrumentsRecordId}
+        </foreach>
+    </update>
+
+    <select id="selectBsInstrumentsRecordByBsInstrumentsId"
+            resultMap="BsInstrumentsRecordResult">
+        <include refid="selectBsInstrumentsRecordVo"/>
+        where bs_instruments_id = #{bsInstrumentsId}
+    </select>
+</mapper>

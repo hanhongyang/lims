@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.leadsealsheet.mapper.OpLeadSealSheetMapper">
+
+    <resultMap type="OpLeadSealSheet" id="OpLeadSealSheetResult">
+            <result property="opLeadSealSheetId"    column="op_lead_seal_sheet_id"    />
+            <result property="milkSourcePlanOrderNumber"    column="milk_source_plan_order_number"    />
+            <result property="opMilkFillingOrderId"    column="op_Milk_filling_order_id"    />
+            <result property="inspectionMilkTankersId"    column="inspection_milk_tankers_id"    />
+            <result property="status"    column="status"    />
+            <result property="preStepCompleted"    column="pre_step_completed"    />
+            <result property="licensePlateNumber"    column="license_plate_number"    />
+            <result property="leadSealNumber"    column="lead_seal_number"    />
+            <result property="sealedManId"    column="sealed_man_id"    />
+            <result property="sealedMan"    column="sealed_man"    />
+            <result property="sealedPhoto"    column="sealed_photo"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createByName"    column="create_by_name"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="deptId"    column="dept_id"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="reviewer"    column="reviewer"    />
+            <result property="reviewerId"    column="reviewer_id"    />
+            <result property="reviewTime"    column="review_time"    />
+            <result property="isPushMilkSource"    column="is_push_milk_source"    />
+            <result property="qfNumber"    column="qf_number"    />
+    </resultMap>
+
+    <sql id="selectOpLeadSealSheetVo">
+        select a.op_lead_seal_sheet_id,
+               a.milk_source_plan_order_number,
+               a.op_Milk_filling_order_id,
+               a.inspection_milk_tankers_id,
+               a.status,
+               a.pre_step_completed,
+               a.license_plate_number,
+               a.lead_seal_number,
+               a.sealed_man_id,
+               a.sealed_man,
+               a.sealed_photo,
+               a.create_by,
+               a.create_by_name,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.dept_id,
+               a.is_delete,
+               a.reviewer,
+               a.reviewer_id,
+               a.review_time,
+               a.is_push_milk_source,
+               a.qf_number
+        from op_lead_seal_sheet a
+    </sql>
+
+    <select id="selectOpLeadSealSheetList" parameterType="OpLeadSealSheet" resultMap="OpLeadSealSheetResult">
+        <include refid="selectOpLeadSealSheetVo"/>
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.is_delete = '0' and a.pre_step_completed = '1'
+            <if test="milkSourcePlanOrderNumber != null  and milkSourcePlanOrderNumber != ''"> and a.milk_source_plan_order_number = #{milkSourcePlanOrderNumber}</if>
+            <if test="opMilkFillingOrderId != null  and opMilkFillingOrderId != ''"> and a.op_Milk_filling_order_id = #{opMilkFillingOrderId}</if>
+            <if test="inspectionMilkTankersId != null  and inspectionMilkTankersId != ''"> and a.inspection_milk_tankers_id = #{inspectionMilkTankersId}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="preStepCompleted != null  and preStepCompleted != ''"> and a.pre_step_completed = #{preStepCompleted}</if>
+            <if test="licensePlateNumber != null  and licensePlateNumber != ''"> and a.license_plate_number like concat('%', #{licensePlateNumber}, '%')</if>
+            <if test="leadSealNumber != null  and leadSealNumber != ''"> and a.lead_seal_number like concat('%', #{leadSealNumber}, '%')</if>
+            <if test="sealedManId != null  and sealedManId != ''"> and a.sealed_man_id = #{sealedManId}</if>
+            <if test="sealedMan != null  and sealedMan != ''"> and a.sealed_man = #{sealedMan}</if>
+            <if test="sealedPhoto != null  and sealedPhoto != ''"> and a.sealed_photo = #{sealedPhoto}</if>
+            <if test="createByName != null  and createByName != ''"> and a.create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if>
+            <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectOpLeadSealSheetByOpLeadSealSheetId" parameterType="String" resultMap="OpLeadSealSheetResult">
+        <include refid="selectOpLeadSealSheetVo"/>
+        where a.op_lead_seal_sheet_id = #{opLeadSealSheetId}
+        and a.is_delete = '0'
+    </select>
+
+    <insert id="insertOpLeadSealSheet" parameterType="OpLeadSealSheet">
+        insert into op_lead_seal_sheet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="opLeadSealSheetId != null">op_lead_seal_sheet_id,</if>
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number,</if>
+                    <if test="opMilkFillingOrderId != null">op_Milk_filling_order_id,</if>
+                    <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id,</if>
+                    <if test="status != null">status,</if>
+                    <if test="preStepCompleted != null">pre_step_completed,</if>
+                    <if test="licensePlateNumber != null">license_plate_number,</if>
+                    <if test="leadSealNumber != null">lead_seal_number,</if>
+                    <if test="sealedManId != null">sealed_man_id,</if>
+                    <if test="sealedMan != null">sealed_man,</if>
+                    <if test="sealedPhoto != null">sealed_photo,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createByName != null">create_by_name,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="deptId != null">dept_id,</if>
+                    <if test="isDelete != null">is_delete,</if>
+                    <if test="reviewer != null">reviewer,</if>
+                    <if test="reviewerId != null">reviewer_id,</if>
+                    <if test="reviewTime != null">review_time,</if>
+                    <if test="isPushMilkSource != null">is_push_milk_source,</if>
+                    <if test="qfNumber != null">qf_number,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="opLeadSealSheetId != null">#{opLeadSealSheetId},</if>
+                    <if test="milkSourcePlanOrderNumber != null">#{milkSourcePlanOrderNumber},</if>
+                    <if test="opMilkFillingOrderId != null">#{opMilkFillingOrderId},</if>
+                    <if test="inspectionMilkTankersId != null">#{inspectionMilkTankersId},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="preStepCompleted != null">#{preStepCompleted},</if>
+                    <if test="licensePlateNumber != null">#{licensePlateNumber},</if>
+                    <if test="leadSealNumber != null">#{leadSealNumber},</if>
+                    <if test="sealedManId != null">#{sealedManId},</if>
+                    <if test="sealedMan != null">#{sealedMan},</if>
+                    <if test="sealedPhoto != null">#{sealedPhoto},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createByName != null">#{createByName},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="deptId != null">#{deptId},</if>
+                    <if test="isDelete != null">#{isDelete},</if>
+                    <if test="reviewer != null">#{reviewer},</if>
+                    <if test="reviewerId != null">#{reviewerId},</if>
+                    <if test="reviewTime != null">#{reviewTime},</if>
+                    <if test="isPushMilkSource != null">#{isPushMilkSource},</if>
+                    <if test="qfNumber != null">#{qfNumber},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpLeadSealSheet" parameterType="OpLeadSealSheet">
+        update op_lead_seal_sheet
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number = #{milkSourcePlanOrderNumber},</if>
+                    <if test="opMilkFillingOrderId != null">op_Milk_filling_order_id = #{opMilkFillingOrderId},</if>
+                    <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id = #{inspectionMilkTankersId},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="preStepCompleted != null">pre_step_completed = #{preStepCompleted},</if>
+                    <if test="licensePlateNumber != null">license_plate_number = #{licensePlateNumber},</if>
+                    <if test="leadSealNumber != null">lead_seal_number = #{leadSealNumber},</if>
+                    <if test="sealedManId != null">sealed_man_id = #{sealedManId},</if>
+                    <if test="sealedMan != null">sealed_man = #{sealedMan},</if>
+                    <if test="sealedPhoto != null">sealed_photo = #{sealedPhoto},</if>
+                    <if test="createByName != null">create_by_name = #{createByName},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="deptId != null">dept_id = #{deptId},</if>
+                    <if test="isDelete != null">is_delete = #{isDelete},</if>
+                    <if test="reviewer != null">reviewer = #{reviewer},</if>
+                    <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+                    <if test="reviewTime != null">review_time = #{reviewTime},</if>
+                    <if test="isPushMilkSource != null">is_push_milk_source = #{isPushMilkSource},</if>
+                    <if test="qfNumber != null">qf_number = #{qfNumber},</if>
+        </trim>
+        where op_lead_seal_sheet_id = #{opLeadSealSheetId}
+    </update>
+
+    <update id="updateDeleteFlagById" >
+        update op_lead_seal_sheet set delete_id = op_lead_seal_sheet_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_lead_seal_sheet_id = #{opLeadSealSheetId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_lead_seal_sheet set delete_id = op_lead_seal_sheet_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_lead_seal_sheet_id in
+        <foreach item="opLeadSealSheetId" collection="array" open="(" separator="," close=")">
+            #{opLeadSealSheetId}
+        </foreach>
+    </update>
+
+    <select id="selectOpLeadSealSheetByMilkTankersId"
+            resultMap="OpLeadSealSheetResult">
+        <include refid="selectOpLeadSealSheetVo"/>
+        where a.inspection_milk_tankers_id = #{inspectionMilkTankersId}
+    </select>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpFeedEntrustOrderChangeLogMapper">
+
+    <resultMap type="OpFeedEntrustOrderChangeLog" id="OpFeedEntrustOrderChangeLogResult">
+        <result property="logId"    column="log_id"    />
+        <result property="businessId"    column="business_id"    />
+        <result property="businessType"    column="business_type"    />
+        <result property="fieldKey"    column="field_key"    />
+        <result property="fieldName"    column="field_name"    />
+        <result property="oldValue"    column="old_value"    />
+        <result property="newValue"    column="new_value"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert into op_feed_entrust_order_change_log
+        (log_id, business_id, business_type, field_key, field_name, old_value, new_value, create_by, create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.logId}, #{item.businessId}, #{item.businessType}, #{item.fieldKey}, #{item.fieldName},
+            #{item.oldValue}, #{item.newValue}, #{item.createBy}, sysdate())
+        </foreach>
+    </insert>
+
+    <select id="selectLogsByBusinessIds" resultMap="OpFeedEntrustOrderChangeLogResult">
+        select * from op_feed_entrust_order_change_log
+        where business_id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by create_time desc
+    </select>
+
+    <select id="selectLogsByOrderId" resultMap="OpFeedEntrustOrderChangeLogResult">
+        select * from op_feed_entrust_order_change_log where business_id = #{orderId}
+    </select>
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpFeedEntrustOrderItemMapper">
+
+    <resultMap type="OpFeedEntrustOrderItem" id="OpFeedEntrustOrderItemResult">
+        <result property="opFeedEntrustOrderItemId"    column="op_feed_entrust_order_item_id"    />
+        <result property="opFeedEntrustOrderSampleId"    column="op_feed_entrust_order_sample_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="testResult"    column="test_result"    />
+        <result property="testUserId"    column="test_user_id"    />
+    </resultMap>
+
+    <sql id="selectOpFeedEntrustOrderItemVo">
+        select op_feed_entrust_order_item_id, op_feed_entrust_order_sample_id, item_id, is_delete, create_time, create_by, 
+               update_time, update_by ,test_result,test_user_id
+        from op_feed_entrust_order_item
+    </sql>
+
+    <select id="selectOpFeedEntrustOrderItemList" parameterType="OpFeedEntrustOrderItem" resultMap="OpFeedEntrustOrderItemResult">
+        select i.*,u.nick_name test_user
+        from op_feed_entrust_order_item i
+        left join sys_user u on i.test_user_id=u.user_id and u.del_flag='0' and status='0'
+        <where>
+            and i.is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="opFeedEntrustOrderSampleId != null  and opFeedEntrustOrderSampleId != ''"> and i.op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId}</if>
+            <if test="itemId != null  and itemId != ''"> and i.item_id = #{itemId}</if>
+            <if test="testUser != null  and testUser != ''"> and u.nick_name like concat('%', #{testUser}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectOpFeedEntrustOrderItemByOpFeedEntrustOrderItemId" parameterType="String" resultMap="OpFeedEntrustOrderItemResult">
+        <include refid="selectOpFeedEntrustOrderItemVo"/>
+        where op_feed_entrust_order_item_id = #{opFeedEntrustOrderItemId}
+    </select>
+
+    <insert id="insertOpFeedEntrustOrderItem" parameterType="OpFeedEntrustOrderItem">
+        insert into op_feed_entrust_order_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opFeedEntrustOrderItemId != null">op_feed_entrust_order_item_id,</if>
+            <if test="opFeedEntrustOrderSampleId != null and opFeedEntrustOrderSampleId != ''">op_feed_entrust_order_sample_id,</if>
+            <if test="testResult != null and testResult != ''">test_result,</if>
+            <if test="testUserId != null and testUserId != ''">test_user_id,</if>
+            <if test="itemId != null and itemId != ''">item_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opFeedEntrustOrderItemId != null">#{opFeedEntrustOrderItemId},</if>
+            <if test="opFeedEntrustOrderSampleId != null and opFeedEntrustOrderSampleId != ''">#{opFeedEntrustOrderSampleId},</if>
+            <if test="testResult != null and testResult != ''">#{testResult},</if>
+            <if test="testUserId != null and testUserId != ''">#{testUserId},</if>
+            <if test="itemId != null and itemId != ''">#{itemId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpFeedEntrustOrderItem" parameterType="OpFeedEntrustOrderItem">
+        update op_feed_entrust_order_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="opFeedEntrustOrderSampleId != null and opFeedEntrustOrderSampleId != ''">op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId},</if>
+            <if test="testResult != null and testResult != ''">test_result = #{testResult},</if>
+            <if test="testUserId != null and testUserId != ''">test_user_id = #{testUserId},</if>
+            <if test="itemId != null and itemId != ''">item_id = #{itemId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where op_feed_entrust_order_item_id = #{opFeedEntrustOrderItemId}
+    </update>
+
+    <update id="updateTestToNullById" >
+        update op_feed_entrust_order_item set test_user_id=null,test_result=null ,update_time=now(),update_by=#{updateBy}
+        where op_feed_entrust_order_item_id = #{entrustOrderItemId}
+    </update>
+    <update id="updateDeleteBySampleId" >
+        update op_feed_entrust_order_item set is_delete=1 ,update_time=now(),update_by=#{updateBy}
+        where op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId}
+    </update>
+    <update id="updateDeleteByOrderId" >
+        UPDATE op_feed_entrust_order_item i
+            INNER JOIN op_feed_entrust_order_sample s ON i.op_feed_entrust_order_sample_id = s.op_feed_entrust_order_sample_id
+        SET i.is_delete = 1,
+            i.update_time = NOW(),
+            i.update_by = #{updateBy}
+        WHERE s.feed_entrust_order_id = #{opFeedEntrustOrderId}
+          AND i.is_delete = '0'
+        and s.is_delete='0'
+    </update>
+    <!-- 批量插入样品-项目关联 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO op_feed_entrust_order_item (
+        op_feed_entrust_order_item_id,
+        op_feed_entrust_order_sample_id,
+        item_id,
+        create_time,
+        create_by,test_result,test_user_id
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.opFeedEntrustOrderItemId},
+            #{item.opFeedEntrustOrderSampleId},
+            #{item.itemId},
+            #{item.createTime},
+            #{item.createBy},
+            #{item.testResult},
+            #{item.testUserId}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="selectIdBySampleId" parameterType="String" resultType="String">
+        select item_id
+        from    op_feed_entrust_order_item
+        where op_feed_entrust_order_sample_id = #{opFeedEntrustOrderSampleId} and is_delete='0'
+    </select>
+
+    <update id="updateDeleteStatusBySampleId" parameterType="String">
+        update op_feed_entrust_order_item
+        set is_delete = #{status}, update_by = #{updateBy}, update_time = sysdate()
+        where op_feed_entrust_order_sample_id = #{sampleId}
+    </update>
+    <select id="selectItemsBySampleIdIncludeDeleted" resultMap="OpFeedEntrustOrderItemResult">
+        select i.*, b.item_name, b.item_code
+        from op_feed_entrust_order_item i
+                 left join bs_labtest_items b on i.item_id = b.bs_labtest_items_id
+        where i.op_feed_entrust_order_sample_id = #{sampleId}
+    </select>
+</mapper>

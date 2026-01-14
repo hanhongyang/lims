@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsItemDeptMapper">
+
+    <resultMap type="BsItemDept" id="BsItemDeptResult">
+        <result property="bsItemDeptId"    column="bs_item_dept_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBsItemDeptVo">
+        select bs_item_dept_id, dept_id, item_id, is_delete, create_time, create_by, update_time, update_by from bs_item_dept
+    </sql>
+
+    <select id="selectBsItemDeptList" parameterType="BsItemDept" resultMap="BsItemDeptResult">
+        <include refid="selectBsItemDeptVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="itemId != null  and itemId != ''"> and item_id = #{itemId}</if>
+        </where>
+    </select>
+
+    <select id="selectBsItemDeptByBsItemDeptId" parameterType="String" resultMap="BsItemDeptResult">
+        <include refid="selectBsItemDeptVo"/>
+        where bs_item_dept_id = #{bsItemDeptId}
+    </select>
+
+    <insert id="insertBsItemDept" parameterType="BsItemDept">
+        insert into bs_item_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsItemDeptId != null">bs_item_dept_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsItemDeptId != null">#{bsItemDeptId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsItemDept" parameterType="BsItemDept">
+        update bs_item_dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_item_dept_id = #{bsItemDeptId}
+    </update>
+
+    <delete id="deleteBsItemDeptByBsItemDeptId" parameterType="String">
+        delete from bs_item_dept where bs_item_dept_id = #{bsItemDeptId}
+    </delete>
+
+    <delete id="deleteBsItemDeptByBsItemDeptIds" parameterType="String">
+        delete from bs_item_dept where bs_item_dept_id in
+        <foreach item="bsItemDeptId" collection="array" open="(" separator="," close=")">
+            #{bsItemDeptId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update bs_item_dept set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where bs_item_dept_id = #{bsItemDeptId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  bs_item_dept set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where bs_item_dept_id in
+        <foreach item="bsItemDeptId" collection="array" open="(" separator="," close=")">
+            #{bsItemDeptId}
+        </foreach>
+    </update>
+
+    <update id="updateDeleteFlagByItemId" >
+        update bs_item_dept set is_delete=1 ,update_time=now(),update_by=#{updateUserId} where item_id = #{labtestItemsId}
+    </update>
+
+</mapper>

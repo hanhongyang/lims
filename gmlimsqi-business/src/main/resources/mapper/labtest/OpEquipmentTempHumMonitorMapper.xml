@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpEquipmentTempHumMonitorMapper">
+    
+    <resultMap type="OpEquipmentTempHumMonitor" id="OpEquipmentTempHumMonitorResult">
+        <result property="id"    column="id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="monitoringPoint"    column="monitoring_point"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <resultMap id="OpEquipmentTempHumMonitorOpDeviceTempHumRecordResult" type="OpEquipmentTempHumMonitor" extends="OpEquipmentTempHumMonitorResult">
+        <collection property="opDeviceTempHumRecordList" ofType="OpDeviceTempHumRecord" column="id" select="selectOpDeviceTempHumRecordList" />
+    </resultMap>
+
+    <resultMap type="OpDeviceTempHumRecord" id="OpDeviceTempHumRecordResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="companyNameNew"    column="company_name_new"    />
+        <result property="monitoringPoint"    column="monitoring_point"    />
+        <result property="monitoringPointNew"    column="monitoring_point_new"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="temperatureNew"    column="temperature_new"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="humidityNew"    column="humidity_new"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="isEnableNew"    column="is_enable_new"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptIdNew"    column="dept_id_new"    />
+    </resultMap>
+
+    <sql id="selectOpEquipmentTempHumMonitorVo">
+        select id,
+               company_name,
+               monitoring_point,
+               temperature,
+               humidity,
+               is_enable,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               dept_id
+        from op_equipment_temp_hum_monitor
+    </sql>
+
+    <select id="selectOpEquipmentTempHumMonitorList" parameterType="OpEquipmentTempHumMonitor" resultMap="OpEquipmentTempHumMonitorResult">
+        <include refid="selectOpEquipmentTempHumMonitorVo"/>
+        <where>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="monitoringPoint != null  and monitoringPoint != ''"> and monitoring_point = #{monitoringPoint}</if>
+            <if test="temperature != null  and temperature != ''"> and temperature = #{temperature}</if>
+            <if test="humidity != null  and humidity != ''"> and humidity = #{humidity}</if>
+            <if test="isEnable != null  and isEnable != ''"> and is_enable = #{isEnable}</if>
+            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+
+    <select id="selectOpEquipmentTempHumMonitorById" parameterType="String"
+            resultMap="OpEquipmentTempHumMonitorOpDeviceTempHumRecordResult">
+        select id,
+               company_name,
+               monitoring_point,
+               temperature,
+               humidity,
+               is_enable,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               dept_id
+        from op_equipment_temp_hum_monitor
+        where id = #{id}
+    </select>
+
+    <select id="selectOpDeviceTempHumRecordList" resultType="OpDeviceTempHumRecord"
+            resultMap="OpDeviceTempHumRecordResult">
+        select id,
+               parent_id,
+               company_name,
+               company_name_new,
+               monitoring_point,
+               monitoring_point_new,
+               temperature,
+               temperature_new,
+               humidity,
+               humidity_new,
+               is_enable,
+               is_enable_new,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               dept_id,
+               dept_id_new
+        from op_device_temp_hum_record
+        where parent_id = #{parentId}
+    </select>
+
+    <insert id="insertOpEquipmentTempHumMonitor" parameterType="OpEquipmentTempHumMonitor">
+        insert into op_equipment_temp_hum_monitor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="companyName != null">company_name,</if>
+            <if test="monitoringPoint != null">monitoring_point,</if>
+            <if test="temperature != null">temperature,</if>
+            <if test="humidity != null">humidity,</if>
+            <if test="isEnable != null">is_enable,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="companyName != null">#{companyName},</if>
+            <if test="monitoringPoint != null">#{monitoringPoint},</if>
+            <if test="temperature != null">#{temperature},</if>
+            <if test="humidity != null">#{humidity},</if>
+            <if test="isEnable != null">#{isEnable},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpEquipmentTempHumMonitor" parameterType="OpEquipmentTempHumMonitor">
+        update op_equipment_temp_hum_monitor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyName != null">company_name = #{companyName},</if>
+            <if test="monitoringPoint != null">monitoring_point = #{monitoringPoint},</if>
+            <if test="temperature != null">temperature = #{temperature},</if>
+            <if test="humidity != null">humidity = #{humidity},</if>
+            <if test="isEnable != null">is_enable = #{isEnable},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOpEquipmentTempHumMonitorById" parameterType="String">
+        delete from op_equipment_temp_hum_monitor where id = #{id}
+    </delete>
+
+    <delete id="deleteOpEquipmentTempHumMonitorByIds" parameterType="String">
+        delete from op_equipment_temp_hum_monitor where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_equipment_temp_hum_monitor set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_equipment_temp_hum_monitor set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+    
+    <delete id="deleteOpDeviceTempHumRecordByParentIds" parameterType="String">
+        delete from op_device_temp_hum_record where parent_id in 
+        <foreach item="parentId" collection="array" open="(" separator="," close=")">
+            #{parentId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteOpDeviceTempHumRecordByParentId" parameterType="String">
+        delete from op_device_temp_hum_record where parent_id = #{parentId}
+    </delete>
+
+    <update id="updateDeleteFlagByParentIds">
+        update op_device_temp_hum_record
+        set is_delete=1,
+            update_time=#{now,jdbcType=TIMESTAMP},
+            update_by=#{updateUserId}   where parent_id in
+        <foreach item="parentId" collection="array" open="(" separator="," close=")">
+            #{parentId}
+        </foreach>
+    </update>
+
+    <update id="updateDeleteFlagByByParentId">
+        update op_device_temp_hum_record
+        set is_delete=1,
+            update_time=#{now,jdbcType=TIMESTAMP},
+            update_by=#{updateUserId}
+        where parent_id = #{parentId}
+    </update>
+
+    <insert id="batchOpDeviceTempHumRecord">
+        insert into op_device_temp_hum_record(id, parent_id, company_name,company_name_new, monitoring_point, monitoring_point_new,
+        temperature, temperature_new, humidity, humidity_new, is_enable, is_enable_new,
+                                              create_by, create_time, update_by, update_time, dept_id, dept_id_new) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.id}, #{item.parentId}, #{item.companyName}, #{item.companyNameNew}, #{item.monitoringPoint}, #{item.monitoringPointNew},
+        #{item.temperature}, #{item.temperatureNew}, #{item.humidity}, #{item.humidityNew}, #{item.isEnable}, #{item.isEnableNew},
+             #{item.createBy}, #{item.createTime}, #{item.updateBy},
+             #{item.updateTime}, #{item.deptId}, #{item.deptIdNew})
+        </foreach>
+    </insert>
+
+    <insert id="insertOpDeviceTempHumRecord">
+        insert into op_device_temp_hum_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="companyName != null">company_name,</if>
+            <if test="companyNameNew != null">company_name_new,</if>
+            <if test="monitoringPoint != null">monitoring_point,</if>
+            <if test="monitoringPointNew != null">monitoring_point_new,</if>
+            <if test="temperature != null">temperature,</if>
+            <if test="temperatureNew != null">temperature_new,</if>
+            <if test="humidity != null">humidity,</if>
+            <if test="humidityNew != null">humidity_new,</if>
+            <if test="isEnable != null">is_enable,</if>
+            <if test="isEnableNew != null">is_enable_new,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptIdNew != null">dept_id_new,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="companyName != null">#{companyName},</if>
+            <if test="companyNameNew != null">#{companyNameNew},</if>
+            <if test="monitoringPoint != null">#{monitoringPoint},</if>
+            <if test="monitoringPointNew != null">#{monitoringPointNew},</if>
+            <if test="temperature != null">#{temperature},</if>
+            <if test="temperatureNew != null">#{temperatureNew},</if>
+            <if test="humidity != null">#{humidity},</if>
+            <if test="humidityNew != null">#{humidityNew},</if>
+            <if test="isEnable != null">#{isEnable},</if>
+            <if test="isEnableNew != null">#{isEnableNew},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptIdNew != null">#{deptIdNew},</if>
+        </trim>
+    </insert>
+</mapper>

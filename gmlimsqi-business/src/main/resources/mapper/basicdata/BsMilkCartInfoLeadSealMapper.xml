@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsMilkCartInfoLeadSealMapper">
+
+    <!-- 通用查询结果映射 -->
+    <resultMap id="BaseResultMap" type="com.gmlimsqi.business.basicdata.domain.BsMilkCartInfoLeadSeal">
+        <id property="milkCartInfoLeadSealId" column="milk_cart_info_lead_seal_id" />
+        <result property="milkCartInfoId" column="milk_cart_info_id" />
+        <result property="cartLeadSealNumber" column="cart_lead_seal_number" />
+        <result property="fillingPort" column="filling_port" />
+    </resultMap>
+
+    <!-- 插入操作 -->
+    <insert id="insert" parameterType="com.gmlimsqi.business.basicdata.domain.BsMilkCartInfoLeadSeal">
+        INSERT INTO bs_milk_cart_info_lead_seal
+        (
+        <if test="milkCartInfoLeadSealId != null">milk_cart_info_lead_seal_id,</if>
+        <if test="milkCartInfoId != null">milk_cart_info_id,</if>
+        <if test="cartLeadSealNumber != null">cart_lead_seal_number,</if>
+        <if test="fillingPort != null">filling_port</if>
+        )
+        VALUES
+        (
+        <if test="milkCartInfoLeadSealId != null">#{milkCartInfoLeadSealId},</if>
+        <if test="milkCartInfoId != null">#{milkCartInfoId},</if>
+        <if test="cartLeadSealNumber != null">#{cartLeadSealNumber},</if>
+        <if test="fillingPort != null">#{fillingPort}</if>
+        )
+    </insert>
+
+    <!-- 根据ID删除 -->
+    <delete id="deleteById" parameterType="java.lang.String">
+        DELETE FROM bs_milk_cart_info_lead_seal
+        WHERE milk_cart_info_lead_seal_id = #{milkCartInfoLeadSealId}
+    </delete>
+
+    <delete id="deleteByMilkCartInfoId" parameterType="java.lang.String">
+        DELETE FROM bs_milk_cart_info_lead_seal
+        WHERE milk_cart_info_id = #{milkCartInfoId}
+    </delete>
+
+    <!-- 根据主表ID查询列表 -->
+    <select id="selectByMilkCartInfoId" resultMap="BaseResultMap"
+            parameterType="java.lang.String">
+        SELECT
+        milk_cart_info_lead_seal_id,
+        milk_cart_info_id,
+        cart_lead_seal_number,
+        filling_port
+        FROM bs_milk_cart_info_lead_seal
+        WHERE milk_cart_info_id = #{milkCartInfoId}
+    </select>
+
+    <!-- 根据主表ID和灌口查询 -->
+    <select id="selectByMilkCartInfoIdAndFillingPort"
+            resultType="com.gmlimsqi.business.basicdata.domain.BsMilkCartInfoLeadSeal"
+            parameterType="java.util.Map">
+        SELECT * FROM bs_milk_cart_info_lead_seal
+        WHERE milk_cart_info_id = #{milkCartInfoId}
+        AND filling_port = #{fillingPort}
+    </select>
+
+    <!-- 更新操作 -->
+    <update id="update" parameterType="com.gmlimsqi.business.basicdata.domain.BsMilkCartInfoLeadSeal">
+        UPDATE bs_milk_cart_info_lead_seal
+        <set>
+            <if test="milkCartInfoId != null">
+                milk_cart_info_id = #{milkCartInfoId},
+            </if>
+            <if test="cartLeadSealNumber != null">
+                cart_lead_seal_number = #{cartLeadSealNumber},
+            </if>
+            <if test="fillingPort != null">
+                filling_port = #{fillingPort}
+            </if>
+        </set>
+        WHERE milk_cart_info_lead_seal_id = #{milkCartInfoLeadSealId}
+    </update>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT * FROM bs_milk_cart_info_lead_seal
+        WHERE milk_cart_info_lead_seal_id = #{milkCartInfoLeadSealId}
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO bs_milk_cart_info_lead_seal (
+        milk_cart_info_lead_seal_id,
+        milk_cart_info_id,
+        cart_lead_seal_number,
+        filling_port
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.milkCartInfoLeadSealId},
+            #{item.milkCartInfoId},
+            #{item.cartLeadSealNumber},
+            #{item.fillingPort}
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpBloodEntrustOrderItemMapper">
+
+
+    <resultMap type="com.gmlimsqi.business.labtest.domain.OpBloodEntrustOrderItem" id="OpBloodEntrustOrderItemResult">
+        <result property="opBloodEntrustOrderItemId"    column="op_blood_entrust_order_item_id"    />
+        <result property="opBloodEntrustOrderId"    column="op_blood_entrust_order_id"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="itemTy"    column="item_ty"    />
+        <result property="immunityTime"    column="immunity_time"    />
+        <result property="itemBbkt"    column="item_bbkt"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="testResult"    column="test_result"    />
+        <result property="testUserId"    column="test_user_id"    />
+        <result property="bloodTaskItemType"    column="blood_task_item_type"    />
+    </resultMap>
+
+    <sql id="selectOpBloodEntrustOrderItemVo">
+        select op_blood_entrust_order_item_id, op_blood_entrust_order_id, item_code, item_ty, immunity_time, item_bbkt,
+               is_delete, create_time, create_by, update_time, update_by,test_result,test_user_id,item_id
+        from op_blood_entrust_order_item
+    </sql>
+
+    <select id="selectOpBloodEntrustOrderItemList" parameterType="OpBloodEntrustOrderItem" resultMap="OpBloodEntrustOrderItemResult">
+        select i.*,u.nick_name test_user
+        from op_blood_entrust_order_item i
+        left join sys_user u on i.test_user_id=u.user_id and u.del_flag='0' and status='0'
+        <where>
+            and i.is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="opBloodEntrustOrderId != null  and opBloodEntrustOrderId != ''"> and i.op_blood_entrust_order_id = #{opBloodEntrustOrderId}</if>
+            <if test="itemCode != null  and itemCode != ''"> and i.item_code = #{itemCode}</if>
+            <if test="itemTy != null  and itemTy != ''"> and i.item_ty = #{itemTy}</if>
+            <if test="immunityTime != null "> and i.immunity_time = #{immunityTime}</if>
+            <if test="itemBbkt != null  and itemBbkt != ''"> and i.item_bbkt = #{itemBbkt}</if>
+            <if test="isDelete != null  and isDelete != ''"> and i.is_delete = #{isDelete}</if>
+            <if test="testUser != null  and testUser != ''"> and u.nick_name like concat('%', #{testUser}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectOpBloodEntrustOrderItemByOpFeedEntrustOrderItemId" parameterType="String" resultMap="OpBloodEntrustOrderItemResult">
+        <include refid="selectOpBloodEntrustOrderItemVo"/>
+        where op_blood_entrust_order_item_id = #{opBloodEntrustOrderItemId}
+    </select>
+
+    <insert id="insertOpBloodEntrustOrderItem" parameterType="OpBloodEntrustOrderItem">
+        insert into op_blood_entrust_order_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opBloodEntrustOrderItemId != null">op_blood_entrust_order_item_id,</if>
+            <if test="opBloodEntrustOrderId != null and opBloodEntrustOrderId != ''">op_blood_entrust_order_id,</if>
+            <if test="testResult != null and testResult != ''">test_result,</if>
+            <if test="testUserId != null and testUserId != ''">test_user_id,</if>
+            <if test="itemCode != null and itemCode != ''">item_code,</if>
+            <if test="itemId != null and itemId != ''">item_id,</if>
+            <if test="itemName != null and itemName != ''">item_name,</if>
+            <if test="itemTy != null">item_ty,</if>
+            <if test="immunityTime != null">immunity_time,</if>
+            <if test="itemBbkt != null">item_bbkt,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="bloodTaskItemType != null">blood_task_item_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opBloodEntrustOrderItemId != null">#{opBloodEntrustOrderItemId},</if>
+            <if test="opBloodEntrustOrderId != null and opBloodEntrustOrderId != ''">#{opBloodEntrustOrderId},</if>
+            <if test="testResult != null and testResult != ''">#{testResult},</if>
+            <if test="testUserId != null and testUserId != ''">#{testUserId},</if>
+            <if test="itemCode != null and itemCode != ''">#{itemCode},</if>
+            <if test="itemId != null and itemId != ''">#{itemId},</if>
+            <if test="itemName != null and itemName != ''">#{itemName},</if>
+            <if test="itemTy != null">#{itemTy},</if>
+            <if test="immunityTime != null">#{immunityTime},</if>
+            <if test="itemBbkt != null">#{itemBbkt},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="bloodTaskItemType != null">#{bloodTaskItemType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpBloodEntrustOrderItem" parameterType="OpBloodEntrustOrderItem">
+        update op_blood_entrust_order_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="opBloodEntrustOrderId != null and opBloodEntrustOrderId != ''">op_blood_entrust_order_id = #{opBloodEntrustOrderId},</if>
+            <if test="itemCode != null and itemCode != ''">item_code = #{itemCode},</if>
+            <if test="testResult != null and testResult != ''">test_result = #{testResult},</if>
+            <if test="testUserId != null and testUserId != ''">test_user_id = #{testUserId},</if>
+            <if test="itemTy != null">item_ty = #{itemTy},</if>
+            <if test="immunityTime != null">immunity_time = #{immunityTime},</if>
+            <if test="itemBbkt != null">item_bbkt = #{itemBbkt},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="bloodTaskItemType != null">blood_task_item_type = #{bloodTaskItemType},</if>
+        </trim>
+        where op_blood_entrust_order_item_id = #{opBloodEntrustOrderItemId}
+    </update>
+
+    <delete id="deleteOpBloodEntrustOrderItemByOpFeedEntrustOrderItemId" parameterType="String">
+        delete from op_blood_entrust_order_item where op_blood_entrust_order_item_id = #{opBloodEntrustOrderItemId}
+    </delete>
+
+    <delete id="deleteOpBloodEntrustOrderItemByOpFeedEntrustOrderItemIds" parameterType="String">
+        delete from op_blood_entrust_order_item where op_blood_entrust_order_item_id in
+        <foreach item="opBloodEntrustOrderItemId" collection="array" open="(" separator="," close=")">
+            #{opBloodEntrustOrderItemId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_blood_entrust_order_item set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_blood_entrust_order_item_id = #{opBloodEntrustOrderItemId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_blood_entrust_order_item set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where op_blood_entrust_order_item_id in
+        <foreach item="opBloodEntrustOrderItemId" collection="array" open="(" separator="," close=")">
+            #{opBloodEntrustOrderItemId}
+        </foreach>
+    </update>
+
+    <select id="selectAllByOpBloodEntrustOrderId"
+            parameterType="String" resultMap="OpBloodEntrustOrderItemResult">
+        <include refid="selectOpBloodEntrustOrderItemVo"/>
+        where op_blood_entrust_order_id = #{opBloodEntrustOrderId}
+        and is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <update id="updateDeleteFlagByEntrustOrderId">
+        update op_blood_entrust_order_item set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_blood_entrust_order_id = #{id}
+
+    </update>
+
+    <select id="selectIdByOrderId" parameterType="String" resultType="String">
+        select item_code
+        from    op_blood_entrust_order_item
+        where op_blood_entrust_order_id = #{opBloodEntrustOrderId} and is_delete='0'
+    </select>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.sap.log.mapper.BsSapLogMapper">
+
+    <resultMap type="com.gmlimsqi.sap.log.domain.BsSapLog" id="BsSapLogResult">
+        <result property="id" column="id"/>
+        <result property="dcreatetime" column="dcreatetime"/>
+        <result property="dmodifytime" column="dmodifytime"/>
+        <result property="bsysdel" column="bsysdel"/>
+        <result property="cdep" column="cdep"/>
+        <result property="cstate" column="cstate"/>
+        <result property="ddate" column="ddate"/>
+        <result property="esOutput" column="ES_OUTPUT"/>
+        <result property="isInput" column="IS_INPUT"/>
+        <result property="ccode" column="ccode"/>
+        <result property="cweightno" column="cweightno"/>
+    </resultMap>
+
+    <sql id="selectBsSapLogVo">
+        select id,
+               dcreatetime,
+               dmodifytime,
+               bsysdel,
+               cdep,
+               cstate,
+               ddate,
+               ES_OUTPUT,
+               IS_INPUT,
+               ccode,
+               cweightno
+        from bs_sap_log
+    </sql>
+
+    <insert id="insertBsSapLog" parameterType="com.gmlimsqi.sap.log.domain.BsSapLog">
+        insert into bs_sap_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="dcreatetime != null">dcreatetime,</if>
+            <if test="dmodifytime != null">dmodifytime,</if>
+            <if test="bsysdel != null">bsysdel,</if>
+            <if test="cdep != null">cdep,</if>
+            <if test="cstate != null">cstate,</if>
+            <if test="ddate != null">ddate,</if>
+            <if test="esOutput != null">ES_OUTPUT,</if>
+            <if test="isInput != null">IS_INPUT,</if>
+            <if test="ccode != null">ccode,</if>
+            <if test="cweightno != null">cweightno,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="dcreatetime != null">#{dcreatetime},</if>
+            <if test="dmodifytime != null">#{dmodifytime},</if>
+            <if test="bsysdel != null">#{bsysdel},</if>
+            <if test="cdep != null">#{cdep},</if>
+            <if test="cstate != null">#{cstate},</if>
+            <if test="ddate != null">#{ddate},</if>
+            <if test="esOutput != null">#{esOutput},</if>
+            <if test="isInput != null">#{isInput},</if>
+            <if test="ccode != null">#{ccode},</if>
+            <if test="cweightno != null">#{cweightno},</if>
+        </trim>
+    </insert>
+
+
+</mapper>

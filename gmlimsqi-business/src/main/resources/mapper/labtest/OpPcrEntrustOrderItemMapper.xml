@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpPcrEntrustOrderItemMapper">
+
+    <resultMap type="OpPcrEntrustOrderItem" id="OpPcrEntrustOrderItemResult">
+        <result property="opPcrEntrustOrderItemId"    column="op_pcr_entrust_order_item_id"    />
+        <result property="pcrEntrustOrderSampleId"    column="pcr_entrust_order_sample_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="testResult"    column="test_result"    />
+        <result property="testUserId"    column="test_user_id"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="remark"    column="remark"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="tqsjh"    column="tqsjh"    />
+        <result property="kzsjh"    column="kzsjh"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="examineUserId"    column="examine_user_id"    />
+        <result property="examineUser"    column="examine_user"    />
+        <result property="examineTime"    column="examine_time"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="opPcrEntrustOrderItemId"    column="pcr_entrust_order_item_id"    />
+
+    </resultMap>
+
+    <sql id="selectOpPcrEntrustOrderItemVo">
+        select op_pcr_entrust_order_item_id, pcr_entrust_order_sample_id,kzsjh,tqsjh,file_id,dept_name, sample_no,
+               item_id, is_delete, create_time, create_by,sample_name,item_name,remark,sequence
+               update_time, update_by ,test_result,test_user_id,sort_order
+        from op_pcr_entrust_order_item
+    </sql>
+
+    <select id="selectOpPcrEntrustOrderItemList" parameterType="OpPcrEntrustOrderItem" resultMap="OpPcrEntrustOrderItemResult">
+        select i.*,u.nick_name test_user
+        from op_pcr_entrust_order_item i
+        left join sys_user u on i.test_user_id=u.user_id and u.del_flag='0' and status='0'
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="pcrEntrustOrderSampleId != null  and pcrEntrustOrderSampleId != ''"> and pcr_entrust_order_sample_id = #{pcrEntrustOrderSampleId}</if>
+            <if test="itemId != null  and itemId != ''"> and item_id = #{itemId}</if>
+            <if test="testUser != null  and testUser != ''"> and u.nick_name like concat('%', #{testUser}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectOpPcrEntrustOrderItemByOpPcrEntrustOrderItemId" parameterType="String" resultMap="OpPcrEntrustOrderItemResult">
+        <include refid="selectOpPcrEntrustOrderItemVo"/>
+        where op_pcr_entrust_order_item_id = #{opPcrEntrustOrderItemId}
+    </select>
+
+    <insert id="insertOpPcrEntrustOrderItem" parameterType="OpPcrEntrustOrderItem">
+        insert into op_pcr_entrust_order_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opPcrEntrustOrderItemId != null">op_pcr_entrust_order_item_id,</if>
+            <if test="pcrEntrustOrderSampleId != null and pcrEntrustOrderSampleId != ''">pcr_entrust_order_sample_id,</if>
+            <if test="testResult != null and testResult != ''">test_result,</if>
+            <if test="testUserId != null and testUserId != ''">test_user_id,</if>
+            <if test="itemId != null and itemId != ''">item_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="sampleName != null">sample_name,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="remark != null">remark,</if>
+            <if test="tqsjh != null">tqsjh,</if>
+            <if test="kzsjh != null">kzsjh,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="examineUserId != null">examine_user_id,</if>
+            <if test="examineUser != null">examine_user,</if>
+            <if test="examineTime != null">examine_time,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opPcrEntrustOrderItemId != null">#{opPcrEntrustOrderItemId},</if>
+            <if test="pcrEntrustOrderSampleId != null and pcrEntrustOrderSampleId != ''">#{pcrEntrustOrderSampleId},</if>
+            <if test="testResult != null and testResult != ''">#{testResult},</if>
+            <if test="testUserId != null and testUserId != ''">#{testUserId},</if>
+            <if test="itemId != null and itemId != ''">#{itemId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="sampleName != null">#{sampleName},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="tqsjh != null">#{tqsjh},</if>
+            <if test="kzsjh != null">#{kzsjh},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="examineUserId != null">#{examineUserId},</if>
+            <if test="examineUser != null">#{examineUser},</if>
+            <if test="examineTime != null">#{examineTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpPcrEntrustOrderItem" parameterType="OpPcrEntrustOrderItem">
+        update op_pcr_entrust_order_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pcrEntrustOrderSampleId != null and pcrEntrustOrderSampleId != ''">pcr_entrust_order_sample_id = #{pcrEntrustOrderSampleId},</if>
+            <if test="itemId != null and itemId != ''">item_id = #{itemId},</if>
+            <if test="testResult != null and testResult != ''">test_result = #{testResult},</if>
+            <if test="testUserId != null and testUserId != ''">test_user_id = #{testUserId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="sampleName != null">sample_name = #{sampleName},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="tqsjh != null">tqsjh = #{tqsjh},</if>
+            <if test="kzsjh != null">kzsjh = #{kzsjh},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="examineUserId != null">examine_user_id = #{examineUserId},</if>
+            <if test="examineUser != null">examine_user = #{examineUser},</if>
+            <if test="examineTime != null">examine_time = #{examineTime},</if>
+        </trim>
+        where op_pcr_entrust_order_item_id = #{opPcrEntrustOrderItemId}
+    </update>
+
+    <update id="updateDeleteBySampleId" >
+        update op_pcr_entrust_order_item set is_delete=1 ,update_time=now(),update_by=#{updateBy}
+        where pcr_entrust_order_sample_id = #{pcrEntrustOrderSampleId}
+    </update>
+    <!-- 批量插入样品-项目关联 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO op_pcr_entrust_order_item (
+        op_pcr_entrust_order_item_id, pcr_entrust_order_sample_id, item_id, create_time, create_by,test_result,test_user_id,
+        file_id,kzsjh,tqsjh,remark,sequence,item_name,sample_name,sample_no,dept_name
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.opPcrEntrustOrderItemId},
+            #{item.pcrEntrustOrderSampleId},
+            #{item.itemId},
+            #{item.createTime},
+            #{item.createBy},
+            #{item.testResult},
+            #{item.testUserId},
+            #{item.fileId},
+            #{item.kzsjh},
+            #{item.tqsjh},
+            #{item.remark},
+            #{item.sequence},
+            #{item.itemName},
+            #{item.sampleName},
+            #{item.sampleNo},
+            #{item.deptName}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="selectIdBySampleId" parameterType="String" resultType="String">
+        select item_id
+        from    op_pcr_entrust_order_item
+        where pcr_entrust_order_sample_id = #{pcrEntrustOrderSampleId} and is_delete='0'
+    </select>
+
+    <select id="getBaseByEntrustOrderNo2" parameterType="String" resultMap="OpPcrEntrustOrderItemResult">
+        SELECT
+            i.kzsjh,i.tqsjh,i.file_id,i.dept_name, i.sample_no,
+            i.sample_name,i.item_name,i.remark,i.sequence,
+            i.test_result
+        FROM
+            op_pcr_entrust_order_item i
+                left join op_pcr_entrust_order_sample s on i.pcr_entrust_order_sample_id=s.op_pcr_entrust_order_sample_id and s.is_delete='0'
+                LEFT JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+                AND o.delete_id = '0'
+        WHERE
+            i.is_delete = '0'
+          and s.pcr_task_item_type=#{pcrTaskItemType}
+          and o.entrust_order_no=#{entrustOrderNo}
+          and i.file_id is not null
+        union
+#         空白样、阴性、阳性
+        SELECT
+            i2.kzsjh,i2.tqsjh,i2.file_id,i2.dept_name, i2.sample_no,
+            i2.sample_name,i2.item_name,i2.remark,i2.sequence,
+            i2.test_result
+        FROM
+            op_jczx_pcr_result_info i2
+        WHERE
+            i2.delete_id = '0'
+          AND i2.file_id IN (
+            SELECT DISTINCT
+                i.file_id
+            FROM
+                op_pcr_entrust_order_item i
+                    LEFT JOIN op_pcr_entrust_order_sample s ON i.pcr_entrust_order_sample_id = s.op_pcr_entrust_order_sample_id
+                    AND s.is_delete = '0'
+                    LEFT JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+                    AND o.delete_id = '0'
+            WHERE
+                i.is_delete = '0'
+              AND s.pcr_task_item_type = #{pcrTaskItemType}
+
+              AND o.entrust_order_no = #{entrustOrderNo}
+
+              AND i.file_id IS NOT NULL
+        ) and i2.sample_no in ('空白样','阳性对照','阴性对照')
+
+    </select>
+
+
+    <select id="getBaseByEntrustOrderNo" parameterType="String" resultMap="OpPcrEntrustOrderItemResult">
+        SELECT * FROM (
+                          -- 第一个查询：主要数据，添加排序标识1，按sample_no排序
+                          SELECT
+                              1 as sort_order,  -- 排序标识：主要数据排在上面
+                              i.kzsjh,i.tqsjh,i.file_id,i.dept_name, i.sample_no,
+                              i.sample_name,i.item_name,i.remark,i.sequence,
+                              i.test_result,i.op_pcr_entrust_order_item_id
+                          FROM
+                              op_pcr_entrust_order_item i
+                                  LEFT JOIN op_pcr_entrust_order_sample s ON i.pcr_entrust_order_sample_id = s.op_pcr_entrust_order_sample_id AND s.is_delete = '0'
+                                  LEFT JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id AND o.delete_id = '0'
+                          WHERE
+                              i.is_delete = '0'
+                            AND s.pcr_task_item_type = #{pcrTaskItemType}
+                            AND o.entrust_order_no = #{entrustOrderNo}
+                            AND i.file_id IS NOT NULL
+
+                          UNION
+
+                          -- 第二个查询：对照数据，添加排序标识2，按指定顺序排序
+                          SELECT
+                              2 as sort_order,  -- 排序标识：对照数据排在下面
+                              i2.kzsjh,i2.tqsjh,i2.file_id,i2.dept_name, i2.sample_no,
+                              i2.sample_name,i2.item_name,i2.remark,i2.sequence,
+                              i2.test_result,'' as op_pcr_entrust_order_item_id
+                          FROM
+                              op_jczx_pcr_result_info i2
+                          WHERE
+                              i2.delete_id = '0'
+                            AND i2.file_id IN (
+                              SELECT DISTINCT i.file_id
+                              FROM op_pcr_entrust_order_item i
+                                       LEFT JOIN op_pcr_entrust_order_sample s ON i.pcr_entrust_order_sample_id = s.op_pcr_entrust_order_sample_id AND s.is_delete = '0'
+                                       LEFT JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id AND o.delete_id = '0'
+                              WHERE i.is_delete = '0'
+                                AND s.pcr_task_item_type = #{pcrTaskItemType}
+                                AND o.entrust_order_no = #{entrustOrderNo}
+                                AND i.file_id IS NOT NULL
+                          )
+                            AND i2.sample_no IN ('空白样','阳性对照','阴性对照')
+                      ) AS combined_result
+        ORDER BY
+            sort_order ASC,  -- 先按排序标识：主要数据(1)在前，对照数据(2)在后
+            CASE
+                WHEN sort_order = 1 THEN sample_no  -- 第一个查询按sample_no排序
+                WHEN sort_order = 2 THEN
+                    CASE sample_no  -- 第二个查询按指定顺序排序
+                        WHEN '空白样' THEN 1
+                        WHEN '阳性对照' THEN 2
+                        WHEN '阴性对照' THEN 3
+                        ELSE 4
+                        END
+                END ASC
+    </select>
+    <update id="updateResultBySampleNo">
+        update op_pcr_entrust_order_item set
+                 test_result=#{testResult},
+                 test_user_id=#{testUserId},
+                 tqsjh=#{tqsjh},
+                 kzsjh=#{kzsjh},
+                 file_id=#{fileId},
+                remark=#{remark},
+                sample_no=#{sampleNo},
+                sample_name=#{sampleName},
+                dept_name=#{deptName},
+                item_name=#{itemName}
+        where pcr_entrust_order_sample_id=(select op_pcr_entrust_order_sample_id from op_pcr_entrust_order_sample where sample_no=#{sampleNo} and is_delete='0') and is_delete='0' and item_id=#{itemId}
+    </update>
+    <select id="selectExaminCountByIdList" parameterType="java.util.List" resultType="Integer">
+        select count(*) from op_pcr_entrust_order_item where
+                                                           op_pcr_entrust_order_item_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and examine_user_id is not null
+    </select>
+    <update id="updateRemarkById" parameterType="OpPcrEntrustOrderItem">
+        UPDATE op_pcr_entrust_order_item
+        SET remark = #{remark},
+            update_time = NOW(),
+            update_by = #{updateBy}
+        WHERE op_pcr_entrust_order_item_id = #{opPcrEntrustOrderItemId}
+          AND is_delete = '0'
+    </update>
+
+    <update id="batchUpdateExamineFields">
+        UPDATE op_pcr_entrust_order_item
+        SET examine_user_id = #{examineUserId},
+        remark = null,
+        examine_user = #{examineUser},
+        examine_time = #{examineTime,jdbcType=TIMESTAMP},
+        update_time = NOW(),
+        update_by = #{examineUserId}
+        WHERE op_pcr_entrust_order_item_id IN
+        <foreach item="id" collection="itemIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND is_delete = '0'
+    </update>
+    <update id="batchClearExamineFields">
+        UPDATE op_pcr_entrust_order_item
+        SET examine_user_id = NULL,
+        examine_user = NULL,
+        examine_time = NULL,
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_by = #{updateUserId}
+        WHERE op_pcr_entrust_order_item_id IN
+        <foreach item="id" collection="itemIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND is_delete = '0'
+    </update>
+    <select id="selectEntrustOrderIdByItemId" parameterType="String" resultType="String">
+        SELECT T1.pcr_entrust_order_id
+        FROM op_pcr_entrust_order_sample T1
+                 INNER JOIN op_pcr_entrust_order_item T2 ON T1.op_pcr_entrust_order_sample_id = T2.pcr_entrust_order_sample_id
+        WHERE T2.op_pcr_entrust_order_item_id = #{opPcrEntrustOrderItemId}
+          AND T1.is_delete = '0'
+          AND T2.is_delete = '0'
+    </select>
+
+    <select id="countUnexaminedItemsByOrderId" parameterType="String" resultType="Integer">
+        SELECT COUNT(T2.op_pcr_entrust_order_item_id)
+        FROM op_pcr_entrust_order_sample T1
+                 INNER JOIN op_pcr_entrust_order_item T2 ON T1.op_pcr_entrust_order_sample_id = T2.pcr_entrust_order_sample_id
+        WHERE T1.pcr_entrust_order_id = #{opPcrEntrustOrderId}
+          AND T1.is_delete = '0'
+          AND T2.is_delete = '0'
+          AND T2.examine_user_id IS NULL
+    </select>
+
+    <select id="countUntestedItemsBySampleNo" parameterType="String" resultType="Integer">
+        SELECT
+            COUNT(T2.op_pcr_entrust_order_item_id)
+        FROM
+            op_pcr_entrust_order T3
+                INNER JOIN op_pcr_entrust_order_sample T1
+                           ON T3.op_pcr_entrust_order_id = T1.pcr_entrust_order_id
+                INNER JOIN op_pcr_entrust_order_item T2
+                           ON T1.op_pcr_entrust_order_sample_id = T2.pcr_entrust_order_sample_id
+                INNER JOIN (
+                SELECT DISTINCT pcr_entrust_order_id
+                FROM op_pcr_entrust_order_sample
+                WHERE sample_no = #{sampleNo} AND is_delete = '0'
+            ) AS T_TargetOrder
+                           ON T3.op_pcr_entrust_order_id = T_TargetOrder.pcr_entrust_order_id -- 连接目标订单
+
+        WHERE
+            T1.is_delete = '0'
+          AND T2.is_delete = '0'
+          AND T3.delete_id = '0'
+          AND T2.test_user_id IS NULL;
+    </select>
+
+    <update id="updateDeleteByOrderId" >
+        UPDATE op_pcr_entrust_order_item i
+            INNER JOIN op_pcr_entrust_order_sample s ON i.pcr_entrust_order_sample_id = s.op_pcr_entrust_order_sample_id
+        SET i.is_delete = 1,
+            i.update_time = NOW(),
+            i.update_by = #{updateBy}
+        WHERE s.pcr_entrust_order_id = #{opPcrEntrustOrderId}
+          AND i.is_delete = '0'
+          and s.is_delete='0'
+    </update>
+    <select id="seletKbyBySampleId" parameterType="String" resultMap="OpPcrEntrustOrderItemResult">
+        SELECT
+            i2.kzsjh,i2.tqsjh,i2.file_id,i2.dept_name, i2.sample_no,
+            i2.sample_name,i2.item_name,i2.remark,i2.sequence,
+            i2.test_result
+        FROM
+            op_jczx_pcr_result_info i2
+        WHERE
+            i2.delete_id = '0'
+          AND i2.file_id IN (
+            SELECT DISTINCT
+                i.file_id
+            FROM
+                op_pcr_entrust_order_item i
+                    LEFT JOIN op_pcr_entrust_order_sample s ON i.pcr_entrust_order_sample_id = s.op_pcr_entrust_order_sample_id
+                    AND s.is_delete = '0'
+            WHERE
+                i.is_delete = '0'
+              AND s.op_pcr_entrust_order_sample_id = #{opPcrEntrustOrderSampleId}
+
+
+              AND i.file_id IS NOT NULL
+        ) and i2.sample_no in ('空白样','阳性对照','阴性对照')
+
+    </select>
+
+    <select id="getBaseByResultNo" parameterType="String" resultMap="OpPcrEntrustOrderItemResult">
+        SELECT
+            1 as sort_order,
+            i.kzsjh,i.tqsjh,i.file_id,i.dept_name, i.sample_no,
+            i.sample_name,i.item_name,i.sequence,
+            i.test_result,i.pcr_entrust_order_item_id as op_pcr_entrust_order_item_id,
+            i.remark
+        FROM
+            op_jczx_pcr_result_info i
+                LEFT JOIN op_jczx_pcr_result_base b ON i.base_id = b.op_jczx_pcr_result_base_id AND b.delete_id = '0'
+        WHERE
+            i.delete_id = '0'
+          AND b.result_no=#{resultNo}
+        ORDER BY
+            sort_order,
+            -- 第一级排序：将普通样品(1)与特殊样品(2)分开
+            CASE
+                WHEN i.sample_no IN ('空白样','阳性对照','阴性对照') THEN 2
+                ELSE 1
+                END,
+            -- 第二级排序：对特殊样品(组 2)内部进行排序
+            CASE
+                WHEN i.sample_no = '空白样' THEN 1
+                WHEN i.sample_no = '阳性对照' THEN 2
+                WHEN i.sample_no = '阴性对照' THEN 3
+                ELSE 0  -- 普通样品(组 1)的内部顺序
+                END,
+            -- 第三级排序：对普通样品按照sequence升序排列
+            CASE
+                WHEN i.sample_no NOT IN ('空白样','阳性对照','阴性对照') THEN i.sequence
+                ELSE NULL  -- 特殊样品不需要按sequence排序
+                END ASC
+    </select>
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gmlimsqi.business.milksamplequalityinspection.mapper.MilkSampleQualityInspectionChangeLogMapper">
+
+    <!-- ResultMap：字段映射 -->
+    <resultMap id="MilkSampleQualityInspectionChangeLogMap"
+               type="com.gmlimsqi.business.milksamplequalityinspection.domain.MilkSampleQualityInspectionChangeLogDO">
+
+        <id property="id" column="id"/>
+
+        <result property="opMilkSampleQualityInspectionId" column="op_milk_sample_quality_inspection_id"/>
+        <result property="opType" column="op_type"/>
+        <result property="changeReason" column="change_reason"/>
+
+        <result property="oldData" column="old_data"/>
+        <result property="newData" column="new_data"/>
+        <result property="diffData" column="diff_data"/>
+
+        <result property="createByName" column="create_by_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <!-- 公共查询列 -->
+    <sql id="Base_Column_List">
+        id,
+        op_milk_sample_quality_inspection_id,
+        op_type,
+        change_reason,
+        old_data,
+        new_data,
+        diff_data,
+        create_by,
+        create_by_name,
+        create_time,
+        update_by,
+        update_time,
+        remark
+    </sql>
+
+    <!-- 插入日志 -->
+    <insert id="insert"
+            parameterType="com.gmlimsqi.business.milksamplequalityinspection.domain.MilkSampleQualityInspectionChangeLogDO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+        INSERT INTO op_milk_sample_quality_inspection_change_log
+        (op_milk_sample_quality_inspection_id,
+         op_type,
+         change_reason,
+         old_data,
+         new_data,
+         diff_data,
+         create_by,
+         create_by_name,
+         create_time,
+         update_by,
+         update_time,
+         remark)
+        VALUES (#{opMilkSampleQualityInspectionId},
+                #{opType},
+                #{changeReason},
+                #{oldData},
+                #{newData},
+                #{diffData},
+                #{createBy},
+                #{createByName},
+                #{createTime},
+                #{updateBy},
+                #{updateTime},
+                #{remark})
+    </insert>
+
+    <!-- 根据主键查询 -->
+    <select id="selectById" resultMap="MilkSampleQualityInspectionChangeLogMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM op_milk_sample_quality_inspection_change_log
+        WHERE id = #{id}
+    </select>
+
+    <!-- 根据奶样质检主表ID查询 -->
+    <select id="selectListByMilkId" resultMap="MilkSampleQualityInspectionChangeLogMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM op_milk_sample_quality_inspection_change_log
+        WHERE op_milk_sample_quality_inspection_id = #{milkId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 条件查询列表 -->
+    <select id="selectList" resultMap="MilkSampleQualityInspectionChangeLogMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM op_milk_sample_quality_inspection_change_log
+        <where>
+            <if test="query != null">
+                <if test="query.opMilkSampleQualityInspectionId != null and query.opMilkSampleQualityInspectionId != ''">
+                    AND op_milk_sample_quality_inspection_id = #{query.opMilkSampleQualityInspectionId}
+                </if>
+                <if test="query.opType != null and query.opType != ''">
+                    AND op_type = #{query.opType}
+                </if>
+                <if test="query.createBy != null and query.createBy != ''">
+                    AND create_by = #{query.createBy}
+                </if>
+                <if test="query.createByName != null and query.createByName != ''">
+                    AND create_by_name = #{query.createByName}
+                </if>
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

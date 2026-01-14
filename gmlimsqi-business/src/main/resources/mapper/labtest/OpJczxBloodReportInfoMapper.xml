@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxBloodReportInfoMapper">
+    
+    <resultMap type="OpJczxBloodReportInfo" id="OpJczxBloodReportInfoResult">
+        <result property="opJczxBloodReportInfoId"    column="op_jczx_blood_report_info_id"    />
+        <result property="baseId"    column="base_id"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="testResult"    column="test_result"    />
+        <result property="sp"    column="sp"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="aYpxj"    column="a_ypxj"    />
+        <result property="aTestResult"    column="a_test_result"    />
+        <result property="oYpxj"    column="o_ypxj"    />
+        <result property="oTestResult"    column="o_test_result"    />
+        <result property="od"    column="od"    />
+        <result property="testRemark"    column="test_remark"    />
+        <result property="zaoyunTestResult"    column="zaoyun_test_result"    />
+        <result property="shZdb" column="sh_zdb" />
+        <result property="shBdb" column="sh_bdb" />
+        <result property="shZg" column="sh_zg" />
+        <result property="shLzg" column="sh_lzg" />
+        <result property="shMlz" column="sh_mlz" />
+        <result property="shWjl" column="sh_wjl" />
+        <result property="shNlz" column="sh_nlz" />
+        <result property="shJlz" column="sh_jlz" />
+        <result property="shLlz" column="sh_llz" />
+        <result property="shTlz" column="sh_tlz" />
+        <result property="shTielz" column="sh_tielz" />
+        <result property="shXlz" column="sh_xlz" />
+        <result property="shGysz" column="sh_gysz" />
+        <result property="shQds" column="sh_qds" />
+        <result property="shFzhx" column="sh_fzhx" />
+        <result property="shPpt" column="sh_ppt" />
+        <result property="shXynsd" column="sh_xynsd" />
+        <result property="shGczam" column="sh_gczam" />
+        <result property="shGbzam" column="sh_gbzam" />
+        <result property="shJxlsm" column="sh_jxlsm" />
+        <result property="gh" column="gh" />
+        <result property="sequence" column="sequence" />
+        <result property="dnh" column="dnh" />
+        <result property="bw" column="bw" />
+        <result property="sn" column="sn" />
+        <result property="pdjg" column="pdjg" />
+        <result property="sampleType" column="sample_type" />
+        <result property="mnh" column="mnh" />
+    </resultMap>
+
+    <sql id="selectOpJczxBloodReportInfoVo">
+        select op_jczx_blood_report_info_id, base_id, sample_name, test_result, sp, create_time, create_by, update_time,
+               update_by, delete_id, a_ypxj, a_test_result, o_ypxj, o_test_result ,od,
+               test_remark,zaoyun_test_result,sh_zdb ,sh_bdb ,sh_zg ,sh_lzg ,sh_mlz ,sh_wjl ,sh_nlz ,sh_jlz ,sh_llz ,
+               sh_tlz ,sh_tielz ,sh_xlz ,sh_gysz  ,sh_qds  ,sh_fzhx  ,sh_ppt  ,sh_xynsd ,sh_gczam  ,sh_gbzam  ,sh_jxlsm,
+               gh,sequence,sample_no,dnh,bw,sn,pdjg,sample_type,mnh
+        from op_jczx_blood_report_info
+    </sql>
+
+    <select id="selectOpJczxBloodReportInfoList" parameterType="OpJczxBloodReportInfo" resultMap="OpJczxBloodReportInfoResult">
+        <include refid="selectOpJczxBloodReportInfoVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            <if test="baseId != null  and baseId != ''"> and base_id = #{baseId}</if>
+            <if test="sampleName != null  and sampleName != ''"> and sample_name like concat('%', #{sampleName}, '%')</if>
+            <if test="testResult != null  and testResult != ''"> and test_result = #{testResult}</if>
+            <if test="sp != null  and sp != ''"> and sp = #{sp}</if>
+            <if test="deleteId != null  and deleteId != ''"> and delete_id = #{deleteId}</if>
+            <if test="aYpxj != null  and aYpxj != ''"> and a_ypxj = #{aYpxj}</if>
+            <if test="aTestResult != null  and aTestResult != ''"> and a_test_result = #{aTestResult}</if>
+            <if test="oYpxj != null  and oYpxj != ''"> and o_ypxj = #{oYpxj}</if>
+            <if test="oTestResult != null  and oTestResult != ''"> and o_test_result = #{oTestResult}</if>
+        </where>
+        order by sequence asc
+    </select>
+    
+    <select id="selectOpJczxBloodReportInfoByOpJczxBloodReportInfoId" parameterType="String" resultMap="OpJczxBloodReportInfoResult">
+        <include refid="selectOpJczxBloodReportInfoVo"/>
+        where op_jczx_blood_report_info_id = #{opJczxBloodReportInfoId}
+    </select>
+
+    <insert id="insertOpJczxBloodReportInfo" parameterType="OpJczxBloodReportInfo">
+        insert into op_jczx_blood_report_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxBloodReportInfoId != null">op_jczx_blood_report_info_id,</if>
+            <if test="baseId != null">base_id,</if>
+            <if test="sampleName != null">sample_name,</if>
+            <if test="testResult != null">test_result,</if>
+            <if test="sp != null">sp,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deleteId != null and deleteId != ''">delete_id,</if>
+            <if test="aYpxj != null">a_ypxj,</if>
+            <if test="aTestResult != null">a_test_result,</if>
+            <if test="oYpxj != null">o_ypxj,</if>
+            <if test="oTestResult != null">o_test_result,</if>
+            <if test="od != null">od ,</if>
+            <if test="testRemark != null">test_remark ,</if>
+            <if test="zaoyunTestResult != null">zaoyun_test_result,</if>
+            <if test="shZdb != null">sh_zdb ,</if>
+            <if test="shBdb != null">sh_bdb ,</if>
+            <if test="shZg != null">sh_zg ,</if>
+            <if test="shLzg != null">sh_lzg ,</if>
+            <if test="shMlz != null">sh_mlz ,</if>
+            <if test="shWjl != null">sh_wjl ,</if>
+            <if test="shNlz != null">sh_nlz ,</if>
+            <if test="shJlz != null">sh_jlz ,</if>
+            <if test="shLlz != null">sh_llz ,</if>
+            <if test="shTlz != null">sh_tlz ,</if>
+            <if test="shTielz != null">sh_tielz ,</if>
+            <if test="shXlz != null">sh_xlz ,</if>
+            <if test="shGysz != null">sh_gysz ,</if>
+            <if test="shQds != null">sh_qds ,</if>
+            <if test="shFzhx != null">sh_fzhx ,</if>
+            <if test="shPpt != null">sh_ppt ,</if>
+            <if test="shXynsd != null">sh_xynsd ,</if>
+            <if test="shGczam != null">sh_gczam ,</if>
+            <if test="shGbzam != null">sh_gbzam ,</if>
+            <if test="shJxlsm != null">sh_jxlsm ,</if>
+            <if test="gh != null">gh ,</if>
+            <if test="sequence != null">sequence ,</if>
+            <if test="sampleNo != null">sample_no ,</if>
+            <if test="dnh != null">dnh,</if>
+            <if test="bw != null">bw,</if>
+            <if test="sn != null">sn,</if>
+            <if test="pdjg != null">pdjg,</if>
+            <if test="sampleType != null">sample_type,</if>
+            <if test="mnh != null">mnh,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxBloodReportInfoId != null">#{opJczxBloodReportInfoId},</if>
+            <if test="baseId != null">#{baseId},</if>
+            <if test="sampleName != null">#{sampleName},</if>
+            <if test="testResult != null">#{testResult},</if>
+            <if test="sp != null">#{sp},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">#{deleteId},</if>
+            <if test="aYpxj != null">#{aYpxj},</if>
+            <if test="aTestResult != null">#{aTestResult},</if>
+            <if test="oYpxj != null">#{oYpxj},</if>
+            <if test="oTestResult != null">#{oTestResult},</if>
+            <if test="od != null">#{od},</if>
+            <if test="testRemark != null">#{testRemark},</if>
+            <if test="zaoyunTestResult != null">#{zaoyunTestResult},</if>
+            <if test="shZdb != null">#{shZdb},</if>
+            <if test="shBdb != null">#{shBdb},</if>
+            <if test="shZg != null">#{shZg},</if>
+            <if test="shLzg != null">#{shLzg},</if>
+            <if test="shMlz != null">#{shMlz},</if>
+            <if test="shWjl != null"> #{shWjl},</if>
+            <if test="shNlz != null">#{shNlz},</if>
+            <if test="shJlz != null"> #{shJlz},</if>
+            <if test="shLlz != null"> #{shLlz},</if>
+            <if test="shTlz != null"> #{shTlz},</if>
+            <if test="shTielz != null"> #{shTielz},</if>
+            <if test="shXlz != null"> #{shXlz},</if>
+            <if test="shGysz != null"> #{shGysz},</if>
+            <if test="shQds != null"> #{shQds},</if>
+            <if test="shFzhx != null">#{shFzhx},</if>
+            <if test="shPpt != null"> #{shPpt},</if>
+            <if test="shXynsd != null"> #{shXynsd},</if>
+            <if test="shGczam != null"> #{shGczam},</if>
+            <if test="shGbzam != null">#{shGbzam},</if>
+            <if test="shJxlsm != null">#{shJxlsm},</if>
+            <if test="gh != null">#{gh},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="dnh != null">#{dnh},</if>
+            <if test="bw != null">#{bw},</if>
+            <if test="sn != null">#{sn},</if>
+            <if test="pdjg != null">#{pdjg},</if>
+            <if test="sampleType != null">#{sampleType},</if>
+            <if test="mnh != null">#{mnh},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpJczxBloodReportInfo" parameterType="OpJczxBloodReportInfo">
+        update op_jczx_blood_report_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="baseId != null">base_id = #{baseId},</if>
+            <if test="sampleName != null">sample_name = #{sampleName},</if>
+            <if test="testResult != null">test_result = #{testResult},</if>
+            <if test="sp != null">sp = #{sp},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">delete_id = #{deleteId},</if>
+            <if test="aYpxj != null">a_ypxj = #{aYpxj},</if>
+            <if test="aTestResult != null">a_test_result = #{aTestResult},</if>
+            <if test="oYpxj != null">o_ypxj = #{oYpxj},</if>
+            <if test="oTestResult != null">o_test_result = #{oTestResult},</if>
+            <if test="od != null">od = #{od},</if>
+            <if test="testRemark != null">test_remark = #{testRemark},</if>
+            <if test="zaoyunTestResult != null">zaoyun_test_result = #{zaoyunTestResult},</if>
+            <if test="shZdb != null">sh_zdb = #{shZdb},</if>
+            <if test="shBdb != null">sh_bdb = #{shBdb},</if>
+            <if test="shZg != null">sh_zg = #{shZg},</if>
+            <if test="shLzg != null">sh_lzg = #{shLzg},</if>
+            <if test="shMlz != null">sh_mlz = #{shMlz},</if>
+            <if test="shWjl != null">sh_wjl = #{shWjl},</if>
+            <if test="shNlz != null">sh_nlz = #{shNlz},</if>
+            <if test="shJlz != null">sh_jlz = #{shJlz},</if>
+            <if test="shLlz != null">sh_llz = #{shLlz},</if>
+            <if test="shTlz != null">sh_tlz = #{shTlz},</if>
+            <if test="shTielz != null">sh_tielz = #{shTielz},</if>
+            <if test="shXlz != null">sh_xlz = #{shXlz},</if>
+            <if test="shGysz != null">sh_gysz = #{shGysz},</if>
+            <if test="shQds != null">sh_qds = #{shQds},</if>
+            <if test="shFzhx != null">sh_fzhx = #{shFzhx},</if>
+            <if test="shPpt != null">sh_ppt = #{shPpt},</if>
+            <if test="shXynsd != null">sh_xynsd = #{shXynsd},</if>
+            <if test="shGczam != null">sh_gczam = #{shGczam},</if>
+            <if test="shGbzam != null">sh_gbzam = #{shGbzam},</if>
+            <if test="shJxlsm != null">sh_jxlsm = #{shJxlsm},</if>
+            <if test="gh != null">gh = #{gh},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="dnh != null">dnh = #{dnh},</if>
+            <if test="bw != null">bw = #{bw},</if>
+            <if test="sn != null">sn = #{sn},</if>
+            <if test="pdjg != null">pdjg = #{pdjg},</if>
+            <if test="sampleType != null">sample_type = #{sampleType},</if>
+            <if test="mnh != null">mnh = #{mnh},</if>
+        </trim>
+        where op_jczx_blood_report_info_id = #{opJczxBloodReportInfoId}
+    </update>
+
+    <delete id="deleteOpJczxBloodReportInfoByOpJczxBloodReportInfoId" parameterType="String">
+        delete from op_jczx_blood_report_info where op_jczx_blood_report_info_id = #{opJczxBloodReportInfoId}
+    </delete>
+
+    <delete id="deleteOpJczxBloodReportInfoByOpJczxBloodReportInfoIds" parameterType="String">
+        delete from op_jczx_blood_report_info where op_jczx_blood_report_info_id in 
+        <foreach item="opJczxBloodReportInfoId" collection="array" open="(" separator="," close=")">
+            #{opJczxBloodReportInfoId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_blood_report_info set delete_id=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_jczx_blood_report_info_id = #{opJczxBloodReportInfoId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_jczx_blood_report_info set delete_id=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where op_jczx_blood_report_info_id in
+        <foreach item="opJczxBloodReportInfoId" collection="array" open="(" separator="," close=")">
+            #{opJczxBloodReportInfoId}
+        </foreach>
+    </update>
+
+    <delete id="deleteByBaseId">
+        update op_jczx_blood_report_info set delete_id=1 ,update_time=NOW(),update_by=#{updateUserId} where base_id = #{baseId}
+    </delete>
+
+    <select id="selectOpJczxBloodReportInfoListByBaseId" parameterType="String" resultMap="OpJczxBloodReportInfoResult">
+        select * from op_jczx_blood_report_info where base_id=#{opJczxBloodReportBaseId}
+    </select>
+</mapper>

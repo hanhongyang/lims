@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsQualityInspectionSyncMapper">
+
+    <resultMap type="BsQualityInspectionSync" id="BsQualityInspectionSyncResult">
+            <result property="id"    column="id"    />
+            <result property="orderNumber"    column="order_number"    />
+            <result property="factoryCode"    column="factory_code"    />
+            <result property="factoryName"    column="factory_name"    />
+            <result property="actualMilk"    column="actual_milk"    />
+            <result property="unloadTime"    column="unload_time"    />
+            <result property="leavePastureTime"    column="leave_pasture_time"    />
+            <result property="arriveFactoryTime"    column="arrive_factory_time"    />
+            <result property="unloadTemperature"    column="unload_temperature"    />
+            <result property="testingFat"    column="testing_fat"    />
+            <result property="testingProtein"    column="testing_protein"    />
+            <result property="testingColonies"    column="testing_colonies"    />
+            <result property="testingSomaticCell"    column="testing_somatic_cell"    />
+            <result property="testingBacteria"    column="testing_bacteria"    />
+            <result property="zxyyb"    column="zxyyb"    />
+            <result property="znrxyyb"    column="znrxyyb"    />
+            <result property="zsrxyyb"    column="zsrxyyb"    />
+            <result property="testingSpore"    column="testing_spore"    />
+            <result property="testingAflatoxin"    column="testing_aflatoxin"    />
+            <result property="testingAcidity"    column="testing_acidity"    />
+            <result property="testingAcidDifference"    column="testing_acid_difference"    />
+            <result property="testingIce"    column="testing_ice"    />
+            <result property="testingImpurity"    column="testing_impurity"    />
+            <result property="testingSensoryRating"    column="testing_sensory_rating"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBsQualityInspectionSyncVo">
+        select id,
+               order_number,
+               factory_code,
+               factory_name,
+               actual_milk,
+               unload_time,
+               leave_pasture_time,
+               arrive_factory_time,
+               unload_temperature,
+               testing_fat,
+               testing_protein,
+               testing_colonies,
+               testing_somatic_cell,
+               testing_bacteria,
+               zxyyb,
+               znrxyyb,
+               zsrxyyb,
+               testing_spore,
+               testing_aflatoxin,
+               testing_acidity,
+               testing_acid_difference,
+               testing_ice,
+               testing_impurity,
+               testing_sensory_rating,
+               create_time,
+               update_time
+        from bs_quality_inspection_sync
+    </sql>
+
+    <select id="selectBsQualityInspectionSyncList" parameterType="BsQualityInspectionSync" resultMap="BsQualityInspectionSyncResult">
+        <include refid="selectBsQualityInspectionSyncVo"/>
+        <where>
+                        <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
+                        <if test="factoryCode != null  and factoryCode != ''"> and factory_code = #{factoryCode}</if>
+                        <if test="factoryName != null  and factoryName != ''"> and factory_name like concat('%', #{factoryName}, '%')</if>
+                        <if test="actualMilk != null  and actualMilk != ''"> and actual_milk = #{actualMilk}</if>
+                        <if test="unloadTime != null "> and unload_time = #{unloadTime}</if>
+                        <if test="leavePastureTime != null "> and leave_pasture_time = #{leavePastureTime}</if>
+                        <if test="arriveFactoryTime != null "> and arrive_factory_time = #{arriveFactoryTime}</if>
+                        <if test="unloadTemperature != null  and unloadTemperature != ''"> and unload_temperature = #{unloadTemperature}</if>
+                        <if test="testingFat != null  and testingFat != ''"> and testing_fat = #{testingFat}</if>
+                        <if test="testingProtein != null  and testingProtein != ''"> and testing_protein = #{testingProtein}</if>
+                        <if test="testingColonies != null  and testingColonies != ''"> and testing_colonies = #{testingColonies}</if>
+                        <if test="testingSomaticCell != null  and testingSomaticCell != ''"> and testing_somatic_cell = #{testingSomaticCell}</if>
+                        <if test="testingBacteria != null  and testingBacteria != ''"> and testing_bacteria = #{testingBacteria}</if>
+                        <if test="zxyyb != null  and zxyyb != ''"> and zxyyb = #{zxyyb}</if>
+                        <if test="znrxyyb != null  and znrxyyb != ''"> and znrxyyb = #{znrxyyb}</if>
+                        <if test="zsrxyyb != null  and zsrxyyb != ''"> and zsrxyyb = #{zsrxyyb}</if>
+                        <if test="testingSpore != null  and testingSpore != ''"> and testing_spore = #{testingSpore}</if>
+                        <if test="testingAflatoxin != null  and testingAflatoxin != ''"> and testing_aflatoxin = #{testingAflatoxin}</if>
+                        <if test="testingAcidity != null  and testingAcidity != ''"> and testing_acidity = #{testingAcidity}</if>
+                        <if test="testingAcidDifference != null  and testingAcidDifference != ''"> and testing_acid_difference = #{testingAcidDifference}</if>
+                        <if test="testingIce != null  and testingIce != ''"> and testing_ice = #{testingIce}</if>
+                        <if test="testingImpurity != null  and testingImpurity != ''"> and testing_impurity = #{testingImpurity}</if>
+                        <if test="testingSensoryRating != null  and testingSensoryRating != ''"> and testing_sensory_rating = #{testingSensoryRating}</if>
+        </where>
+    </select>
+
+    <select id="selectBsQualityInspectionSyncById" parameterType="String" resultMap="BsQualityInspectionSyncResult">
+        <include refid="selectBsQualityInspectionSyncVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBsQualityInspectionSync" parameterType="BsQualityInspectionSync">
+        insert into bs_quality_inspection_sync
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">id,</if>
+                    <if test="orderNumber != null">order_number,</if>
+                    <if test="factoryCode != null">factory_code,</if>
+                    <if test="factoryName != null">factory_name,</if>
+                    <if test="actualMilk != null">actual_milk,</if>
+                    <if test="unloadTime != null">unload_time,</if>
+                    <if test="leavePastureTime != null">leave_pasture_time,</if>
+                    <if test="arriveFactoryTime != null">arrive_factory_time,</if>
+                    <if test="unloadTemperature != null">unload_temperature,</if>
+                    <if test="testingFat != null">testing_fat,</if>
+                    <if test="testingProtein != null">testing_protein,</if>
+                    <if test="testingColonies != null">testing_colonies,</if>
+                    <if test="testingSomaticCell != null">testing_somatic_cell,</if>
+                    <if test="testingBacteria != null">testing_bacteria,</if>
+                    <if test="zxyyb != null">zxyyb,</if>
+                    <if test="znrxyyb != null">znrxyyb,</if>
+                    <if test="zsrxyyb != null">zsrxyyb,</if>
+                    <if test="testingSpore != null">testing_spore,</if>
+                    <if test="testingAflatoxin != null">testing_aflatoxin,</if>
+                    <if test="testingAcidity != null">testing_acidity,</if>
+                    <if test="testingAcidDifference != null">testing_acid_difference,</if>
+                    <if test="testingIce != null">testing_ice,</if>
+                    <if test="testingImpurity != null">testing_impurity,</if>
+                    <if test="testingSensoryRating != null">testing_sensory_rating,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">#{id},</if>
+                    <if test="orderNumber != null">#{orderNumber},</if>
+                    <if test="factoryCode != null">#{factoryCode},</if>
+                    <if test="factoryName != null">#{factoryName},</if>
+                    <if test="actualMilk != null">#{actualMilk},</if>
+                    <if test="unloadTime != null">#{unloadTime},</if>
+                    <if test="leavePastureTime != null">#{leavePastureTime},</if>
+                    <if test="arriveFactoryTime != null">#{arriveFactoryTime},</if>
+                    <if test="unloadTemperature != null">#{unloadTemperature},</if>
+                    <if test="testingFat != null">#{testingFat},</if>
+                    <if test="testingProtein != null">#{testingProtein},</if>
+                    <if test="testingColonies != null">#{testingColonies},</if>
+                    <if test="testingSomaticCell != null">#{testingSomaticCell},</if>
+                    <if test="testingBacteria != null">#{testingBacteria},</if>
+                    <if test="zxyyb != null">#{zxyyb},</if>
+                    <if test="znrxyyb != null">#{znrxyyb},</if>
+                    <if test="zsrxyyb != null">#{zsrxyyb},</if>
+                    <if test="testingSpore != null">#{testingSpore},</if>
+                    <if test="testingAflatoxin != null">#{testingAflatoxin},</if>
+                    <if test="testingAcidity != null">#{testingAcidity},</if>
+                    <if test="testingAcidDifference != null">#{testingAcidDifference},</if>
+                    <if test="testingIce != null">#{testingIce},</if>
+                    <if test="testingImpurity != null">#{testingImpurity},</if>
+                    <if test="testingSensoryRating != null">#{testingSensoryRating},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsQualityInspectionSync" parameterType="BsQualityInspectionSync">
+        update bs_quality_inspection_sync
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="orderNumber != null">order_number = #{orderNumber},</if>
+                    <if test="factoryCode != null">factory_code = #{factoryCode},</if>
+                    <if test="factoryName != null">factory_name = #{factoryName},</if>
+                    <if test="actualMilk != null">actual_milk = #{actualMilk},</if>
+                    <if test="unloadTime != null">unload_time = #{unloadTime},</if>
+                    <if test="leavePastureTime != null">leave_pasture_time = #{leavePastureTime},</if>
+                    <if test="arriveFactoryTime != null">arrive_factory_time = #{arriveFactoryTime},</if>
+                    <if test="unloadTemperature != null">unload_temperature = #{unloadTemperature},</if>
+                    <if test="testingFat != null">testing_fat = #{testingFat},</if>
+                    <if test="testingProtein != null">testing_protein = #{testingProtein},</if>
+                    <if test="testingColonies != null">testing_colonies = #{testingColonies},</if>
+                    <if test="testingSomaticCell != null">testing_somatic_cell = #{testingSomaticCell},</if>
+                    <if test="testingBacteria != null">testing_bacteria = #{testingBacteria},</if>
+                    <if test="zxyyb != null">zxyyb = #{zxyyb},</if>
+                    <if test="znrxyyb != null">znrxyyb = #{znrxyyb},</if>
+                    <if test="zsrxyyb != null">zsrxyyb = #{zsrxyyb},</if>
+                    <if test="testingSpore != null">testing_spore = #{testingSpore},</if>
+                    <if test="testingAflatoxin != null">testing_aflatoxin = #{testingAflatoxin},</if>
+                    <if test="testingAcidity != null">testing_acidity = #{testingAcidity},</if>
+                    <if test="testingAcidDifference != null">testing_acid_difference = #{testingAcidDifference},</if>
+                    <if test="testingIce != null">testing_ice = #{testingIce},</if>
+                    <if test="testingImpurity != null">testing_impurity = #{testingImpurity},</if>
+                    <if test="testingSensoryRating != null">testing_sensory_rating = #{testingSensoryRating},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+
+    <update id="updateDeleteFlagById" >
+        update bs_quality_inspection_sync set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update bs_quality_inspection_sync set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

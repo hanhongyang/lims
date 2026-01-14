@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.LabtestMethodsFormulaMapper">
+    
+    <resultMap type="LabtestMethodsFormula" id="BsLabtestMethodsFormulaResult">
+        <result property="bsLabtestMethodsFormulaId"    column="bs_labtest_methods_formula_id"    />
+        <result property="bsLabtestMethodsId"    column="bs_labtest_methods_id"    />
+        <result property="formulaContent"    column="formula_content"    />
+        <result property="formulaDescription"    column="formula_description"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBsLabtestMethodsFormulaVo">
+        select bs_labtest_methods_formula_id, bs_labtest_methods_id, formula_content, formula_description, is_delete, create_time, create_by, update_time, update_by from bs_labtest_methods_formula
+    </sql>
+
+    <select id="selectBsLabtestMethodsFormulaList" parameterType="LabtestMethodsFormula" resultMap="BsLabtestMethodsFormulaResult">
+        <include refid="selectBsLabtestMethodsFormulaVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="bsLabtestMethodsId != null  and bsLabtestMethodsId != ''"> and bs_labtest_methods_id = #{bsLabtestMethodsId}</if>
+            <if test="formulaContent != null  and formulaContent != ''"> and formula_content = #{formulaContent}</if>
+            <if test="formulaDescription != null  and formulaDescription != ''"> and formula_description = #{formulaDescription}</if>
+        </where>
+    </select>
+    
+    <select id="selectBsLabtestMethodsFormulaByBsLabtestMethodsFormulaId" parameterType="String" resultMap="BsLabtestMethodsFormulaResult">
+        <include refid="selectBsLabtestMethodsFormulaVo"/>
+        where bs_labtest_methods_formula_id = #{bsLabtestMethodsFormulaId}
+    </select>
+
+    <insert id="insertBsLabtestMethodsFormula" parameterType="LabtestMethodsFormula">
+        insert into bs_labtest_methods_formula
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestMethodsFormulaId != null">bs_labtest_methods_formula_id,</if>
+            <if test="bsLabtestMethodsId != null and bsLabtestMethodsId != ''">bs_labtest_methods_id,</if>
+            <if test="formulaContent != null and formulaContent != ''">formula_content,</if>
+            <if test="formulaDescription != null">formula_description,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestMethodsFormulaId != null">#{bsLabtestMethodsFormulaId},</if>
+            <if test="bsLabtestMethodsId != null and bsLabtestMethodsId != ''">#{bsLabtestMethodsId},</if>
+            <if test="formulaContent != null and formulaContent != ''">#{formulaContent},</if>
+            <if test="formulaDescription != null">#{formulaDescription},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBsLabtestMethodsFormula" parameterType="LabtestMethodsFormula">
+        update bs_labtest_methods_formula
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bsLabtestMethodsId != null and bsLabtestMethodsId != ''">bs_labtest_methods_id = #{bsLabtestMethodsId},</if>
+            <if test="formulaContent != null and formulaContent != ''">formula_content = #{formulaContent},</if>
+            <if test="formulaDescription != null">formula_description = #{formulaDescription},</if>
+            <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+<!--            <if test="createTime != null">create_time = #{createTime},</if>-->
+<!--            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>-->
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_labtest_methods_formula_id = #{bsLabtestMethodsFormulaId}
+    </update>
+
+    <update id="deleteByMethodsId">
+        update bs_labtest_methods_formula set
+        is_delete = 1,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where bs_labtest_methods_id = #{bsLabtestMethodsId}
+    </update>
+
+    <delete id="deleteBsLabtestMethodsFormulaByBsLabtestMethodsFormulaId" parameterType="String">
+        delete from bs_labtest_methods_formula where bs_labtest_methods_formula_id = #{bsLabtestMethodsFormulaId}
+    </delete>
+
+    <delete id="deleteBsLabtestMethodsFormulaByBsLabtestMethodsFormulaIds" parameterType="String">
+        delete from bs_labtest_methods_formula where bs_labtest_methods_formula_id in 
+        <foreach item="bsLabtestMethodsFormulaId" collection="array" open="(" separator="," close=")">
+            #{bsLabtestMethodsFormulaId}
+        </foreach>
+    </delete>
+</mapper>

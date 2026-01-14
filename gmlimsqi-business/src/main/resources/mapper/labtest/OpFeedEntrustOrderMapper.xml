@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpFeedEntrustOrderMapper">
+
+    <resultMap type="OpFeedEntrustOrder" id="OpFeedEntrustOrderResult">
+        <result property="opFeedEntrustOrderId"    column="op_feed_entrust_order_id"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="entrustDeptId"    column="entrust_dept_id"    />
+        <result property="entrustDeptName"    column="dept_name"    />
+        <result property="reportMailingAddress"    column="report_mailing_address"    />
+        <result property="entrustContactInfoId"    column="entrust_contact_info_id"    />
+        <result property="entrustContact"    column="entrust_contact"    />
+        <result property="entrustContactPhone"    column="entrust_contact_phone"    />
+        <result property="entrustContactEmail"    column="entrust_contact_email"    />
+        <result property="sendSampleDate"    column="send_sample_date"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="invoiceTitle"    column="invoice_title"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="paymentStatus"    column="payment_status"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="totalFee"    column="total_fee"    />
+        <result property="sampleReturnPolicy"    column="sample_return_policy"    />
+        <result property="totalSampleQuantity"    column="total_sample_quantity"    />
+        <result property="requiresJudgement"    column="requires_judgement"    />
+        <result property="allowsSubcontracting"    column="allows_subcontracting"    />
+        <result property="reportReceiveType"    column="report_receive_type"    />
+        <result property="testingServiceLevel"    column="testing_service_level"    />
+        <result property="remark"    column="remark"    />
+        <result property="allowsTestMethods"    column="allows_test_methods"    />
+        <result property="operatorUserId"    column="operator_user_id"    />
+        <result property="receiverName"    column="receiver_name"    />
+        <result property="reportReceiver"    column="report_receiver"    />
+        <result property="reportReceiveDate"    column="report_receive_date"    />
+        <result property="rejectReason"    column="reject_reason"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="receiver"    column="receiver"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="executionPeriod"    column="execution_period"    />
+        <result property="isReturn"    column="is_return"    />
+        <result property="returnTime"    column="return_time"    />
+        <result property="returnReason"    column="return_reason"    />
+        <result property="producerUnitId"    column="producer_unit_id"    />
+        <result property="producerUnitName"    column="producer_unit_name"    />
+    </resultMap>
+
+    <sql id="selectOpFeedEntrustOrderVo">
+        select op_feed_entrust_order_id, entrust_order_no, entrust_dept_id, report_mailing_address, entrust_contact,
+               entrust_contact_phone, entrust_contact_email, send_sample_date, receiver_id,
+               invoice_title, invoice_type, payment_status, payment_method, total_fee, sample_return_policy,
+               total_sample_quantity, requires_judgement, allows_subcontracting, report_receive_type,
+               testing_service_level, remark, allows_test_methods, operator_user_id, report_receiver,
+               report_receive_date, reject_reason, delete_id, status, create_time, create_by, update_time,
+               update_by, receive_time, execution_period, is_return, return_time, return_reason,producer_unit_id,producer_unit_name
+        from op_feed_entrust_order
+    </sql>
+
+    <select id="selectOpFeedEntrustOrderList" parameterType="OpFeedEntrustOrder" resultMap="OpFeedEntrustOrderResult">
+        select
+            o.*,
+            u.nick_name as receiver_name,
+            d.dept_name
+            from op_feed_entrust_order o
+            left join sys_dept d on d.dept_id=o.entrust_dept_id
+            LEFT JOIN sys_user u ON o.receiver_id = u.user_id and u.del_flag='0'
+        <where>
+            and d.del_flag='0'
+            and o.delete_id = '0'  <!-- 固定添加软删除条件 -->
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and o.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="entrustDeptName != null "> and d.dept_name like concat('%', #{entrustDeptName}, '%')</if>
+            <!-- 修改为范围查询 -->
+            <if test="sendSampleDateStart != null"> and o.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and o.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="status != null  and status != ''"> and o.status = #{status}</if>
+            <if test="entrustDeptId != null  and entrustDeptId != ''"> and o.entrust_dept_id = #{entrustDeptId}</if>
+        </where>
+        order by o.create_time desc
+    </select>
+
+    <select id="selectOpFeedEntrustOrderByOpFeedEntrustOrderId" parameterType="String" resultMap="OpFeedEntrustOrderResult">
+        <include refid="selectOpFeedEntrustOrderVo"/>
+        where op_feed_entrust_order_id = #{opFeedEntrustOrderId}
+    </select>
+
+    <insert id="insertOpFeedEntrustOrder" parameterType="OpFeedEntrustOrder">
+        insert into op_feed_entrust_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opFeedEntrustOrderId != null">op_feed_entrust_order_id,</if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">entrust_order_no,</if>
+            <if test="entrustDeptId != null">entrust_dept_id,</if>
+            <if test="reportMailingAddress != null">report_mailing_address,</if>
+            <if test="entrustContact != null">entrust_contact,</if>
+            <if test="entrustContactPhone != null">entrust_contact_phone,</if>
+            <if test="entrustContactInfoId != null">entrust_contact_info_id,</if>
+            <if test="entrustContactEmail != null">entrust_contact_email,</if>
+            <if test="sendSampleDate != null">send_sample_date,</if>
+            <if test="receiverId != null">receiver_id,</if>
+            <if test="invoiceTitle != null">invoice_title,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+            <if test="paymentStatus != null">payment_status,</if>
+            <if test="paymentMethod != null">payment_method,</if>
+            <if test="totalFee != null">total_fee,</if>
+            <if test="sampleReturnPolicy != null">sample_return_policy,</if>
+            <if test="totalSampleQuantity != null">total_sample_quantity,</if>
+            <if test="requiresJudgement != null">requires_judgement,</if>
+            <if test="allowsSubcontracting != null">allows_subcontracting,</if>
+            <if test="reportReceiveType != null">report_receive_type,</if>
+            <if test="testingServiceLevel != null">testing_service_level,</if>
+            <if test="remark != null">remark,</if>
+            <if test="allowsTestMethods != null">allows_test_methods,</if>
+            <if test="operatorUserId != null">operator_user_id,</if>
+            <if test="reportReceiver != null">report_receiver,</if>
+            <if test="reportReceiveDate != null">report_receive_date,</if>
+            <if test="rejectReason != null">reject_reason,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="executionPeriod != null">execution_period,</if>
+            <if test="isReturn != null">is_return,</if>
+            <if test="returnTime != null">return_time,</if>
+            <if test="returnReason != null">return_reason,</if>
+            <if test="producerUnitId != null">producer_unit_id,</if>
+            <if test="producerUnitName != null">producer_unit_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opFeedEntrustOrderId != null">#{opFeedEntrustOrderId},</if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">#{entrustOrderNo},</if>
+            <if test="entrustDeptId != null">#{entrustDeptId},</if>
+            <if test="reportMailingAddress != null">#{reportMailingAddress},</if>
+            <if test="entrustContact != null">#{entrustContact},</if>
+            <if test="entrustContactPhone != null">#{entrustContactPhone},</if>
+            <if test="entrustContactInfoId != null">#{entrustContactInfoId},</if>
+            <if test="entrustContactEmail != null">#{entrustContactEmail},</if>
+            <if test="sendSampleDate != null">#{sendSampleDate},</if>
+            <if test="receiverId != null">#{receiverId},</if>
+            <if test="invoiceTitle != null">#{invoiceTitle},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+            <if test="paymentStatus != null">#{paymentStatus},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="totalFee != null">#{totalFee},</if>
+            <if test="sampleReturnPolicy != null">#{sampleReturnPolicy},</if>
+            <if test="totalSampleQuantity != null">#{totalSampleQuantity},</if>
+            <if test="requiresJudgement != null">#{requiresJudgement},</if>
+            <if test="allowsSubcontracting != null">#{allowsSubcontracting},</if>
+            <if test="reportReceiveType != null">#{reportReceiveType},</if>
+            <if test="testingServiceLevel != null">#{testingServiceLevel},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="allowsTestMethods != null">#{allowsTestMethods},</if>
+            <if test="operatorUserId != null">#{operatorUserId},</if>
+            <if test="reportReceiver != null">#{reportReceiver},</if>
+            <if test="reportReceiveDate != null">#{reportReceiveDate},</if>
+            <if test="rejectReason != null">#{rejectReason},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="executionPeriod != null">#{executionPeriod},</if>
+            <if test="isReturn != null">#{isReturn},</if>
+            <if test="returnTime != null">#{returnTime},</if>
+            <if test="returnReason != null">#{returnReason},</if>
+            <if test="producerUnitId != null">#{producerUnitId},</if>
+            <if test="producerUnitName != null">#{producerUnitName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpFeedEntrustOrder" parameterType="OpFeedEntrustOrder">
+        update op_feed_entrust_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">entrust_order_no = #{entrustOrderNo},</if>
+            <if test="entrustDeptId != null">entrust_dept_id = #{entrustDeptId},</if>
+            <if test="reportMailingAddress != null">report_mailing_address = #{reportMailingAddress},</if>
+            <if test="entrustContact != null">entrust_contact = #{entrustContact},</if>
+            <if test="entrustContactPhone != null">entrust_contact_phone = #{entrustContactPhone},</if>
+            <if test="entrustContactInfoId != null">entrust_contact_info_id = #{entrustContactInfoId},</if>
+            <if test="entrustContactEmail != null">entrust_contact_email = #{entrustContactEmail},</if>
+            <if test="sendSampleDate != null">send_sample_date = #{sendSampleDate},</if>
+            <if test="receiverId != null">receiver_id = #{receiverId},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="invoiceTitle != null">invoice_title = #{invoiceTitle},</if>
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="totalFee != null">total_fee = #{totalFee},</if>
+            <if test="sampleReturnPolicy != null">sample_return_policy = #{sampleReturnPolicy},</if>
+            <if test="totalSampleQuantity != null">total_sample_quantity = #{totalSampleQuantity},</if>
+            <if test="requiresJudgement != null">requires_judgement = #{requiresJudgement},</if>
+            <if test="allowsSubcontracting != null">allows_subcontracting = #{allowsSubcontracting},</if>
+            <if test="reportReceiveType != null">report_receive_type = #{reportReceiveType},</if>
+            <if test="testingServiceLevel != null">testing_service_level = #{testingServiceLevel},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="allowsTestMethods != null">allows_test_methods = #{allowsTestMethods},</if>
+            <if test="operatorUserId != null">operator_user_id = #{operatorUserId},</if>
+            <if test="reportReceiver != null">report_receiver = #{reportReceiver},</if>
+            <if test="reportReceiveDate != null">report_receive_date = #{reportReceiveDate},</if>
+            <if test="rejectReason != null">reject_reason = #{rejectReason},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="executionPeriod != null">execution_period = #{executionPeriod},</if>
+            <if test="isReturn != null">is_return = #{isReturn},</if>
+            <if test="returnTime != null">return_time = #{returnTime},</if>
+            <if test="returnReason != null">return_reason = #{returnReason},</if>
+            <if test="producerUnitId != null">producer_unit_id = #{producerUnitId},</if>
+            <if test="producerUnitName != null">producer_unit_name = #{producerUnitName},</if>
+        </trim>
+        where op_feed_entrust_order_id = #{opFeedEntrustOrderId}
+    </update>
+
+    <!-- 查询委托单详情（包含样品和项目信息） -->
+    <select id="selectOrderDetailById" parameterType="String" resultMap="OrderDetailResultMap">
+        SELECT
+            o.*,
+            s.op_feed_entrust_order_sample_id,
+            s.invbill_code,
+            s.name as sample_name,
+            s.material_name ,
+            s.model,
+            s.batch_no,
+            s.packaging,
+            s.status as sample_status ,
+            s.storage_requirement,
+            s.sequence,
+            s.sample_no,
+            s.producer_unit,
+            s.sample_remark,
+            ib.invbill_name,
+            i.item_id,
+            it.item_name,
+            it.item_code,
+            s.test_method,
+            u.nick_name as receiver_name,
+            s.report_id,
+            i.op_feed_entrust_order_item_id,
+            s.material_sample_no
+        FROM op_feed_entrust_order o
+                 LEFT JOIN op_feed_entrust_order_sample s ON o.op_feed_entrust_order_id = s.feed_entrust_order_id AND s.is_delete = '0'
+                left join business_invbill ib on s.invbill_code=ib.sap_code and ib.del_flag='0'
+                 LEFT JOIN op_feed_entrust_order_item i ON s.op_feed_entrust_order_sample_id = i.op_feed_entrust_order_sample_id AND i.is_delete = '0'
+                 LEFT JOIN bs_labtest_items it ON i.item_id = it.bs_labtest_items_id
+                 LEFT JOIN sys_user u ON o.receiver_id = u.user_id and u.del_flag='0'
+        WHERE o.op_feed_entrust_order_id = #{orderId} AND o.delete_id = '0'
+        ORDER BY s.sequence
+    </select>
+
+    <!-- 委托单详情结果映射 -->
+    <resultMap id="OrderDetailResultMap" type="com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrder">
+        <result property="opFeedEntrustOrderId" column="op_feed_entrust_order_id"/>
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="entrustDeptId"    column="entrust_dept_id"    />
+        <result property="reportMailingAddress"    column="report_mailing_address"    />
+        <result property="entrustContact"    column="entrust_contact"    />
+        <result property="entrustContactPhone"    column="entrust_contact_phone"    />
+        <result property="entrustContactInfoId"    column="entrust_contact_info_id"    />
+        <result property="entrustContactEmail"    column="entrust_contact_email"    />
+
+        <result property="sendSampleDate"    column="send_sample_date"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="invoiceTitle"    column="invoice_title"    />
+        <result property="invoiceType"    column="invoice_type"    />
+        <result property="paymentStatus"    column="payment_status"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="totalFee"    column="total_fee"    />
+        <result property="sampleReturnPolicy"    column="sample_return_policy"    />
+        <result property="totalSampleQuantity"    column="total_sample_quantity"    />
+        <result property="requiresJudgement"    column="requires_judgement"    />
+        <result property="allowsSubcontracting"    column="allows_subcontracting"    />
+        <result property="reportReceiveType"    column="report_receive_type"    />
+        <result property="testingServiceLevel"    column="testing_service_level"    />
+
+        <result property="allowsTestMethods"    column="allows_test_methods"    />
+        <result property="operatorUserId"    column="operator_user_id"    />
+        <result property="reportReceiver"    column="report_receiver"    />
+        <result property="reportReceiveDate"    column="report_receive_date"    />
+        <result property="rejectReason"    column="reject_reason"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+
+        <result property="executionPeriod"    column="execution_period"    />
+        <result property="receiverName"    column="receiver_name"    />
+        <result property="isReturn"    column="is_return"    />
+        <result property="returnTime"    column="return_time"    />
+        <result property="returnReason"    column="return_reason"    />
+
+        <result property="producerUnitId"    column="producer_unit_id"    />
+        <result property="producerUnitName"    column="producer_unit_name"    />
+
+        <collection property="sampleList" ofType="com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrderSample">
+            <result property="opFeedEntrustOrderSampleId" column="op_feed_entrust_order_sample_id"/>
+            <result property="invbillCode" column="invbill_code"/>
+            <result property="invbillName" column="invbill_name"/>
+            <result property="name" column="sample_name"/>
+            <result property="materialName" column="material_name"/>
+            <result property="model" column="model"/>
+            <result property="batchNo" column="batch_no"/>
+            <result property="packaging" column="packaging"/>
+            <result property="status" column="sample_status"/>
+            <result property="storageRequirement" column="storage_requirement"/>
+            <result property="sequence" column="sequence"/>
+            <result property="testMethod" column="test_method"/>
+            <result property="reportId"    column="report_id"    />
+            <result property="sampleNo"    column="sample_no"    />
+            <result property="producerUnit"    column="producer_unit"    />
+            <result property="sampleRemark"    column="sample_remark"    />
+            <result property="materialSampleNo"    column="material_sample_no"    />
+            <collection property="testItem" ofType="com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrderItem">
+                <result property="opFeedEntrustOrderItemId" column="op_feed_entrust_order_item_id"/>
+                <result property="itemId" column="item_id"/>
+                <result property="itemName" column="item_name"/>
+                <result property="itemCode" column="item_code"/>
+            </collection>
+        </collection>
+
+    </resultMap>
+
+    <select id="selectByNo" parameterType="String" resultMap="OpFeedEntrustOrderResult">
+        <include refid="selectOpFeedEntrustOrderVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            and entrust_order_no =#{entrustOrderNo}
+        </where>
+    </select>
+
+    <select id="selectNotEndCountById" parameterType="String" resultType="String">
+        select count(*)
+        from    op_feed_entrust_order o
+        left join op_feed_entrust_order_sample s on s.feed_entrust_order_id=o.op_feed_entrust_order_id and s.is_delete='0'
+        left join op_feed_entrust_order_item i on i.op_feed_entrust_order_sample_id=s.op_feed_entrust_order_sample_id and i.is_delete='0'
+        left join op_jczx_feed_result_info ri on ri.entrust_order_item_id=i.op_feed_entrust_order_item_id and ri.delete_id='0'
+        where o.op_feed_entrust_order_id = #{opFeedEntrustOrderId} and o.delete_id='0' and ri.test_user is null
+    </select>
+
+    <update id="updateStatusById" parameterType="String">
+        update op_feed_entrust_order set status=#{status} where op_feed_entrust_order_id = #{opFeedEntrustOrderId} and delete_id='0'
+    </update>
+
+    <select id="selectPrintOrderDetailById" parameterType="String" resultMap="OrderDetailResultMap">
+        SELECT
+            o.*,
+            s.op_feed_entrust_order_sample_id,
+            s.invbill_code,
+            s.name as sample_name,
+            s.material_name ,
+            s.model,
+            s.batch_no,
+            s.packaging,
+            s.status as sample_status ,
+            s.storage_requirement,
+            s.sequence,
+            s.sample_no,
+            s.producer_unit,
+            s.sample_remark,
+            ib.invbill_name,
+            i.item_id,
+            it.item_name,
+            it.item_code,
+            s.test_method,
+            u.nick_name as receiver_name,
+            s.report_id
+        FROM op_feed_entrust_order o
+                 LEFT JOIN op_feed_entrust_order_sample s ON o.op_feed_entrust_order_id = s.feed_entrust_order_id AND s.is_delete = '0'
+                 left join business_invbill ib on s.invbill_code=ib.sap_code and ib.del_flag='0'
+                 LEFT JOIN op_feed_entrust_order_item i ON s.op_feed_entrust_order_sample_id = i.op_feed_entrust_order_sample_id AND i.is_delete = '0'
+                 LEFT JOIN bs_labtest_items it ON i.item_id = it.bs_labtest_items_id
+                 LEFT JOIN sys_user u ON o.receiver_id = u.user_id and u.del_flag='0'
+        WHERE o.op_feed_entrust_order_id = #{orderId} AND o.delete_id = '0'
+        ORDER BY s.sequence
+    </select>
+
+    <update id="updateExecutionPeriod">
+        update op_feed_entrust_order
+        set execution_period = #{executionPeriod, jdbcType=TIMESTAMP}
+        where op_feed_entrust_order_id = #{opFeedEntrustOrderId}
+    </update>
+
+    <update id="migrateResultToNewItem">
+        UPDATE op_jczx_feed_result_info r
+            INNER JOIN op_feed_entrust_order_item old_item
+        ON r.entrust_order_item_id = old_item.op_feed_entrust_order_item_id
+            SET r.entrust_order_item_id = #{newItemId}
+        WHERE r.entrust_order_sample_id = #{sampleId}
+          AND old_item.item_id = #{dictItemId}
+          AND r.delete_id = '0'
+    </update>
+</mapper>

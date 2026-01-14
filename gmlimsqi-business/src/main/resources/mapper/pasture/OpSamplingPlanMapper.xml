@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.ranch.mapper.OpSamplingPlanMapper">
+
+    <resultMap type="OpSamplingPlan" id="OpSamplingPlanResult">
+        <result property="opSamplingPlanId"    column="op_sampling_plan_id"    />
+        <result property="samplingPlanNo"    column="sampling_plan_no"    />
+        <result property="supplierId"    column="supplier_id"    />
+        <result property="supplierCode"    column="supplier_code"    />
+        <result property="supplierName"    column="supplier_name"    />
+        <result property="driverName"    column="driver_name"    />
+        <result property="driverPhone"    column="driver_phone"    />
+        <result property="driverCode"    column="driver_code"    />
+        <result property="carInTime"    column="car_in_time"    />
+        <result property="carOutTime"    column="car_out_time"    />
+        <result property="toxicide"    column="toxicide"    />
+        <result property="density"    column="density"    />
+        <result property="disinfection"    column="disinfection"    />
+        <result property="personLiable"    column="person_liable"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="samplerName"    column="sampler_name"    />
+        <result property="samplerId"    column="sampler_id"    />
+        <result property="sampleTime"    column="sample_time"    />
+        <result property="carFileId"    column="car_file_id"    />
+        <result property="signInId"    column="sign_in_id"    />
+        <result property="isRelease"    column="is_release"    />
+        <result property="isReceive"    column="is_receive"    />
+        <result property="samplingType"    column="sampling_type"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+    <resultMap type="com.gmlimsqi.business.ranch.vo.SamplingReceiveListVo" id="SamplingReceiveListVoResult">
+        <result property="samplingPlanNo"    column="sampling_plan_no"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="samplingPlanSampleId"    column="sampling_plan_sample_id"    />
+        <result property="productionDate"    column="production_date"    />
+        <result property="shelfLife"    column="shelf_life"    />
+        <result property="carFileId"    column="car_file_id"    />
+        <result property="ggQualityDescribe"    column="gg_quality_describe"    />
+        <result property="ggQualityResult"    column="gg_quality_result"    />
+        <result property="ggQualityFileIds"    column="gg_quality_file_ids"    />
+        <result property="itemNames"    column="item_names"    />
+        <result property="invbillName"    column="invbill_name"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="samplerName"    column="sampler_name"    />
+        <result property="sampleTime"    column="sample_time"    />
+        <result property="invbillCode"    column="invbill_code"    />
+        <result property="isReceive" column="is_receive"    />
+        <result property="model" column="model"    />
+        <result property="samplerId" column="sampler_id"    />
+    </resultMap>
+    <sql id="selectOpSamplingPlanVo">
+        select s.op_sampling_plan_id,
+               s.sampling_plan_no,
+               s.supplier_id,
+               s.supplier_name,
+               s.driver_name,
+               s.driver_phone,
+               s.driver_code,
+               s.car_in_time,
+               s.car_out_time,
+               s.toxicide,
+               s.density,
+               s.disinfection,
+               s.person_liable,
+               s.remark,
+               s.status,
+               s.create_time,
+               s.create_by,
+               s.update_time,
+               s.update_by,
+               s.delete_id,
+               s.sampler_name,
+               s.sample_time,
+               s.car_file_id,
+               s.sign_in_id,
+               s.is_release,
+               s.dept_id,
+               s.supplier_code
+        from op_sampling_plan s
+                 LEFT JOIN sys_dept d ON s.dept_id = d.dept_id
+    </sql>
+
+    <select id="selectOpSamplingPlanList" parameterType="OpSamplingPlan" resultMap="OpSamplingPlanResult">
+        select s.op_sampling_plan_id,
+        s.sampling_plan_no,
+        s.supplier_id,
+        s.supplier_name,
+        s.driver_name,
+        s.driver_phone,
+        s.driver_code,
+        s.car_in_time,
+        s.car_out_time,
+        s.toxicide,
+        s.density,
+        s.disinfection,
+        s.person_liable,
+        s.remark,
+        s.status,
+        s.create_time,
+        s.create_by,
+        s.update_time,
+        s.update_by,
+        s.delete_id,
+        s.sampler_name,
+        s.sample_time,
+        s.car_file_id,
+        s.sign_in_id,
+        s.is_release,
+        s.dept_id,
+        s.supplier_code
+        from op_sampling_plan s
+        LEFT JOIN sys_dept d ON s.dept_id = d.dept_id
+        <where>
+            and s.delete_id = '0' AND s.status != '3'
+            <if test="samplingPlanNo != null  and samplingPlanNo != ''">and s.sampling_plan_no = #{samplingPlanNo}</if>
+            <if test="supplierId != null  and supplierId != ''">and s.supplier_id = #{supplierId}</if>
+            <if test="supplierName != null  and supplierName != ''">and s.supplier_name like concat('%',
+                #{supplierName}, '%')
+            </if>
+            <if test="driverName != null  and driverName != ''">and s.driver_name like concat('%', #{driverName}, '%')
+            </if>
+            <if test="driverPhone != null  and driverPhone != ''">and s.driver_phone = #{driverPhone}</if>
+            <if test="driverCode != null  and driverCode != ''">and s.driver_code like concat('%', #{driverCode}, '%')
+            </if>
+            <if test="carInTime != null ">and s.car_in_time = #{carInTime}</if>
+            <if test="carOutTime != null ">and s.car_out_time = #{carOutTime}</if>
+            <if test="toxicide != null  and toxicide != ''">and s.toxicide = #{toxicide}</if>
+            <if test="density != null  and density != ''">and s.density = #{density}</if>
+            <if test="disinfection != null  and disinfection != ''">and s.disinfection like concat('%', #{disinfection},
+                '%')
+            </if>
+            <if test="personLiable != null  and personLiable != ''">and s.person_liable = #{personLiable}</if>
+            <if test="status != null  and status != ''">and s.status = #{status}</if>
+            <if test="deleteId != null  and deleteId != ''">and s.delete_id = #{deleteId}</if>
+            <if test="samplerName != null  and samplerName != ''">and s.sampler_name like concat('%', #{samplerName},
+                '%')
+            </if>
+            <if test="sampleTime != null  and sampleTime != ''">and s.sample_time = #{sampleTime}</if>
+            <if test="carFileId != null  and carFileId != ''">and s.car_file_id = #{carFileId}</if>
+            <if test="deptId != null and deptId != ''">and s.dept_id = #{deptId}</if>
+            <if test="createStartTime != null">
+                and s.create_time >= #{createStartTime}
+            </if>
+            <if test="createEndTime != null">
+                and s.create_time &lt;= #{createEndTime}
+            </if>
+            <if test="carInStartTime != null">
+                and s.car_in_time >= #{carInStartTime}
+            </if>
+            <if test="carInEndTime != null">
+                and s.car_in_time &lt;= #{carInEndTime}
+            </if>
+            <if test="carOutStartTime != null">
+                and s.car_out_time >= #{carOutStartTime}
+            </if>
+            <if test="carOutEndTime != null">
+                and s.car_out_time &lt;= #{carOutEndTime}
+            </if>
+        </where>
+        ORDER BY
+        CASE WHEN s.status = '0' THEN s.create_time ELSE s.update_time END DESC
+    </select>
+
+    <select id="selectOpSamplingPlanByOpSamplingPlanId" parameterType="String" resultMap="OpSamplingPlanResult">
+        <include refid="selectOpSamplingPlanVo"/>
+        where op_sampling_plan_id = #{opSamplingPlanId} and s.delete_id = '0'
+    </select>
+
+    <insert id="insertOpSamplingPlan" parameterType="OpSamplingPlan">
+        insert into op_sampling_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opSamplingPlanId != null">op_sampling_plan_id,</if>
+            <if test="samplingPlanNo != null and samplingPlanNo != ''">sampling_plan_no,</if>
+            <if test="supplierId != null">supplier_id,</if>
+            <if test="supplierName != null">supplier_name,</if>
+            <if test="driverName != null">driver_name,</if>
+            <if test="driverPhone != null">driver_phone,</if>
+            <if test="driverCode != null">driver_code,</if>
+            <if test="carInTime != null">car_in_time,</if>
+            <if test="carOutTime != null">car_out_time,</if>
+            <if test="toxicide != null">toxicide,</if>
+            <if test="density != null">density,</if>
+            <if test="disinfection != null">disinfection,</if>
+            <if test="personLiable != null">person_liable,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deleteId != null and deleteId != ''">delete_id,</if>
+            <if test="ggQualityResult != null">gg_quality_result,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="samplerName != null">sampler_name,</if>
+            <if test="samplerId != null">sampler_id,</if>
+            <if test="sampleTime != null">sample_time,</if>
+            <if test="carFileId != null">car_file_id,</if>
+            <if test="signInId != null">sign_in_id,</if>
+            <if test="supplierCode != null">supplier_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opSamplingPlanId != null">#{opSamplingPlanId},</if>
+            <if test="samplingPlanNo != null and samplingPlanNo != ''">#{samplingPlanNo},</if>
+            <if test="supplierId != null">#{supplierId},</if>
+            <if test="supplierName != null">#{supplierName},</if>
+            <if test="driverName != null">#{driverName},</if>
+            <if test="driverPhone != null">#{driverPhone},</if>
+            <if test="driverCode != null">#{driverCode},</if>
+            <if test="carInTime != null">#{carInTime},</if>
+            <if test="carOutTime != null">#{carOutTime},</if>
+            <if test="toxicide != null">#{toxicide},</if>
+            <if test="density != null">#{density},</if>
+            <if test="disinfection != null">#{disinfection},</if>
+            <if test="personLiable != null">#{personLiable},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">#{deleteId},</if>
+            <if test="ggQualityResult != null">#{ggQualityResult},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="samplerName != null">#{samplerName},</if>
+            <if test="samplerId != null">#{samplerId},</if>
+            <if test="sampleTime != null">#{sampleTime},</if>
+            <if test="carFileId != null">#{carFileId},</if>
+            <if test="signInId != null">#{signInId},</if>
+            <if test="supplierCode != null">#{supplierCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpSamplingPlan" parameterType="OpSamplingPlan">
+        update op_sampling_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="samplingPlanNo != null and samplingPlanNo != ''">sampling_plan_no = #{samplingPlanNo},</if>
+            <if test="supplierId != null">supplier_id = #{supplierId},</if>
+            <if test="supplierName != null">supplier_name = #{supplierName},</if>
+            <if test="driverName != null">driver_name = #{driverName},</if>
+            <if test="driverPhone != null">driver_phone = #{driverPhone},</if>
+            <if test="driverCode != null">driver_code = #{driverCode},</if>
+            <if test="carInTime != null">car_in_time = #{carInTime},</if>
+            <if test="carOutTime != null">car_out_time = #{carOutTime},</if>
+            <if test="toxicide != null">toxicide = #{toxicide},</if>
+            <if test="density != null">density = #{density},</if>
+            <if test="disinfection != null">disinfection = #{disinfection},</if>
+            <if test="personLiable != null">person_liable = #{personLiable},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">delete_id = #{deleteId},</if>
+            <if test="ggQualityResult != null">gg_quality_result = #{ggQualityResult},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="samplerName != null">sampler_name = #{samplerName},</if>
+            <if test="samplerId != null">sampler_id = #{samplerId},</if>
+            <if test="sampleTime != null">sample_time = #{sampleTime},</if>
+            <if test="carFileId != null">car_file_id = #{carFileId},</if>
+            <if test="signInId != null">sign_in_id = #{signInId},</if>
+            <if test="supplierCode != null">supplier_code = #{supplierCode},</if>
+        </trim>
+        where op_sampling_plan_id = #{opSamplingPlanId}
+    </update>
+
+    <delete id="deleteOpSamplingPlanByOpSamplingPlanId" parameterType="String">
+        delete from op_sampling_plan where op_sampling_plan_id = #{opSamplingPlanId}
+    </delete>
+
+    <delete id="deleteOpSamplingPlanByOpSamplingPlanIds" parameterType="String">
+        delete from op_sampling_plan where op_sampling_plan_id in
+        <foreach item="opSamplingPlanId" collection="array" open="(" separator="," close=")">
+            #{opSamplingPlanId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_sampling_plan set delete_id=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_sampling_plan_id = #{opSamplingPlanId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_sampling_plan set delete_id=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where op_sampling_plan_id in
+        <foreach item="opSamplingPlanId" collection="array" open="(" separator="," close=")">
+            #{opSamplingPlanId}
+        </foreach>
+    </update>
+
+    <update id="updateSampleDeleteFlagByPlanId">
+        update op_sampling_plan_sample set is_delete=1 ,update_time=now(),update_by=#{updateUserId} where sampling_plan_id = #{opSamplingPlanId}
+    </update>
+
+    <update id="updateItemDeleteFlagByPlanId">
+        update op_sampling_plan_item set is_delete=1 ,update_time=now(),update_by=#{updateUserId} where sampling_plan_sample_id = #{opSamplingPlanId}
+    </update>
+
+    <select id="selectOpSamplingPlanReceiveList" resultMap="SamplingReceiveListVoResult">
+        SELECT ps.op_sampling_plan_sample_id as sampling_plan_sample_id,
+        p.sampling_plan_no,
+        ps.sample_no,
+        ps.invbill_name,
+        ps.model,
+        ps.production_date,
+        ps.shelf_life,
+        ps.car_file_id,
+        ps.gg_quality_describe,
+        ps.gg_quality_result,
+        ps.invbill_code,
+        GROUP_CONCAT(pi.item_name SEPARATOR ',') as item_names,
+        ps.is_receive,
+        ps.receive_time,
+        ps.receiver_id,
+        p.sampler_name,
+        p.sample_time,
+        p.update_time
+        FROM
+        op_sampling_plan_sample ps
+        LEFT JOIN
+        op_sampling_plan p ON p.op_sampling_plan_id = ps.sampling_plan_id and p.delete_id = '0' and p.status='1'
+        LEFT JOIN
+        op_sampling_plan_item pi ON ps.op_sampling_plan_sample_id = pi.sampling_plan_sample_id AND pi.is_delete = '0'
+        LEFT JOIN sys_dept d ON ps.dept_id = d.dept_id
+        where ps.is_delete = '0'
+        <if test="sampleNo != null  and sampleNo != ''">and ps.sample_no like concat('%',#{sampleNo},'%')</if>
+        <if test="isReceive != null  and isReceive != ''">and ps.is_receive = #{isReceive}</if>
+        <if test="newSamplingTypes != null and newSamplingTypes != ''">
+            and ps.new_sampling_type = #{newSamplingTypes}
+        </if>
+        GROUP BY
+        ps.op_sampling_plan_sample_id, ps.sample_no,ps.invbill_name,ps.model,ps.production_date,ps.shelf_life,
+        ps.car_file_id,ps.gg_quality_describe,ps.gg_quality_result,
+        ps.receive_time,ps.receiver_id,
+        p.sampler_name,p.sample_time
+        -- ORDER BY
+        -- ps.receive_time desc
+        ORDER BY
+        CASE
+        WHEN ps.is_receive = '1' THEN ps.receive_time
+        ELSE COALESCE(p.update_time, ps.create_time)
+        END DESC
+    </select>
+
+
+
+
+    <select id="selectOpSamplingPlanReceiveList2" resultMap="SamplingReceiveListVoResult">
+        SELECT ps.op_sampling_plan_sample_id as sampling_plan_sample_id,
+        ps.sample_no,
+        ps.invbill_name,
+        ps.model,
+        ps.production_date,
+        ps.shelf_life,
+        ps.car_file_id,
+        ps.gg_quality_describe,
+        ps.gg_quality_result,
+        ps.invbill_code,
+        ps.is_receive,
+        ps.receive_time,
+        ps.receiver_id,
+        p.sampler_name,
+        p.sample_time,
+        p.update_time
+        FROM
+        op_sampling_plan_sample ps
+        INNER JOIN
+        op_sampling_plan p ON p.op_sampling_plan_id = ps.sampling_plan_id and p.delete_id = '0'
+        where   ps.is_delete = '0'  and p.status='1'   and ps.is_receive = '1'
+        <if test="sampleNo != null  and sampleNo != ''"> and ps.sample_no like concat('%',#{sampleNo},'%')</if>
+        <if test="newSamplingTypes != null and newSamplingTypes != ''">
+            and ps.new_sampling_type = #{newSamplingTypes}
+        </if>
+        ORDER BY
+        CASE WHEN ps.is_receive = '1' THEN ps.receive_time ELSE p.update_time END DESC
+    </select>
+    <select id="selectBySignInId" parameterType="String" resultMap="OpSamplingPlanResult">
+        <include refid="selectOpSamplingPlanVo"/>
+        where sign_in_id = #{signInId} and s.delete_id = '0'
+    </select>
+    <select id="selectopSamplingPlanSampleInfoById"
+            resultMap="SamplingReceiveListVoResult">
+        SELECT ps.op_sampling_plan_sample_id as sampling_plan_sample_id,
+        p.sampling_plan_no,
+        ps.sample_no,
+        ps.invbill_name,
+        ps.model,
+        ps.production_date,
+        ps.shelf_life,
+        ps.car_file_id,
+        ps.gg_quality_describe,
+        ps.gg_quality_result,
+        ps.invbill_code,
+        GROUP_CONCAT(pi.item_name SEPARATOR ',') as item_names,
+        ps.is_receive,
+        ps.receive_time,
+        ps.receiver_id,
+        p.sampler_name,
+        p.sample_time,
+        p.update_time
+        FROM
+        op_sampling_plan_sample ps
+        LEFT JOIN
+        op_sampling_plan p ON p.op_sampling_plan_id = ps.sampling_plan_id and p.delete_id = '0'
+        LEFT JOIN
+        op_sampling_plan_item pi ON ps.op_sampling_plan_sample_id = pi.sampling_plan_sample_id AND pi.is_delete = '0'
+        LEFT JOIN sys_dept d ON ps.dept_id = d.dept_id
+        where sampling_plan_sample_id = #{opSamplingPlanSampleId}
+        GROUP BY
+        ps.op_sampling_plan_sample_id, ps.sample_no,ps.invbill_name,ps.model,ps.production_date,ps.shelf_life,
+        ps.car_file_id,ps.gg_quality_describe,ps.gg_quality_result,
+        ps.receive_time,ps.receiver_id,
+        p.sampler_name,p.sample_time
+        -- ORDER BY
+        -- ps.receive_time desc
+        ORDER BY
+        CASE WHEN ps.is_receive = '1' THEN ps.receive_time ELSE p.update_time END DESC
+    </select>
+</mapper>

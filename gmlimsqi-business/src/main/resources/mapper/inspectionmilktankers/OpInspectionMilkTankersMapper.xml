@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.inspectionmilktankers.mapper.OpInspectionMilkTankersMapper">
+
+    <resultMap type="OpInspectionMilkTankers" id="OpInspectionMilkTankersResult">
+            <result property="inspectionMilkTankersId"    column="inspection_milk_tankers_id"    />
+            <result property="inspectionMilkTankersNumber"    column="inspection_milk_tankers_number"    />
+            <result property="milkSourcePlanOrderNumber"    column="milk_source_plan_order_number"    />
+            <result property="status"    column="status"    />
+            <result property="licensePlateNumber"    column="license_plate_number"    />
+            <result property="cylinderHeadExhaustHolePhoto"    column="cylinder_head_exhaust_hole_photo"    />
+            <result property="milkCanSprayHeadPhoto"    column="milk_can_spray_head_photo"    />
+            <result property="washerPhoto"    column="washer_photo"    />
+            <result property="entryTime"    column="entry_time"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createByName"    column="create_by_name"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="deptId"    column="dept_id"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="reviewer"    column="reviewer"    />
+            <result property="reviewerId"    column="reviewer_id"    />
+            <result property="reviewTime"    column="review_time"    />
+            <result property="schedulingDate"    column="scheduling_date"    />
+            <result property="orderNumber"    column="order_number"    />
+            <result property="carId"    column="car_id"    />
+            <result property="driverId"    column="driver_id"    />
+            <result property="driverName"    column="driver_name"    />
+            <result property="trailerId"    column="trailer_id"    />
+            <result property="trailerNumber"    column="trailer_number"    />
+            <result property="isPushMilkSource"    column="is_push_milk_source"    />
+    </resultMap>
+
+    <sql id="selectOpInspectionMilkTankersVo">
+        select a.inspection_milk_tankers_id,
+               a.inspection_milk_tankers_number,
+               a.milk_source_plan_order_number,
+               a.status,
+               a.license_plate_number,
+               a.cylinder_head_exhaust_hole_photo,
+               a.milk_can_spray_head_photo,
+               a.washer_photo,
+               a.entry_time,
+               a.create_by,
+               a.create_by_name,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.dept_id,
+               a.is_delete,
+               a.reviewer,
+               a.reviewer_id,
+               a.review_time,
+               a.scheduling_date,
+               a.order_number,
+               a.car_id,
+               a.driver_id,
+               a.driver_name,
+               a.trailer_id,
+               a.trailer_number,
+               a.is_push_milk_source
+        from op_inspection_milk_tankers a
+    </sql>
+
+    <select id="selectOpInspectionMilkTankersList" parameterType="OpInspectionMilkTankers" resultMap="OpInspectionMilkTankersResult">
+        <include refid="selectOpInspectionMilkTankersVo"/>
+        <where>
+            a.is_delete = '0'
+                        <if test="inspectionMilkTankersNumber != null  and inspectionMilkTankersNumber != ''"> and a.inspection_milk_tankers_number = #{inspectionMilkTankersNumber}</if>
+                        <if test="milkSourcePlanOrderNumber != null  and milkSourcePlanOrderNumber != ''"> and a.milk_source_plan_order_number = #{milkSourcePlanOrderNumber}</if>
+                        <if test="status != null  and status != ''"> and a.status = #{status}</if>
+                        <if test="licensePlateNumber != null  and licensePlateNumber != ''"> and a.license_plate_number like concat('%',#{licensePlateNumber},'%')</if>
+                        <if test="cylinderHeadExhaustHolePhoto != null  and cylinderHeadExhaustHolePhoto != ''"> and a.cylinder_head_exhaust_hole_photo = #{cylinderHeadExhaustHolePhoto}</if>
+                        <if test="milkCanSprayHeadPhoto != null  and milkCanSprayHeadPhoto != ''"> and a.milk_can_spray_head_photo = #{milkCanSprayHeadPhoto}</if>
+                        <if test="washerPhoto != null  and washerPhoto != ''"> and a.washer_photo = #{washerPhoto}</if>
+                        <if test="entryTime != null "> and a.entry_time = #{entryTime}</if>
+                        <if test="createByName != null  and createByName != ''"> and a.create_by_name like concat('%', #{createByName}, '%')</if>
+                        <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if>
+                        <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectOpInspectionMilkTankersByInspectionMilkTankersId" parameterType="String" resultMap="OpInspectionMilkTankersResult">
+        <include refid="selectOpInspectionMilkTankersVo"/>
+        where a.inspection_milk_tankers_id = #{inspectionMilkTankersId}
+        and a.is_delete = '0'
+    </select>
+
+    <insert id="insertOpInspectionMilkTankers" parameterType="OpInspectionMilkTankers"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into op_inspection_milk_tankers
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id,</if>
+            <if test="inspectionMilkTankersNumber != null">inspection_milk_tankers_number,</if>
+            <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number,</if>
+            <if test="status != null">status,</if>
+            <if test="licensePlateNumber != null">license_plate_number,</if>
+            <if test="cylinderHeadExhaustHolePhoto != null">cylinder_head_exhaust_hole_photo,</if>
+            <if test="milkCanSprayHeadPhoto != null">milk_can_spray_head_photo,</if>
+            <if test="washerPhoto != null">washer_photo,</if>
+            <if test="entryTime != null">entry_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="reviewer != null">reviewer,</if>
+            <if test="reviewerId != null">reviewer_id,</if>
+            <if test="reviewTime != null">review_time,</if>
+            <if test="schedulingDate != null">scheduling_date,</if>
+            <if test="orderNumber != null">order_number,</if>
+            <if test="carId != null">car_id,</if>
+            <if test="driverId != null">driver_id,</if>
+            <if test="driverName != null">driver_name,</if>
+            <if test="trailerId != null">trailer_id,</if>
+            <if test="trailerNumber != null">trailer_number,</if>
+            <if test="isPushMilkSource != null">is_push_milk_source,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inspectionMilkTankersId != null">#{inspectionMilkTankersId},</if>
+            <if test="inspectionMilkTankersNumber != null">#{inspectionMilkTankersNumber},</if>
+            <if test="milkSourcePlanOrderNumber != null">#{milkSourcePlanOrderNumber},</if>
+            <if test="status != null">#{status},</if>
+            <if test="licensePlateNumber != null">#{licensePlateNumber},</if>
+            <if test="cylinderHeadExhaustHolePhoto != null">#{cylinderHeadExhaustHolePhoto},</if>
+            <if test="milkCanSprayHeadPhoto != null">#{milkCanSprayHeadPhoto},</if>
+            <if test="washerPhoto != null">#{washerPhoto},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="reviewer != null">#{reviewer},</if>
+            <if test="reviewerId != null">#{reviewerId},</if>
+            <if test="reviewTime != null">#{reviewTime},</if>
+            <if test="schedulingDate != null">#{schedulingDate},</if>
+            <if test="orderNumber != null">#{orderNumber},</if>
+            <if test="carId != null">#{carId},</if>
+            <if test="driverId != null">#{driverId},</if>
+            <if test="driverName != null">#{driverName},</if>
+            <if test="trailerId != null">#{trailerId},</if>
+            <if test="trailerNumber != null">#{trailerNumber},</if>
+            <if test="isPushMilkSource != null">#{isPushMilkSource},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpInspectionMilkTankers" parameterType="OpInspectionMilkTankers">
+        update op_inspection_milk_tankers
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="inspectionMilkTankersNumber != null">inspection_milk_tankers_number = #{inspectionMilkTankersNumber},</if>
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number = #{milkSourcePlanOrderNumber},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="licensePlateNumber != null">license_plate_number = #{licensePlateNumber},</if>
+                    <if test="cylinderHeadExhaustHolePhoto != null">cylinder_head_exhaust_hole_photo = #{cylinderHeadExhaustHolePhoto},</if>
+                    <if test="milkCanSprayHeadPhoto != null">milk_can_spray_head_photo = #{milkCanSprayHeadPhoto},</if>
+                    <if test="washerPhoto != null">washer_photo = #{washerPhoto},</if>
+                    <if test="entryTime != null">entry_time = #{entryTime},</if>
+                    <if test="createByName != null">create_by_name = #{createByName},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="deptId != null">dept_id = #{deptId},</if>
+                    <if test="isDelete != null">is_delete = #{isDelete},</if>
+                    <if test="reviewer != null">reviewer = #{reviewer},</if>
+                    <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+                    <if test="reviewTime != null">review_time = #{reviewTime},</if>
+                    <if test="schedulingDate != null">scheduling_date = #{schedulingDate},</if>
+                    <if test="orderNumber != null">order_number = #{orderNumber},</if>
+                    <if test="carId != null">car_id = #{carId},</if>
+                    <if test="driverId != null">driver_id = #{driverId},</if>
+                    <if test="driverName != null">driver_name = #{driverName},</if>
+                    <if test="trailerId != null">trailer_id = #{trailerId},</if>
+                    <if test="trailerNumber != null">trailer_number = #{trailerNumber},</if>
+                    <if test="isPushMilkSource != null">is_push_milk_source = #{isPushMilkSource},</if>
+        </trim>
+        where inspection_milk_tankers_id = #{inspectionMilkTankersId}
+    </update>
+
+    <update id="updateDeleteFlagById" >
+        update op_inspection_milk_tankers set delete_id = inspection_milk_tankers_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where inspection_milk_tankers_id = #{inspectionMilkTankersId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_inspection_milk_tankers set delete_id = inspection_milk_tankers_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where inspection_milk_tankers_id in
+        <foreach item="inspectionMilkTankersId" collection="array" open="(" separator="," close=")">
+            #{inspectionMilkTankersId}
+        </foreach>
+    </update>
+
+
+</mapper>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsLabtestItemFeatureMapper">
+
+    <resultMap type="com.gmlimsqi.business.basicdata.domain.BsLabtestItemFeature" id="BsLabtestItemFeatureResult">
+        <result property="bsLabtestItemFeatureId"    column="bs_labtest_item_feature_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="featureId"    column="feature_id"    />
+        <result property="featureName"    column="name"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="itemSapCode"    column="sap_code"    />
+        <result property="upperLimit"    column="upper_limit"    />
+        <result property="lowerLimit"    column="lower_limit"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+
+    <!-- BsLabtestItemFeatureVo结果映射 -->
+    <resultMap id="BsLabtestItemFeatureVoResult" type="com.gmlimsqi.business.basicdata.vo.BsLabtestItemFeatureVo">
+        <id property="itemId" column="bs_labtest_items_id"/>
+        <result property="bsLabtestItemFeatureId" column="bs_labtest_item_feature_id"/>
+        <result property="itemName" column="item_name"/>
+        <result property="remark"    column="remark"    />
+        <collection property="featureList" ofType="BsLabtestItemFeature" resultMap="BsLabtestItemFeatureResult"/>
+    </resultMap>
+
+    <sql id="selectBsLabtestItemFeatureVo">
+        select bs_labtest_item_feature_id, item_id, feature_id, dept_id, create_time, create_by, update_time, update_by,
+               is_delete, is_enable
+        from bs_labtest_item_feature
+    </sql>
+
+    <!-- 按项目分组查询 -->
+    <select id="selectListGroupByItem" parameterType="BsLabtestItemFeature" resultMap="BsLabtestItemFeatureVoResult">
+        SELECT
+        i.bs_labtest_items_id  ,
+        i.item_name,
+        fi.bs_labtest_item_feature_id,
+        fi.feature_id,
+        fi.dept_id,
+        fi.create_time,
+        fi.create_by,
+        fi.update_time,
+        fi.update_by,
+        fi.is_delete,
+        fi.is_enable,
+        fi.remark,
+        f.name
+        FROM bs_labtest_item_feature fi
+        LEFT JOIN  bs_labtest_items i ON i.bs_labtest_items_id = fi.item_id AND i.is_delete = '0' and i.is_enable='1'
+        LEFT JOIN bs_labtest_feature f ON fi.feature_id = f.bs_labtest_feature_id AND f.is_delete = '0' and f.is_enable='1'
+        WHERE fi.is_delete = '0'
+        <if test="isEnable != null and isEnable != ''">
+            AND i.is_enable = #{isEnable}
+        </if>
+        <if test="deptId != null">
+            AND i.dept_id = #{deptId}
+        </if>
+        <if test="itemName != null and itemName != ''">
+            AND i.item_name  like concat('%', #{itemName}, '%')
+        </if>
+        <if test="featureName != null and featureName != ''">
+            AND f.name  like concat('%', #{featureName}, '%')
+        </if>
+        <if test="itemId != null and itemId != ''">
+            AND fi.item_id  = #{itemId}
+        </if>
+        <!-- 可以根据需要添加更多查询条件 -->
+        ORDER BY i.item_name, f.create_time DESC
+    </select>
+
+
+    <select id="selectBsLabtestItemFeatureList" parameterType="BsLabtestItemFeature" resultMap="BsLabtestItemFeatureResult">
+        select blif.bs_labtest_item_feature_id,
+        blif.item_id,
+        blif.feature_id,
+        blif.dept_id,
+        blif.create_time,
+        blif.create_by,
+        blif.update_time,
+        blif.update_by,
+        blif.is_delete,
+        blif.is_enable ,
+        blif.remark,
+        i.item_name,
+        i.item_code,
+        i.sap_code,
+        f.name,
+        f.upper_limit,
+        f.lower_limit
+        from bs_labtest_item_feature blif
+        left join bs_labtest_items i on blif.item_id=i.bs_labtest_items_id  AND i.is_delete = '0'
+        LEFT JOIN bs_labtest_feature f ON blif.feature_id = f.bs_labtest_feature_id  AND f.is_delete = '0'
+        <where>
+            and blif.is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="itemId != null  and itemId != ''"> and blif.item_id = #{itemId}</if>
+            <if test="featureId != null  and featureId != ''"> and blif.feature_id = #{featureId}</if>
+            <if test="deptId != null "> and blif.dept_id = #{deptId}</if>
+            <if test="isEnable != null  and isEnable != ''"> and blif.is_enable = #{isEnable}</if>
+        </where>
+    </select>
+
+    <select id="selectBsLabtestItemFeatureByBsLabtestItemFeatureId" parameterType="String" resultMap="BsLabtestItemFeatureResult">
+        <include refid="selectBsLabtestItemFeatureVo"/>
+        where bs_labtest_item_feature_id = #{bsLabtestItemFeatureId}
+    </select>
+
+    <insert id="insertBsLabtestItemFeature" parameterType="BsLabtestItemFeature">
+        insert into bs_labtest_item_feature
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestItemFeatureId != null">bs_labtest_item_feature_id,</if>
+            <if test="itemId != null and itemId != ''">item_id,</if>
+            <if test="featureId != null">feature_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="isEnable != null and isEnable != ''">is_enable,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestItemFeatureId != null">#{bsLabtestItemFeatureId},</if>
+            <if test="itemId != null and itemId != ''">#{itemId},</if>
+            <if test="featureId != null">#{featureId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsLabtestItemFeature" parameterType="BsLabtestItemFeature">
+        update bs_labtest_item_feature
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemId != null and itemId != ''">item_id = #{itemId},</if>
+            <if test="featureId != null">feature_id = #{featureId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+        </trim>
+        where bs_labtest_item_feature_id = #{bsLabtestItemFeatureId}
+    </update>
+
+    <update id="updateDeleteFlagById" >
+        update bs_labtest_item_feature set is_delete=1 ,update_time=now(),update_by=#{updateUserId}
+                                       where bs_labtest_item_feature_id = #{bsLabtestItemFeatureId}
+    </update>
+    <update id="updateDeleteFlagByItemId" >
+        update bs_labtest_item_feature set is_delete=1 ,update_time=now(),update_by=#{updateUserId}
+        where item_id = #{itemId}
+    </update>
+    <update id="updateDeleteFlagByIds">
+        update  bs_labtest_item_feature set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where bs_labtest_item_feature_id in
+        <foreach item="bsLabtestItemFeatureId" collection="array" open="(" separator="," close=")">
+            #{bsLabtestItemFeatureId}
+        </foreach>
+    </update>
+
+    <!-- 先分页查询符合条件的项目ID -->
+    <select id="selectItemIdsPage2" parameterType="BsLabtestItemFeature" resultType="java.lang.String">
+        SELECT item_id
+        FROM (
+            SELECT DISTINCT fi.item_id,f.create_time
+            FROM bs_labtest_item_feature fi
+            LEFT JOIN bs_labtest_items i ON i.bs_labtest_items_id = fi.item_id AND i.is_delete = '0' AND i.is_enable='1'
+            LEFT JOIN bs_labtest_feature f ON fi.feature_id = f.bs_labtest_feature_id AND f.is_delete = '0' AND f.is_enable='1'
+            WHERE fi.is_delete = '0'
+            <if test="isEnable != null and isEnable != ''">
+                AND i.is_enable = #{isEnable}
+            </if>
+            <if test="itemName != null and itemName != ''">
+                AND i.item_name LIKE CONCAT('%', #{itemName}, '%')
+            </if>
+            <if test="featureName != null and featureName != ''">
+                AND f.name LIKE CONCAT('%', #{featureName}, '%')
+            </if>
+            <if test="itemId != null and itemId != ''">
+                AND fi.item_id = #{itemId}
+            </if>
+        ) t
+        ORDER BY create_time DESC
+    </select>
+    <select id="selectItemIdsPage" parameterType="BsLabtestItemFeature" resultType="java.lang.String">
+        SELECT fi.item_id
+        FROM bs_labtest_item_feature fi
+        LEFT JOIN bs_labtest_items i ON i.bs_labtest_items_id = fi.item_id AND i.is_delete = '0' AND i.is_enable='1'
+        LEFT JOIN bs_labtest_feature f ON fi.feature_id = f.bs_labtest_feature_id AND f.is_delete = '0' AND f.is_enable='1'
+        WHERE fi.is_delete = '0'
+        <if test="isEnable != null and isEnable != ''">
+            AND i.is_enable = #{isEnable}
+        </if>
+        <if test="itemName != null and itemName != ''">
+            AND i.item_name LIKE CONCAT('%', #{itemName}, '%')
+        </if>
+        <if test="featureName != null and featureName != ''">
+            AND f.name LIKE CONCAT('%', #{featureName}, '%')
+        </if>
+        <if test="itemId != null and itemId != ''">
+            AND fi.item_id = #{itemId}
+        </if>
+        GROUP BY fi.item_id
+        ORDER BY MAX(f.create_time) DESC
+    </select>
+    <!-- 根据项目ID列表查询详细数据 -->
+    <select id="selectFeatureListByItemIds" resultMap="BsLabtestItemFeatureResult">
+        SELECT
+        i.bs_labtest_items_id as item_id,
+        i.item_name,
+        i.item_code,
+        i.sap_code as item_sap_code,
+        fi.bs_labtest_item_feature_id,
+        fi.feature_id,
+        fi.dept_id,
+        fi.create_time,
+        fi.create_by,
+        fi.update_time,
+        fi.update_by,
+        fi.is_delete,
+        fi.is_enable,
+        fi.remark,
+        f.name ,
+        f.upper_limit,
+        f.lower_limit
+        FROM bs_labtest_item_feature fi
+        LEFT JOIN bs_labtest_items i ON i.bs_labtest_items_id = fi.item_id AND i.is_delete = '0' AND i.is_enable='1'
+        LEFT JOIN bs_labtest_feature f ON fi.feature_id = f.bs_labtest_feature_id AND f.is_delete = '0' AND f.is_enable='1'
+        WHERE fi.item_id IN
+        <foreach collection="itemIds" item="itemId" open="(" separator="," close=")">
+            #{itemId}
+        </foreach>
+        AND fi.is_delete = '0'
+        <if test="bsLabtestItemFeature.isEnable != null and bsLabtestItemFeature.isEnable != ''">
+            AND i.is_enable = #{bsLabtestItemFeature.isEnable}
+        </if>
+        <if test="bsLabtestItemFeature.itemName != null and bsLabtestItemFeature.itemName != ''">
+            AND i.item_name LIKE CONCAT('%', #{bsLabtestItemFeature.itemName}, '%')
+        </if>
+        <if test="bsLabtestItemFeature.featureName != null and bsLabtestItemFeature.featureName != ''">
+            AND f.name LIKE CONCAT('%', #{bsLabtestItemFeature.featureName}, '%')
+        </if>
+        <if test="bsLabtestItemFeature.itemId != null and bsLabtestItemFeature.itemId != ''">
+            AND fi.item_id = #{bsLabtestItemFeature.itemId}
+        </if>
+        ORDER BY i.item_name, f.create_time DESC
+    </select>
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO bs_labtest_item_feature (
+        bs_labtest_item_feature_id,
+        item_id,
+        feature_id,
+        dept_id,
+        create_time,
+        create_by,
+        update_time,
+        update_by,
+        is_enable,
+        remark
+        )
+        VALUES
+        <foreach collection="addList" item="item" separator=",">
+            (
+            #{item.bsLabtestItemFeatureId},
+            #{item.itemId},
+            #{item.featureId},
+            #{item.deptId},
+            #{item.createTime},
+            #{item.createBy},
+            #{item.updateTime},
+            #{item.updateBy},
+            #{item.isEnable},
+            #{item.remark}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

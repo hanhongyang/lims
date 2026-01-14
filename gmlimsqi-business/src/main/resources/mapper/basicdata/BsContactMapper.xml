@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsContactMapper">
+
+    <resultMap type="BsContact" id="BsContactResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="email"    column="email"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBsContactVo">
+        select id, dept_id, is_delete, is_enable, create_time, create_by, update_time, update_by, dept_name, email, remark from bs_contact
+    </sql>
+
+    <select id="selectBsContactList" parameterType="BsContact" resultMap="BsContactResult">
+        <include refid="selectBsContactVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="isEnable != null  and isEnable != ''"> and is_enable = #{isEnable}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="email != null  and email != ''"> and email like concat('%', #{email}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectBsContactById" parameterType="String" resultMap="BsContactResult">
+        <include refid="selectBsContactVo"/>
+        where    id = #{id}
+    </select>
+
+    <insert id="insertBsContact" parameterType="BsContact">
+        insert into bs_contact
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="isEnable != null and isEnable != ''">is_enable,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="email != null">email,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="email != null">#{email},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsContact" parameterType="BsContact">
+        update bs_contact
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+            <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBsContactById" parameterType="String">
+        delete from bs_contact where id = #{id}
+    </delete>
+
+    <delete id="deleteBsContactByIds" parameterType="String">
+        delete from bs_contact where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update bs_contact set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  bs_contact set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectFeedEmailByDeptId" resultType="com.gmlimsqi.business.labtest.vo.ReportEmailVo" parameterType="Long">
+        SELECT bsi.contact_email AS email,bsi.contact_person as userName,bsc.dept_name as deptName
+        FROM bs_contact bsc
+                 LEFT JOIN bs_contact_info bsi ON bsc.id = bsi.bs_contact_id and bsi.is_delete = '0'
+        WHERE bsc.dept_id = #{deptId} and FIND_IN_SET('1', bsi.is_receive) and bsc.is_delete = '0'
+    </select>
+
+    <select id="selectPcrEmailByDeptId" resultType="com.gmlimsqi.business.labtest.vo.ReportEmailVo" parameterType="Long">
+        SELECT bsi.contact_email AS email,bsi.contact_person as userName,bsc.dept_name as deptName
+        FROM bs_contact bsc
+                 LEFT JOIN bs_contact_info bsi ON bsc.id = bsi.bs_contact_id
+        WHERE bsc.dept_id = #{deptId} and FIND_IN_SET('5', bsi.is_receive) and bsc.is_delete = '0'
+    </select>
+
+    <select id="selectYbEmailByDeptId" resultType="com.gmlimsqi.business.labtest.vo.ReportEmailVo" parameterType="Long">
+        SELECT bsi.contact_email AS email,bsi.contact_person as userName,bsc.dept_name as deptName
+        FROM bs_contact bsc
+                 LEFT JOIN bs_contact_info bsi ON bsc.id = bsi.bs_contact_id
+        WHERE bsc.dept_id = #{deptId} and FIND_IN_SET('2', bsi.is_receive) and bsc.is_delete = '0'
+    </select>
+    <select id="selectZyEmailByDeptId" resultType="com.gmlimsqi.business.labtest.vo.ReportEmailVo" parameterType="Long">
+        SELECT bsi.contact_email AS email,bsi.contact_person as userName,bsc.dept_name as deptName
+        FROM bs_contact bsc
+                 LEFT JOIN bs_contact_info bsi ON bsc.id = bsi.bs_contact_id
+        WHERE bsc.dept_id = #{deptId} and FIND_IN_SET('3', bsi.is_receive) and bsc.is_delete = '0'
+    </select>
+    <select id="selectShEmailByDeptId" resultType="com.gmlimsqi.business.labtest.vo.ReportEmailVo" parameterType="Long">
+        SELECT bsi.contact_email AS email,bsi.contact_person as userName,bsc.dept_name as deptName
+        FROM bs_contact bsc
+                 LEFT JOIN bs_contact_info bsi ON bsc.id = bsi.bs_contact_id
+        WHERE bsc.dept_id = #{deptId} and FIND_IN_SET('4', bsi.is_receive) and bsc.is_delete = '0'
+    </select>
+</mapper>

@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.milkbinqualityinspection.mapper.OpMilkBinQualityInspectionMapper">
+
+    <resultMap type="OpMilkBinQualityInspection" id="OpMilkBinQualityInspectionResult">
+            <result property="id"    column="id"    />
+            <result property="inspectionNumber"    column="inspection_number"    />
+            <result property="status"    column="status"    />
+            <result property="milkBinId"    column="milk_bin_id"    />
+            <result property="milkBinName"    column="milk_bin_name"    />
+            <result property="sampler"    column="sampler"    />
+            <result property="samplingTime"    column="sampling_time"    />
+            <result property="tester"    column="tester"    />
+            <result property="testDate"    column="test_date"    />
+            <result property="creator"    column="creator"    />
+            <result property="createDate"    column="create_date"    />
+            <result property="remark"    column="remark"    />
+            <result property="attachmentList"    column="attachment_list"    />
+            <result property="fatPercent"    column="fat_percent"    />
+            <result property="proteinPercent"    column="protein_percent"    />
+            <result property="phosphateTest"    column="phosphate_test"    />
+            <result property="acidity"    column="acidity"    />
+            <result property="antibioticResidue"    column="antibiotic_residue"    />
+            <result property="aflatoxinM1"    column="aflatoxin_m1"    />
+            <result property="betaLactam"    column="beta_lactam"    />
+            <result property="tetracyclines"    column="tetracyclines"    />
+            <result property="ceftiofur"    column="ceftiofur"    />
+            <result property="cefalexin"    column="cefalexin"    />
+            <result property="flunixin"    column="flunixin"    />
+            <result property="streptomycin"    column="streptomycin"    />
+            <result property="kanamycin"    column="kanamycin"    />
+            <result property="monensin"    column="monensin"    />
+            <result property="roseBengal"    column="rose_bengal"    />
+            <result property="bromothymolBlue"    column="bromothymol_blue"    />
+            <result property="ferricChloride"    column="ferric_chloride"    />
+            <result property="methyleneBlueTest"    column="methylene_blue_test"    />
+            <result property="bloodMilkTest"    column="blood_milk_test"    />
+            <result property="e50"    column="e50"    />
+            <result property="sensoryIndex"    column="sensory_index"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="deptId"    column="dept_id"    />
+            <result property="reviewer"    column="reviewer"    />
+            <result property="reviewTime"    column="review_time"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="reviewerId"    column="reviewer_id"    />
+            <result property="samplerId"    column="sampler_id"    />
+            <result property="testerId"    column="tester_id"    />
+            <result property="chaoCi"    column="chao_ci"    />
+            <result property="quantity"    column="quantity"    />
+            <result property="samplingMilkTemperature"    column="sampling_milk_temperature"    />
+            <result property="quinolone"    column="quinolone"    />
+            <result property="freezingPoint"    column="freezing_point"    />
+            <result property="alcoholType"    column="alcohol_type"    />
+            <result property="alcoholValue"    column="alcohol_value"    />
+            <result property="alcoholPhoto"    column="alcohol_photo"    />
+            <result property="meloxicam"    column="meloxicam"    />
+
+            <result column="fat_percent_photo" property="fatPercentPhoto"/>
+            <result column="protein_percent_photo" property="proteinPercentPhoto"/>
+            <result column="phosphate_test_photo" property="phosphateTestPhoto"/>
+            <result column="acidity_photo" property="acidityPhoto"/>
+            <result column="antibiotic_residue_photo" property="antibioticResiduePhoto"/>
+            <result column="aflatoxin_m1_photo" property="aflatoxinM1Photo"/>
+            <result column="beta_lactam_photo" property="betaLactamPhoto"/>
+            <result column="tetracyclines_photo" property="tetracyclinesPhoto"/>
+            <result column="ceftiofur_photo" property="ceftiofurPhoto"/>
+            <result column="cefalexin_photo" property="cefalexinPhoto"/>
+            <result column="flunixin_photo" property="flunixinPhoto" />
+            <result column="streptomycin_photo" property="streptomycinPhoto" />
+            <result column="kanamycin_photo" property="kanamycinPhoto" />
+            <result column="monensin_photo" property="monensinPhoto" />
+            <result column="rose_bengal_photo" property="roseBengalPhoto" />
+            <result column="bromothymol_blue_photo" property="bromothymolBluePhoto" />
+            <result column="ferric_chloride_photo" property="ferricChloridePhoto" />
+            <result column="methylene_blue_test_photo" property="methyleneBlueTestPhoto"/>
+            <result column="blood_milk_test_photo" property="bloodMilkTestPhoto" />
+            <result column="e50_photo" property="e50Photo" />
+            <result column="sensory_index_photo" property="sensoryIndexPhoto" />
+            <result column="sampling_milk_temperature_photo" property="samplingMilkTemperaturePhoto" />
+            <result column="quinolone_photo" property="quinolonePhoto" />
+            <result column="freezing_point_photo" property="freezingPointPhoto" />
+            <result column="meloxicam_photo" property="meloxicamPhoto" />
+
+            <result column="fatPercentPhotoUrl" property="fatPercentPhotoUrl" />
+            <result column="proteinPercentPhotoUrl" property="proteinPercentPhotoUrl" />
+            <result column="phosphateTestPhotoUrl" property="phosphateTestPhotoUrl" />
+            <result column="acidityPhotoUrl" property="acidityPhotoUrl" />
+            <result column="antibioticResiduePhotoUrl" property="antibioticResiduePhotoUrl" />
+            <result column="aflatoxinM1PhotoUrl" property="aflatoxinM1PhotoUrl" />
+            <result column="betaLactamPhotoUrl" property="betaLactamPhotoUrl" />
+            <result column="tetracyclinesPhotoUrl" property="tetracyclinesPhotoUrl" />
+            <result column="ceftiofurPhotoUrl" property="ceftiofurPhotoUrl" />
+            <result column="cefalexinPhotoUrl" property="cefalexinPhotoUrl" />
+            <result column="flunixinPhotoUrl" property="flunixinPhotoUrl" />
+            <result column="streptomycinPhotoUrl" property="streptomycinPhotoUrl" />
+            <result column="kanamycinPhotoUrl" property="kanamycinPhotoUrl" />
+            <result column="monensinPhotoUrl" property="monensinPhotoUrl" />
+            <result column="roseBengalPhotoUrl" property="roseBengalPhotoUrl" />
+            <result column="bromothymolBluePhotoUrl" property="bromothymolBluePhotoUrl" />
+            <result column="ferricChloridePhotoUrl" property="ferricChloridePhotoUrl" />
+            <result column="methyleneBlueTestPhotoUrl" property="methyleneBlueTestPhotoUrl" />
+            <result column="bloodMilkTestPhotoUrl" property="bloodMilkTestPhotoUrl" />
+            <result column="e50PhotoUrl" property="e50PhotoUrl" />
+            <result column="sensoryIndexPhotoUrl" property="sensoryIndexPhotoUrl" />
+            <result column="samplingMilkTemperaturePhotoUrl" property="samplingMilkTemperaturePhotoUrl" />
+            <result column="quinolonePhotoUrl" property="quinolonePhotoUrl" />
+            <result column="freezingPointPhotoUrl" property="freezingPointPhotoUrl" />
+            <result column="alcoholPhotoUrl" property="alcoholPhotoUrl" />
+            <result column="meloxicamPhotoUrl" property="meloxicamPhotoUrl" />
+    </resultMap>
+
+    <sql id="selectOpMilkBinQualityInspectionVo">
+        select a.id,
+               a.inspection_number,
+               a.status,
+               a.milk_bin_id,
+               a.milk_bin_name,
+               a.sampler,
+               a.sampling_time,
+               a.tester,
+               a.test_date,
+               a.creator,
+               a.create_date,
+               a.remark,
+               a.attachment_list,
+               a.fat_percent,
+               a.fat_percent_photo,
+               a.protein_percent,
+               a.protein_percent_photo,
+               a.phosphate_test,
+               a.phosphate_test_photo,
+               a.acidity,
+               a.acidity_photo,
+               a.antibiotic_residue,
+               a.antibiotic_residue_photo,
+               a.aflatoxin_m1,
+               a.aflatoxin_m1_photo,
+               a.beta_lactam,
+               a.beta_lactam_photo,
+               a.tetracyclines,
+               a.tetracyclines_photo,
+               a.ceftiofur,
+               a.ceftiofur_photo,
+               a.cefalexin,
+               a.cefalexin_photo,
+               a.flunixin,
+               a.flunixin_photo,
+               a.streptomycin,
+               a.streptomycin_photo,
+               a.kanamycin,
+               a.kanamycin_photo,
+               a.monensin,
+               a.monensin_photo,
+               a.rose_bengal,
+               a.rose_bengal_photo,
+               a.bromothymol_blue,
+               a.bromothymol_blue_photo,
+               a.ferric_chloride,
+               a.ferric_chloride_photo,
+               a.methylene_blue_test,
+               a.methylene_blue_test_photo,
+               a.blood_milk_test,
+               a.blood_milk_test_photo,
+               a.e50,
+               a.e50_photo,
+               a.sensory_index,
+               a.sensory_index_photo,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.dept_id,
+               a.reviewer,
+               a.review_time,
+               a.is_delete,
+               a.reviewer_id,
+               a.sampler_id,
+               a.tester_id,
+               a.chao_ci,
+               a.quantity,
+               a.sampling_milk_temperature,
+               a.sampling_milk_temperature_photo,
+               a.quinolone,
+               a.quinolone_photo,
+               a.freezing_point,
+               a.freezing_point_photo,
+               a.alcohol_type,
+               a.alcohol_value,
+               a.alcohol_photo,
+               a.meloxicam,
+               a.meloxicam_photo
+        from op_milk_bin_quality_inspection a
+    </sql>
+
+    <select id="selectOpMilkBinQualityInspectionList" parameterType="OpMilkBinQualityInspection" resultMap="OpMilkBinQualityInspectionResult">
+        <include refid="selectOpMilkBinQualityInspectionVo"/>
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.is_delete = '0'
+                        <if test="inspectionNumber != null  and inspectionNumber != ''"> and a.inspection_number like concat('%', #{inspectionNumber}, '%')</if>
+                        <if test="status != null  and status != ''"> and a.status = #{status}</if>
+                        <if test="milkBinId != null  and milkBinId != ''"> and a.milk_bin_id = #{milkBinId}</if>
+                        <if test="milkBinName != null  and milkBinName != ''"> and a.milk_bin_name like concat('%', #{milkBinName}, '%')</if>
+                        <if test="sampler != null  and sampler != ''"> and a.sampler like concat('%', #{sampler}, '%')</if>
+                        <if test="samplingStartTime != null "> and a.sampling_time >= #{samplingStartTime}</if>
+                        <if test="samplingEndTime != null "> and a.sampling_time &lt;= #{samplingEndTime}</if>
+                        <if test="tester != null  and tester != ''"> and a.tester like concat('%', #{tester}, '%')</if>
+                        <if test="testStartTime != null "> and a.test_date >= #{testStartTime}</if>
+                        <if test="testEndTime != null "> and a.test_date &lt;= #{testEndTime}</if>
+                        <if test="creator != null  and creator != ''"> and a.creator = #{creator}</if>
+                        <if test="createDate != null "> and a.create_date = #{createDate}</if>
+                        <if test="attachmentList != null  and attachmentList != ''"> and a.attachment_list = #{attachmentList}</if>
+                        <if test="fatPercent != null  and fatPercent != ''"> and a.fat_percent = #{fatPercent}</if>
+                        <if test="proteinPercent != null  and proteinPercent != ''"> and a.protein_percent = #{proteinPercent}</if>
+                        <if test="phosphateTest != null  and phosphateTest != ''"> and a.phosphate_test = #{phosphateTest}</if>
+                        <if test="acidity != null  and acidity != ''"> and a.acidity = #{acidity}</if>
+                        <if test="antibioticResidue != null  and antibioticResidue != ''"> and a.antibiotic_residue = #{antibioticResidue}</if>
+                        <if test="aflatoxinM1 != null  and aflatoxinM1 != ''"> and a.aflatoxin_m1 = #{aflatoxinM1}</if>
+                        <if test="betaLactam != null  and betaLactam != ''"> and a.beta_lactam = #{betaLactam}</if>
+                        <if test="tetracyclines != null  and tetracyclines != ''"> and a.tetracyclines = #{tetracyclines}</if>
+                        <if test="ceftiofur != null  and ceftiofur != ''"> and a.ceftiofur = #{ceftiofur}</if>
+                        <if test="cefalexin != null  and cefalexin != ''"> and a.cefalexin = #{cefalexin}</if>
+                        <if test="flunixin != null  and flunixin != ''"> and a.flunixin = #{flunixin}</if>
+                        <if test="streptomycin != null  and streptomycin != ''"> and a.streptomycin = #{streptomycin}</if>
+                        <if test="kanamycin != null  and kanamycin != ''"> and a.kanamycin = #{kanamycin}</if>
+                        <if test="monensin != null  and monensin != ''"> and a.monensin = #{monensin}</if>
+                        <if test="roseBengal != null  and roseBengal != ''"> and a.rose_bengal = #{roseBengal}</if>
+                        <if test="bromothymolBlue != null  and bromothymolBlue != ''"> and a.bromothymol_blue = #{bromothymolBlue}</if>
+                        <if test="ferricChloride != null  and ferricChloride != ''"> and a.ferric_chloride = #{ferricChloride}</if>
+                        <if test="methyleneBlueTest != null  and methyleneBlueTest != ''"> and a.methylene_blue_test = #{methyleneBlueTest}</if>
+                        <if test="bloodMilkTest != null  and bloodMilkTest != ''"> and a.blood_milk_test = #{bloodMilkTest}</if>
+                        <if test="e50 != null  and e50 != ''"> and a.e50 = #{e50}</if>
+                        <if test="sensoryIndex != null  and sensoryIndex != ''"> and a.sensory_index = #{sensoryIndex}</if>
+                        <if test="deptId != null and deptId != ''"> and a.dept_id = #{deptId}</if>
+                        <if test="reviewer != null and reviewer != ''"> and a.reviewer like concat('%', #{reviewer}, '%')</if>
+                        <if test="reviewStartTime != null "> and a.review_time >= #{reviewStartTime}</if>
+                        <if test="reviewEndTime != null "> and a.review_time &lt;= #{reviewEndTime}</if>
+                        <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+            ${params.dataScope}
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectOpMilkBinQualityInspectionById" parameterType="String" resultMap="OpMilkBinQualityInspectionResult">
+        select
+        -- 主表（a表）所有原有字段+新增photo字段（file_id）
+        a.id,
+        a.inspection_number,
+        a.status,
+        a.milk_bin_id,
+        a.milk_bin_name,
+        a.sampler,
+        a.sampling_time,
+        a.tester,
+        a.test_date,
+        a.creator,
+        a.create_date,
+        a.remark,
+        a.attachment_list,
+        a.fat_percent,
+        a.fat_percent_photo,
+        a.protein_percent,
+        a.protein_percent_photo,
+        a.phosphate_test,
+        a.phosphate_test_photo,
+        a.acidity,
+        a.acidity_photo,
+        a.antibiotic_residue,
+        a.antibiotic_residue_photo,
+        a.aflatoxin_m1,
+        a.aflatoxin_m1_photo,
+        a.beta_lactam,
+        a.beta_lactam_photo,
+        a.tetracyclines,
+        a.tetracyclines_photo,
+        a.ceftiofur,
+        a.ceftiofur_photo,
+        a.cefalexin,
+        a.cefalexin_photo,
+        a.flunixin,
+        a.flunixin_photo,
+        a.streptomycin,
+        a.streptomycin_photo,
+        a.kanamycin,
+        a.kanamycin_photo,
+        a.monensin,
+        a.monensin_photo,
+        a.rose_bengal,
+        a.rose_bengal_photo,
+        a.bromothymol_blue,
+        a.bromothymol_blue_photo,
+        a.ferric_chloride,
+        a.ferric_chloride_photo,
+        a.methylene_blue_test,
+        a.methylene_blue_test_photo,
+        a.blood_milk_test,
+        a.blood_milk_test_photo,
+        a.e50,
+        a.e50_photo,
+        a.sensory_index,
+        a.sensory_index_photo,
+        a.create_by,
+        a.create_time,
+        a.update_by,
+        a.update_time,
+        a.dept_id,
+        a.reviewer,
+        a.review_time,
+        a.is_delete,
+        a.reviewer_id,
+        a.sampler_id,
+        a.tester_id,
+        a.chao_ci,
+        a.quantity,
+        a.sampling_milk_temperature,
+        a.sampling_milk_temperature_photo,
+        a.quinolone,
+        a.quinolone_photo,
+        a.freezing_point,
+        a.freezing_point_photo,
+        a.alcohol_type,
+        a.alcohol_value,
+        a.alcohol_photo,
+        a.meloxicam,
+        a.meloxicam_photo,
+
+        fat_file.url as fatPercentPhotoUrl,
+        protein_file.url as proteinPercentPhotoUrl,
+        phosphate_file.url as phosphateTestPhotoUrl,
+        acidity_file.url as acidityPhotoUrl,
+        antibiotic_file.url as antibioticResiduePhotoUrl,
+        aflatoxin_file.url as aflatoxinM1PhotoUrl,
+        beta_file.url as betaLactamPhotoUrl,
+        tetracyclines_file.url as tetracyclinesPhotoUrl,
+        ceftiofur_file.url as ceftiofurPhotoUrl,
+        cefalexin_file.url as cefalexinPhotoUrl,
+        flunixin_file.url as flunixinPhotoUrl,
+        streptomycin_file.url as streptomycinPhotoUrl,
+        kanamycin_file.url as kanamycinPhotoUrl,
+        monensin_file.url as monensinPhotoUrl,
+        rose_file.url as roseBengalPhotoUrl,
+        bromothymol_file.url as bromothymolBluePhotoUrl,
+        ferric_file.url as ferricChloridePhotoUrl,
+        methylene_file.url as methyleneBlueTestPhotoUrl,
+        blood_file.url as bloodMilkTestPhotoUrl,
+        e50_file.url as e50PhotoUrl,
+        sensory_file.url as sensoryIndexPhotoUrl,
+        sampling_file.url as samplingMilkTemperaturePhotoUrl,
+        quinolone_file.url as quinolonePhotoUrl,
+        freezing_file.url as freezingPointPhotoUrl,
+        alcohol_file.url as alcoholPhotoUrl,
+        meloxicam_file.url as meloxicamPhotoUrl
+
+        from op_milk_bin_quality_inspection a
+
+        -- 每个photo字段对应唯一LEFT JOIN，确保url字段不冲突
+        left join sys_upload_file fat_file on a.fat_percent_photo = fat_file.file_id
+        left join sys_upload_file protein_file on a.protein_percent_photo = protein_file.file_id
+        left join sys_upload_file phosphate_file on a.phosphate_test_photo = phosphate_file.file_id
+        left join sys_upload_file acidity_file on a.acidity_photo = acidity_file.file_id
+        left join sys_upload_file antibiotic_file on a.antibiotic_residue_photo = antibiotic_file.file_id
+        left join sys_upload_file aflatoxin_file on a.aflatoxin_m1_photo = aflatoxin_file.file_id
+        left join sys_upload_file beta_file on a.beta_lactam_photo = beta_file.file_id
+        left join sys_upload_file tetracyclines_file on a.tetracyclines_photo = tetracyclines_file.file_id
+        left join sys_upload_file ceftiofur_file on a.ceftiofur_photo = ceftiofur_file.file_id
+        left join sys_upload_file cefalexin_file on a.cefalexin_photo = cefalexin_file.file_id
+        left join sys_upload_file flunixin_file on a.flunixin_photo = flunixin_file.file_id
+        left join sys_upload_file streptomycin_file on a.streptomycin_photo = streptomycin_file.file_id
+        left join sys_upload_file kanamycin_file on a.kanamycin_photo = kanamycin_file.file_id
+        left join sys_upload_file monensin_file on a.monensin_photo = monensin_file.file_id
+        left join sys_upload_file rose_file on a.rose_bengal_photo = rose_file.file_id
+        left join sys_upload_file bromothymol_file on a.bromothymol_blue_photo = bromothymol_file.file_id
+        left join sys_upload_file ferric_file on a.ferric_chloride_photo = ferric_file.file_id
+        left join sys_upload_file methylene_file on a.methylene_blue_test_photo = methylene_file.file_id
+        left join sys_upload_file blood_file on a.blood_milk_test_photo = blood_file.file_id
+        left join sys_upload_file e50_file on a.e50_photo = e50_file.file_id
+        left join sys_upload_file sensory_file on a.sensory_index_photo = sensory_file.file_id
+        left join sys_upload_file sampling_file on a.sampling_milk_temperature_photo = sampling_file.file_id
+        left join sys_upload_file quinolone_file on a.quinolone_photo = quinolone_file.file_id
+        left join sys_upload_file freezing_file on a.freezing_point_photo = freezing_file.file_id
+        left join sys_upload_file alcohol_file on a.alcohol_photo = alcohol_file.file_id
+        left join sys_upload_file meloxicam_file on a.meloxicam_photo = meloxicam_file.file_id
+
+        -- 条件：根据a表id查询单条详情，过滤已删除数据
+        where a.id = #{id}
+        and a.is_delete = 0;
+    </select>
+
+    <insert id="insertOpMilkBinQualityInspection" parameterType="OpMilkBinQualityInspection"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        insert into op_milk_bin_quality_inspection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="inspectionNumber != null">inspection_number,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="milkBinId != null and milkBinId != ''">milk_bin_id,</if>
+            <if test="milkBinName != null and milkBinName != ''">milk_bin_name,</if>
+            <if test="sampler != null">sampler,</if>
+            <if test="samplingTime != null">sampling_time,</if>
+            <if test="tester != null">tester,</if>
+            <if test="testDate != null">test_date,</if>
+            <if test="creator != null and creator != ''">creator,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="remark != null">remark,</if>
+            <if test="attachmentList != null">attachment_list,</if>
+            <if test="fatPercent != null">fat_percent,</if>
+            <if test="fatPercentPhoto != null">fat_percent_photo,</if> <!-- 新增：脂肪质检图片file_id -->
+            <if test="proteinPercent != null">protein_percent,</if>
+            <if test="proteinPercentPhoto != null">protein_percent_photo,</if> <!-- 新增：蛋白质检图片file_id -->
+            <if test="phosphateTest != null">phosphate_test,</if>
+            <if test="phosphateTestPhoto != null">phosphate_test_photo,</if> <!-- 新增：磷酸盐试验图片file_id -->
+            <if test="acidity != null">acidity,</if>
+            <if test="acidityPhoto != null">acidity_photo,</if> <!-- 新增：酸度图片file_id -->
+            <if test="antibioticResidue != null">antibiotic_residue,</if>
+            <if test="antibioticResiduePhoto != null">antibiotic_residue_photo,</if> <!-- 新增：解抗剂质检图片file_id -->
+            <if test="aflatoxinM1 != null">aflatoxin_m1,</if>
+            <if test="aflatoxinM1Photo != null">aflatoxin_m1_photo,</if> <!-- 新增：黄曲霉毒素M1质检图片file_id -->
+            <if test="betaLactam != null">beta_lactam,</if>
+            <if test="betaLactamPhoto != null">beta_lactam_photo,</if> <!-- 新增：β-内酰胺图片file_id -->
+            <if test="tetracyclines != null">tetracyclines,</if>
+            <if test="tetracyclinesPhoto != null">tetracyclines_photo,</if> <!-- 新增：四环素类图片file_id -->
+            <if test="ceftiofur != null">ceftiofur,</if>
+            <if test="ceftiofurPhoto != null">ceftiofur_photo,</if> <!-- 新增：头孢噻呋图片file_id -->
+            <if test="cefalexin != null">cefalexin,</if>
+            <if test="cefalexinPhoto != null">cefalexin_photo,</if> <!-- 新增：头孢氨苄图片file_id -->
+            <if test="flunixin != null">flunixin,</if>
+            <if test="flunixinPhoto != null">flunixin_photo,</if> <!-- 新增：氟尼辛质检图片file_id -->
+            <if test="streptomycin != null">streptomycin,</if>
+            <if test="streptomycinPhoto != null">streptomycin_photo,</if> <!-- 新增：链霉素/双氢链霉素质检图片file_id -->
+            <if test="kanamycin != null">kanamycin,</if>
+            <if test="kanamycinPhoto != null">kanamycin_photo,</if> <!-- 新增：卡那图片file_id -->
+            <if test="monensin != null">monensin,</if>
+            <if test="monensinPhoto != null">monensin_photo,</if> <!-- 新增：莫能菌素质检图片file_id -->
+            <if test="roseBengal != null">rose_bengal,</if>
+            <if test="roseBengalPhoto != null">rose_bengal_photo,</if> <!-- 新增：玫瑰红质检图片file_id -->
+            <if test="bromothymolBlue != null">bromothymol_blue,</if>
+            <if test="bromothymolBluePhoto != null">bromothymol_blue_photo,</if> <!-- 新增：溴百里香酚蓝图片file_id -->
+            <if test="ferricChloride != null">ferric_chloride,</if>
+            <if test="ferricChloridePhoto != null">ferric_chloride_photo,</if> <!-- 新增：三氯化铁质检图片file_id -->
+            <if test="methyleneBlueTest != null">methylene_blue_test,</if>
+            <if test="methyleneBlueTestPhoto != null">methylene_blue_test_photo,</if> <!-- 新增：美兰试验质检图片file_id -->
+            <if test="bloodMilkTest != null">blood_milk_test,</if>
+            <if test="bloodMilkTestPhoto != null">blood_milk_test_photo,</if> <!-- 新增：血奶检测质检图片file_id -->
+            <if test="e50 != null">e50,</if>
+            <if test="e50Photo != null">e50_photo,</if> <!-- 新增：e50质检图片file_id -->
+            <if test="sensoryIndex != null">sensory_index,</if>
+            <if test="sensoryIndexPhoto != null">sensory_index_photo,</if> <!-- 新增：感官指标图片file_id -->
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="reviewer != null">reviewer,</if>
+            <if test="reviewTime != null">review_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="reviewerId != null">reviewer_id,</if>
+            <if test="samplerId != null">sampler_id,</if>
+            <if test="testerId != null">tester_id,</if>
+            <if test="chaoCi != null">chao_ci,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="samplingMilkTemperature != null">sampling_milk_temperature,</if>
+            <if test="samplingMilkTemperaturePhoto != null">sampling_milk_temperature_photo,
+            </if> <!-- 新增：采样奶温图片file_id -->
+            <if test="quinolone != null">quinolone,</if>
+            <if test="quinolonePhoto != null">quinolone_photo,</if> <!-- 新增：喹诺酮图片file_id -->
+            <if test="freezingPoint != null">freezing_point,</if>
+            <if test="freezingPointPhoto != null">freezing_point_photo,</if> <!-- 新增：冰点图片file_id -->
+            <if test="alcoholType != null">alcohol_type,</if>
+            <if test="alcoholValue != null">alcohol_value,</if>
+            <if test="alcoholPhoto != null">alcohol_photo,</if>
+            <if test="meloxicam != null">meloxicam,</if>
+            <if test="meloxicamPhoto != null">meloxicam_photo,</if> <!-- 新增：美洛昔康图片file_id -->
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="inspectionNumber != null">#{inspectionNumber},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="milkBinId != null and milkBinId != ''">#{milkBinId},</if>
+            <if test="milkBinName != null and milkBinName != ''">#{milkBinName},</if>
+            <if test="sampler != null">#{sampler},</if>
+            <if test="samplingTime != null">#{samplingTime},</if>
+            <if test="tester != null">#{tester},</if>
+            <if test="testDate != null">#{testDate},</if>
+            <if test="creator != null and creator != ''">#{creator},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="attachmentList != null">#{attachmentList},</if>
+            <if test="fatPercent != null">#{fatPercent},</if>
+            <if test="fatPercentPhoto != null">#{fatPercentPhoto},</if> <!-- 新增：对应实体类脂肪质检图片属性 -->
+            <if test="proteinPercent != null">#{proteinPercent},</if>
+            <if test="proteinPercentPhoto != null">#{proteinPercentPhoto},</if> <!-- 新增：对应实体类蛋白质检图片属性 -->
+            <if test="phosphateTest != null">#{phosphateTest},</if>
+            <if test="phosphateTestPhoto != null">#{phosphateTestPhoto},</if> <!-- 新增：对应实体类磷酸盐试验图片属性 -->
+            <if test="acidity != null">#{acidity},</if>
+            <if test="acidityPhoto != null">#{acidityPhoto},</if> <!-- 新增：对应实体类酸度图片属性 -->
+            <if test="antibioticResidue != null">#{antibioticResidue},</if>
+            <if test="antibioticResiduePhoto != null">#{antibioticResiduePhoto},</if> <!-- 新增：对应实体类解抗剂质检图片属性 -->
+            <if test="aflatoxinM1 != null">#{aflatoxinM1},</if>
+            <if test="aflatoxinM1Photo != null">#{aflatoxinM1Photo},</if> <!-- 新增：对应实体类黄曲霉毒素M1质检图片属性 -->
+            <if test="betaLactam != null">#{betaLactam},</if>
+            <if test="betaLactamPhoto != null">#{betaLactamPhoto},</if> <!-- 新增：对应实体类β-内酰胺图片属性 -->
+            <if test="tetracyclines != null">#{tetracyclines},</if>
+            <if test="tetracyclinesPhoto != null">#{tetracyclinesPhoto},</if> <!-- 新增：对应实体类四环素类图片属性 -->
+            <if test="ceftiofur != null">#{ceftiofur},</if>
+            <if test="ceftiofurPhoto != null">#{ceftiofurPhoto},</if> <!-- 新增：对应实体类头孢噻呋图片属性 -->
+            <if test="cefalexin != null">#{cefalexin},</if>
+            <if test="cefalexinPhoto != null">#{cefalexinPhoto},</if> <!-- 新增：对应实体类头孢氨苄图片属性 -->
+            <if test="flunixin != null">#{flunixin},</if>
+            <if test="flunixinPhoto != null">#{flunixinPhoto},</if> <!-- 新增：对应实体类氟尼辛质检图片属性 -->
+            <if test="streptomycin != null">#{streptomycin},</if>
+            <if test="streptomycinPhoto != null">#{streptomycinPhoto},</if> <!-- 新增：对应实体类链霉素/双氢链霉素质检图片属性 -->
+            <if test="kanamycin != null">#{kanamycin},</if>
+            <if test="kanamycinPhoto != null">#{kanamycinPhoto},</if> <!-- 新增：对应实体类卡那图片属性 -->
+            <if test="monensin != null">#{monensin},</if>
+            <if test="monensinPhoto != null">#{monensinPhoto},</if> <!-- 新增：对应实体类莫能菌素质检图片属性 -->
+            <if test="roseBengal != null">#{roseBengal},</if>
+            <if test="roseBengalPhoto != null">#{roseBengalPhoto},</if> <!-- 新增：对应实体类玫瑰红质检图片属性 -->
+            <if test="bromothymolBlue != null">#{bromothymolBlue},</if>
+            <if test="bromothymolBluePhoto != null">#{bromothymolBluePhoto},</if> <!-- 新增：对应实体类溴百里香酚蓝图片属性 -->
+            <if test="ferricChloride != null">#{ferricChloride},</if>
+            <if test="ferricChloridePhoto != null">#{ferricChloridePhoto},</if> <!-- 新增：对应实体类三氯化铁质检图片属性 -->
+            <if test="methyleneBlueTest != null">#{methyleneBlueTest},</if>
+            <if test="methyleneBlueTestPhoto != null">#{methyleneBlueTestPhoto},</if> <!-- 新增：对应实体类美兰试验质检图片属性 -->
+            <if test="bloodMilkTest != null">#{bloodMilkTest},</if>
+            <if test="bloodMilkTestPhoto != null">#{bloodMilkTestPhoto},</if> <!-- 新增：对应实体类血奶检测质检图片属性 -->
+            <if test="e50 != null">#{e50},</if>
+            <if test="e50Photo != null">#{e50Photo},</if> <!-- 新增：对应实体类e50质检图片属性 -->
+            <if test="sensoryIndex != null">#{sensoryIndex},</if>
+            <if test="sensoryIndexPhoto != null">#{sensoryIndexPhoto},</if> <!-- 新增：对应实体类感官指标图片属性 -->
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="reviewer != null">#{reviewer},</if>
+            <if test="reviewTime != null">#{reviewTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="reviewerId != null">#{reviewerId},</if>
+            <if test="samplerId != null">#{samplerId},</if>
+            <if test="testerId != null">#{testerId},</if>
+            <if test="chaoCi != null">#{chaoCi},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="samplingMilkTemperature != null">#{samplingMilkTemperature},</if>
+            <if test="samplingMilkTemperaturePhoto != null">#{samplingMilkTemperaturePhoto},
+            </if> <!-- 新增：对应实体类采样奶温图片属性 -->
+            <if test="quinolone != null">#{quinolone},</if>
+            <if test="quinolonePhoto != null">#{quinolonePhoto},</if> <!-- 新增：对应实体类喹诺酮图片属性 -->
+            <if test="freezingPoint != null">#{freezingPoint},</if>
+            <if test="freezingPointPhoto != null">#{freezingPointPhoto},</if> <!-- 新增：对应实体类冰点图片属性 -->
+            <if test="alcoholType != null">#{alcoholType},</if>
+            <if test="alcoholValue != null">#{alcoholValue},</if>
+            <if test="alcoholPhoto != null">#{alcoholPhoto},</if>
+            <if test="meloxicam != null">#{meloxicam},</if>
+            <if test="meloxicamPhoto != null">#{meloxicamPhoto},</if> <!-- 新增：对应实体类美洛昔康图片属性 -->
+        </trim>
+    </insert>
+
+    <update id="updateOpMilkBinQualityInspection" parameterType="OpMilkBinQualityInspection">
+        update op_milk_bin_quality_inspection
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inspectionNumber != null">inspection_number = #{inspectionNumber},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="milkBinId != null and milkBinId != ''">milk_bin_id = #{milkBinId},</if>
+            <if test="milkBinName != null and milkBinName != ''">milk_bin_name = #{milkBinName},</if>
+            <if test="sampler != null">sampler = #{sampler},</if>
+            <if test="samplingTime != null">sampling_time = #{samplingTime},</if>
+            <if test="tester != null">tester = #{tester},</if>
+            <if test="testDate != null">test_date = #{testDate},</if>
+            <if test="creator != null and creator != ''">creator = #{creator},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="attachmentList != null">attachment_list = #{attachmentList},</if>
+            <if test="fatPercent != null">fat_percent = #{fatPercent},</if>
+            <if test="fatPercentPhoto != null">fat_percent_photo = #{fatPercentPhoto},</if> <!-- 新增：脂肪质检图片file_id -->
+            <if test="proteinPercent != null">protein_percent = #{proteinPercent},</if>
+            <if test="proteinPercentPhoto != null">protein_percent_photo = #{proteinPercentPhoto},</if> <!-- 新增：蛋白质检图片file_id -->
+            <if test="phosphateTest != null">phosphate_test = #{phosphateTest},</if>
+            <if test="phosphateTestPhoto != null">phosphate_test_photo = #{phosphateTestPhoto},</if> <!-- 新增：磷酸盐试验图片file_id -->
+            <if test="acidity != null">acidity = #{acidity},</if>
+            <if test="acidityPhoto != null">acidity_photo = #{acidityPhoto},</if> <!-- 新增：酸度图片file_id -->
+            <if test="antibioticResidue != null">antibiotic_residue = #{antibioticResidue},</if>
+            <if test="antibioticResiduePhoto != null">antibiotic_residue_photo = #{antibioticResiduePhoto},</if> <!-- 新增：解抗剂质检图片file_id -->
+            <if test="aflatoxinM1 != null">aflatoxin_m1 = #{aflatoxinM1},</if>
+            <if test="aflatoxinM1Photo != null">aflatoxin_m1_photo = #{aflatoxinM1Photo},</if> <!-- 新增：黄曲霉毒素M1质检图片file_id -->
+            <if test="betaLactam != null">beta_lactam = #{betaLactam},</if>
+            <if test="betaLactamPhoto != null">beta_lactam_photo = #{betaLactamPhoto},</if> <!-- 新增：β-内酰胺图片file_id -->
+            <if test="tetracyclines != null">tetracyclines = #{tetracyclines},</if>
+            <if test="tetracyclinesPhoto != null">tetracyclines_photo = #{tetracyclinesPhoto},</if> <!-- 新增：四环素类图片file_id -->
+            <if test="ceftiofur != null">ceftiofur = #{ceftiofur},</if>
+            <if test="ceftiofurPhoto != null">ceftiofur_photo = #{ceftiofurPhoto},</if> <!-- 新增：头孢噻呋图片file_id -->
+            <if test="cefalexin != null">cefalexin = #{cefalexin},</if>
+            <if test="cefalexinPhoto != null">cefalexin_photo = #{cefalexinPhoto},</if> <!-- 新增：头孢氨苄图片file_id -->
+            <if test="flunixin != null">flunixin = #{flunixin},</if>
+            <if test="flunixinPhoto != null">flunixin_photo = #{flunixinPhoto},</if> <!-- 新增：氟尼辛质检图片file_id -->
+            <if test="streptomycin != null">streptomycin = #{streptomycin},</if>
+            <if test="streptomycinPhoto != null">streptomycin_photo = #{streptomycinPhoto},</if> <!-- 新增：链霉素/双氢链霉素质检图片file_id -->
+            <if test="kanamycin != null">kanamycin = #{kanamycin},</if>
+            <if test="kanamycinPhoto != null">kanamycin_photo = #{kanamycinPhoto},</if> <!-- 新增：卡那图片file_id -->
+            <if test="monensin != null">monensin = #{monensin},</if>
+            <if test="monensinPhoto != null">monensin_photo = #{monensinPhoto},</if> <!-- 新增：莫能菌素质检图片file_id -->
+            <if test="roseBengal != null">rose_bengal = #{roseBengal},</if>
+            <if test="roseBengalPhoto != null">rose_bengal_photo = #{roseBengalPhoto},</if> <!-- 新增：玫瑰红质检图片file_id -->
+            <if test="bromothymolBlue != null">bromothymol_blue = #{bromothymolBlue},</if>
+            <if test="bromothymolBluePhoto != null">bromothymol_blue_photo = #{bromothymolBluePhoto},</if> <!-- 新增：溴百里香酚蓝图片file_id -->
+            <if test="ferricChloride != null">ferric_chloride = #{ferricChloride},</if>
+            <if test="ferricChloridePhoto != null">ferric_chloride_photo = #{ferricChloridePhoto},</if> <!-- 新增：三氯化铁质检图片file_id -->
+            <if test="methyleneBlueTest != null">methylene_blue_test = #{methyleneBlueTest},</if>
+            <if test="methyleneBlueTestPhoto != null">methylene_blue_test_photo = #{methyleneBlueTestPhoto},</if> <!-- 新增：美兰试验质检图片file_id -->
+            <if test="bloodMilkTest != null">blood_milk_test = #{bloodMilkTest},</if>
+            <if test="bloodMilkTestPhoto != null">blood_milk_test_photo = #{bloodMilkTestPhoto},</if> <!-- 新增：血奶检测质检图片file_id -->
+            <if test="e50 != null">e50 = #{e50},</if>
+            <if test="e50Photo != null">e50_photo = #{e50Photo},</if> <!-- 新增：e50质检图片file_id -->
+            <if test="sensoryIndex != null">sensory_index = #{sensoryIndex},</if>
+            <if test="sensoryIndexPhoto != null">sensory_index_photo = #{sensoryIndexPhoto},</if> <!-- 新增：感官指标图片file_id -->
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="reviewer != null">reviewer = #{reviewer},</if>
+            <if test="reviewTime != null">review_time = #{reviewTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+            <if test="samplerId != null">sampler_id = #{samplerId},</if>
+            <if test="testerId != null">tester_id = #{testerId},</if>
+            <if test="chaoCi != null">chao_ci = #{chaoCi},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="samplingMilkTemperature != null">sampling_milk_temperature = #{samplingMilkTemperature},</if>
+            <if test="samplingMilkTemperaturePhoto != null">sampling_milk_temperature_photo = #{samplingMilkTemperaturePhoto},</if> <!-- 新增：采样奶温图片file_id -->
+            <if test="quinolone != null">quinolone = #{quinolone},</if>
+            <if test="quinolonePhoto != null">quinolone_photo = #{quinolonePhoto},</if> <!-- 新增：喹诺酮图片file_id -->
+            <if test="freezingPoint != null">freezing_point = #{freezingPoint},</if>
+            <if test="freezingPointPhoto != null">freezing_point_photo = #{freezingPointPhoto},</if> <!-- 新增：冰点图片file_id -->
+            <if test="alcoholType != null">alcohol_type = #{alcoholType},</if>
+            <if test="alcoholValue != null">alcohol_value = #{alcoholValue},</if>
+            <if test="alcoholPhoto != null">alcohol_photo = #{alcoholPhoto},</if>
+            <if test="meloxicam != null">meloxicam = #{meloxicam},</if>
+            <if test="meloxicamPhoto != null">meloxicam_photo = #{meloxicamPhoto},</if> <!-- 新增：美洛昔康图片file_id -->
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagById" >
+        update op_milk_bin_quality_inspection set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_milk_bin_quality_inspection set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

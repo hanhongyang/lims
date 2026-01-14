@@ -1,0 +1,1405 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxTestTaskMapper">
+
+    <resultMap type="com.gmlimsqi.business.labtest.vo.OpJczxTestTaskVo" id="OpJczxTestTaskResult">
+        <result property="entrustOrderItemId" column="entrust_order_item_id"/>
+        <result property="result" column="result"/>
+        <result property="testUserId" column="test_user_id"/>
+        <result property="isTest" column="isTest"/>
+        <result property="testMethod" column="test_method"/>
+        <result property="fileId" column="file_id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="itemName" column="item_name"/>
+        <result property="testResult" column="test_result"/>
+        <result property="testUser" column="test_user"/>
+        <result property="opBloodEntrustOrderId" column="op_blood_entrust_order_id"/>
+        <result property="sampleName" column="sample_name"/>
+        <result property="sampleNo" column="sample_no"/>
+        <result property="sampleCount" column="sample_count"/>
+        <result property="receiveTime" column="receive_time"/>
+        <result property="examineTime" column="examine_time"/>
+        <result property="receiverId" column="receiver_id"/>
+        <result property="receiverName" column="receiver_name"/>
+        <result property="entrustOrderNo" column="entrust_order_no"/>
+        <result property="entrustDeptName" column="entrust_dept_name"/>
+        <result property="invbillCode" column="invbill_code"/>
+        <result property="invbillName" column="invbill_name"/>
+        <result property="testTime" column="test_time"/>
+        <result property="entrustOrderSampleId" column="entrust_order_sample_id"/>
+        <result property="pcrTaskItemType" column="pcr_task_item_type"/>
+        <result property="sampleType" column="sample_type"/>
+        <result property="sendSampleDate" column="send_sample_date"/>
+        <result property="bloodTaskItemType" column="blood_task_item_type"/>
+        <result property="sendSampleUserName" column="send_sample_user_name"/>
+        <result property="entrustOrderId" column="entrust_order_id"/>
+        <!-- pcr、血样已化验-->
+        <result property="fileName" column="file_Name"/>
+        <result property="testUser" column="test_user"/>
+        <result property="testDate" column="test_date"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="exportFileName" column="export_file_name"/>
+        <result property="resultNo" column="result_no"/>
+        <result property="testEndTime" column="test_end_time"/>
+        <result property="examinePassFlag" column="examine_pass_flag"/>
+        <result property="blTemplateType" column="bl_template_type"/>
+
+        <result property="tag" column="tag"/>
+        <result property="isRetest" column="is_retest"/>
+        <result property="primaryMoistureStatus" column="primary_moisture_status"/>
+
+    </resultMap>
+
+    <sql id="fromAndWhere">
+        SELECT
+            t.op_blood_entrust_order_item_id AS entrust_order_item_id,
+            t.test_result AS result,
+            t.test_user_id,
+            bic.item_id,
+            bi.item_name,
+            t.test_result,
+            u.nick_name AS test_user,
+            t.op_blood_entrust_order_id AS entrust_order_id,
+            s.op_blood_entrust_order_sample_id as entrust_order_sample_id,
+            s.sample_name,
+            s.sample_no,
+            o.receive_time,
+            o.receiver_id,
+            ru.nick_name AS receiver_name,
+            o.entrust_order_no,
+            d.dept_name AS entrust_dept_name,
+            '' as invbill_code
+        FROM
+            op_blood_entrust_order_item t
+                LEFT JOIN op_blood_entrust_order o ON t.op_blood_entrust_order_id = o.op_blood_entrust_order_id
+                AND o.delete_id = '0'
+                LEFT JOIN op_blood_entrust_order_sample s ON t.op_blood_entrust_order_id = s.op_blood_entrust_order_id
+                AND s.is_delete = '0'
+                LEFT JOIN op_blood_entrust_item_config bic ON bic.item_code = t.item_code
+                AND bic.is_delete = '0'
+                LEFT JOIN bs_labtest_items bi ON bic.item_id = bi.bs_labtest_items_id
+                AND bi.is_delete = '0'
+                LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id
+                AND d.del_flag = '0'
+                LEFT JOIN sys_user u ON t.test_user_id = u.user_id
+                AND u.del_flag = '0'
+                AND u.STATUS = '0'
+                LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id
+                AND ru.del_flag = '0'
+                AND ru.STATUS = '0'
+        WHERE
+            t.is_delete = '0'
+
+        UNION ALL
+        SELECT
+            t.op_feed_entrust_order_item_id AS entrust_order_item_id,
+            t.test_result AS result,
+            t.test_user_id,
+            t.item_id,
+            bi.item_name,
+            t.test_result,
+            u.nick_name AS test_user,
+            s.feed_entrust_order_id AS entrust_order_id,
+            s.op_feed_entrust_order_sample_id as entrust_order_sample_id,
+            s.NAME AS sample_name,
+            s.sample_no,
+            o.receive_time,
+            o.receiver_id,
+            ru.nick_name AS receiver_name,
+            o.entrust_order_no,
+            d.dept_name AS entrust_dept_name,
+            s.invill_id as invbill_code
+        FROM
+            op_feed_entrust_order_item t
+                LEFT JOIN op_feed_entrust_order_sample s ON t.op_feed_entrust_order_sample_id = s.op_feed_entrust_order_sample_id
+                AND s.is_delete = '0'
+                LEFT JOIN op_feed_entrust_order o ON s.feed_entrust_order_id = o.op_feed_entrust_order_id
+                AND o.delete_id = '0'
+                LEFT JOIN bs_labtest_items bi ON t.item_id = bi.bs_labtest_items_id
+                AND bi.is_delete = '0'
+                LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id
+                AND d.del_flag = '0'
+                LEFT JOIN sys_user u ON t.test_user_id = u.user_id
+                AND u.del_flag = '0'
+                AND u.STATUS = '0'
+                LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id
+                AND ru.del_flag = '0'
+                AND ru.STATUS = '0'
+        WHERE
+            t.is_delete = '0'  and bi.is_jhw='0' UNION ALL
+        SELECT
+            t.op_pcr_entrust_order_item_id AS entrust_order_item_id,
+            t.test_result AS result,
+            t.test_user_id,
+            t.item_id,
+            bi.item_name,
+            t.test_result,
+            u.nick_name AS test_user,
+            s.pcr_entrust_order_id AS entrust_order_id,
+            s.op_pcr_entrust_order_sample_id as entrust_order_sample_id,
+            s.`name` AS sample_name,
+            s.sample_no,
+            o.receive_time,
+            o.receiver_id,
+            ru.nick_name AS receiver_name,
+            o.entrust_order_no,
+            d.dept_name AS entrust_dept_name,
+            '' as invbill_code
+        FROM
+            op_pcr_entrust_order_item t
+                LEFT JOIN op_pcr_entrust_order_sample s ON t.pcr_entrust_order_sample_id = s.op_pcr_entrust_order_sample_id
+                AND s.is_delete = '0'
+                LEFT JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+                AND o.delete_id = '0'
+                LEFT JOIN bs_labtest_items bi ON t.item_id = bi.bs_labtest_items_id
+                AND bi.is_delete = '0'
+                LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id
+                AND d.del_flag = '0'
+                LEFT JOIN sys_user u ON t.test_user_id = u.user_id
+                AND u.del_flag = '0'
+                AND u.STATUS = '0'
+                LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id
+                AND ru.del_flag = '0'
+                AND ru.STATUS = '0'
+        WHERE
+            t.is_delete = '0'
+    </sql>
+
+
+    <select id="selectPcrTestTaskList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        SELECT
+        o.op_pcr_entrust_order_id AS entrust_order_id,
+        o.entrust_order_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name AS receiver_name,
+        d.dept_name AS entrust_dept_name,
+        s.pcr_task_item_type,
+        <!-- 检测时间 - 取第一个非空的 -->
+        (
+        SELECT MIN(s1.test_time)
+        FROM op_pcr_entrust_order_sample s1
+        WHERE s1.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+        AND s1.pcr_task_item_type = s.pcr_task_item_type
+        AND s1.test_time IS NOT NULL
+        ) AS test_time,
+        COUNT(s.op_pcr_entrust_order_sample_id) as sample_count,  -- 该类型的样品数量
+        '3' as order_type,
+        <!-- 检测人信息 - 取第一个非空的检测人 -->
+        (SELECT u1.nick_name FROM sys_user u1
+        WHERE u1.user_id = (
+        SELECT MIN(s1.test_user_id)
+        FROM op_pcr_entrust_order_sample s1
+        WHERE s1.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+        AND s1.pcr_task_item_type = s.pcr_task_item_type
+        AND s1.test_user_id IS NOT NULL
+        ) AND u1.del_flag = '0' AND u1.STATUS = '0'
+        ) AS test_user
+        FROM
+        op_pcr_entrust_order o
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id AND d.del_flag = '0'
+        LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id AND ru.del_flag = '0' AND ru.STATUS = '0'
+        INNER JOIN op_pcr_entrust_order_sample s ON o.op_pcr_entrust_order_id = s.pcr_entrust_order_id AND s.is_delete = '0'
+        <where>
+            o.delete_id = '0' and o.is_return = '0'
+            AND s.sample_no IS NOT NULL
+            AND o.status  IN ('2','3')
+            -- 不存在已检测
+            AND NOT EXISTS (
+            SELECT 1 FROM op_pcr_entrust_order_sample s2
+            WHERE s2.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+            AND s2.pcr_task_item_type = s.pcr_task_item_type
+            AND s2.test_user_id IS NOT NULL
+            )
+            -- 不存在已导出
+            AND NOT EXISTS (
+            SELECT 1 FROM op_jczx_pcr_result_info s2
+            WHERE s2.pcr_entrust_order_sample_id = s.op_pcr_entrust_order_sample_id
+            )
+            <if test="pcrTaskItemType != null and pcrTaskItemType != ''">
+                AND s.pcr_task_item_type = #{pcrTaskItemType}
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND o.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="beginReceiveTime != null">
+                AND o.receive_time &gt;= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null ">
+                AND o.receive_time &lt;= #{endReceiveTime}
+            </if>
+            <if test="begintestTime != null ">
+                AND test_time &gt;= #{begintestTime}
+            </if>
+            <if test="endtestTime != null ">
+                AND test_time &lt;= #{endtestTime}
+            </if>
+
+        </where>
+        GROUP BY
+        o.op_pcr_entrust_order_id,
+        o.entrust_order_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name,
+        d.dept_name,
+        s.pcr_task_item_type
+        ORDER BY o.receive_time asc
+    </select>
+
+
+    <select id="selectPcrAuditedList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        select
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_end_time,
+        b.pcr_task_item_type,
+        b.bl_template_type,
+        b.create_time,
+        f.original_name file_name,
+        b.export_file_name,
+        count(i.op_jczx_pcr_result_info_id) file_size
+        from op_jczx_pcr_result_base b
+        inner join op_jczx_pcr_result_info i on b.op_jczx_pcr_result_base_id=i.base_id and i.delete_id='0'
+        left join sys_upload_file f on f.file_id=b.file_id
+        <where>
+            b.delete_id='0'
+            and i.sample_no not in('空白样','阳性对照','阴性对照')
+            and b.status ='3'
+            <if test="beginTestDate != null  and endTestDate != null  "> and test_date between #{beginTestDate} and #{endTestDate}</if>
+            <if test="beginTestEndTime != null  and endTestEndTime != null  "> and test_end_time between #{beginTestEndTime} and #{endTestEndTime}</if>
+            <if test="testUser != null and testUser != ''">
+                and b.test_user like CONCAT('%', #{testUser}, '%')
+            </if>
+            <if test="fileName != null and fileName != ''">
+                and f.original_name like CONCAT('%', #{fileName}, '%')
+            </if>
+        </where>
+        group by
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_end_time,
+        b.pcr_task_item_type,
+        b.bl_template_type,
+        f.original_name,
+        b.create_time,
+        b.export_file_name
+        <!-- 新增：当fileSize存在时，筛选文件条数等于该值的记录 -->
+        <trim prefix="having" prefixOverrides="and">
+            <if test="fileSize != null">file_size = #{fileSize}</if>
+        </trim>
+        order by b.create_time desc
+    </select>
+
+
+    <select id="selectPcrTestTaskList2" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+
+        SELECT
+        u.nick_name AS test_user,
+        s.pcr_entrust_order_id AS entrust_order_id,
+        s.op_pcr_entrust_order_sample_id as entrust_order_sample_id,
+        s.`name` AS sample_name,
+        s.sample_no,
+        s.pcr_task_item_type,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name AS receiver_name,
+        o.entrust_order_no,
+        d.dept_name AS entrust_dept_name,
+        s.invill_id as invbill_code,
+        ib.invbill_name,
+        '3' as order_type  <!-- 添加类型标识 -->
+        FROM
+     op_pcr_entrust_order_sample s
+        LEFT JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+        AND o.delete_id = '0'
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id
+        AND d.del_flag = '0'
+        LEFT JOIN sys_user u ON s.test_user_id = u.user_id
+        AND u.del_flag = '0'
+        AND u.STATUS = '0'
+        LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id
+        AND ru.del_flag = '0'
+        AND ru.STATUS = '0'
+        left join business_invbill ib on s.invill_id=ib.id and ib.del_flag='0'
+        <where>
+            s.is_delete = '0'
+            and s.sample_no is not null
+            and (o.status !='7' or o.status !='6')
+            <if test="pcrTaskItemType != null and pcrTaskItemType != ''">
+                AND s.pcr_task_item_type = #{pcrTaskItemType}
+            </if>
+            <if test="sampleName != null and sampleName != ''">
+                AND s.name LIKE CONCAT('%', #{sampleName}, '%')
+            </if>
+            <if test="invbillName != null and invbillName != ''">
+                AND ib.invbill_name LIKE CONCAT('%', #{invbillName}, '%')
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                AND s.sample_no LIKE CONCAT('%', #{sampleNo}, '%')
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                AND ru.nick_name LIKE CONCAT('%', #{receiverName}, '%')
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND o.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="beginReceiveTime != null ">
+                AND o.receive_time &gt;= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null and endReceiveTime != ''">
+                AND o.receive_time &lt;= #{endReceiveTime}
+            </if>
+            <if test="isTest != null and isTest == '1'.toString()">
+                AND s.test_user_id is not null
+            </if>
+            <if test="isTest != null and isTest == '0'.toString()">
+                AND s.test_user_id is null
+            </if>
+        </where>
+        ORDER BY o.receive_time asc
+    </select>
+
+
+    <select id="selectFeedTestTaskList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        SELECT
+        t.op_feed_entrust_order_item_id AS entrust_order_item_id,
+        t.test_result AS result,
+        t.test_user_id,
+        t.test_user_id IS NOT NULL AS IsTest,
+        t.item_id,
+        bi.item_name,
+        t.test_result,
+        u.nick_name AS test_user,
+        s.feed_entrust_order_id AS entrust_order_id,
+        s.op_feed_entrust_order_sample_id as entrust_order_sample_id,
+        s.NAME AS sample_name,
+        ib.invbill_name,
+        s.sample_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name AS receiver_name,
+        o.entrust_order_no,
+        d.dept_name AS entrust_dept_name,
+        s.invbill_code as invbill_code,
+        s.test_method,
+        s.status as sample_status,
+        '1' as order_type,
+        -- 动态计算项目的复检状态
+        CASE
+        WHEN (
+        -- 条件1：存在被重置(申请复检)的历史记录
+        EXISTS (
+        SELECT 1
+        FROM op_jczx_feed_result_info r
+        WHERE r.entrust_order_item_id = t.op_feed_entrust_order_item_id
+        AND r.delete_id = '0'
+        AND r.is_reset = '1'
+        )
+        AND
+        -- 条件2：不存在新的有效记录(说明还没开始做复检)
+        NOT EXISTS (
+        SELECT 1
+        FROM op_jczx_feed_result_info r
+        WHERE r.entrust_order_item_id = t.op_feed_entrust_order_item_id
+        AND r.delete_id = '0'
+        AND r.is_reset = '0'
+        )
+        ) THEN '1'  -- 标记为：这是个复检任务
+        ELSE '0'    -- 标记为：这是个普通任务(或复检已完成)
+        END AS is_retest, -- 给前端用的新字段
+        ii.tag,
+        CASE
+        WHEN s.status is null or s.status != '1' THEN '无初水分'
+        WHEN ri.op_jczx_feed_result_info_id IS NULL THEN '未开始化验'
+        WHEN ri.check_user IS NOT NULL THEN '已校对'
+        WHEN ri.test_user IS NOT NULL THEN '已化验'
+        ELSE '未开始化验'
+        END AS primary_moisture_status
+        FROM
+        op_feed_entrust_order_item t
+        LEFT JOIN op_feed_entrust_order_sample s ON t.op_feed_entrust_order_sample_id = s.op_feed_entrust_order_sample_id AND s.is_delete = '0'
+        LEFT JOIN op_feed_entrust_order o ON s.feed_entrust_order_id = o.op_feed_entrust_order_id AND o.delete_id = '0'
+        LEFT JOIN bs_labtest_items bi ON t.item_id = bi.bs_labtest_items_id AND bi.is_delete = '0'
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id AND d.del_flag = '0'
+        LEFT JOIN sys_user u ON t.test_user_id = u.user_id AND u.del_flag = '0' AND u.STATUS = '0'
+        LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id AND ru.del_flag = '0' AND ru.STATUS = '0'
+        INNER JOIN bs_user_labtest_item ul ON ul.bs_labtest_items_id = t.item_id AND ul.user_id = #{userId} AND ul.delete_id = '0'
+        left join business_invbill ib on s.invbill_code=ib.sap_code and ib.del_flag='0'
+        left join bs_invbill_info ii on ib.sap_code=ii.sap_code and ii.delete_id='0'
+        LEFT JOIN op_jczx_feed_result_info ri ON ri.entrust_order_sample_id = s.op_feed_entrust_order_sample_id
+        AND ri.delete_id = '0'
+        AND ri.entrust_order_item_id = '初水分'
+        AND (ri.is_reset = '0' OR ri.is_reset IS NULL)
+        <where>
+            t.is_delete = '0'
+            and bi.is_jhw='0'
+            AND s.is_receive = '1'
+            AND o.is_return = '0'
+            and ul.user_type='1'
+            <if test="itemName != null and itemName != ''">
+                AND bi.item_name LIKE CONCAT('%', #{itemName}, '%')
+            </if>
+            <if test="itemId != null and itemId != ''">
+                AND t.item_id = #{itemId}
+            </if>
+            <if test="testMethod != null and testMethod != ''">
+                AND s.test_method = #{testMethod}
+            </if>
+            <if test="sampleName != null and sampleName != ''">
+                AND s.NAME LIKE CONCAT('%', #{sampleName}, '%')
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                AND s.sample_no LIKE CONCAT('%', #{sampleNo}, '%')
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                AND ru.nick_name LIKE CONCAT('%', #{receiverName}, '%')
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND o.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="invbillName != null and invbillName != ''">
+                AND ib.invbill_name LIKE CONCAT('%', #{invbillName}, '%')
+            </if>
+            <if test="beginReceiveTime != null">
+                AND o.receive_time &gt;= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null">
+                AND o.receive_time &lt;= #{endReceiveTime}
+            </if>
+            <if test="testUser != null and testUser != ''">
+                AND u.nick_name LIKE CONCAT('%', #{testUser}, '%')
+            </if>
+            <if test="isTest != null and isTest == '1'.toString()">
+                AND t.test_user_id is not null
+            </if>
+        <!-- 过滤已存在检测人、复检的样品项
+            <if test="isTest != null and isTest == '0'.toString()">
+                AND (t.test_user_id is null  or   exists (
+                    select 1 from op_jczx_feed_result_info r
+                    where r.entrust_order_item_id=t.op_feed_entrust_order_item_id
+                    and r.delete_id='0' and r.is_reset='1'
+                ))
+            </if> -->
+            <if test="isTest != null and isTest == '0'.toString()">
+                AND (
+                t.test_user_id is null
+                OR (
+                -- 场景：虽然分配了人，但是发起了复检(is_reset='1')，且尚未录入新结果(不存在is_reset='0')
+                EXISTS (
+                select 1 from op_jczx_feed_result_info r
+                where r.entrust_order_item_id = t.op_feed_entrust_order_item_id
+                and r.delete_id = '0' and r.is_reset = '1'
+                )
+                AND NOT EXISTS (
+                select 1 from op_jczx_feed_result_info r
+                where r.entrust_order_item_id = t.op_feed_entrust_order_item_id
+                and r.delete_id = '0' and r.is_reset = '0'
+                )
+                )
+                )
+            </if>
+        </where>
+        ORDER BY CAST(s.sample_no AS UNSIGNED) asc
+        <!-- ORDER BY o.receive_time desc -->
+    </select>
+
+    <select id="selectFeedTestTaskList2" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        SELECT
+        t.op_feed_entrust_order_item_id AS entrust_order_item_id,
+        t.test_result AS result,
+        t.test_user_id,
+        t.test_user_id IS NOT NULL AS IsTest,
+        t.item_id,
+        bi.item_name,
+        t.test_result,
+        u.nick_name AS test_user,
+        s.feed_entrust_order_id AS entrust_order_id,
+        s.op_feed_entrust_order_sample_id as entrust_order_sample_id,
+        s.NAME AS sample_name,
+        s.sample_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name AS receiver_name,
+        o.entrust_order_no,
+        d.dept_name AS entrust_dept_name,
+        s.invbill_code as invbill_code,
+        s.test_method,
+        s.status as sample_status,
+        '1' as order_type
+        FROM
+        op_feed_entrust_order_item t
+        LEFT JOIN op_feed_entrust_order_sample s ON t.op_feed_entrust_order_sample_id = s.op_feed_entrust_order_sample_id AND s.is_delete = '0'
+        LEFT JOIN op_feed_entrust_order o ON s.feed_entrust_order_id = o.op_feed_entrust_order_id AND o.delete_id = '0'
+        LEFT JOIN bs_labtest_items bi ON t.item_id = bi.bs_labtest_items_id AND bi.is_delete = '0'
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id AND d.del_flag = '0'
+        LEFT JOIN sys_user u ON t.test_user_id = u.user_id AND u.del_flag = '0' AND u.STATUS = '0'
+        LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id AND ru.del_flag = '0' AND ru.STATUS = '0'
+
+        <where>
+            t.is_delete = '0'
+            and bi.is_jhw='0'
+            AND s.is_receive = '1'
+            AND s.status ='1'
+            and not exists (
+                select 1 from op_jczx_feed_result_info r
+                where r.entrust_order_item_id=t.op_feed_entrust_order_item_id
+                and r.delete_id='0' and r.is_reset='0'
+            )
+            <if test="itemName != null and itemName != ''">
+                AND bi.item_name LIKE CONCAT('%', #{itemName}, '%')
+            </if>
+            <if test="itemId != null and itemId != ''">
+                AND t.item_id = #{itemId}
+            </if>
+            <if test="testMethod != null and testMethod != ''">
+                AND s.test_method = #{testMethod}
+            </if>
+            <if test="sampleName != null and sampleName != ''">
+                AND s.NAME LIKE CONCAT('%', #{sampleName}, '%')
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                AND s.sample_no LIKE CONCAT('%', #{sampleNo}, '%')
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                AND ru.nick_name LIKE CONCAT('%', #{receiverName}, '%')
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND o.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="beginReceiveTime != null">
+                AND o.receive_time &gt;= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null">
+                AND o.receive_time &lt;= #{endReceiveTime}
+            </if>
+            <if test="testUser != null and testUser != ''">
+                AND u.nick_name LIKE CONCAT('%', #{testUser}, '%')
+            </if>
+        </where>
+
+        ORDER BY o.receive_time desc
+    </select>
+
+    <select id="selectFeedTestTaskListGrouped" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        SELECT
+        GROUP_CONCAT(DISTINCT temp.item_name SEPARATOR ',') as item_name,
+        temp.entrust_order_id,
+        temp.entrust_order_no,
+        temp.receive_time,
+        temp.receiver_id,
+        temp.receiver_name,
+        temp.entrust_dept_name,
+        temp.test_method,
+        MIN(temp.file_id) as file_id, -- 获取一个报告ID用于展示
+        COUNT(DISTINCT temp.entrust_order_sample_id) as sample_count
+        FROM (
+        SELECT
+        bi.item_name,
+        s.feed_entrust_order_id AS entrust_order_id,
+        s.op_feed_entrust_order_sample_id as entrust_order_sample_id,
+        s.sample_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name AS receiver_name,
+        o.entrust_order_no,
+        d.dept_name AS entrust_dept_name,
+        s.test_method,
+        s.file_id
+        FROM
+        op_feed_entrust_order_item t
+        LEFT JOIN op_feed_entrust_order_sample s ON t.op_feed_entrust_order_sample_id = s.op_feed_entrust_order_sample_id
+        AND s.is_delete = '0'
+        LEFT JOIN op_feed_entrust_order o ON s.feed_entrust_order_id = o.op_feed_entrust_order_id
+        AND o.delete_id = '0' and o.is_return = '0'
+        LEFT JOIN bs_labtest_items bi ON t.item_id = bi.bs_labtest_items_id
+        AND bi.is_delete = '0'
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id
+        AND d.del_flag = '0'
+        LEFT JOIN sys_user u ON t.test_user_id = u.user_id
+        AND u.del_flag = '0'
+        AND u.STATUS = '0'
+        LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id
+        AND ru.del_flag = '0'
+        AND ru.STATUS = '0'
+        WHERE
+        t.is_delete = '0' and
+        s.is_receive = '1'
+        ) temp
+        <where>
+            <if test="itemName != null and itemName != ''">
+                AND temp.item_name LIKE CONCAT('%', #{itemName}, '%')
+            </if>
+            <if test="testMethod != null and testMethod != ''">
+                AND temp.test_method = #{testMethod}
+            </if>
+            <if test="sampleName != null and sampleName != ''">
+                AND temp.sample_name LIKE CONCAT('%', #{sampleName}, '%')
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                AND temp.sample_no LIKE CONCAT('%', #{sampleNo}, '%')
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                AND temp.receiver_name LIKE CONCAT('%', #{receiverName}, '%')
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND temp.entrust_dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND temp.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="beginReceiveTime != null">
+                AND temp.receive_time &gt;= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null">
+                AND temp.receive_time &lt;= #{endReceiveTime}
+            </if>
+            <if test="isTest != null and isTest == '1'.toString()">
+                AND temp.test_user_id is not null
+            </if>
+            <if test="isTest != null and isTest == '0'.toString()">
+                AND temp.test_user_id is null
+            </if>
+        </where>
+        GROUP BY
+        temp.entrust_order_id,
+        temp.entrust_order_no,
+        temp.receive_time,
+        temp.receiver_id,
+        temp.receiver_name,
+        temp.entrust_dept_name,
+        temp.test_method
+        ORDER BY temp.receive_time DESC
+    </select>
+
+
+    <select id="selectBloodTestTaskList" resultMap="OpJczxTestTaskResult" parameterType="com.gmlimsqi.business.labtest.vo.OpJczxTestTaskVo">
+        SELECT
+        o.op_blood_entrust_order_id AS entrust_order_id,
+        o.entrust_order_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name AS receiver_name,
+        d.dept_name AS entrust_dept_name,
+        o.blood_task_item_type,
+        '2' as order_type,       -- 类型标识
+        COUNT(DISTINCT s.op_blood_entrust_order_sample_id) as sample_count, -- 计算样品数量
+        -- 获取检测人 (取第一个非空的)
+        (
+        SELECT i1.test_user
+        FROM op_blood_entrust_order_sample i1
+        WHERE i1.op_blood_entrust_order_id = o.op_blood_entrust_order_id
+        AND i1.test_user_id IS NOT NULL
+        AND i1.is_delete = '0' limit 1
+        ) AS test_user,
+        -- 获取检测时间 (取第一个非空的更新时间作为替代)
+        (
+        SELECT MIN(s1.test_time)
+        FROM op_blood_entrust_order_sample s1
+        WHERE s1.op_blood_entrust_order_id = o.op_blood_entrust_order_id
+        AND s1.is_delete = '0'
+        AND s1.test_time IS NOT NULL
+        ) AS test_time
+        FROM
+        op_blood_entrust_order o
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id AND d.del_flag = '0'
+        LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id AND ru.del_flag = '0' AND ru.STATUS = '0'
+        -- 使用 INNER JOIN 确保只查询有对应样品的订单
+        INNER JOIN op_blood_entrust_order_sample s ON o.op_blood_entrust_order_id = s.op_blood_entrust_order_id AND s.is_delete = '0'
+        <where>
+            o.delete_id = '0' and o.is_return = '0'
+            AND s.sample_no IS NOT NULL -- 确保样品已接收并编号
+            AND o.status  IN ('2','3')
+            -- 不存在已检测
+            AND NOT EXISTS (
+            SELECT 1 FROM op_blood_entrust_order_sample s2
+            WHERE s2.op_blood_entrust_order_id = o.op_blood_entrust_order_id
+            AND s2.blood_task_item_type = s.blood_task_item_type
+            AND s2.test_user_id IS NOT NULL
+            )
+            -- 不存在已导出
+            AND NOT EXISTS (
+            SELECT 1 FROM op_jczx_blood_result_info s2
+            WHERE s2.blood_entrust_order_sample_id = s.op_blood_entrust_order_sample_id
+            )
+            <if test="bloodTaskItemType != null and bloodTaskItemType != ''">
+                AND o.blood_task_item_type = #{bloodTaskItemType}
+            </if>
+            <if test="bloodTaskItemTypeNotIn != null  and bloodTaskItemTypeNotIn != ''">
+                and o.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND o.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="testUser != null and testUser != ''">
+                AND s.test_user LIKE CONCAT('%', #{testUser}, '%')
+            </if>
+
+            <if test="beginReceiveTime != null ">
+                AND o.receive_time &gt;= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null ">
+                AND o.receive_time &lt;= #{endReceiveTime}
+            </if>
+            <if test="begintestTime != null ">
+                AND test_time &gt;= #{begintestTime}
+            </if>
+            <if test="endtestTime != null ">
+                AND test_time &lt;= #{endtestTime}
+            </if>
+            <if test="beginReceiveTime != null">
+                AND o.receive_time >= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null">
+                AND o.receive_time &lt;= #{endReceiveTime}
+            </if>
+        </where>
+        GROUP BY
+        o.op_blood_entrust_order_id,
+        o.entrust_order_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name,
+        d.dept_name,
+        o.blood_task_item_type,
+        o.send_sample_date,
+        o.send_sample_user_name
+        ORDER BY o.receive_time asc
+    </select>
+
+    <select id="selectShTestTaskList" resultMap="OpJczxTestTaskResult" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto">
+        SELECT
+        o.op_blood_entrust_order_id AS entrust_order_id,
+        o.entrust_order_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name AS receiver_name,
+        d.dept_name AS entrust_dept_name,
+        o.blood_task_item_type,
+        '2' as order_type,
+        COUNT(DISTINCT s.op_blood_entrust_order_sample_id) as sample_count,
+        -- 获取检测人 (取第一个非空的)
+        <!--     (
+            SELECT i1.test_user
+            FROM op_blood_entrust_order_sample i1
+            WHERE i1.op_blood_entrust_order_id = o.op_blood_entrust_order_id
+            AND i1.test_user_id IS NOT NULL
+            AND i1.is_delete = '0' limit 1
+            ) AS test_user,-->
+        -- 获取检测时间
+        <!--       (
+               SELECT MIN(s1.test_time)
+               FROM op_blood_entrust_order_sample s1
+               WHERE s1.op_blood_entrust_order_id = o.op_blood_entrust_order_id
+               AND s1.is_delete = '0'
+               AND s1.test_time IS NOT NULL
+               ) AS test_time, -->
+        -- 【新增】获取化验单号 (用于前端判断是否显示确认按钮)
+        MAX(rb.result_no) as result_no,
+        -- 【新增】导入时间 (取Base表里的test_end_time或create_time)
+        MAX(rb.create_time) as test_time,
+        -- 【新增】导入人 (取Base表里的test_user)
+        MAX(rb.test_user) as test_user,
+        -- 【新增】导入文件名 (关联文件表)
+        MAX(f.original_name) as file_Name
+        FROM
+        op_blood_entrust_order o
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id AND d.del_flag = '0'
+        LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id AND ru.del_flag = '0' AND ru.STATUS = '0'
+        INNER JOIN op_blood_entrust_order_sample s ON o.op_blood_entrust_order_id = s.op_blood_entrust_order_id AND s.is_delete = '0'
+        -- 【新增】关联结果信息表，再关联结果主表
+        LEFT JOIN op_jczx_blood_result_info ri ON s.op_blood_entrust_order_sample_id = ri.blood_entrust_order_sample_id AND ri.delete_id = '0'
+        LEFT JOIN op_jczx_blood_result_base rb ON ri.base_id = rb.op_jczx_blood_result_base_id AND rb.delete_id = '0'
+        LEFT JOIN sys_upload_file f ON rb.file_id = f.file_id
+        <where>
+            o.delete_id = '0' and o.is_return = '0'
+            AND s.sample_no IS NOT NULL
+            AND o.status IN ('2','3')
+            <if test="bloodTaskItemType != null and bloodTaskItemType != ''">
+                AND o.blood_task_item_type = #{bloodTaskItemType}
+            </if>
+            <if test="bloodTaskItemTypeNotIn != null  and bloodTaskItemTypeNotIn != ''">
+                and o.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND o.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="testUser != null and testUser != ''">
+                AND s.test_user LIKE CONCAT('%', #{testUser}, '%')
+            </if>
+
+            <if test="beginReceiveTime != null ">
+                AND o.receive_time &gt;= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null ">
+                AND o.receive_time &lt;= #{endReceiveTime}
+            </if>
+        </where>
+        GROUP BY
+        o.op_blood_entrust_order_id,
+        o.entrust_order_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name,
+        d.dept_name,
+        o.blood_task_item_type,
+        o.send_sample_date,
+        o.send_sample_user_name
+        ORDER BY o.receive_time desc
+    </select>
+
+
+    <select id="selectBloodAuditedList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        select
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_end_time,
+        b.blood_task_item_type,
+        b.create_time,
+        f.original_name file_name,
+        b.export_file_name,
+        count(i.op_jczx_blood_result_info_id) file_size
+        from op_jczx_blood_result_base b
+        inner join op_jczx_blood_result_info i on b.op_jczx_blood_result_base_id=i.base_id and i.delete_id='0'
+        left join sys_upload_file f on f.file_id=b.file_id
+        where b.delete_id='0'
+        and b.status ='3'
+        <if test="beginTestDate != null  and endTestDate != null  "> and test_date between #{beginTestDate} and #{endTestDate}</if>
+        <if test="beginTestEndTime != null  and endTestEndTime != null  "> and test_end_time between #{beginTestEndTime} and #{endTestEndTime}</if>
+
+        group by
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_end_time,
+        b.blood_task_item_type,
+        f.original_name,
+        b.create_time,
+        b.export_file_name
+        order by b.create_time desc
+    </select>
+
+    <select id="selectPcrTestTaskListIsTest" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        select
+            b.result_no,
+            b.test_user,
+            b.examine_user,
+            b.status,
+            b.test_date,
+            b.test_end_time,
+            b.pcr_task_item_type,
+            b.bl_template_type,
+            b.create_time,
+            f.original_name file_name,
+            b.export_file_name,
+        count(DISTINCT i.sample_no) file_size,
+            b.examine_pass_flag
+        from op_jczx_pcr_result_base b
+        inner join op_jczx_pcr_result_info i on b.op_jczx_pcr_result_base_id=i.base_id and i.delete_id='0'
+        left join sys_upload_file f on f.file_id=b.file_id
+        <where>
+            b.delete_id='0'
+            and i.sample_no not in('空白样','阳性对照','阴性对照')
+            <if test="beginTestDate != null  and endTestDate != null  "> and test_date between #{beginTestDate} and #{endTestDate}</if>
+            <if test="beginTestEndTime != null  and endTestEndTime != null  "> and test_end_time between #{beginTestEndTime} and #{endTestEndTime}</if>
+            <if test="testUser != null and testUser != ''">and b.test_user like concat('%',#{testUser},'%')</if>
+            <if test="begintestTime != null ">and b.test_end_time >= #{begintestTime}</if>
+            <if test="endtestTime != null ">and b.test_end_time &lt;= #{endtestTime}</if>
+            <if test="fileName != null and fileName != ''">and f.original_name like concat('%',#{fileName},'%')</if>
+        </where>
+        group by
+            b.result_no,
+            b.test_user,
+            b.examine_user,
+            b.status,
+            b.test_date,
+            b.test_end_time,
+            b.pcr_task_item_type,
+            b.bl_template_type,
+            f.original_name,
+            b.create_time,
+            b.export_file_name,
+            b.examine_pass_flag
+        <trim prefix="having" prefixOverrides="and">
+            <if test="fileSize != null">file_size = #{fileSize}</if>
+        </trim>
+        order by b.create_time desc
+    </select>
+
+
+
+    <select id="selectPcrExamine" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        select
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_date,
+        b.test_end_time,
+        b.pcr_task_item_type,
+        b.bl_template_type,
+        b.create_time,
+        f.original_name file_name,
+        b.export_file_name,
+        b.examine_pass_flag,
+        count(i.op_jczx_pcr_result_info_id) file_size  -- 聚合计算的文件条数
+        from op_jczx_pcr_result_base b
+        inner join op_jczx_pcr_result_info i on b.op_jczx_pcr_result_base_id=i.base_id and i.delete_id='0'
+        left join sys_upload_file f on f.file_id=b.file_id
+        <where>
+            b.delete_id='0'
+            and i.sample_no not in('空白样','阳性对照','阴性对照')
+            and b.status ='2'
+            <!-- 原有的其他条件 -->
+            <if test="beginTestDate != null  and endTestDate != null  "> and test_date between #{beginTestDate} and #{endTestDate}</if>
+            <if test="beginTestEndTime != null  and endTestEndTime != null  "> and test_end_time between #{beginTestEndTime} and #{endTestEndTime}</if>
+            <if test="testUser != null and testUser != ''">and b.test_user like concat('%',#{testUser},'%')</if>
+            <if test="begintestTime != null ">and b.test_end_time >= #{begintestTime}</if>
+            <if test="endtestTime != null ">and b.test_end_time &lt;= #{endtestTime}</if>
+            <if test="fileName != null and fileName != ''">and f.original_name like concat('%',#{fileName},'%')</if>
+        </where>
+        group by
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_date,
+        b.test_end_time,
+        b.pcr_task_item_type,
+        b.bl_template_type,
+        f.original_name,
+        b.create_time,
+        b.export_file_name,
+        b.examine_pass_flag
+        <trim prefix="having" prefixOverrides="and">
+            <if test="fileSize != null">file_size = #{fileSize}</if>
+        </trim>
+        order by b.create_time desc
+    </select>
+
+
+    <select id="selectBloodTestTaskListIsTest" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        select
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_date,
+        b.test_end_time,
+        b.blood_task_item_type,
+        b.create_time,
+        f.original_name file_name,
+        b.export_file_name,
+        b.examine_pass_flag,
+        count(i.op_jczx_blood_result_info_id) file_size
+        from op_jczx_blood_result_base b
+        inner join op_jczx_blood_result_info i on b.op_jczx_blood_result_base_id=i.base_id and i.delete_id='0'
+        left join sys_upload_file f on f.file_id=b.file_id
+        where b.delete_id='0'
+        <if test="beginTestDate != null  and endTestDate != null  ">
+            and test_date between #{beginTestDate} and #{endTestDate}
+        </if>
+        <if test="beginTestEndTime != null  and endTestEndTime != null  ">
+            and test_end_time between #{beginTestEndTime} and #{endTestEndTime}
+        </if>
+        <if test="fileName != null and fileName != ''">
+            and (f.original_name like concat('%', #{fileName}, '%')
+            or b.export_file_name like concat('%', #{fileName}, '%'))
+        </if>
+        <if test="testUser != null and testUser != ''">
+            and b.test_user like concat('%', #{testUser}, '%')
+        </if>
+        <if test="bloodTaskItemType != null  and bloodTaskItemType != ''">
+            and b.blood_task_item_type = #{bloodTaskItemType}
+        </if>
+        <if test="bloodTaskItemTypeNotIn != null  and bloodTaskItemTypeNotIn != ''">
+            and b.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+        </if>
+        group by
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_date,
+        b.test_end_time,
+        b.blood_task_item_type,
+        f.original_name,
+        b.create_time,
+        b.examine_pass_flag,
+        b.export_file_name
+        <if test="fileSize != null and fileSize != ''">
+            having count(i.op_jczx_blood_result_info_id) = #{fileSize}
+        </if>
+        order by b.create_time desc
+    </select>
+
+
+
+    <select id="selectBloodExamine" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        select
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_end_time,
+        b.blood_task_item_type,
+        b.create_time,
+        f.original_name file_name,
+        b.export_file_name,
+        b.examine_pass_flag,
+        count(i.op_jczx_blood_result_info_id) file_size
+        from op_jczx_blood_result_base b
+        inner join op_jczx_blood_result_info i on b.op_jczx_blood_result_base_id=i.base_id and i.delete_id='0'
+        left join sys_upload_file f on f.file_id=b.file_id
+        where b.delete_id='0'
+        and b.status ='2'
+        <if test="beginTestDate != null  and endTestDate != null  "> and test_date between #{beginTestDate} and #{endTestDate}</if>
+        <if test="beginTestEndTime != null  and endTestEndTime != null  "> and test_end_time between #{beginTestEndTime} and #{endTestEndTime}</if>
+        <if test="testUser != null  and testUser != null  "> and b.test_user LIKE CONCAT('%', #{testUser}, '%')</if>
+        <if test="exportFileName != null  and exportFileName != null  "> and export_file_name LIKE CONCAT('%', #{exportFileName}, '%')</if>
+        <if test="fileName != null  and fileName != null  "> and f.original_name LIKE CONCAT('%', #{fileName}, '%')</if>
+
+        group by
+        b.result_no,
+        b.test_user,
+        b.examine_user,
+        b.status,
+        b.test_end_time,
+        b.blood_task_item_type,
+        f.original_name,
+        b.create_time,
+        b.examine_pass_flag,
+        b.export_file_name
+        order by b.create_time desc
+    </select>
+
+    <select id="selectCsfTestTaskList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        SELECT
+
+        '初水分' as item_name,
+        '初水分' as entrust_order_item_id,
+        s.feed_entrust_order_id AS entrust_order_id,
+        s.op_feed_entrust_order_sample_id as entrust_order_sample_id,
+        s.NAME AS sample_name,
+        ib.invbill_name,
+        s.sample_no,
+        o.receive_time,
+        o.receiver_id,
+        ru.nick_name AS receiver_name,
+        o.entrust_order_no,
+        d.dept_name AS entrust_dept_name,
+        s.invbill_code as invbill_code,
+        s.test_method,
+        s.status as sample_status,
+        '1' as order_type,
+        ii.tag
+        FROM
+        op_feed_entrust_order_sample s
+        inner JOIN op_feed_entrust_order o ON s.feed_entrust_order_id = o.op_feed_entrust_order_id AND o.delete_id = '0'
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id AND d.del_flag = '0'
+            LEFT JOIN sys_user ru ON o.receiver_id = ru.user_id AND ru.del_flag = '0' AND ru.STATUS = '0'
+        left join business_invbill ib on s.invbill_code=ib.sap_code and ib.del_flag='0'
+        left join bs_invbill_info ii on ib.sap_code=ii.sap_code and ii.delete_id='0'
+        INNER JOIN bs_user_labtest_item ul ON ul.bs_labtest_items_id = #{csfItemId} AND ul.user_id = #{userId} AND ul.delete_id = '0'
+        <where>
+            AND s.is_receive = '1'
+            AND s.status ='1' AND o.is_return = '0'
+            and not exists(
+            SELECT 1 FROM op_jczx_feed_result_info ri
+            WHERE ri.entrust_order_sample_id=s.op_feed_entrust_order_sample_id and ri.delete_id='0' and ri.is_reset='0'
+            and ri.csf is not null
+            )
+            and ul.user_type='1'
+            <if test="testMethod != null and testMethod != ''">
+                AND s.test_method = #{testMethod}
+            </if>
+            <if test="sampleName != null and sampleName != ''">
+                AND s.NAME LIKE CONCAT('%', #{sampleName}, '%')
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                AND s.sample_no LIKE CONCAT('%', #{sampleNo}, '%')
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                AND ru.nick_name LIKE CONCAT('%', #{receiverName}, '%')
+            </if>
+            <if test="entrustDeptName != null and entrustDeptName != ''">
+                AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">
+                AND o.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="beginReceiveTime != null">
+                AND o.receive_time &gt;= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null">
+                AND o.receive_time &lt;= #{endReceiveTime}
+            </if>
+            <if test="testUser != null and testUser != ''">
+                AND u.nick_name LIKE CONCAT('%', #{testUser}, '%')
+            </if>
+            <if test="invbillName != null and invbillName != ''">
+                AND ib.invbill_name LIKE CONCAT('%', #{invbillName}, '%')
+            </if>
+        </where>
+        ORDER BY CAST(s.sample_no AS UNSIGNED) asc
+        <!-- ORDER BY o.receive_time desc -->
+    </select>
+
+    <select id="selectJhwTaskList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto" resultMap="OpJczxTestTaskResult">
+        SELECT
+        fos.feed_entrust_order_id AS entrust_order_id,
+        fos.op_feed_entrust_order_sample_id as entrust_order_sample_id,
+        ib.invbill_name,
+        d.dept_name AS entrust_dept_name,
+        fos.invbill_code as invbill_code,
+        fo.entrust_order_no,
+        fos.name as sample_name,
+        fos.sample_no,
+        GROUP_CONCAT( i.item_name SEPARATOR ',') AS item_name,
+        fo.receive_time,
+        u.nick_name as receiver_name
+        FROM op_feed_entrust_order fo
+        LEFT JOIN op_feed_entrust_order_sample fos ON fos.feed_entrust_order_id = fo.op_feed_entrust_order_id AND fos.is_delete = '0'
+        LEFT JOIN op_feed_entrust_order_item fi ON fi.op_feed_entrust_order_sample_id = fos.op_feed_entrust_order_sample_id AND fi.is_delete = '0'
+        LEFT JOIN bs_labtest_items i ON i.bs_labtest_items_id = fi.item_id AND i.is_delete = '0'
+         INNER JOIN bs_user_labtest_item ul ON ul.bs_labtest_items_id = fi.item_id AND ul.user_id = #{userId} AND ul.delete_id = '0'
+        LEFT JOIN sys_dept d ON fo.entrust_dept_id = d.dept_id AND d.del_flag = '0'
+        left join business_invbill ib on fos.invbill_code=ib.sap_code and ib.del_flag='0'
+        left join sys_user u on fo.receiver_id=u.user_id AND u.del_flag = '0' AND u.STATUS = '0'
+        <where>
+             fo.delete_id = '0'
+             AND fos.sample_no IS NOT NULL
+             and i.is_jhw='1'
+             and (fi.test_user_id is null or   exists (
+                select 1 from op_jczx_feed_result_info r
+                where r.entrust_order_item_id=fi.op_feed_entrust_order_item_id
+                and r.delete_id='0' and r.is_reset='1'
+                ))
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> AND fo.entrust_order_no LIKE CONCAT('%', #{entrustOrderNo}, '%')</if>
+            <if test="entrustDeptName != null and entrustDeptName != ''"> AND d.dept_name LIKE CONCAT('%', #{entrustDeptName}, '%')</if>
+            <if test="sampleNo != null and sampleNo != ''"> AND fos.sample_no LIKE CONCAT('%', #{sampleNo}, '%')</if>
+            <if test="beginReceiveTime != null"> AND fo.receive_time &gt;= #{beginReceiveTime}</if>
+            <if test="endReceiveTime != null"> AND fo.receive_time &lt;= #{endReceiveTime}</if>
+            <if test="invbillName != null and invbillName != ''">
+                AND ib.invbill_name LIKE CONCAT('%', #{invbillName}, '%')
+            </if>
+            <if test="sampleName != null and sampleName != ''">
+                AND fos.NAME LIKE CONCAT('%', #{sampleName}, '%')
+            </if>
+            <if test="sampleNo != null and sampleNo != ''">
+                AND fos.sample_no LIKE CONCAT('%', #{sampleNo}, '%')
+            </if>
+        </where>
+
+        GROUP BY fos.feed_entrust_order_id,ib.invbill_name,fos.invbill_code,d.dept_name,
+            fo.entrust_order_no, fos.name, fos.sample_no, fo.receive_time, fos.op_feed_entrust_order_sample_id
+        ORDER BY CAST(fos.sample_no AS UNSIGNED) ASC
+    </select>
+
+    <select id="countFeedWaitTestChemistryByUserId" resultType="int">
+        SELECT COUNT(DISTINCT t.op_feed_entrust_order_item_id)
+        FROM op_feed_entrust_order_item t
+                 INNER JOIN op_feed_entrust_order_sample s
+                            ON t.op_feed_entrust_order_sample_id = s.op_feed_entrust_order_sample_id
+                                AND s.is_delete = '0'
+                 INNER JOIN op_feed_entrust_order o
+                            ON s.feed_entrust_order_id = o.op_feed_entrust_order_id
+                                AND o.delete_id = '0'
+                 INNER JOIN bs_labtest_items bi
+                            ON t.item_id = bi.bs_labtest_items_id
+                                AND bi.is_delete = '0'
+                 INNER JOIN bs_user_labtest_item ul
+                            ON ul.bs_labtest_items_id = t.item_id
+                                AND ul.user_id = #{userId}
+                                AND ul.delete_id = '0'
+        WHERE t.is_delete = '0'
+          AND bi.is_jhw = '0'     -- 饲料（非近红外）
+          AND s.is_receive = '1'
+          AND o.is_return = '0'
+          AND ul.user_type = '1'
+          AND s.test_method = '2' -- 化学法
+          AND (
+            t.test_user_id is null
+                OR (
+                -- 场景：虽然分配了人，但是发起了复检(is_reset='1')，且尚未录入新结果(不存在is_reset='0')
+                EXISTS (
+                    select 1 from op_jczx_feed_result_info r
+                    where r.entrust_order_item_id = t.op_feed_entrust_order_item_id
+                      and r.delete_id = '0' and r.is_reset = '1'
+                )
+                    AND NOT EXISTS (
+                    select 1 from op_jczx_feed_result_info r
+                    where r.entrust_order_item_id = t.op_feed_entrust_order_item_id
+                      and r.delete_id = '0' and r.is_reset = '0'
+                )
+                )
+            )
+    </select>
+
+    <select id="countFeedWaitTestCsfByUserId" resultType="int">
+        SELECT COUNT(DISTINCT s.op_feed_entrust_order_sample_id)
+        FROM op_feed_entrust_order_sample s
+                 INNER JOIN op_feed_entrust_order o
+                            ON s.feed_entrust_order_id = o.op_feed_entrust_order_id
+                                AND o.delete_id = '0'
+                 INNER JOIN bs_user_labtest_item ul
+                            ON ul.bs_labtest_items_id = #{csfItemId}
+                                AND ul.user_id = #{userId}
+                                AND ul.delete_id = '0'
+        WHERE s.is_receive = '1'
+          AND s.status = '1'
+          AND o.is_return = '0'
+          AND ul.user_type = '1'
+          -- 尚未生成“初水分”化验结果
+          AND NOT EXISTS (
+            SELECT 1
+            FROM op_jczx_feed_result_info r
+            WHERE r.entrust_order_sample_id = s.op_feed_entrust_order_sample_id
+              AND r.delete_id = '0'
+              AND r.is_reset = '0'
+              AND r.csf IS NOT NULL
+        )
+    </select>
+
+    <select id="countPcrWaitTest" resultType="int">
+        SELECT COUNT(1)
+        FROM (SELECT o.op_pcr_entrust_order_id,
+                     s.pcr_task_item_type
+              FROM op_pcr_entrust_order o
+                       INNER JOIN op_pcr_entrust_order_sample s
+                                  ON o.op_pcr_entrust_order_id = s.pcr_entrust_order_id
+                                      AND s.is_delete = '0'
+              WHERE o.delete_id = '0'
+                AND o.is_return = '0'
+                AND s.sample_no IS NOT NULL
+                AND o.status IN ('2', '3')
+                -- 不存在已检测
+                AND NOT EXISTS (SELECT 1
+                                FROM op_pcr_entrust_order_sample s2
+                                WHERE s2.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+                                  AND s2.pcr_task_item_type = s.pcr_task_item_type
+                                  AND s2.test_user_id IS NOT NULL)
+                -- 不存在已导出
+                AND NOT EXISTS (SELECT 1
+                                FROM op_jczx_pcr_result_info r
+                                WHERE r.pcr_entrust_order_sample_id = s.op_pcr_entrust_order_sample_id)
+              GROUP BY o.op_pcr_entrust_order_id,
+                       s.pcr_task_item_type) t
+    </select>
+
+    <select id="countDiseaseWaitTest" resultType="int">
+        SELECT COUNT(1)
+        FROM (
+                 SELECT
+                     o.op_blood_entrust_order_id,
+                     o.blood_task_item_type
+                 FROM op_blood_entrust_order o
+                          INNER JOIN op_blood_entrust_order_sample s
+                                     ON o.op_blood_entrust_order_id = s.op_blood_entrust_order_id
+                                         AND s.is_delete = '0'
+                 WHERE o.delete_id = '0'
+                   AND o.is_return = '0'
+                   AND s.sample_no IS NOT NULL
+                   AND o.status IN ('2','3')
+
+                   -- 不存在已检测
+                   AND NOT EXISTS (
+                     SELECT 1
+                     FROM op_blood_entrust_order_sample s2
+                     WHERE s2.op_blood_entrust_order_id = o.op_blood_entrust_order_id
+                       AND s2.blood_task_item_type = s.blood_task_item_type
+                       AND s2.test_user_id IS NOT NULL
+                 )
+
+                   -- 不存在已导出
+                   AND NOT EXISTS (
+                     SELECT 1
+                     FROM op_jczx_blood_result_info r
+                     WHERE r.blood_entrust_order_sample_id = s.op_blood_entrust_order_sample_id
+                 )
+
+                   -- 固定血样任务类型范围
+                   AND o.blood_task_item_type IN ('0','1','2','3','4','5','6','7')
+
+                 GROUP BY
+                     o.op_blood_entrust_order_id,
+                     o.blood_task_item_type
+             ) t
+    </select>
+
+    <select id="countBiochemistryWaitTest" resultType="int">
+        SELECT count(distinct  o.op_blood_entrust_order_id  )
+        FROM op_blood_entrust_order o
+                 INNER JOIN op_blood_entrust_order_sample s
+                            ON o.op_blood_entrust_order_id = s.op_blood_entrust_order_id AND s.is_delete = '0'
+        WHERE o.delete_id = '0'
+          AND o.is_return = '0'
+          AND s.sample_no IS NOT NULL
+          AND o.status IN ('2', '3')
+          AND o.blood_task_item_type = '8'
+          and s.test_user is  null
+    </select>
+
+    <select id="countEarlyPregnancyWaitTest" resultType="int">
+        SELECT COUNT(1)
+        FROM (
+                 SELECT
+                     o.op_blood_entrust_order_id,
+                     o.blood_task_item_type
+                 FROM op_blood_entrust_order o
+                          INNER JOIN op_blood_entrust_order_sample s
+                                     ON o.op_blood_entrust_order_id = s.op_blood_entrust_order_id
+                                         AND s.is_delete = '0'
+                 WHERE o.delete_id = '0'
+                   AND o.is_return = '0'
+                   AND s.sample_no IS NOT NULL
+                   AND o.status IN ('2','3')
+                   -- 不存在已检测
+                   AND NOT EXISTS (
+                     SELECT 1
+                     FROM op_blood_entrust_order_sample s2
+                     WHERE s2.op_blood_entrust_order_id = o.op_blood_entrust_order_id
+                       AND s2.blood_task_item_type = s.blood_task_item_type
+                       AND s2.test_user_id IS NOT NULL
+                 )
+                   -- 不存在已导出
+                   AND NOT EXISTS (
+                     SELECT 1
+                     FROM op_jczx_blood_result_info r
+                     WHERE r.blood_entrust_order_sample_id = s.op_blood_entrust_order_sample_id
+                 )
+                   -- 固定范围：0 ~ 7
+                   AND o.blood_task_item_type IN ('0','1','2','3','4','5','6','7')
+                 GROUP BY
+                     o.op_blood_entrust_order_id,
+                     o.blood_task_item_type
+             ) t
+    </select>
+</mapper>

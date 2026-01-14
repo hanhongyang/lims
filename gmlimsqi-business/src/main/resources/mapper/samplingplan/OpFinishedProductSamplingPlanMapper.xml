@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.samplingplan.mapper.OpFinishedProductSamplingPlanMapper">
+
+    <resultMap type="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlan" id="OpFinishedProductSamplingPlanResult">
+            <result property="finishedProductSamplingPlanId"    column="finished_product_sampling_plan_id"    />
+            <result property="samplingOrderNumber"    column="sampling_order_number"    />
+            <result property="planTime"    column="plan_time"    />
+            <result property="planType"    column="plan_type"    />
+            <result property="status"    column="status"    />
+            <result property="remark"    column="remark"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="deptId" column="dept_id"    />
+    </resultMap>
+
+    <resultMap id="OpFinishedProductSamplingPlanOpFinishedProductSamplingPlanDetailResult"
+               type="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlan" extends="OpFinishedProductSamplingPlanResult">
+        <collection property="opFinishedProductSamplingPlanDetailList" ofType="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlanDetail"
+                    column="finished_product_sampling_plan_id" select="selectOpFinishedProductSamplingPlanDetailList"/>
+    </resultMap>
+
+        <resultMap type="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlanDetail" id="OpFinishedProductSamplingPlanDetailResult">
+                <result property="finishedProductSamplingPlanDetailId"    column="finished_product_sampling_plan_detail_id"    />
+                <result property="finishedProductSamplingPlanId"    column="finished_product_sampling_plan_id"    />
+                <result property="materialCode"    column="material_code"    />
+                <result property="materialName"    column="material_name"    />
+                <result property="productionOrderNumber"    column="production_order_number"    />
+                <result property="plannedProductionVolume"    column="planned_production_volume"    />
+                <result property="plannedSampleQuantity"    column="planned_sample_quantity"    />
+                <result property="haveSampleCopies"    column="have_sample_copies"    />
+                <result property="planTime" column="plan_time"    />
+                <result property="samplingOrderNumber" column="sampling_order_number" />
+                <result property="planType" column="plan_type" />
+        </resultMap>
+
+    <sql id="selectOpFinishedProductSamplingPlanVo">
+        select a.finished_product_sampling_plan_id,
+               a.sampling_order_number,
+               a.plan_time,
+               a.plan_type,
+               a.status,
+               a.remark,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.is_delete,
+               a.dept_id
+        from op_finished_product_sampling_plan a
+    </sql>
+
+    <select id="selectOpFinishedProductSamplingPlanList"
+            parameterType="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlan"
+            resultMap="OpFinishedProductSamplingPlanResult">
+        <include refid="selectOpFinishedProductSamplingPlanVo"/>
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.is_delete = '0' and a.status = '0'
+            <if test="samplingOrderNumber != null  and samplingOrderNumber != ''"> and a.sampling_order_number like concat('%',#{samplingOrderNumber},'%')</if>
+            <if test="planTime != null "> and a.plan_time = #{planTime}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+            <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if>
+            <if test="planTypeList != null and planTypeList.size() > 0">
+                AND a.plan_type IN
+                <foreach collection="planTypeList" item="type" open="(" close=")" separator=",">
+                    #{type}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOpFinishedProductSamplingPlanByFinishedProductSamplingPlanId" parameterType="String"
+            resultMap="OpFinishedProductSamplingPlanOpFinishedProductSamplingPlanDetailResult">
+        <include refid="selectOpFinishedProductSamplingPlanVo"/>
+        where a.finished_product_sampling_plan_id = #{finishedProductSamplingPlanId}
+        and a.is_delete = '0'
+    </select>
+
+    <select id="selectOpFinishedProductSamplingPlanDetailList"
+            resultType="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlanDetail"
+            resultMap="OpFinishedProductSamplingPlanDetailResult">
+        select b.finished_product_sampling_plan_detail_id,
+               b.finished_product_sampling_plan_id,
+               b.material_code,
+               b.material_name,
+               b.production_order_number,
+               b.planned_production_volume,
+               b.planned_sample_quantity,
+               b.have_sample_copies
+        from op_finished_product_sampling_plan_detail b
+        where b.finished_product_sampling_plan_id = #{finishedProductSamplingPlanId}
+    </select>
+
+    <insert id="insertOpFinishedProductSamplingPlan"
+            parameterType="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlan">
+        insert into op_finished_product_sampling_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="finishedProductSamplingPlanId != null">finished_product_sampling_plan_id,</if>
+                    <if test="samplingOrderNumber != null">sampling_order_number,</if>
+                    <if test="planTime != null">plan_time,</if>
+                    <if test="planType != null">plan_type,</if>
+                    <if test="status != null">status,</if>
+                    <if test="remark != null">remark,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="isDelete != null and isDelete != ''">is_delete,</if>
+                    <if test="deptId != null">dept_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="finishedProductSamplingPlanId != null">#{finishedProductSamplingPlanId},</if>
+                    <if test="samplingOrderNumber != null">#{samplingOrderNumber},</if>
+                    <if test="planTime != null">#{planTime},</if>
+                    <if test="planType != null">#{planType},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+                    <if test="deptId != null">#{deptId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpFinishedProductSamplingPlan"
+            parameterType="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlan">
+        update op_finished_product_sampling_plan
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="samplingOrderNumber != null">sampling_order_number = #{samplingOrderNumber},</if>
+                    <if test="planTime != null">plan_time = #{planTime},</if>
+                    <if test="planType != null">plan_type = #{planType},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+                    <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where finished_product_sampling_plan_id = #{finishedProductSamplingPlanId}
+    </update>
+
+    <insert id="batchOpFinishedProductSamplingPlanDetail">
+        insert into op_finished_product_sampling_plan_detail(finished_product_sampling_plan_detail_id,
+                                                             finished_product_sampling_plan_id, material_code,
+                                                             material_name, production_order_number,
+                                                             planned_production_volume, planned_sample_quantity,
+                                                             have_sample_copies) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.finishedProductSamplingPlanDetailId}, #{item.finishedProductSamplingPlanId}, #{item.materialCode},
+             #{item.materialName}, #{item.productionOrderNumber}, #{item.plannedProductionVolume},
+             #{item.plannedSampleQuantity}, #{item.haveSampleCopies})
+        </foreach>
+    </insert>
+
+    <delete id="deleteOpFinishedProductSamplingPlanDetailByFinishedProductSamplingPlanId">
+        delete from op_finished_product_sampling_plan_detail
+        where finished_product_sampling_plan_id = #{finishedProductSamplingPlanId}
+    </delete>
+
+    <select id="selectDetailList" resultMap="OpFinishedProductSamplingPlanDetailResult">
+        select b.finished_product_sampling_plan_detail_id,
+        b.finished_product_sampling_plan_id,
+        b.material_code,
+        b.material_name,
+        b.production_order_number,
+        b.planned_production_volume,
+        b.planned_sample_quantity,
+        b.have_sample_copies,
+        a.plan_time,
+        a.plan_type,
+        a.sampling_order_number
+        from op_finished_product_sampling_plan_detail b
+        left join op_finished_product_sampling_plan a
+        on a.finished_product_sampling_plan_id = b.finished_product_sampling_plan_id AND a.is_delete = '0'
+        left join sys_dept d on d.dept_id = a.dept_id
+        <where>
+            <if test="deptId != null and deptId != ''">
+                a.dept_id = #{deptId}
+            </if>
+            <if test="samplingOrderNumber != null  and samplingOrderNumber != ''">
+                and a.sampling_order_number like concat('%', #{samplingOrderNumber}, '%')
+            </if>
+            <if test="planTime != null "> and a.plan_time = #{planTime}</if>
+            <if test="planType != null  and planType != ''"> and a.plan_type = #{planType}</if>
+            <if test="materialCode != null and materialCode != ''"> and b.material_code like concat('%', #{materialCode}, '%')</if>
+            <if test="materialName != null and materialName != ''"> and b.material_name like concat('%', #{materialName}, '%')</if>
+
+        </where>
+    </select>
+
+    <update id="updateOpFinishedProductSamplingPlanDetail">
+        update op_finished_product_sampling_plan_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="materialCode != null and materialCode != ''">material_code = #{materialCode},</if>
+            <if test="materialName != null and materialName != ''">material_name = #{materialName},</if>
+            <if test="plannedProductionVolume != null">planned_production_volume = #{plannedProductionVolume},</if>
+            <if test="plannedSampleQuantity != null">planned_sample_quantity = #{plannedSampleQuantity},</if>
+            <if test="haveSampleCopies != null">have_sample_copies = #{haveSampleCopies},</if>
+        </trim>
+        where finished_product_sampling_plan_detail_id = #{finishedProductSamplingPlanDetailId}
+    </update>
+
+    <select id="selectOpFinishedProductSamplingPlanDetailByFinishedProductSamplingPlanDetailId"
+            resultMap="OpFinishedProductSamplingPlanDetailResult">
+        select b.finished_product_sampling_plan_detail_id,
+        b.finished_product_sampling_plan_id,
+        b.material_code,
+        b.material_name,
+        b.production_order_number,
+        b.planned_production_volume,
+        b.planned_sample_quantity,
+        b.have_sample_copies,
+        a.plan_time,
+        a.plan_type,
+        a.sampling_order_number
+        from op_finished_product_sampling_plan_detail b
+        left join op_finished_product_sampling_plan a
+        on a.finished_product_sampling_plan_id = b.finished_product_sampling_plan_id AND a.is_delete = '0'
+        left join sys_dept d on d.dept_id = a.dept_id
+        where b.finished_product_sampling_plan_detail_id = #{finishedProductSamplingPlanDetailId}
+    </select>
+
+    <select id="selectOpFinishedProductSamplingPlanDetailByFinishedProductSamplingPlanIdAndMaterialCode"
+            resultMap="OpFinishedProductSamplingPlanDetailResult">
+        select b.finished_product_sampling_plan_detail_id,
+        b.finished_product_sampling_plan_id,
+        b.material_code,
+        b.material_name,
+        b.production_order_number,
+        b.planned_production_volume,
+        b.planned_sample_quantity,
+        b.have_sample_copies
+        from op_finished_product_sampling_plan_detail b
+        left join op_finished_product_sampling_plan a
+        on a.finished_product_sampling_plan_id = b.finished_product_sampling_plan_id AND a.is_delete = '0'
+        where b.finished_product_sampling_plan_id = #{finishedProductSamplingPlanId}
+        and b.material_code = #{materialCode}
+    </select>
+
+    <select id="selectPlanDetailListBySamplingPlanId" resultMap="OpFinishedProductSamplingPlanDetailResult">
+        select * from op_finished_product_sampling_plan_detail
+        where finished_product_sampling_plan_id = #{finishedProductSamplingPlanId}
+    </select>
+    <select id="selectOpSamplingPlanByOpSamplingPlanId"
+            resultType="com.gmlimsqi.business.samplingplan.pojo.entity.OpFinishedProductSamplingPlan">
+        <include refid="OpSamplingPlanVo"></include>
+    where finished_product_sampling_plan_id = #{finishedProductSamplingPlanId}
+    </select>
+
+    <sql id="OpSamplingPlanVo">
+        select
+            finished_product_sampling_plan_id,
+            sampling_order_number,
+            plan_time,
+            plan_type,
+            status,
+            remark,
+            create_by,
+            create_time,
+            update_by,
+            update_time,
+            is_delete,
+            dept_id
+        from op_finished_product_sampling_plan
+    </sql>
+</mapper>

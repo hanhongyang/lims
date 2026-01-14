@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpBloodEntrustOrderMapper">
+    
+    <resultMap type="com.gmlimsqi.business.labtest.domain.OpBloodEntrustOrder" id="OpBloodEntrustOrderResult">
+        <result property="opBloodEntrustOrderId"    column="op_blood_entrust_order_id"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="entrustDeptId"    column="entrust_dept_id"    />
+        <result property="address"    column="address"    />
+        <result property="entrustContact"    column="entrust_contact"    />
+        <result property="entrustContactPhone"    column="entrust_contact_phone"    />
+        <result property="entrustContactEmail"    column="entrust_contact_email"    />
+        <result property="sendSampleDate"    column="send_sample_date"    />
+        <result property="sendSampleUserId"    column="send_sample_user_id"    />
+        <result property="sendSampleUserName"    column="send_sample_user_name"    />
+        <result property="totalSampleQuantity"    column="total_sample_quantity"    />
+        <result property="receiver"    column="receiver"    />
+        <result property="receiverId"    column="receiver_id"    />
+        <result property="rejectReason"    column="reject_reason"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId" column="delete_id"    />
+        <result property="entrustDeptName"    column="entrust_dept_name"    />
+        <result property="isZaoyun"    column="is_zaoyun"    />
+        <result property="bloodTaskItemType"    column="blood_task_item_type"    />
+        <result property="examineUser"    column="examine_user"    />
+        <result property="examineUserId"    column="examine_user_id"    />
+        <result property="examineTime"    column="examine_time"    />
+        <result property="biochemistryItemType"    column="biochemistry_item_type"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="isReturn"    column="is_return"    />
+        <result property="returnTime"    column="return_time"    />
+        <result property="returnReason"    column="return_reason"    />
+    </resultMap>
+
+    <sql id="selectOpBloodEntrustOrderVo">
+        select op_blood_entrust_order_id, entrust_order_no,entrust_dept_name, entrust_dept_id, address, entrust_contact,
+               entrust_contact_phone, entrust_contact_email, send_sample_date, send_sample_user_id, send_sample_user_name,
+               total_sample_quantity, receiver, receiver_id, reject_reason, status, create_time, create_by, update_time,
+               update_by, delete_id ,is_zaoyun,blood_task_item_type, examine_user,
+               examine_user_id, examine_time,biochemistry_item_type,receive_time,report_id,is_return,return_time,return_reason
+        from op_blood_entrust_order
+    </sql>
+
+    <select id="selectOpBloodEntrustOrderList" parameterType="OpBloodEntrustOrder" resultMap="OpBloodEntrustOrderResult">
+        <include refid="selectOpBloodEntrustOrderVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="entrustDeptId != null "> and entrust_dept_id = #{entrustDeptId}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="entrustContact != null  and entrustContact != ''"> and entrust_contact = #{entrustContact}</if>
+            <if test="entrustContactPhone != null  and entrustContactPhone != ''"> and entrust_contact_phone = #{entrustContactPhone}</if>
+            <if test="entrustContactEmail != null  and entrustContactEmail != ''"> and entrust_contact_email = #{entrustContactEmail}</if>
+            <if test="sendSampleDateStart != null "> and send_sample_date >= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null "> and send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="sendSampleUserId != null  and sendSampleUserId != ''"> and send_sample_user_id = #{sendSampleUserId}</if>
+            <if test="sendSampleUserName != null  and sendSampleUserName != ''"> and send_sample_user_name like concat('%', #{sendSampleUserName}, '%')</if>
+            <if test="totalSampleQuantity != null "> and total_sample_quantity = #{totalSampleQuantity}</if>
+            <if test="receiver != null  and receiver != ''"> and receiver = #{receiver}</if>
+            <if test="receiverId != null  and receiverId != ''"> and receiver_id = #{receiverId}</if>
+            <if test="rejectReason != null  and rejectReason != ''"> and reject_reason = #{rejectReason}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="deleteId != null  and deleteId != ''"> and delete_id = #{deleteId}</if>
+            <if test="entrustDeptName != null  and entrustDeptName != ''"> and entrust_dept_name = #{entrustDeptName}</if>
+            <if test="isZaoyun != null  and isZaoyun != ''"> and is_zaoyun = #{isZaoyun}</if>
+            <if test="bloodTaskItemType != null  and bloodTaskItemType != ''"> and blood_task_item_type = #{bloodTaskItemType}</if>
+            <if test="biochemistryItemType != null  and biochemistryItemType != ''"> and biochemistry_item_type = #{biochemistryItemType}</if>
+            <if test="jibing != null  and jibing != ''"> and blood_task_item_type not in('8','9') </if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectOpBloodEntrustOrderByOpBloodEntrustOrderId" parameterType="String" resultMap="OpBloodEntrustOrderResult">
+        <include refid="selectOpBloodEntrustOrderVo"/>
+        where op_blood_entrust_order_id = #{opBloodEntrustOrderId}
+    </select>
+
+    <insert id="insertOpBloodEntrustOrder" parameterType="OpBloodEntrustOrder">
+        insert into op_blood_entrust_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opBloodEntrustOrderId != null">op_blood_entrust_order_id,</if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">entrust_order_no,</if>
+            <if test="entrustDeptId != null">entrust_dept_id,</if>
+            <if test="address != null">address,</if>
+            <if test="entrustContact != null">entrust_contact,</if>
+            <if test="entrustContactPhone != null">entrust_contact_phone,</if>
+            <if test="entrustContactEmail != null">entrust_contact_email,</if>
+            <if test="sendSampleDate != null">send_sample_date,</if>
+            <if test="sendSampleUserId != null">send_sample_user_id,</if>
+            <if test="sendSampleUserName != null">send_sample_user_name,</if>
+            <if test="totalSampleQuantity != null">total_sample_quantity,</if>
+            <if test="receiver != null">receiver,</if>
+            <if test="receiverId != null">receiver_id,</if>
+            <if test="rejectReason != null">reject_reason,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="entrustDeptName != null">entrust_dept_name,</if>
+            <if test="isZaoyun != null">is_zaoyun,</if>
+            <if test="bloodTaskItemType != null">blood_task_item_type,</if>
+            <if test="biochemistryItemType != null">biochemistry_item_type,</if>
+            <if test="isReturn != null">is_return,</if>
+            <if test="returnTime != null">return_time,</if>
+            <if test="returnReason != null">return_reason,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opBloodEntrustOrderId != null">#{opBloodEntrustOrderId},</if>
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">#{entrustOrderNo},</if>
+            <if test="entrustDeptId != null">#{entrustDeptId},</if>
+            <if test="address != null">#{address},</if>
+            <if test="entrustContact != null">#{entrustContact},</if>
+            <if test="entrustContactPhone != null">#{entrustContactPhone},</if>
+            <if test="entrustContactEmail != null">#{entrustContactEmail},</if>
+            <if test="sendSampleDate != null">#{sendSampleDate},</if>
+            <if test="sendSampleUserId != null">#{sendSampleUserId},</if>
+            <if test="sendSampleUserName != null">#{sendSampleUserName},</if>
+            <if test="totalSampleQuantity != null">#{totalSampleQuantity},</if>
+            <if test="receiver != null">#{receiver},</if>
+            <if test="receiverId != null">#{receiverId},</if>
+            <if test="rejectReason != null">#{rejectReason},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="entrustDeptName != null">#{entrustDeptName},</if>
+            <if test="isZaoyun != null">#{isZaoyun},</if>
+            <if test="bloodTaskItemType != null">#{bloodTaskItemType},</if>
+            <if test="biochemistryItemType != null">#{biochemistryItemType},</if>
+            <if test="isReturn != null">#{isReturn},</if>
+            <if test="returnTime != null">#{returnTime},</if>
+            <if test="returnReason != null">#{returnReason},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpBloodEntrustOrder" parameterType="OpBloodEntrustOrder">
+        update op_blood_entrust_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entrustOrderNo != null and entrustOrderNo != ''">entrust_order_no = #{entrustOrderNo},</if>
+            <if test="entrustDeptId != null">entrust_dept_id = #{entrustDeptId},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="entrustContact != null">entrust_contact = #{entrustContact},</if>
+            <if test="entrustContactPhone != null">entrust_contact_phone = #{entrustContactPhone},</if>
+            <if test="entrustContactEmail != null">entrust_contact_email = #{entrustContactEmail},</if>
+            <if test="sendSampleDate != null">send_sample_date = #{sendSampleDate},</if>
+            <if test="sendSampleUserId != null">send_sample_user_id = #{sendSampleUserId},</if>
+            <if test="sendSampleUserName != null">send_sample_user_name = #{sendSampleUserName},</if>
+            <if test="totalSampleQuantity != null">total_sample_quantity = #{totalSampleQuantity},</if>
+            <if test="receiver != null">receiver = #{receiver},</if>
+            <if test="receiverId != null">receiver_id = #{receiverId},</if>
+            <if test="rejectReason != null">reject_reason = #{rejectReason},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deleteId != null">delete_id = #{deleteId},</if>
+            <if test="entrustDeptName != null">entrust_dept_name = #{entrustDeptName},</if>
+            <if test="isZaoyun != null">is_zaoyun = #{isZaoyun},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="examineUser != null">examine_user = #{examineUser},</if>
+            <if test="examineUserId != null">examine_user_id = #{examineUserId},</if>
+            <if test="examineTime != null">examine_time = #{examineTime},</if>
+            <if test="biochemistryItemType != null">biochemistry_item_type = #{biochemistryItemType},</if>
+            <if test="reportId != null">report_id = #{reportId},</if>
+            <if test="isReturn != null">is_return = #{isReturn},</if>
+            <if test="returnTime != null">return_time = #{returnTime},</if>
+            <if test="returnReason != null">return_reason = #{returnReason},</if>
+        </trim>
+        where op_blood_entrust_order_id = #{opBloodEntrustOrderId}
+    </update>
+
+
+    <update id="updateDeleteIdById">
+        update op_blood_entrust_order
+        set delete_id=op_blood_entrust_order_id,
+            update_time=#{now,jdbcType=TIMESTAMP},
+            update_by=#{updateUserId}
+        where op_blood_entrust_order_id = #{opBloodEntrustOrderId}
+    </update>
+
+
+
+    <select id="selectByNo" parameterType="String" resultMap="OpBloodEntrustOrderResult">
+        <include refid="selectOpBloodEntrustOrderVo"/>
+        <where>
+            and delete_id ='0'  <!-- 固定添加软删除条件 -->
+            and entrust_order_no =#{entrustOrderNo}
+        </where>
+    </select>
+
+
+    <update id="updateOrderStatusByOrderIdList">
+        UPDATE op_blood_entrust_order o
+        SET o.status = '2',
+        o.update_time = NOW()
+        WHERE
+        o.op_blood_entrust_order_id  in
+        <foreach collection="orderIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND o.delete_id = '0' and o.status ='1'
+    </update>
+
+
+
+    <update id="updateStatusById">
+        UPDATE op_blood_entrust_order
+        set
+            status = #{status},
+            update_time = #{updateTime},
+            update_by = #{updateBy},
+            examine_user = #{examineUser},
+            examine_user_id = #{examineUserId},
+            examine_time = #{examineTime}
+
+        WHERE op_blood_entrust_order_id = #{opBloodEntrustOrderId}
+          AND delete_id = '0'
+    </update>
+
+    <select id="selectBiochemistryItemTypeBySampleIdList" parameterType="java.util.List">
+        select
+        distinct
+        o.biochemistry_item_type
+        from op_blood_entrust_order o
+        inner join gmlimsqi.op_blood_entrust_order_sample s on s.op_blood_entrust_order_id = o.op_blood_entrust_order_id and o.delete_id='0'
+        where s.op_blood_entrust_order_sample_id in
+        <foreach collection="sampleIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and s.is_delete = '0'
+    </select>
+</mapper>

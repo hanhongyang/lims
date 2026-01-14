@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.milkfillingorder.mapper.OpMilkFillingOrderDetailMapper">
+
+    <resultMap type="OpMilkFillingOrderDetail" id="OpMilkFillingOrderDetailResult">
+            <result property="opMilkFillingOrderDetailId"    column="op_milk_filling_order_detail_id"    />
+            <result property="opMilkFillingOrderId"    column="op_milk_filling_order_id"    />
+            <result property="milkWarehouseId"    column="milk_warehouse_id"    />
+            <result property="milkWarehouseName"    column="milk_warehouse_name"    />
+            <result property="milkWarehouseNumber"    column="milk_warehouse_number"    />
+            <result property="milkCapacity"    column="milk_capacity"    />
+    </resultMap>
+
+    <sql id="selectOpMilkFillingOrderDetailVo">
+        select op_milk_filling_order_detail_id,
+               op_milk_filling_order_id,
+               milk_warehouse_id,
+               milk_warehouse_name,
+               milk_warehouse_number,
+               milk_capacity
+        from op_milk_filling_order_detail
+    </sql>
+
+    <select id="selectOpMilkFillingOrderDetailList" parameterType="OpMilkFillingOrderDetail" resultMap="OpMilkFillingOrderDetailResult">
+        <include refid="selectOpMilkFillingOrderDetailVo"/>
+        <where>
+            <if test="opMilkFillingOrderId != null  and opMilkFillingOrderId != ''"> and op_milk_filling_order_id = #{opMilkFillingOrderId}</if>
+            <if test="milkWarehouseId != null  and milkWarehouseId != ''"> and milk_warehouse_id = #{milkWarehouseId}</if>
+            <if test="milkWarehouseName != null  and milkWarehouseName != ''"> and milk_warehouse_name like concat('%', #{milkWarehouseName}, '%')</if>
+            <if test="milkWarehouseNumber != null  and milkWarehouseNumber != ''"> and milk_warehouse_number = #{milkWarehouseNumber}</if>
+            <if test="milkCapacity != null  and milkCapacity != ''"> and milk_capacity = #{milkCapacity}</if>
+        </where>
+    </select>
+
+    <select id="selectOpMilkFillingOrderDetailByOpMilkFillingOrderDetailId" parameterType="String" resultMap="OpMilkFillingOrderDetailResult">
+        <include refid="selectOpMilkFillingOrderDetailVo"/>
+        where op_milk_filling_order_detail_id = #{opMilkFillingOrderDetailId}
+    </select>
+
+    <insert id="insertOpMilkFillingOrderDetail" parameterType="OpMilkFillingOrderDetail">
+        insert into op_milk_filling_order_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="opMilkFillingOrderDetailId != null">op_milk_filling_order_detail_id,</if>
+                    <if test="opMilkFillingOrderId != null">op_milk_filling_order_id,</if>
+                    <if test="milkWarehouseId != null">milk_warehouse_id,</if>
+                    <if test="milkWarehouseName != null">milk_warehouse_name,</if>
+                    <if test="milkWarehouseNumber != null">milk_warehouse_number,</if>
+                    <if test="milkCapacity != null">milk_capacity,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="opMilkFillingOrderDetailId != null">#{opMilkFillingOrderDetailId},</if>
+                    <if test="opMilkFillingOrderId != null">#{opMilkFillingOrderId},</if>
+                    <if test="milkWarehouseId != null">#{milkWarehouseId},</if>
+                    <if test="milkWarehouseName != null">#{milkWarehouseName},</if>
+                    <if test="milkWarehouseNumber != null">#{milkWarehouseNumber},</if>
+                    <if test="milkCapacity != null">#{milkCapacity},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpMilkFillingOrderDetail" parameterType="OpMilkFillingOrderDetail">
+        update op_milk_filling_order_detail
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="opMilkFillingOrderId != null">op_milk_filling_order_id = #{opMilkFillingOrderId},</if>
+                    <if test="milkWarehouseId != null">milk_warehouse_id = #{milkWarehouseId},</if>
+                    <if test="milkWarehouseName != null">milk_warehouse_name = #{milkWarehouseName},</if>
+                    <if test="milkWarehouseNumber != null">milk_warehouse_number = #{milkWarehouseNumber},</if>
+                    <if test="milkCapacity != null">milk_capacity = #{milkCapacity},</if>
+        </trim>
+        where op_milk_filling_order_detail_id = #{opMilkFillingOrderDetailId}
+    </update>
+
+
+
+    <update id="updateDeleteFlagById" >
+        update op_milk_filling_order_detail set delete_id = op_milk_filling_order_detail_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_milk_filling_order_detail_id = #{opMilkFillingOrderDetailId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_milk_filling_order_detail set delete_id = op_milk_filling_order_detail_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_milk_filling_order_detail_id in
+        <foreach item="opMilkFillingOrderDetailId" collection="array" open="(" separator="," close=")">
+            #{opMilkFillingOrderDetailId}
+        </foreach>
+    </update>
+
+    <delete id="deleteOpMilkFillingOrderDetailByOpMilkFillingOrderId">
+        delete from op_milk_filling_order_detail where op_milk_filling_order_id = #{opMilkFillingOrderId}
+    </delete>
+
+    <select id="selectOpMilkFillingOrderDetailListByOpMilkFillingOrderId"
+            resultMap="OpMilkFillingOrderDetailResult">
+        <include refid="selectOpMilkFillingOrderDetailVo"/>
+        where op_milk_filling_order_id = #{opMilkFillingOrderId}
+    </select>
+</mapper>

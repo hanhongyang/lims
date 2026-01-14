@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsMilkCartInfoMapper">
+    
+    <resultMap type="BsMilkCartInfo" id="BsMilkCartInfoResult">
+        <result property="id"    column="id"    />
+        <result property="cartStatus"    column="cart_status"    />
+        <result property="cartLicensePlateNumber"    column="cart_license_plate_number"    />
+        <result property="cartDriverName"    column="cart_driver_name"    />
+        <result property="cartDriverPhone"    column="cart_driver_phone"    />
+        <result property="cartNumber"    column="cart_number"    />
+        <result property="cartType"    column="cart_type"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap id="BsMilkCartInfoResultAll" type="BsMilkCartInfo"
+               extends="BsMilkCartInfoResult">
+        <collection property="milkCartInfoLeadSealList" ofType="BsMilkCartInfoLeadSeal"
+                    column="id" select="selectByMilkCartInfoId"/>
+    </resultMap>
+
+    <!-- 通用查询结果映射 -->
+    <resultMap id="BaseResultMap" type="com.gmlimsqi.business.basicdata.domain.BsMilkCartInfoLeadSeal">
+        <id property="milkCartInfoLeadSealId" column="milk_cart_info_lead_seal_id" />
+        <result property="milkCartInfoId" column="milk_cart_info_id" />
+        <result property="cartLeadSealNumber" column="cart_lead_seal_number" />
+        <result property="fillingPort" column="filling_port" />
+    </resultMap>
+
+    <sql id="selectBsMilkCartInfoVo">
+        select id,
+               cart_status,
+               cart_license_plate_number,
+               cart_driver_name,
+               cart_driver_phone,
+               cart_number,
+               cart_type,
+               dept_id,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from bs_milk_cart_info
+    </sql>
+
+    <select id="selectBsMilkCartInfoList" parameterType="BsMilkCartInfo" resultMap="BsMilkCartInfoResult">
+        select a.id,
+        a.cart_status,
+        a.cart_license_plate_number,
+        a.cart_driver_name,
+        a.cart_driver_phone,
+        a.cart_number,
+        a.cart_type,
+        a.dept_id,
+        a.create_by,
+        a.create_time,
+        a.update_by,
+        a.update_time
+        from bs_milk_cart_info a
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            <if test="cartStatus != null  and cartStatus != ''"> and a.cart_status = #{cartStatus}</if>
+            <if test="cartLicensePlateNumber != null  and cartLicensePlateNumber != ''"> and a.cart_license_plate_number = #{cartLicensePlateNumber}</if>
+            <if test="cartDriverName != null  and cartDriverName != ''"> and a.cart_driver_name like concat('%', #{cartDriverName}, '%')</if>
+            <if test="cartDriverPhone != null  and cartDriverPhone != ''"> and a.cart_driver_phone = #{cartDriverPhone}</if>
+            <if test="cartNumber != null  and cartNumber != ''"> and a.cart_number = #{cartNumber}</if>
+            <if test="cartType != null  and cartType != ''"> and a.cart_type = #{cartType}</if>
+            <!-- <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if> -->
+            ${params.dataScope}
+        </where>
+    </select>
+    
+    <select id="selectBsMilkCartInfoById" parameterType="String" resultMap="BsMilkCartInfoResult">
+        <include refid="selectBsMilkCartInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBsMilkCartInfo" parameterType="BsMilkCartInfo">
+        insert into bs_milk_cart_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="cartStatus != null">cart_status,</if>
+            <if test="cartLicensePlateNumber != null">cart_license_plate_number,</if>
+            <if test="cartDriverName != null">cart_driver_name,</if>
+            <if test="cartDriverPhone != null">cart_driver_phone,</if>
+            <if test="cartNumber != null">cart_number,</if>
+            <if test="cartType != null">cart_type,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="cartStatus != null">#{cartStatus},</if>
+            <if test="cartLicensePlateNumber != null">#{cartLicensePlateNumber},</if>
+            <if test="cartDriverName != null">#{cartDriverName},</if>
+            <if test="cartDriverPhone != null">#{cartDriverPhone},</if>
+            <if test="cartNumber != null">#{cartNumber},</if>
+            <if test="cartType != null">#{cartType},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBsMilkCartInfo" parameterType="BsMilkCartInfo">
+        update bs_milk_cart_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cartStatus != null">cart_status = #{cartStatus},</if>
+            <if test="cartLicensePlateNumber != null">cart_license_plate_number = #{cartLicensePlateNumber},</if>
+            <if test="cartDriverName != null">cart_driver_name = #{cartDriverName},</if>
+            <if test="cartDriverPhone != null">cart_driver_phone = #{cartDriverPhone},</if>
+            <if test="cartNumber != null">cart_number = #{cartNumber},</if>
+            <if test="cartType != null">cart_type = #{cartType},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBsMilkCartInfoById" parameterType="String">
+        delete from bs_milk_cart_info where id = #{id}
+    </delete>
+
+    <delete id="deleteBsMilkCartInfoByIds" parameterType="String">
+        delete from bs_milk_cart_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update bs_milk_cart_info set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  bs_milk_cart_info set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据主表ID查询列表 -->
+    <select id="selectByMilkCartInfoId" resultType="com.gmlimsqi.business.basicdata.domain.BsMilkCartInfoLeadSeal"
+            parameterType="java.lang.String">
+        SELECT
+        milk_cart_info_lead_seal_id,
+        milk_cart_info_id,
+        cart_lead_seal_number,
+        filling_port
+        FROM bs_milk_cart_info_lead_seal
+        WHERE milk_cart_info_id = #{milkCartInfoId}
+    </select>
+
+    <select id="selectBsMilkCartInfoByDriverCode" resultMap="BsMilkCartInfoResult">
+        <include refid="selectBsMilkCartInfoVo"/>
+        where cart_license_plate_number = #{driverCode} and dept_id = #{deptId}
+    </select>
+</mapper>

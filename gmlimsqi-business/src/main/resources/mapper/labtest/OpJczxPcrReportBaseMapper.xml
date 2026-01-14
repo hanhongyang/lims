@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxPcrReportBaseMapper">
+
+    <resultMap type="OpJczxPcrReportBase" id="OpJczxPcrReportBaseResult">
+        <result property="opJczxPcrReportBaseId"    column="op_jczx_pcr_report_base_id"    />
+        <result property="pcrEntrustOrderId"    column="pcr_entrust_order_id"    />
+        <result property="reportNo"    column="report_no"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="status"    column="status"    />
+        <result property="entrustDeptName"    column="entrust_dept_name"    />
+        <result property="invbillName"    column="invbill_name"    />
+        <result property="sampleAmount"    column="sample_amount"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="testTime"    column="test_time"    />
+        <result property="tqsjh"    column="tqsjh"    />
+        <result property="kzsjh"    column="kzsjh"    />
+        <result property="conclusion"    column="conclusion"    />
+        <result property="remark"    column="remark"    />
+        <result property="editUserId"    column="edit_user_id"    />
+        <result property="checkUserId"    column="check_user_id"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="approveUserId"    column="approve_user_id"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="editUser"    column="edit_user"    />
+        <result property="checkUser"    column="check_user"    />
+        <result property="approveUser"    column="approve_user"    />
+        <result property="testLocation"    column="test_location"    />
+        <result property="itemName"    column="item_name"    />
+    </resultMap>
+
+    <sql id="selectOpJczxPcrReportBaseVo">
+        select op_jczx_pcr_report_base_id,
+               pcr_entrust_order_id,
+               report_no,
+               order_no,
+               status,
+               entrust_dept_name,
+               invbill_name,
+               sample_amount,
+               receive_time,
+               test_time,
+               tqsjh,
+               kzsjh,
+               conclusion,
+               remark,
+               edit_user_id,
+               check_user_id,
+               check_time,
+               approve_user_id,
+               approve_time,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               delete_id,
+               edit_user,
+               check_user,
+               approve_user,
+               test_location,
+               item_name
+        from op_jczx_pcr_report_base
+    </sql>
+
+    <resultMap type="com.gmlimsqi.business.labtest.vo.OpPcrReportListVo" id="OpPcrReportListVoResult">
+        <result property="reportNo"    column="report_no"    />
+        <result property="entrustDeptName"    column="entrust_deptName"    />
+        <result property="entrustContact"    column="entrust_contact"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="status"    column="status"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="opPcrEntrustOrderId"    column="op_pcr_entrust_order_id"    />
+    </resultMap>
+
+
+    <select id="selectOpJczxPcrReportBaseList" parameterType="com.gmlimsqi.business.labtest.vo.OpPcrReportListVo" resultMap="OpPcrReportListVoResult">
+        <include refid="selectOpJczxPcrReportBaseVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            <if test="opPcrEntrustOrderId != null  and opPcrEntrustOrderId != ''"> and pcr_entrust_order_id = #{opPcrEntrustOrderId}</if>
+            <if test="reportNo != null  and reportNo != ''"> and report_no = #{reportNo}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+
+            <if test="entrustDeptName != null  and entrustDeptName != ''"> and entrust_dept_name like concat('%', #{entrustDeptName}, '%')</if>
+            <if test="receiveTime != null "> and receive_time = #{receiveTime}</if>
+            <if test="testTime != null "> and test_time = #{testTime}</if>
+            <if test="editUserId != null  and editUserId != ''"> and edit_user_id = #{editUserId}</if>
+            <if test="checkUserId != null  and checkUserId != ''"> and check_user_id = #{checkUserId}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="approveUserId != null  and approveUserId != ''"> and approve_user_id = #{approveUserId}</if>
+            <if test="approveTime != null "> and approve_time = #{approveTime}</if>
+            <if test="editUser != null  and editUser != ''"> and edit_user = #{editUser}</if>
+            <if test="checkUser != null  and checkUser != ''"> and check_user = #{checkUser}</if>
+            <if test="approveUser != null  and approveUser != ''"> and approve_user = #{approveUser}</if>
+
+        </where>
+    </select>
+    
+    <select id="selectOpJczxPcrReportBaseByOpJczxPcrReportBaseId" parameterType="String" resultMap="OpJczxPcrReportBaseResult">
+        <include refid="selectOpJczxPcrReportBaseVo"/>
+        where op_jczx_pcr_report_base_id = #{opJczxPcrReportBaseId}
+    </select>
+
+    <insert id="insertOpJczxPcrReportBase" parameterType="OpJczxPcrReportBase">
+        insert into op_jczx_pcr_report_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxPcrReportBaseId != null">op_jczx_pcr_report_base_id,</if>
+            <if test="pcrEntrustOrderId != null">pcr_entrust_order_id,</if>
+            <if test="reportNo != null">report_no,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="sampleName != null and sampleName != ''">sample_name,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="entrustDeptName != null">entrust_dept_name,</if>
+            <if test="invbillName != null">invbill_name,</if>
+            <if test="sampleAmount != null">sample_amount,</if>
+            <if test="receiveTime != null">receive_time,</if>
+            <if test="testTime != null">test_time,</if>
+            <if test="tqsjh != null">tqsjh,</if>
+            <if test="kzsjh != null">kzsjh,</if>
+            <if test="conclusion != null">conclusion,</if>
+            <if test="remark != null">remark,</if>
+            <if test="editUserId != null">edit_user_id,</if>
+            <if test="checkUserId != null">check_user_id,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="approveUserId != null">approve_user_id,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deleteId != null and deleteId != ''">delete_id,</if>
+            <if test="editUser != null">edit_user,</if>
+            <if test="checkUser != null">check_user,</if>
+            <if test="approveUser != null">approve_user,</if>
+            <if test="testLocation != null">test_location,</if>
+            <if test="itemName != null">item_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxPcrReportBaseId != null">#{opJczxPcrReportBaseId},</if>
+            <if test="pcrEntrustOrderId != null">#{pcrEntrustOrderId},</if>
+            <if test="reportNo != null">#{reportNo},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="sampleName != null and sampleName != ''">#{sampleName},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="entrustDeptName != null">#{entrustDeptName},</if>
+            <if test="invbillName != null">#{invbillName},</if>
+            <if test="sampleAmount != null">#{sampleAmount},</if>
+            <if test="receiveTime != null">#{receiveTime},</if>
+            <if test="testTime != null">#{testTime},</if>
+            <if test="tqsjh != null">#{tqsjh},</if>
+            <if test="kzsjh != null">#{kzsjh},</if>
+            <if test="conclusion != null">#{conclusion},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="editUserId != null">#{editUserId},</if>
+            <if test="checkUserId != null">#{checkUserId},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="approveUserId != null">#{approveUserId},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">#{deleteId},</if>
+            <if test="editUser != null">#{editUser},</if>
+            <if test="checkUser != null">#{checkUser},</if>
+            <if test="approveUser != null">#{approveUser},</if>
+            <if test="testLocation != null">#{testLocation},</if>
+            <if test="itemName != null">#{itemName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpJczxPcrReportBase" parameterType="OpJczxPcrReportBase">
+        update op_jczx_pcr_report_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pcrEntrustOrderId != null">pcr_entrust_order_id = #{pcrEntrustOrderId},</if>
+            <if test="reportNo != null">report_no = #{reportNo},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="sampleName != null and sampleName != ''">sample_name = #{sampleName},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="entrustDeptName != null">entrust_dept_name = #{entrustDeptName},</if>
+            <if test="invbillName != null">invbill_name = #{invbillName},</if>
+            <if test="sampleAmount != null">sample_amount = #{sampleAmount},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="testTime != null">test_time = #{testTime},</if>
+            <if test="tqsjh != null">tqsjh = #{tqsjh},</if>
+            <if test="kzsjh != null">kzsjh = #{kzsjh},</if>
+            <if test="conclusion != null">conclusion = #{conclusion},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="editUserId != null">edit_user_id = #{editUserId},</if>
+            <if test="checkUserId != null">check_user_id = #{checkUserId},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="approveUserId != null">approve_user_id = #{approveUserId},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">delete_id = #{deleteId},</if>
+            <if test="editUser != null">edit_user = #{editUser},</if>
+            <if test="checkUser != null">check_user = #{checkUser},</if>
+            <if test="approveUser != null">approve_user = #{approveUser},</if>
+            <if test="testLocation != null">test_location = #{testLocation},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+        </trim>
+        where op_jczx_pcr_report_base_id = #{opJczxPcrReportBaseId}
+    </update>
+
+    <delete id="deleteOpJczxPcrReportBaseByOpJczxPcrReportBaseId" parameterType="String">
+        delete from op_jczx_pcr_report_base where op_jczx_pcr_report_base_id = #{opJczxPcrReportBaseId}
+    </delete>
+
+    <delete id="deleteOpJczxPcrReportBaseByOpJczxPcrReportBaseIds" parameterType="String">
+        delete from op_jczx_pcr_report_base where op_jczx_pcr_report_base_id in 
+        <foreach item="opJczxPcrReportBaseId" collection="array" open="(" separator="," close=")">
+            #{opJczxPcrReportBaseId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_pcr_report_base set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_jczx_pcr_report_base_id = #{opJczxPcrReportBaseId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_jczx_pcr_report_base set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where op_jczx_pcr_report_base_id in
+        <foreach item="opJczxPcrReportBaseId" collection="array" open="(" separator="," close=")">
+            #{opJczxPcrReportBaseId}
+        </foreach>
+    </update>
+
+    <select id="selectOpJczxPcrReportBaseListStatus0"
+            resultMap="OpPcrReportListVoResult">
+        SELECT
+        o.op_pcr_entrust_order_id,
+        o.entrust_contact,
+        o.entrust_order_no,
+        '' as report_no,
+        '0' as status,
+        d.dept_name as entrust_dept_name,
+        o.receiver_id,
+        o.receive_time
+        FROM
+        op_pcr_entrust_order o
+        LEFT JOIN sys_dept d ON d.dept_id = o.entrust_dept_id
+        <where>
+            o.delete_id = '0'
+<!--           检查是否有未审核的样本项目-->
+            AND NOT EXISTS (
+            SELECT 1
+            FROM op_pcr_entrust_order_sample s
+            LEFT JOIN op_pcr_entrust_order_item i ON s.op_pcr_entrust_order_sample_id = i.pcr_entrust_order_sample_id
+            WHERE s.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+            AND s.is_delete = '0'
+            AND IFNULL(i.examine_user, '') = ''
+            )
+<!--            检查是否存在相关报告记录-->
+            AND NOT EXISTS (
+            SELECT 1
+            FROM op_jczx_pcr_report_base b
+            WHERE b.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+            )
+
+            <if test="entrustContact != null  and entrustContact != ''">
+                and o.entrust_contact like concat('%', #{entrustContact}, '%')
+            </if>
+            <if test="receiverId != null  and receiverId != ''">
+                and o.receiver_id like concat('%', #{receiverId}, '%')
+            </if>
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''">
+                and o.entrust_order_no like concat('%', #{entrustOrderNo}, '%')
+            </if>
+            <if test="entrustDeptName != null  and entrustDeptName != ''">
+                and d.dept_name like concat('%', #{entrustDeptName}, '%')
+            </if>
+            <if test="beginReceiveTime != null and beginReceiveTime != '' and endReceiveTime != null and endReceiveTime != ''">
+                and DATE(o.receive_time) between #{beginReceiveTime} and #{endReceiveTime}
+            </if>
+        </where>
+        order by o.entrust_order_no desc
+    </select>
+</mapper>

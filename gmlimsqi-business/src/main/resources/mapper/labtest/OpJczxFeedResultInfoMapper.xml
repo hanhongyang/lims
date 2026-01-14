@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxFeedResultInfoMapper">
+
+    <resultMap type="OpJczxFeedResultInfo" id="OpJczxFeedResultInfoResult">
+        <result property="opJczxFeedResultInfoId"    column="op_jczx_feed_result_info_id"    />
+        <result property="baseId"    column="base_id"    />
+        <result property="entrustOrderItemId"    column="entrust_order_item_id"    />
+        <result property="entrustOrderSampleId"    column="entrust_order_sample_id"    />
+        <result property="entrustOrderId"    column="entrust_order_id"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemId"    column="bs_labtest_items_id"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="clmh"    column="clmh"    />
+        <result property="m0"    column="m0"    />
+        <result property="m1"    column="m1"    />
+        <result property="m2"    column="m2"    />
+        <result property="m3"    column="m3"    />
+        <result property="m4"    column="m4"    />
+        <result property="x"    column="x"    />
+        <result property="x1"    column="x1"    />
+        <result property="upperM1"    column="upper_m1"    />
+        <result property="m"    column="m"    />
+        <result property="cp"    column="cp"    />
+        <result property="v2"    column="v2"    />
+        <result property="xhgh"    column="xhgh"    />
+        <result property="w"    column="w"    />
+        <result property="ldh"    column="ldh"    />
+        <result property="ca"    column="ca"    />
+        <result property="ee"    column="ee"    />
+        <result property="ggh"    column="ggh"    />
+        <result property="p"    column="p"    />
+        <result property="a"    column="a"    />
+        <result property="zxph"    column="zxph"    />
+        <result property="zjl"    column="zjl"    />
+        <result property="gh"    column="gh"    />
+        <result property="compareClmh"    column="compare_clmh"    />
+        <result property="compareM0"    column="compare_m0"    />
+        <result property="compareM1"    column="compare_m1"    />
+        <result property="compareM2"    column="compare_m2"    />
+        <result property="compareM3"    column="compare_m3"    />
+        <result property="compareM4"    column="compare_m4"    />
+        <result property="compareX"    column="compare_x"    />
+        <result property="compareX1"    column="compare_x1"    />
+        <result property="compareUpperM1"    column="compare_upper_m1"    />
+        <result property="compareXhgh"    column="compare_xhgh"    />
+        <result property="compareM"    column="compare_m"    />
+        <result property="compareCp"    column="compare_cp"    />
+        <result property="compareV2"    column="compare_v2"    />
+        <result property="compareW"    column="compare_w"    />
+        <result property="compareEe"    column="compare_ee"    />
+        <result property="compareLdh"    column="compare_ldh"    />
+        <result property="compareCa"    column="compare_ca"    />
+        <result property="compareGgh"    column="compare_ggh"    />
+        <result property="compareA"    column="compare_a"    />
+        <result property="compareZxph"    column="compare_zxph"    />
+        <result property="compareP"    column="compare_p"    />
+        <result property="compareZjl"    column="compare_zjl"    />
+        <result property="compareA0"    column="compare_a0"    />
+        <result property="compareA1"    column="compare_a1"    />
+        <result property="compareA2"    column="compare_a2"    />
+        <result property="compareSyxgdaz"    column="compare_syxgdaz"    />
+        <result property="compareYyh"    column="compare_yyh"    />
+        <result property="compareG"    column="compare_g"    />
+        <result property="compareSyzwschl"    column="compare_syzwschl"    />
+        <result property="compareDfhl"    column="compare_dfhl"    />
+        <result property="testDate"    column="test_date"    />
+        <result property="average"    column="average"    />
+        <result property="absoluteDifference"    column="absolute_difference"    />
+        <result property="f"    column="f"    />
+        <result property="dryTime"    column="dry_time"    />
+        <result property="testUser"    column="test_user"    />
+        <result property="checkUser"    column="check_user"    />
+        <result property="xyzhl"    column="xyzhl"    />
+        <result property="jcstj"    column="jcstj"    />
+        <result property="dcytj"    column="dcytj"    />
+        <result property="jcjg"    column="jcjg"    />
+        <result property="syxgdaz"    column="syxgdaz"    />
+        <result property="c"    column="c"    />
+        <result property="ypzxxhl"    column="ypzxxhl"    />
+        <result property="a0"    column="a0"    />
+        <result property="a1"    column="a1"    />
+        <result property="a2"    column="a2"    />
+        <result property="yyh"    column="yyh"    />
+        <result property="n"    column="n"    />
+        <result property="g"    column="g"    />
+        <result property="dfhl"    column="dfhl"    />
+        <result property="syzwschl"    column="syzwschl"    />
+        <result property="ycstj"    column="ycstj"    />
+        <result property="xsytj"    column="xsytj"    />
+        <result property="yxxc"    column="yxxc"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="fgwz"    column="fgwz"    />
+        <result property="csf"    column="csf"    />
+        <result property="v1"    column="v1"    />
+        <result property="compareV1"    column="compare_v1"    />
+        <result property="compareC"    column="compare_c"    />
+        <result property="testUserSignature"    column="test_user_signature"    />
+        <result property="checkUserSignature"    column="check_user_signature"    />
+        <result property="v"    column="v"    />
+        <result property="v0"    column="v0"    />
+        <result property="compareV"    column="compare_v"    />
+        <result property="compareV0"    column="compare_v0"    />
+        <result property="isReset"    column="is_reset"    />
+        <result property="remark"    column="remark"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="fileUrl"    column="file_url"    />
+        <result property="jcjgfw"    column="jcjgfw"    />
+    </resultMap>
+
+    <sql id="selectOpJczxFeedResultInfoVo">
+        select op_jczx_feed_result_info_id, base_id, entrust_order_item_id, entrust_order_sample_id, entrust_order_id,
+               clmh, m0, m1, m2, m3, m4, x, x1, upper_m1, m, cp, v2, xhgh, w, ldh, ca, ee, ggh, p, a, zxph, zjl, gh,
+               compare_clmh, compare_m0, compare_m1, compare_m2, compare_m3, compare_m4, compare_x, compare_x1,
+               compare_upper_m1, compare_xhgh, compare_m, compare_cp, compare_v2, compare_w, compare_ee, compare_ldh,
+               compare_ca, compare_ggh, compare_a, compare_zxph, compare_p, compare_zjl, compare_a0, compare_a1,
+               compare_a2, compare_syxgdaz, compare_yyh, compare_g, compare_syzwschl, compare_dfhl, test_date, average,
+               absolute_difference, f, dry_time, test_user, check_user, xyzhl, jcstj, dcytj, jcjg, syxgdaz, c, ypzxxhl,
+               a0, a1, a2, yyh, n, g, dfhl, syzwschl, ycstj, xsytj, yxxc, create_time, create_by, update_time,
+               update_by, delete_id ,fgwz,csf,v1,compare_v1,compare_c,test_user_signature,check_user_signature,v,v0,
+               compare_v,compare_v0,is_reset,remark,file_id,file_url,jcjgfw
+        from op_jczx_feed_result_info
+    </sql>
+
+    <select id="selectOpJczxFeedResultInfoList" parameterType="OpJczxFeedResultInfo" resultMap="OpJczxFeedResultInfoResult">
+        <include refid="selectOpJczxFeedResultInfoVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            <if test="baseId != null  and baseId != ''"> and base_id = #{baseId}</if>
+            <if test="entrustOrderItemId != null  and entrustOrderItemId != ''"> and entrust_order_item_id = #{entrustOrderItemId}</if>
+            <if test="entrustOrderSampleId != null  and entrustOrderSampleId != ''"> and entrust_order_sample_id = #{entrustOrderSampleId}</if>
+            <if test="entrustOrderId != null  and entrustOrderId != ''"> and entrust_order_id = #{entrustOrderId}</if>
+        </where>
+    </select>
+
+
+
+    <select id="selectOpJczxFeedResultInfoByOpJczxFeedResultInfoId" parameterType="String" resultMap="OpJczxFeedResultInfoResult">
+        <include refid="selectOpJczxFeedResultInfoVo"/>
+        where op_jczx_feed_result_info_id = #{opJczxFeedResultInfoId}
+    </select>
+
+    <insert id="insertOpJczxFeedResultInfo" parameterType="OpJczxFeedResultInfo">
+        insert into op_jczx_feed_result_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxFeedResultInfoId != null">op_jczx_feed_result_info_id,</if>
+            <if test="baseId != null">base_id,</if>
+            <if test="entrustOrderItemId != null and entrustOrderItemId != ''">entrust_order_item_id,</if>
+            <if test="entrustOrderSampleId != null">entrust_order_sample_id,</if>
+            <if test="entrustOrderId != null">entrust_order_id,</if>
+            <if test="clmh != null">clmh,</if>
+            <if test="m0 != null">m0,</if>
+            <if test="m1 != null">m1,</if>
+            <if test="m2 != null">m2,</if>
+            <if test="m3 != null">m3,</if>
+            <if test="m4 != null">m4,</if>
+            <if test="x != null">x,</if>
+            <if test="x1 != null">x1,</if>
+            <if test="upperM1 != null">upper_m1,</if>
+            <if test="m != null">m,</if>
+            <if test="cp != null">cp,</if>
+            <if test="v2 != null">v2,</if>
+            <if test="xhgh != null">xhgh,</if>
+            <if test="w != null">w,</if>
+            <if test="ldh != null">ldh,</if>
+            <if test="ca != null">ca,</if>
+            <if test="ee != null">ee,</if>
+            <if test="ggh != null">ggh,</if>
+            <if test="p != null">p,</if>
+            <if test="a != null">a,</if>
+            <if test="zxph != null">zxph,</if>
+            <if test="zjl != null">zjl,</if>
+            <if test="gh != null">gh,</if>
+            <if test="compareClmh != null">compare_clmh,</if>
+            <if test="compareM0 != null">compare_m0,</if>
+            <if test="compareM1 != null">compare_m1,</if>
+            <if test="compareM2 != null">compare_m2,</if>
+            <if test="compareM3 != null">compare_m3,</if>
+            <if test="compareM4 != null">compare_m4,</if>
+            <if test="compareX != null">compare_x,</if>
+            <if test="compareX1 != null">compare_x1,</if>
+            <if test="compareUpperM1 != null">compare_upper_m1,</if>
+            <if test="compareXhgh != null">compare_xhgh,</if>
+            <if test="compareM != null">compare_m,</if>
+            <if test="compareCp != null">compare_cp,</if>
+            <if test="compareV2 != null">compare_v2,</if>
+            <if test="compareW != null">compare_w,</if>
+            <if test="compareEe != null">compare_ee,</if>
+            <if test="compareLdh != null">compare_ldh,</if>
+            <if test="compareCa != null">compare_ca,</if>
+            <if test="compareGgh != null">compare_ggh,</if>
+            <if test="compareA != null">compare_a,</if>
+            <if test="compareZxph != null">compare_zxph,</if>
+            <if test="compareP != null">compare_p,</if>
+            <if test="compareZjl != null">compare_zjl,</if>
+            <if test="compareA0 != null">compare_a0,</if>
+            <if test="compareA1 != null">compare_a1,</if>
+            <if test="compareA2 != null">compare_a2,</if>
+            <if test="compareSyxgdaz != null">compare_syxgdaz,</if>
+            <if test="compareYyh != null">compare_yyh,</if>
+            <if test="compareG != null">compare_g,</if>
+            <if test="compareSyzwschl != null">compare_syzwschl,</if>
+            <if test="compareDfhl != null">compare_dfhl,</if>
+            <if test="testDate != null">test_date,</if>
+            <if test="average != null">average,</if>
+            <if test="absoluteDifference != null">absolute_difference,</if>
+            <if test="f != null">f,</if>
+            <if test="dryTime != null">dry_time,</if>
+            <if test="testUser != null">test_user,</if>
+            <if test="checkUser != null">check_user,</if>
+            <if test="testUserSignature != null">test_user_signature,</if>
+            <if test="checkUserSignature != null">check_user_signature,</if>
+            <if test="xyzhl != null">xyzhl,</if>
+            <if test="jcstj != null">jcstj,</if>
+            <if test="dcytj != null">dcytj,</if>
+            <if test="jcjg != null">jcjg,</if>
+            <if test="syxgdaz != null">syxgdaz,</if>
+            <if test="c != null">c,</if>
+            <if test="ypzxxhl != null">ypzxxhl,</if>
+            <if test="a0 != null">a0,</if>
+            <if test="a1 != null">a1,</if>
+            <if test="a2 != null">a2,</if>
+            <if test="yyh != null">yyh,</if>
+            <if test="n != null">n,</if>
+            <if test="g != null">g,</if>
+            <if test="dfhl != null">dfhl,</if>
+            <if test="syzwschl != null">syzwschl,</if>
+            <if test="ycstj != null">ycstj,</if>
+            <if test="xsytj != null">xsytj,</if>
+            <if test="yxxc != null">yxxc,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="fgwz != null">fgwz,</if>
+            <if test="csf != null">csf,</if>
+            <if test="v1 != null">v1,</if>
+            <if test="compareV1 != null">compare_v1,</if>
+            <if test="compareC != null">compare_c,</if>
+            <if test="v != null">v,</if>
+            <if test="v0 != null">v0,</if>
+            <if test="compareV != null">compare_v,</if>
+            <if test="compareV0 != null">compare_v0,</if>
+            <if test="remark != null">remark,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="fileUrl != null">file_url,</if>
+            <if test="jcjgfw != null">jcjgfw,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxFeedResultInfoId != null">#{opJczxFeedResultInfoId},</if>
+            <if test="baseId != null">#{baseId},</if>
+            <if test="entrustOrderItemId != null and entrustOrderItemId != ''">#{entrustOrderItemId},</if>
+            <if test="entrustOrderSampleId != null">#{entrustOrderSampleId},</if>
+            <if test="entrustOrderId != null">#{entrustOrderId},</if>
+            <if test="clmh != null">#{clmh},</if>
+            <if test="m0 != null">#{m0},</if>
+            <if test="m1 != null">#{m1},</if>
+            <if test="m2 != null">#{m2},</if>
+            <if test="m3 != null">#{m3},</if>
+            <if test="m4 != null">#{m4},</if>
+            <if test="x != null">#{x},</if>
+            <if test="x1 != null">#{x1},</if>
+            <if test="upperM1 != null">#{upperM1},</if>
+            <if test="m != null">#{m},</if>
+            <if test="cp != null">#{cp},</if>
+            <if test="v2 != null">#{v2},</if>
+            <if test="xhgh != null">#{xhgh},</if>
+            <if test="w != null">#{w},</if>
+            <if test="ldh != null">#{ldh},</if>
+            <if test="ca != null">#{ca},</if>
+            <if test="ee != null">#{ee},</if>
+            <if test="ggh != null">#{ggh},</if>
+            <if test="p != null">#{p},</if>
+            <if test="a != null">#{a},</if>
+            <if test="zxph != null">#{zxph},</if>
+            <if test="zjl != null">#{zjl},</if>
+            <if test="gh != null">#{gh},</if>
+            <if test="compareClmh != null">#{compareClmh},</if>
+            <if test="compareM0 != null">#{compareM0},</if>
+            <if test="compareM1 != null">#{compareM1},</if>
+            <if test="compareM2 != null">#{compareM2},</if>
+            <if test="compareM3 != null">#{compareM3},</if>
+            <if test="compareM4 != null">#{compareM4},</if>
+            <if test="compareX != null">#{compareX},</if>
+            <if test="compareX1 != null">#{compareX1},</if>
+            <if test="compareUpperM1 != null">#{compareUpperM1},</if>
+            <if test="compareXhgh != null">#{compareXhgh},</if>
+            <if test="compareM != null">#{compareM},</if>
+            <if test="compareCp != null">#{compareCp},</if>
+            <if test="compareV2 != null">#{compareV2},</if>
+            <if test="compareW != null">#{compareW},</if>
+            <if test="compareEe != null">#{compareEe},</if>
+            <if test="compareLdh != null">#{compareLdh},</if>
+            <if test="compareCa != null">#{compareCa},</if>
+            <if test="compareGgh != null">#{compareGgh},</if>
+            <if test="compareA != null">#{compareA},</if>
+            <if test="compareZxph != null">#{compareZxph},</if>
+            <if test="compareP != null">#{compareP},</if>
+            <if test="compareZjl != null">#{compareZjl},</if>
+            <if test="compareA0 != null">#{compareA0},</if>
+            <if test="compareA1 != null">#{compareA1},</if>
+            <if test="compareA2 != null">#{compareA2},</if>
+            <if test="compareSyxgdaz != null">#{compareSyxgdaz},</if>
+            <if test="compareYyh != null">#{compareYyh},</if>
+            <if test="compareG != null">#{compareG},</if>
+            <if test="compareSyzwschl != null">#{compareSyzwschl},</if>
+            <if test="compareDfhl != null">#{compareDfhl},</if>
+            <if test="testDate != null">#{testDate},</if>
+            <if test="average != null">#{average},</if>
+            <if test="absoluteDifference != null">#{absoluteDifference},</if>
+            <if test="f != null">#{f},</if>
+            <if test="dryTime != null">#{dryTime},</if>
+            <if test="testUser != null">#{testUser},</if>
+            <if test="checkUser != null">#{checkUser},</if>
+            <if test="testUserSignature != null">#{testUserSignature},</if>
+            <if test="checkUserSignature != null">#{checkUserSignature},</if>
+            <if test="xyzhl != null">#{xyzhl},</if>
+            <if test="jcstj != null">#{jcstj},</if>
+            <if test="dcytj != null">#{dcytj},</if>
+            <if test="jcjg != null">#{jcjg},</if>
+            <if test="syxgdaz != null">#{syxgdaz},</if>
+            <if test="c != null">#{c},</if>
+            <if test="ypzxxhl != null">#{ypzxxhl},</if>
+            <if test="a0 != null">#{a0},</if>
+            <if test="a1 != null">#{a1},</if>
+            <if test="a2 != null">#{a2},</if>
+            <if test="yyh != null">#{yyh},</if>
+            <if test="n != null">#{n},</if>
+            <if test="g != null">#{g},</if>
+            <if test="dfhl != null">#{dfhl},</if>
+            <if test="syzwschl != null">#{syzwschl},</if>
+            <if test="ycstj != null">#{ycstj},</if>
+            <if test="xsytj != null">#{xsytj},</if>
+            <if test="yxxc != null">#{yxxc},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="fgwz != null">#{fgwz},</if>
+            <if test="csf != null">#{csf},</if>
+            <if test="v1 != null">#{v1},</if>
+            <if test="compareV1 != null">#{compareV1},</if>
+            <if test="compareC != null">#{compareC},</if>
+            <if test="v != null">#{v},</if>
+            <if test="v0 != null">#{v0},</if>
+            <if test="compareV != null">#{compareV},</if>
+            <if test="compareV0 != null">#{compareV0},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="fileUrl != null">#{fileUrl},</if>
+            <if test="jcjgfw != null">#{jcjgfw},</if>
+
+        </trim>
+    </insert>
+    <insert id="batchInsertOpJczxFeedResultInfo" parameterType="java.util.List">
+        insert into op_jczx_feed_result_info (
+        op_jczx_feed_result_info_id,
+        base_id,
+        entrust_order_item_id,
+        entrust_order_sample_id,
+        entrust_order_id,
+        clmh,
+        m0,
+        m1,
+        m2,
+        m3,
+        m4,
+        x,
+        x1,
+        upper_m1,
+        m,
+        cp,
+        v2,
+        xhgh,
+        w,
+        ldh,
+        ca,
+        ee,
+        ggh,
+        p,
+        a,
+        zxph,
+        zjl,
+        gh,
+        compare_clmh,
+        compare_m0,
+        compare_m1,
+        compare_m2,
+        compare_m3,
+        compare_m4,
+        compare_x,
+        compare_x1,
+        compare_upper_m1,
+        compare_xhgh,
+        compare_m,
+        compare_cp,
+        compare_v2,
+        compare_w,
+        compare_ee,
+        compare_ldh,
+        compare_ca,
+        compare_ggh,
+        compare_a,
+        compare_zxph,
+        compare_p,
+        compare_zjl,
+        compare_a0,
+        compare_a1,
+        compare_a2,
+        compare_syxgdaz,
+        compare_yyh,
+        compare_g,
+        compare_syzwschl,
+        compare_dfhl,
+        test_date,
+        average,
+        absolute_difference,
+        f,
+        dry_time,
+        test_user,
+        check_user,
+        test_user_signature,
+        check_user_signature,
+        xyzhl,
+        jcstj,
+        dcytj,
+        jcjg,
+        syxgdaz,
+        c,
+        ypzxxhl,
+        a0,
+        a1,
+        a2,
+        yyh,
+        n,
+        g,
+        dfhl,
+        syzwschl,
+        ycstj,
+        xsytj,
+        yxxc,
+        create_time,
+        create_by,
+        update_time,
+        update_by,
+        fgwz,
+        csf,
+        v1,
+        compare_v1,
+        compare_c,
+        v,
+        v0,
+        compare_v,
+        compare_v0,
+        remark,
+        file_id,
+        file_url,
+        jcjgfw,
+        is_reset
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.opJczxFeedResultInfoId},
+            #{item.baseId},
+            #{item.entrustOrderItemId},
+            #{item.entrustOrderSampleId},
+            #{item.entrustOrderId},
+            #{item.clmh},
+            #{item.m0},
+            #{item.m1},
+            #{item.m2},
+            #{item.m3},
+            #{item.m4},
+            #{item.x},
+            #{item.x1},
+            #{item.upperM1},
+            #{item.m},
+            #{item.cp},
+            #{item.v2},
+            #{item.xhgh},
+            #{item.w},
+            #{item.ldh},
+            #{item.ca},
+            #{item.ee},
+            #{item.ggh},
+            #{item.p},
+            #{item.a},
+            #{item.zxph},
+            #{item.zjl},
+            #{item.gh},
+            #{item.compareClmh},
+            #{item.compareM0},
+            #{item.compareM1},
+            #{item.compareM2},
+            #{item.compareM3},
+            #{item.compareM4},
+            #{item.compareX},
+            #{item.compareX1},
+            #{item.compareUpperM1},
+            #{item.compareXhgh},
+            #{item.compareM},
+            #{item.compareCp},
+            #{item.compareV2},
+            #{item.compareW},
+            #{item.compareEe},
+            #{item.compareLdh},
+            #{item.compareCa},
+            #{item.compareGgh},
+            #{item.compareA},
+            #{item.compareZxph},
+            #{item.compareP},
+            #{item.compareZjl},
+            #{item.compareA0},
+            #{item.compareA1},
+            #{item.compareA2},
+            #{item.compareSyxgdaz},
+            #{item.compareYyh},
+            #{item.compareG},
+            #{item.compareSyzwschl},
+            #{item.compareDfhl},
+            #{item.testDate},
+            #{item.average},
+            #{item.absoluteDifference},
+            #{item.f},
+            #{item.dryTime},
+            #{item.testUser},
+            #{item.checkUser},
+            #{item.testUserSignature},
+            #{item.checkUserSignature},
+            #{item.xyzhl},
+            #{item.jcstj},
+            #{item.dcytj},
+            #{item.jcjg},
+            #{item.syxgdaz},
+            #{item.c},
+            #{item.ypzxxhl},
+            #{item.a0},
+            #{item.a1},
+            #{item.a2},
+            #{item.yyh},
+            #{item.n},
+            #{item.g},
+            #{item.dfhl},
+            #{item.syzwschl},
+            #{item.ycstj},
+            #{item.xsytj},
+            #{item.yxxc},
+            #{item.createTime},
+            #{item.createBy},
+            #{item.updateTime},
+            #{item.updateBy},
+            #{item.fgwz},
+            #{item.csf},
+            #{item.v1},
+            #{item.compareV1},
+            #{item.compareC},
+            #{item.v},
+            #{item.v0},
+            #{item.compareV},
+            #{item.compareV0},
+             #{item.remark},
+            #{item.fileId},
+            #{item.fileUrl},
+            #{item.jcjgfw},
+            #{item.isReset}
+            )
+        </foreach>
+    </insert>
+    <update id="updateOpJczxFeedResultInfo" parameterType="OpJczxFeedResultInfo">
+        update op_jczx_feed_result_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="baseId != null">base_id = #{baseId},</if>
+            <if test="entrustOrderItemId != null and entrustOrderItemId != ''">entrust_order_item_id = #{entrustOrderItemId},</if>
+            <if test="entrustOrderSampleId != null">entrust_order_sample_id = #{entrustOrderSampleId},</if>
+            <if test="entrustOrderId != null">entrust_order_id = #{entrustOrderId},</if>
+            <if test="clmh != null">clmh = #{clmh},</if>
+            <if test="m0 != null">m0 = #{m0},</if>
+            <if test="m1 != null">m1 = #{m1},</if>
+            <if test="m2 != null">m2 = #{m2},</if>
+            <if test="m3 != null">m3 = #{m3},</if>
+            <if test="m4 != null">m4 = #{m4},</if>
+            <if test="x != null">x = #{x},</if>
+            <if test="x1 != null">x1 = #{x1},</if>
+            <if test="upperM1 != null">upper_m1 = #{upperM1},</if>
+            <if test="m != null">m = #{m},</if>
+            <if test="cp != null">cp = #{cp},</if>
+            <if test="v2 != null">v2 = #{v2},</if>
+            <if test="xhgh != null">xhgh = #{xhgh},</if>
+            <if test="w != null">w = #{w},</if>
+            <if test="ldh != null">ldh = #{ldh},</if>
+            <if test="ca != null">ca = #{ca},</if>
+            <if test="ee != null">ee = #{ee},</if>
+            <if test="ggh != null">ggh = #{ggh},</if>
+            <if test="p != null">p = #{p},</if>
+            <if test="a != null">a = #{a},</if>
+            <if test="zxph != null">zxph = #{zxph},</if>
+            <if test="zjl != null">zjl = #{zjl},</if>
+            <if test="gh != null">gh = #{gh},</if>
+            <if test="compareClmh != null">compare_clmh = #{compareClmh},</if>
+            <if test="compareM0 != null">compare_m0 = #{compareM0},</if>
+            <if test="compareM1 != null">compare_m1 = #{compareM1},</if>
+            <if test="compareM2 != null">compare_m2 = #{compareM2},</if>
+            <if test="compareM3 != null">compare_m3 = #{compareM3},</if>
+            <if test="compareM4 != null">compare_m4 = #{compareM4},</if>
+            <if test="compareX != null">compare_x = #{compareX},</if>
+            <if test="compareX1 != null">compare_x1 = #{compareX1},</if>
+            <if test="compareUpperM1 != null">compare_upper_m1 = #{compareUpperM1},</if>
+            <if test="compareXhgh != null">compare_xhgh = #{compareXhgh},</if>
+            <if test="compareM != null">compare_m = #{compareM},</if>
+            <if test="compareCp != null">compare_cp = #{compareCp},</if>
+            <if test="compareV2 != null">compare_v2 = #{compareV2},</if>
+            <if test="compareW != null">compare_w = #{compareW},</if>
+            <if test="compareEe != null">compare_ee = #{compareEe},</if>
+            <if test="compareLdh != null">compare_ldh = #{compareLdh},</if>
+            <if test="compareCa != null">compare_ca = #{compareCa},</if>
+            <if test="compareGgh != null">compare_ggh = #{compareGgh},</if>
+            <if test="compareA != null">compare_a = #{compareA},</if>
+            <if test="compareZxph != null">compare_zxph = #{compareZxph},</if>
+            <if test="compareP != null">compare_p = #{compareP},</if>
+            <if test="compareZjl != null">compare_zjl = #{compareZjl},</if>
+            <if test="compareA0 != null">compare_a0 = #{compareA0},</if>
+            <if test="compareA1 != null">compare_a1 = #{compareA1},</if>
+            <if test="compareA2 != null">compare_a2 = #{compareA2},</if>
+            <if test="compareSyxgdaz != null">compare_syxgdaz = #{compareSyxgdaz},</if>
+            <if test="compareYyh != null">compare_yyh = #{compareYyh},</if>
+            <if test="compareG != null">compare_g = #{compareG},</if>
+            <if test="compareSyzwschl != null">compare_syzwschl = #{compareSyzwschl},</if>
+            <if test="compareDfhl != null">compare_dfhl = #{compareDfhl},</if>
+            <if test="testDate != null">test_date = #{testDate},</if>
+            <if test="average != null">average = #{average},</if>
+            <if test="absoluteDifference != null">absolute_difference = #{absoluteDifference},</if>
+            <if test="f != null">f = #{f},</if>
+            <if test="dryTime != null">dry_time = #{dryTime},</if>
+            <if test="testUser != null">test_user = #{testUser},</if>
+            <if test="checkUser != null">check_user = #{checkUser},</if>
+            <if test="testUserSignature != null">test_user_signature = #{testUserSignature},</if>
+            <if test="checkUserSignature != null">check_user_signature = #{checkUserSignature},</if>
+            <if test="xyzhl != null">xyzhl = #{xyzhl},</if>
+            <if test="jcstj != null">jcstj = #{jcstj},</if>
+            <if test="dcytj != null">dcytj = #{dcytj},</if>
+            <if test="jcjg != null">jcjg = #{jcjg},</if>
+            <if test="syxgdaz != null">syxgdaz = #{syxgdaz},</if>
+            <if test="c != null">c = #{c},</if>
+            <if test="ypzxxhl != null">ypzxxhl = #{ypzxxhl},</if>
+            <if test="a0 != null">a0 = #{a0},</if>
+            <if test="a1 != null">a1 = #{a1},</if>
+            <if test="a2 != null">a2 = #{a2},</if>
+            <if test="yyh != null">yyh = #{yyh},</if>
+            <if test="n != null">n = #{n},</if>
+            <if test="g != null">g = #{g},</if>
+            <if test="dfhl != null">dfhl = #{dfhl},</if>
+            <if test="syzwschl != null">syzwschl = #{syzwschl},</if>
+            <if test="ycstj != null">ycstj = #{ycstj},</if>
+            <if test="xsytj != null">xsytj = #{xsytj},</if>
+            <if test="yxxc != null">yxxc = #{yxxc},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="fgwz != null">fgwz = #{fgwz},</if>
+            <if test="csf != null">csf = #{csf},</if>
+            <if test="v1 != null">v1 = #{v1},</if>
+            <if test="compareV1 != null">compare_v1 = #{compareV1},</if>
+            <if test="compareC != null">compare_c = #{compareC},</if>
+            <if test="v != null">v = #{v},</if>
+            <if test="v0 != null">v0 = #{v0},</if>
+            <if test="compareV != null">compare_v = #{compareV},</if>
+            <if test="compareV0 != null">compare_v0 = #{compareV0},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="fileUrl != null">file_url = #{fileUrl},</if>
+            <if test="jcjgfw != null">jcjgfw = #{jcjgfw},</if>
+
+        </trim>
+        where op_jczx_feed_result_info_id = #{opJczxFeedResultInfoId}
+    </update>
+
+
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_feed_result_info set delete_id=op_jczx_feed_result_info_id ,update_time=now(),
+                                            update_by=#{updateUserId} where op_jczx_feed_result_info_id = #{opJczxFeedResultInfoId}
+    </update>
+    <update id="updateIsResetById" >
+        update op_jczx_feed_result_info set is_reset='1' ,update_time=now(),
+                                            update_by=#{updateUserId} where op_jczx_feed_result_info_id = #{opJczxFeedResultInfoId}
+    </update>
+    <update id="updateDeleteFlagByBaseId" >
+        update op_jczx_feed_result_info set delete_id=op_jczx_feed_result_info_id ,update_time=now(),
+                                            update_by=#{updateUserId} where base_id = #{baseId}
+    </update>
+    <select id="selectInfoListByBaseId" parameterType="String" resultMap="OpJczxFeedResultInfoResult">
+        select i.*,s.sample_no,s.name sample_name from op_jczx_feed_result_info i
+                 left join op_feed_entrust_order_sample s on s.op_feed_entrust_order_sample_id=i.entrust_order_sample_id
+                 where i.base_id=#{opJczxFeedResultBaseId} and i.delete_id='0' and i.is_reset ='0'
+        order by s.sample_no asc
+    </select>
+    <select id="selectJhwInfoListByBaseId" parameterType="String" resultMap="OpJczxFeedResultInfoResult">
+        select i.*,s.sample_no,s.name sample_name,bi.item_name,bi.bs_labtest_items_id,bi.item_code
+        from op_jczx_feed_result_info i
+        left join op_feed_entrust_order_sample s on s.op_feed_entrust_order_sample_id=i.entrust_order_sample_id and s.is_delete='0'
+        left join op_feed_entrust_order_item fi on fi.op_feed_entrust_order_item_id=i.entrust_order_item_id and fi.is_delete='0'
+        left join bs_labtest_items bi on bi.bs_labtest_items_id=fi.item_id and bi.is_delete='0'
+             where i.base_id=#{opJczxFeedResultBaseId} and i.delete_id='0'
+        order by s.sample_no desc,bi.item_name desc
+    </select>
+    <update id="updateCheckUserByBaseId" >
+        update op_jczx_feed_result_info set check_user=#{checkUser} where base_id = #{baseId} and delete_id='0'
+    </update>
+
+    <update id="updateTestUserByBaseId" >
+        update op_jczx_feed_result_info set test_user=#{testUser} where base_id = #{baseId} and delete_id='0'
+    </update>
+
+    <select id="selectByOrderSampleIdList" parameterType="java.util.List" resultMap="OpJczxFeedResultInfoResult">
+        select
+        *
+        from op_jczx_feed_result_info b
+        where delete_id = '0'
+          and entrust_order_sample_id in
+        <foreach collection="orderSampleIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+    <select id="selectCsfByOrderSampleIdList" parameterType="java.util.List" resultMap="OpJczxFeedResultInfoResult">
+        select
+        *
+        from op_jczx_feed_result_info b
+        where delete_id = '0' and entrust_order_item_id='初水分'
+        and entrust_order_sample_id in
+        <foreach collection="orderSampleIdList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+    <select id="getResultBySampleNo"   parameterType="OpJczxFeedResultInfo" resultMap="OpJczxFeedResultInfoResult">
+        select i.*,s.sample_no,s.name as sample_name
+        from op_jczx_feed_result_info i
+        left join op_feed_entrust_order_sample s on s.op_feed_entrust_order_sample_id=i.entrust_order_sample_id and s.is_delete = '0'
+        where
+        s.sample_no = #{sampleNo}
+          and i.delete_id = '0'
+        <if test="entrustOrderItemId != null  and entrustOrderItemId != ''"> and i.entrust_order_item_id = #{entrustOrderItemId}</if>
+    </select>
+    <select id="getResultBySampleNo2"   parameterType="String" resultMap="OpJczxFeedResultInfoResult">
+        select i.*,s.sample_no,s.name as sample_name,li.item_name
+        from op_jczx_feed_result_info i
+        left join op_feed_entrust_order_sample s on s.op_feed_entrust_order_sample_id=i.entrust_order_sample_id and s.is_delete = '0'
+        left join op_feed_entrust_order_item oi on oi.op_feed_entrust_order_item_id =i.entrust_order_item_id and oi.is_delete='0'
+        left join bs_labtest_items li on li.bs_labtest_items_id=oi.item_id and li.is_delete='0'
+        where
+        s.sample_no = #{sampleNo}
+        and i.delete_id = '0'
+    </select>
+    <update id="updateSampleId" parameterType="String">
+        update op_jczx_feed_result_info set entrust_order_sample_id=#{newSampleId} where entrust_order_sample_id=#{oldSampleId} and delete_id='0'
+    </update>
+
+    <update id="updateItemId" parameterType="String">
+        update op_jczx_feed_result_info set entrust_order_item_id=#{newItemId} where entrust_order_item_id=#{oldItemId} and delete_id='0'
+    </update>
+</mapper>

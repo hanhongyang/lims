@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxPcrResultInfoMapper">
+
+    <resultMap type="OpJczxPcrResultInfo" id="OpJczxPcrResultInfoResult">
+        <result property="opJczxPcrResultInfoId"    column="op_jczx_pcr_result_info_id"    />
+        <result property="baseId"    column="base_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="pcrEntrustOrderSampleId"    column="pcr_entrust_order_sample_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="pcrEntrustOrderItemId"    column="pcr_entrust_order_item_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="testResult"    column="test_result"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="tqsjh"    column="tqsjh"    />
+        <result property="kzsjh"    column="kzsjh"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="invbillName"    column="invbill_name"    />
+    </resultMap>
+
+    <sql id="selectOpJczxPcrResultInfoVo">
+        select op_jczx_pcr_result_info_id, base_id, tqsjh, kzsjh,dept_name, sample_no,file_id, pcr_entrust_order_sample_id,
+               item_id, pcr_entrust_order_item_id, item_name, test_result, sequence, remark, create_time, create_by,
+               update_time, update_by, delete_id ,invbill_name
+        from op_jczx_pcr_result_info
+    </sql>
+
+    <select id="selectOpJczxPcrResultInfoList" parameterType="OpJczxPcrResultInfo" resultMap="OpJczxPcrResultInfoResult">
+        <include refid="selectOpJczxPcrResultInfoVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            <if test="baseId != null  and baseId != ''"> and base_id = #{baseId}</if>
+            <if test="sampleNo != null  and sampleNo != ''"> and sample_no like concat('%', #{sampleNo}, '%')</if>
+            <if test="pcrEntrustOrderSampleId != null  and pcrEntrustOrderSampleId != ''"> and pcr_entrust_order_sample_id = #{pcrEntrustOrderSampleId}</if>
+            <if test="itemId != null  and itemId != ''"> and item_id = #{itemId}</if>
+            <if test="itemName != null  and itemName != ''"> and item_name like concat('%', #{itemName}, '%')</if>
+            <if test="testResult != null  and testResult != ''"> and test_result = #{testResult}</if>
+            <if test="remark != null  and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectOpJczxPcrResultInfoByOpJczxPcrResultInfoId" parameterType="String" resultMap="OpJczxPcrResultInfoResult">
+        <include refid="selectOpJczxPcrResultInfoVo"/>
+        where op_jczx_pcr_result_info_id = #{opJczxPcrResultInfoId}
+    </select>
+
+    <insert id="insertOpJczxPcrResultInfo" parameterType="OpJczxPcrResultInfo">
+        insert into op_jczx_pcr_result_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxPcrResultInfoId != null">op_jczx_pcr_result_info_id,</if>
+            <if test="baseId != null">base_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="sampleName != null">sample_name,</if>
+            <if test="pcrEntrustOrderSampleId != null">pcr_entrust_order_sample_id,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="pcrEntrustOrderItemId != null">pcr_entrust_order_item_id,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="testResult != null">test_result,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="tqsjh != null">tqsjh,</if>
+            <if test="kzsjh != null">kzsjh,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="invbillName != null">invbill_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxPcrResultInfoId != null">#{opJczxPcrResultInfoId},</if>
+            <if test="baseId != null">#{baseId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="sampleName != null">#{sampleName},</if>
+            <if test="pcrEntrustOrderSampleId != null">#{pcrEntrustOrderSampleId},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="pcrEntrustOrderItemId != null">#{pcrEntrustOrderItemId},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="testResult != null">#{testResult},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="tqsjh != null">#{tqsjh},</if>
+            <if test="kzsjh != null">#{kzsjh},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="invbillName != null">#{invbillName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpJczxPcrResultInfo" parameterType="OpJczxPcrResultInfo">
+        update op_jczx_pcr_result_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="baseId != null">base_id = #{baseId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="sampleName != null">sample_name = #{sampleName},</if>
+            <if test="pcrEntrustOrderSampleId != null">pcr_entrust_order_sample_id = #{pcrEntrustOrderSampleId},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="pcrEntrustOrderItemId != null">pcr_entrust_order_item_id = #{pcrEntrustOrderItemId},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+            <if test="testResult != null">test_result = #{testResult},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="tqsjh != null">tqsjh = #{tqsjh},</if>
+            <if test="kzsjh != null">kzsjh = #{kzsjh},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="invbillName != null">invbill_name = #{invbillName},</if>
+        </trim>
+        where op_jczx_pcr_result_info_id = #{opJczxPcrResultInfoId}
+    </update>
+
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_pcr_result_info set delete_id=op_jczx_pcr_result_info_id ,update_time=now(),update_by=#{updateUserId} where op_jczx_pcr_result_info_id = #{opJczxPcrResultInfoId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_jczx_pcr_result_info set delete_id=op_jczx_pcr_result_info_id ,update_time=now(),update_by=#{updateUserId}  where op_jczx_pcr_result_info_id in
+        <foreach item="opJczxPcrResultInfoId" collection="array" open="(" separator="," close=")">
+            #{opJczxPcrResultInfoId}
+        </foreach>
+    </update>
+
+    <update id="updateResultBySampleNoItemName" parameterType="String">
+        UPDATE op_jczx_pcr_result_info
+        SET test_result = #{testResult},
+            update_time = NOW(),
+            update_by = #{updateBy},
+            file_id = #{fileId},
+            tqsjh = #{tqsjh},
+            kzsjh = #{kzsjh},
+            remark = #{remark},
+            sequence = #{sequence}
+        WHERE sample_no = #{sampleNo} and item_name=#{itemName}
+          AND op_jczx_pcr_result_info_id = (
+            SELECT id FROM (
+                               SELECT op_jczx_pcr_result_info_id AS id
+                               FROM op_jczx_pcr_result_info
+                               WHERE sample_no = #{sampleNo} and item_name=#{itemName}
+                               ORDER BY create_time DESC
+                               LIMIT 1
+                           ) AS temp
+        )
+    </update>
+
+
+    <update id="updateRemarkBySampleNoItemId" parameterType="String">
+        UPDATE op_jczx_pcr_result_info
+        SET remark = #{remark}
+        WHERE sample_no = #{sampleNo}
+          AND pcr_entrust_order_item_id = #{pcrEntrustOrderItemId}
+    </update>
+    <select id="getBaseByEntrustOrderNo" parameterType="String" resultMap="OpJczxPcrResultInfoResult">
+        SELECT
+            s.pcr_task_item_type,
+            o.entrust_order_no,
+            i.*
+        FROM
+            op_jczx_pcr_result_info i
+                left join op_pcr_entrust_order_sample s on i.sample_no=s.sample_no and s.is_delete='0'
+                LEFT JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+                AND o.delete_id = '0'
+        WHERE
+            i.delete_id = '0'
+          and s.pcr_task_item_type=#{pcrTaskItemType}
+          and o.entrust_order_no=#{entrustOrderNo}
+            and i.file_id is not null
+        union
+        select
+            #{pcrTaskItemType} as pcr_task_item_type,
+            #{entrustOrderNo} as entrust_order_no,
+            i2.*
+        FROM
+            op_jczx_pcr_result_info i2
+        WHERE
+            i2.delete_id = '0'
+          AND i2.file_id IN (
+            SELECT DISTINCT i.file_id
+            FROM op_jczx_pcr_result_info i
+                     INNER JOIN op_pcr_entrust_order_sample s ON i.sample_no = s.sample_no AND s.is_delete = '0'
+                     INNER JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id AND o.delete_id = '0'
+            WHERE i.delete_id = '0'   and i.file_id is not null
+              AND s.pcr_task_item_type = #{pcrTaskItemType}
+              AND o.entrust_order_no = #{entrustOrderNo}
+        )
+        ORDER BY sequence DESC
+    </select>
+
+
+    <update id="batchClearExamineFields" parameterType="String">
+        UPDATE op_jczx_pcr_result_info
+         set remark=null
+        where base_id=#{opJczxPcrResultBaseId} and delete_id='0'
+    </update>
+</mapper>

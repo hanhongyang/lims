@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.UserLabtestItemMapper">
+    
+    <resultMap type="UserLabtestItem" id="UserLabtestItemResult">
+        <result property="userLabtestItemId"    column="bs_user_labtest_item_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="labtestItemsId"    column="bs_labtest_items_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemCode"    column="item_code"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="userType"    column="user_type"    />
+    </resultMap>
+
+
+    <resultMap type="com.gmlimsqi.business.basicdata.vo.UserLabtestItemVo" id="UserLabtestItemResultListVo">
+        <result property="userId" column="user_id" />
+        <result property="userName" column="user_name" />
+        <result property="nickName" column="nick_name" />
+    </resultMap>
+    <sql id="selectUserLabtestItemVo">
+        select bs_user_labtest_item_id, user_id, bs_labtest_items_id, remark,  create_time, create_by, update_time,
+               update_by,delete_id,user_type
+
+               from bs_user_labtest_item
+    </sql>
+
+    <select id="selectUserLabtestItemList" parameterType="UserLabtestItem" resultMap="UserLabtestItemResultListVo">
+        select ui.bs_user_labtest_item_id, ui.user_id, ui.bs_labtest_items_id, ui.remark, ui.is_deletedelete_id, ui.create_time, ui.user_type,
+               ui.create_by, ui.update_time, ui.update_by,u.nick_name,u.user_name,i.item_name,i.item_code
+        from bs_user_labtest_item ui
+        inner join sys_user u on u.user_id=ui.user_id
+        inner join bs_labtest_items i on i.bs_labtest_items_id=ui.bs_labtest_items_id
+        <where>
+            and ui.delete_id = '0'  <!-- 固定添加软删除条件 -->
+             and i.is_delete='0'
+             and i.is_enable='1'
+             and u.del_flag='0'
+             and u.status='0'
+            <if test="labtestItemsId != null">and ui.bs_labtest_items_id=#{labtestItemsId}</if>
+            <if test="deptId != null">and u.dept_id=#{deptId}</if>
+        </where>
+        order by ui.create_time desc
+    </select>
+
+    <select id="selectCheckItemIdsByUserId" parameterType="String" resultType="String">
+        SELECT bs_labtest_items_id
+        FROM bs_user_labtest_item
+        WHERE user_id = #{userId}
+          AND user_type = '2'  AND delete_id = '0'
+    </select>
+
+
+    <!-- 先分页查询符合条件的用户ID -->
+    <select id="selectUserIdsPage" parameterType="UserLabtestItem" resultType="java.lang.String">
+        SELECT user_id
+            FROM (select distinct ui.user_id,ui.create_time
+            from bs_user_labtest_item ui
+            inner join sys_user u on u.user_id=ui.user_id
+            inner join bs_labtest_items i on i.bs_labtest_items_id=ui.bs_labtest_items_id
+            <where>
+                and ui.delete_id = '0'
+                and i.is_delete='0'
+                and i.is_enable='1'
+                and u.del_flag='0'
+                and u.status='0'
+                <if test="labtestItemsId != null">and ui.bs_labtest_items_id=#{labtestItemsId}</if>
+                <if test="deptId != null">and u.dept_id=#{deptId}</if>
+            </where>
+        ) t
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据用户ID列表查询详细数据 -->
+    <select id="selectUserLabtestItemListByUserIds" resultMap="UserLabtestItemResult">
+        select ui.bs_user_labtest_item_id, ui.user_id, ui.bs_labtest_items_id, ui.remark, ui.delete_id, ui.create_time, ui.user_type,
+        ui.create_by, ui.update_time, ui.update_by,u.nick_name,u.user_name,i.item_name,i.item_code
+        from bs_user_labtest_item ui
+        inner join sys_user u on u.user_id=ui.user_id
+        inner join bs_labtest_items i on i.bs_labtest_items_id=ui.bs_labtest_items_id
+        where ui.user_id in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        and ui.delete_id = '0'
+        and i.is_delete='0'
+        and i.is_enable='1'
+        and u.del_flag='0'
+        and u.status='0'
+        <if test="userLabtestItem.labtestItemsId != null">and ui.bs_labtest_items_id=#{userLabtestItem.labtestItemsId}</if>
+        <if test="userLabtestItem.deptId != null">and u.dept_id=#{userLabtestItem.deptId}</if>
+        order by ui.create_time desc
+    </select>
+
+
+    <select id="selectUserLabtestItemByUserId" parameterType="String" resultMap="UserLabtestItemResult">
+        select ui.bs_user_labtest_item_id, ui.user_id, ui.bs_labtest_items_id, ui.remark, ui.delete_id, ui.create_time, ui.user_type,
+               ui.create_by, ui.update_time, ui.update_by,u.nick_name,u.user_name,i.item_name,i.item_code
+        from bs_user_labtest_item ui
+                 inner join sys_user u on u.user_id=ui.user_id
+                 inner join bs_labtest_items i on i.bs_labtest_items_id=ui.bs_labtest_items_id
+        where ui.user_id = #{userId}  and ui.delete_id = '0'  <!-- 固定添加软删除条件 -->
+        and i.is_delete='0' and i.is_enable='1' and u.del_flag='0' and u.status='0'
+        order by ui.create_time desc
+    </select>
+
+    <select id="selectUserLabtestItemByUserLabtestItemId" parameterType="String" resultMap="UserLabtestItemResult">
+        select ui.bs_user_labtest_item_id, ui.user_id, ui.bs_labtest_items_id, ui.remark, ui.delete_id, ui.create_time,ui.user_type,
+        ui.create_by, ui.update_time, ui.update_by,u.nick_name,u.user_name,i.item_name,i.item_code
+        from bs_user_labtest_item ui
+        inner join sys_user u on u.user_id=ui.user_id
+        inner join bs_labtest_items i on i.bs_labtest_items_id=ui.bs_labtest_items_id
+        where ui.bs_user_labtest_item_id = #{userLabtestItemId}  and ui.delete_id = '0'  <!-- 固定添加软删除条件 -->
+        and i.is_delete='0' and i.is_enable='1' and u.del_flag='0' and u.status='0'
+        order by ui.create_time desc
+    </select>
+
+
+
+    <insert id="insertUserLabtestItem" parameterType="UserLabtestItem">
+        insert into bs_user_labtest_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userLabtestItemId != null">bs_user_labtest_item_id,</if>
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="labtestItemsId != null and labtestItemsId != ''">bs_labtest_items_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="userType != null">user_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userLabtestItemId != null">#{userLabtestItemId},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="labtestItemsId != null and labtestItemsId != ''">#{labtestItemsId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="userType != null">#{userType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserLabtestItem" parameterType="UserLabtestItem">
+        update bs_user_labtest_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="labtestItemsId != null and labtestItemsId != ''">bs_labtest_items_id = #{labtestItemsId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="userType != null">user_type = #{userType},</if>
+        </trim>
+        where bs_user_labtest_item_id = #{userLabtestItemId}
+    </update>
+
+
+    <update id="updateDeleteFlagById">
+        update bs_user_labtest_item set delete_id=bs_user_labtest_item_id,update_time=#{updateTime,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where bs_user_labtest_item_id = #{userLabtestItemId}
+    </update>
+
+    <update id="updateDeleteFlagByUserId">
+        update bs_user_labtest_item set delete_id=bs_user_labtest_item_id,update_time=#{updateTime,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+            where user_id = #{userId}
+    </update>
+
+    <insert id="batchInsertUserLabtestItem" parameterType="java.util.List">
+        insert into bs_user_labtest_item (
+        bs_user_labtest_item_id,
+        user_id,
+        bs_labtest_items_id,
+        remark,
+        create_time,
+        create_by,
+        update_time,
+        update_by,
+        user_type
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.userLabtestItemId},
+            #{item.userId},
+            #{item.labtestItemsId},
+            #{item.remark},
+            #{item.createTime},
+            #{item.createBy},
+            #{item.updateTime},
+            #{item.updateBy},
+            #{item.userType}
+            )
+        </foreach>
+    </insert>
+</mapper>

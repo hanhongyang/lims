@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxPcrResultBaseMapper">
+
+    <resultMap type="OpJczxPcrResultBase" id="OpJczxPcrResultBaseResult">
+        <result property="opJczxPcrResultBaseId"    column="op_jczx_pcr_result_base_id"    />
+        <result property="resultNo"    column="result_no"    />
+        <result property="pcrTaskItemType"    column="pcr_task_item_type"    />
+        <result property="testUserId"    column="test_user_id"    />
+        <result property="testUser"    column="test_user"    />
+        <result property="examineUserId"    column="examine_user_id"    />
+        <result property="examineUser"    column="examine_user"    />
+        <result property="examineTime"    column="examine_time"    />
+
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="testDate"    column="test_date"    />
+        <result property="testEndTime"    column="test_end_time"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="exportFileName"    column="export_file_name"    />
+        <result property="examinePassFlag"    column="examine_pass_flag"    />
+        <result property="blTemplateType"    column="bl_template_type"    />
+    </resultMap>
+
+    <resultMap id="OpJczxPcrResultBaseOpJczxPcrResultInfoResult" type="OpJczxPcrResultBase" extends="OpJczxPcrResultBaseResult">
+        <collection property="opJczxPcrResultInfoList" ofType="OpJczxPcrResultInfo" column="op_jczx_pcr_result_base_id" select="selectOpJczxPcrResultInfoList" />
+    </resultMap>
+
+    <resultMap type="OpJczxPcrResultInfo" id="OpJczxPcrResultInfoResult">
+        <result property="opJczxPcrResultInfoId"    column="op_jczx_pcr_result_info_id"    />
+        <result property="baseId"    column="base_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="pcrEntrustOrderSampleId"    column="pcr_entrust_order_sample_id"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="pcrEntrustOrderItemId"    column="pcr_entrust_order_item_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="testResult"    column="test_result"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="tqsjh"    column="tqsjh"    />
+        <result property="kzsjh"    column="kzsjh"    />
+    </resultMap>
+
+    <sql id="selectOpJczxPcrResultBaseVo">
+        select op_jczx_pcr_result_base_id, result_no, pcr_task_item_type, test_user,test_user_id,examine_user,examine_user_id,
+                status, remark, test_date, test_end_time, file_id, create_time, create_by, update_time,
+               update_by, delete_id,examine_time ,export_file_name,examine_pass_flag,bl_template_type
+        from op_jczx_pcr_result_base
+    </sql>
+
+    <select id="selectOpJczxPcrResultBaseList" parameterType="OpJczxPcrResultBase" resultMap="OpJczxPcrResultBaseResult">
+        <include refid="selectOpJczxPcrResultBaseVo"/>
+        <where>
+            and delete_id = '0'  <!-- 固定添加软删除条件 -->
+            <if test="resultNo != null  and resultNo != ''"> and result_no like concat('%', #{resultNo}, '%')</if>
+            <if test="pcrTaskItemType != null  and pcrTaskItemType != ''"> and pcr_task_item_type = #{pcrTaskItemType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="params.beginTestDate != null and params.beginTestDate != '' and params.endTestDate != null and params.endTestDate != ''"> and test_date between #{params.beginTestDate} and #{params.endTestDate}</if>
+        </where>
+    </select>
+
+    <select id="selectOpJczxPcrResultBaseByOpJczxPcrResultBaseId" parameterType="String" resultMap="OpJczxPcrResultBaseOpJczxPcrResultInfoResult">
+        select *
+        from op_jczx_pcr_result_base
+        where op_jczx_pcr_result_base_id = #{opJczxPcrResultBaseId}       and delete_id = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+
+    <select id="getBaseByEntrustOrderNo" parameterType="String" resultMap="OpJczxPcrResultBaseOpJczxPcrResultInfoResult">
+        SELECT
+            i.*
+        FROM
+            op_pcr_entrust_order_item i
+                left join op_pcr_entrust_order_sample s on i.pcr_entrust_order_sample_id=s.op_pcr_entrust_order_sample_id and s.is_delete='0'
+                LEFT JOIN op_pcr_entrust_order o ON s.pcr_entrust_order_id = o.op_pcr_entrust_order_id
+                AND o.delete_id = '0'
+        WHERE
+            i.is_delete = '0'
+          and s.pcr_task_item_type=#{pcrTaskItemType}
+          and o.entrust_order_no=#{entrustOrderNo}
+          and i.file_id is not null;
+
+    </select>
+
+    <select id="selectOpJczxPcrResultInfoList" resultType="OpJczxPcrResultInfo" resultMap="OpJczxPcrResultInfoResult">
+        select op_jczx_pcr_result_info_id, base_id, dept_name, sample_no, pcr_entrust_order_sample_id, item_id, pcr_entrust_order_item_id, item_name, test_result, sequence, remark, create_time, create_by, update_time, update_by, delete_id
+        from op_jczx_pcr_result_info
+        where base_id = #{base_id}
+    </select>
+
+    <insert id="insertOpJczxPcrResultBase" parameterType="OpJczxPcrResultBase">
+        insert into op_jczx_pcr_result_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxPcrResultBaseId != null">op_jczx_pcr_result_base_id,</if>
+            <if test="resultNo != null">result_no,</if>
+            <if test="pcrTaskItemType != null">pcr_task_item_type,</if>
+            <if test="testUserId != null">test_user_id,</if>
+            <if test="testUser != null">test_user,</if>
+            <if test="examineUserId != null">examine_user_id,</if>
+            <if test="examineUser != null">examine_user,</if>
+            <if test="examineTime != null">examine_time,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="testDate != null">test_date,</if>
+            <if test="testEndTime != null">test_end_time,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="exportFileName != null">export_file_name,</if>
+            <if test="examinePassFlag != null">examine_pass_flag,</if>
+            <if test="blTemplateType != null">bl_template_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxPcrResultBaseId != null">#{opJczxPcrResultBaseId},</if>
+            <if test="resultNo != null">#{resultNo},</if>
+            <if test="pcrTaskItemType != null">#{pcrTaskItemType},</if>
+            <if test="testUserId != null">#{testUserId},</if>
+            <if test="testUser != null">#{testUser},</if>
+            <if test="examineUserId != null">#{examineUserId},</if>
+            <if test="examineUser != null">#{examineUser},</if>
+            <if test="examineTime != null">#{examineTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="testDate != null">#{testDate},</if>
+            <if test="testEndTime != null">#{testEndTime},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="exportFileName != null">#{exportFileName},</if>
+            <if test="examinePassFlag != null">#{examinePassFlag},</if>
+            <if test="blTemplateType != null">#{blTemplateType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpJczxPcrResultBase" parameterType="OpJczxPcrResultBase">
+        update op_jczx_pcr_result_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resultNo != null">result_no = #{resultNo},</if>
+            <if test="pcrTaskItemType != null">pcr_task_item_type = #{pcrTaskItemType},</if>
+            <if test="testUserId != null">test_user_id = #{testUserId},</if>
+            <if test="testUser != null">test_user = #{testUser},</if>
+            <if test="examineUserId != null">examine_user_id = #{examineUserId},</if>
+            <if test="examineUser != null">examine_user = #{examineUser},</if>
+            <if test="examineTime != null">examine_time = #{examineTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="testDate != null">test_date = #{testDate},</if>
+            <if test="testEndTime != null">test_end_time = #{testEndTime},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="exportFileName != null">export_file_name = #{exportFileName},</if>
+            <if test="examinePassFlag != null">examine_pass_flag = #{examinePassFlag},</if>
+            <if test="blTemplateType != null">bl_template_type = #{blTemplateType},</if>
+        </trim>
+        where op_jczx_pcr_result_base_id = #{opJczxPcrResultBaseId}
+    </update>
+
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_pcr_result_base set delete_id=op_jczx_pcr_result_base_id ,update_time=now(),update_by=#{updateUserId}
+                                       where op_jczx_pcr_result_base_id = #{opJczxPcrResultBaseId}
+    </update>
+
+
+    <update id="updateDeleteFlagByBaseId" >
+        update  op_jczx_pcr_result_info set delete_id=op_jczx_pcr_result_info_id  ,update_time=now(),update_by=#{updateUserId}
+                                        where base_id = #{opJczxPcrResultBaseId} and delete_id='0'
+    </update>
+
+    <insert id="batchOpJczxPcrResultInfo">
+        insert into op_jczx_pcr_result_info( op_jczx_pcr_result_info_id, base_id, dept_name, sample_no, pcr_entrust_order_sample_id,
+                                            item_id, pcr_entrust_order_item_id, item_name, test_result, sequence, remark,
+                                            create_time, create_by, update_time, update_by, sample_name) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.opJczxPcrResultInfoId}, #{item.baseId}, #{item.deptName}, #{item.sampleNo}, #{item.pcrEntrustOrderSampleId},
+             #{item.itemId}, #{item.pcrEntrustOrderItemId}, #{item.itemName}, #{item.testResult}, #{item.sequence}, #{item.remark},
+             #{item.createTime}, #{item.createBy}, #{item.updateTime}, #{item.updateBy}, #{item.sampleName})
+        </foreach>
+    </insert>
+
+
+
+    <select id="selectOpJczxPcrResultBaseListBySampleNoList" parameterType="java.util.List" resultMap="OpJczxPcrResultBaseOpJczxPcrResultInfoResult">
+        select
+        b.*
+        from op_jczx_pcr_result_base b
+        where exists (
+        select 1 from op_jczx_pcr_result_info i
+        where i.base_id = b.op_jczx_pcr_result_base_id
+        and i.sample_no in
+        <foreach collection="sampleNoList" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and i.delete_id = '0'
+        )
+        and b.delete_id = '0'
+    </select>
+
+ 
+    <update id="updateFileNameByResultNo" parameterType="String">
+        update op_jczx_pcr_result_base set export_file_name=#{fileName} where result_no=#{resultNo} and delete_id='0'
+    </update>
+    <update id="updateExamineFlagByResultNo" parameterType="String">
+        update op_jczx_pcr_result_base
+        set examine_pass_flag=#{examinePassFlag}
+        <if test="examinePassFlag != null and examinePassFlag == '1'.toString()">,status = '3'</if>
+        where result_no=#{resultNo} and delete_id='0'
+    </update>
+
+
+    <select id="selectByNo" parameterType="java.util.List" resultMap="OpJczxPcrResultBaseOpJczxPcrResultInfoResult">
+        select
+        b.*
+        from op_jczx_pcr_result_base b
+        where b.result_no=#{resultNo}
+        and b.delete_id = '0'
+    </select>
+    <update id="updateCancelExamine" parameterType="String">
+        update op_jczx_pcr_result_base
+        set examine_pass_flag=null,status = '2',examine_user=null,examine_user_id=null,examine_time=null
+        where op_jczx_pcr_result_base_id=#{opJczxPcrResultBaseId} and delete_id='0'
+    </update>
+
+</mapper>

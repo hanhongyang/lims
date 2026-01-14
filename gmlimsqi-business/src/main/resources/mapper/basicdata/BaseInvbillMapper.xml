@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BaseInvbillMapper">
+
+    <!-- BaseInvbill 单表ResultMap -->
+    <resultMap id="BaseInvbillResult" type="com.gmlimsqi.business.basicdata.domain.BaseInvbill">
+        <!-- 主键映射 -->
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+
+        <!-- 普通字段映射 -->
+        <result column="sap_code" property="sapCode" jdbcType="VARCHAR"/>
+        <result column="invbill_name" property="invbillName" jdbcType="VARCHAR"/>
+        <result column="ikz" property="ikz" jdbcType="VARCHAR"/>
+        <result column="is_upload_report" property="isUploadReport" jdbcType="VARCHAR"/>
+        <result column="izj" property="izj" jdbcType="VARCHAR"/>
+        <result column="cclasscode" property="cclasscode" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR"/> <!-- 对应实体：部门sap编码 -->
+        <result column="dept_name" property="deptName" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/> <!-- 含时分秒，用TIMESTAMP -->
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="tag" property="tag" jdbcType="VARCHAR"/> <!-- 标签字段 -->
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/> <!-- 含时分秒，用TIMESTAMP -->
+        <result column="is_sap_type" property="isSapType" jdbcType="VARCHAR"/> <!-- 是否为sap物料 -->
+        <result column="sample_state" property="sampleState" jdbcType="VARCHAR"/> <!-- 样品状况 -->
+        <result column="invbill_code" property="invbillCode" jdbcType="VARCHAR"/> <!-- 物料编码 -->
+    </resultMap>
+
+    <sql id="BaseInvbillResultVO">
+        SELECT
+            id,
+            sap_code,
+            invbill_name,
+            ikz,
+            is_upload_report,
+            izj,
+            cclasscode,
+            dept_id,
+            dept_name,
+            create_by,
+            create_time,
+            update_by,
+            tag,
+            update_time,
+            is_sap_type,
+            sample_state,
+            invbill_code
+    </sql>
+
+    <select id="selectInvbillList"
+            resultType="com.gmlimsqi.business.basicdata.domain.BaseInvbill">
+        SELECT i.id,
+        i.sap_code as sapCode,
+        i.invbill_name as invbillName,
+        i.ikz as ikz,
+        i.dept_id as deptId,
+        d.dept_name as deptName,
+        ii.is_upload_report as isUploadReport,
+        i.izj,
+        i.create_by as createBy,
+        i.create_time as createTime,
+        i.update_by as updateBy,
+        i.update_time as updateTime,
+        ii.tag as tag,
+        i.is_sap_type as isSapType,
+        i.sample_state as sampleState,
+        i.invbill_code as invbillCode,
+        i.material_type as materialType
+        FROM business_invbill i
+        left join bs_invbill_info ii on ii.sap_code=i.sap_code and ii.delete_id='0'
+        left join sys_dept d on d.sap_name=i.dept_id
+        <where>
+            i.del_flag = '0'
+            <if test="sapCode != null and sapCode != ''">
+                AND i.sap_code like concat('%', #{sapCode}, '%')
+            </if>
+            <if test="invbillName != null and invbillName != ''">
+                AND i.invbill_name like concat('%', #{invbillName}, '%')
+            </if>
+            <if test="cclasscode != null and cclasscode != ''">
+                AND i.cclasscode = #{cclasscode}
+            </if>
+            <if test="ikz != null and ikz != ''">
+                AND i.ikz = #{ikz}
+            </if>
+            <if test="deptId != null and deptId != ''">
+                AND i.dept_id = #{deptId}
+            </if>
+            <if test="tag != null and tag != ''">
+                AND FIND_IN_SET( #{tag}, ii.tag)> 0
+            </if>
+            <if test="isSapType != null and isSapType != ''">
+                AND i.is_sap_type = #{isSapType}
+            </if>
+            <if test="materialTypeNotEmpty != null and materialTypeNotEmpty != ''">
+                AND i.material_type is not null and i.material_type != ''
+            </if>
+        </where>
+        order by i.update_time desc
+    </select>
+
+    <select id="selectBusinessInvbillList"
+            resultType="com.gmlimsqi.business.basicdata.vo.BusinessInvbillVo">
+        SELECT id,
+               cinvcode   as cinvcode,
+               cinvname   as cinvname,
+               ikz        as ikz,
+               bsysdel    as bsysdel,
+               cclasscode as cclasscode,
+               cclassname as cclassname,
+               cremark    as cremark
+        FROM bs_invbill
+        where bsysdel = '0'
+    </select>
+
+    <select id="selectInvbillListSap" resultMap="BaseInvbillResult">
+        SELECT
+            a.id,
+            a.sap_code,
+            a.invbill_name,
+            a.ikz,
+            a.is_upload_report,
+            a.izj,
+            a.cclasscode,
+            a.dept_id,
+            d.dept_name,
+            a.create_by,
+            a.create_time,
+            a.update_by,
+            a.update_time,
+            a.is_sap_type,
+            a.sample_state,
+            a.invbill_code
+        FROM bs_invbill a
+        left join sys_dept d on d.sap_name=a.dept_id
+        <where>
+            a.del_flag = '0' and a.is_sap_type='1'
+            <if test="sapCode != null and sapCode != ''">
+                AND a.sap_code like concat('%', #{sapCode}, '%')
+            </if>
+            <if test="invbillName != null and invbillName != ''">
+                AND a.invbill_name like concat('%', #{invbillName}, '%')
+            </if>
+            <if test="cclasscode != null and cclasscode != ''">
+                AND a.cclasscode = #{cclasscode}
+            </if>
+            <if test="ikz != null and ikz != ''">
+                AND a.ikz = #{ikz}
+            </if>
+            <if test="deptId != null and deptId != ''">
+                AND a.dept_id = #{deptId}
+            </if>
+        </where>
+    </select>
+</mapper>

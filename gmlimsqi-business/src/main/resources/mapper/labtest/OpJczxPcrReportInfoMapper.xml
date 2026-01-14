@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxPcrReportInfoMapper">
+
+    <resultMap type="OpJczxPcrReportInfo" id="OpJczxPcrReportInfoResult">
+        <result property="opJczxPcrReportInfoId"    column="op_jczx_pcr_report_info_id"    />
+        <result property="baseId"    column="base_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="testResult"    column="test_result"    />
+        <result property="tqsjh"    column="tqsjh"    />
+        <result property="kzsjh"    column="kzsjh"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="sequence"    column="sequence"    />
+        <result property="remark"    column="remark"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="itemName"    column="item_name"    />
+    </resultMap>
+
+    <sql id="selectOpJczxPcrReportInfoVo">
+    select op_jczx_pcr_report_info_id, base_id, is_delete, create_time, create_by, update_time, update_by, test_result,
+           tqsjh, kzsjh, dept_name, sample_name, sequence, remark, sample_no, item_name
+    from op_jczx_pcr_report_info
+</sql>
+
+    <select id="selectOpJczxPcrReportInfoList" parameterType="OpJczxPcrReportInfo" resultMap="OpJczxPcrReportInfoResult">
+        <include refid="selectOpJczxPcrReportInfoVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="baseId != null  and baseId != ''"> and base_id = #{baseId}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="testResult != null  and testResult != ''"> and test_result = #{testResult}</if>
+            <if test="tqsjh != null  and tqsjh != ''"> and tqsjh = #{tqsjh}</if>
+            <if test="kzsjh != null  and kzsjh != ''"> and kzsjh = #{kzsjh}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="sampleName != null  and sampleName != ''"> and sample_name like concat('%', #{sampleName}, '%')</if>
+            <if test="sequence != null  and sequence != ''"> and sequence = #{sequence}</if>
+            <if test="sampleNo != null  and sampleNo != ''"> and sample_no = #{sampleNo}</if>
+            <if test="itemName != null  and itemName != ''"> and item_name like concat('%', #{itemName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectOpJczxPcrReportInfoByOpJczxPcrReportInfoId" parameterType="String" resultMap="OpJczxPcrReportInfoResult">
+        <include refid="selectOpJczxPcrReportInfoVo"/>
+        where op_jczx_pcr_report_info_id = #{opJczxPcrReportInfoId}
+    </select>
+
+    <insert id="insertOpJczxPcrReportInfo" parameterType="OpJczxPcrReportInfo">
+        insert into op_jczx_pcr_report_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxPcrReportInfoId != null">op_jczx_pcr_report_info_id,</if>
+            <if test="baseId != null and baseId != ''">base_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="testResult != null">test_result,</if>
+            <if test="tqsjh != null">tqsjh,</if>
+            <if test="kzsjh != null">kzsjh,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="sampleName != null">sample_name,</if>
+            <if test="sequence != null">sequence,</if>
+            <if test="remark != null">remark,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="pcrTaskItemType != null">pcr_task_item_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxPcrReportInfoId != null">#{opJczxPcrReportInfoId},</if>
+            <if test="baseId != null and baseId != ''">#{baseId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="testResult != null">#{testResult},</if>
+            <if test="tqsjh != null">#{tqsjh},</if>
+            <if test="kzsjh != null">#{kzsjh},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="sampleName != null">#{sampleName},</if>
+            <if test="sequence != null">#{sequence},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="pcrTaskItemType != null">#{pcrTaskItemType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpJczxPcrReportInfo" parameterType="OpJczxPcrReportInfo">
+        update op_jczx_pcr_report_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="baseId != null and baseId != ''">base_id = #{baseId},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="testResult != null">test_result = #{testResult},</if>
+            <if test="tqsjh != null">tqsjh = #{tqsjh},</if>
+            <if test="kzsjh != null">kzsjh = #{kzsjh},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="sampleName != null">sample_name = #{sampleName},</if>
+            <if test="sequence != null">sequence = #{sequence},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+        </trim>
+        where op_jczx_pcr_report_info_id = #{opJczxPcrReportInfoId}
+    </update>
+
+    <delete id="deleteOpJczxPcrReportInfoByOpJczxPcrReportInfoId" parameterType="String">
+        delete from op_jczx_pcr_report_info where op_jczx_pcr_report_info_id = #{opJczxPcrReportInfoId}
+    </delete>
+
+    <delete id="deleteOpJczxPcrReportInfoByOpJczxPcrReportInfoIds" parameterType="String">
+        delete from op_jczx_pcr_report_info where op_jczx_pcr_report_info_id in 
+        <foreach item="opJczxPcrReportInfoId" collection="array" open="(" separator="," close=")">
+            #{opJczxPcrReportInfoId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_pcr_report_info set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_jczx_pcr_report_info_id = #{opJczxPcrReportInfoId}
+    </update>
+    <update id="updateDeleteFlagByBaseId" >
+        update op_jczx_pcr_report_info set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where base_id = #{baseId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_jczx_pcr_report_info set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where op_jczx_pcr_report_info_id in
+        <foreach item="opJczxPcrReportInfoId" collection="array" open="(" separator="," close=")">
+            #{opJczxPcrReportInfoId}
+        </foreach>
+    </update>
+
+    <select id="selectItemTypeByBaseId" resultType="java.lang.String">
+        SELECT pcr_task_item_type from op_jczx_pcr_report_info where base_id = #{opJczxPcrReportBaseId}
+    </select>
+</mapper>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.milktankinspection.mapper.OpMilkTankInspectionMapper">
+
+    <resultMap type="OpMilkTankInspection" id="OpMilkTankInspectionResult">
+            <result property="opMilkTankInspectionId"    column="op_milk_tank_inspection_id"    />
+            <result property="milkTankInspectionNumber"    column="milk_tank_inspection_number"    />
+            <result property="licensePlateNumber"    column="license_plate_number"    />
+            <result property="entryTime"    column="entry_time"    />
+            <result property="destination"    column="destination"    />
+            <result property="samlerId"    column="samler_id"    />
+            <result property="sampler"    column="sampler"    />
+            <result property="samplingTime"    column="sampling_time"    />
+            <result property="testerId"    column="tester_id"    />
+            <result property="tester"    column="tester"    />
+            <result property="testDate"    column="test_date"    />
+            <result property="reviewerId"    column="reviewer_id"    />
+            <result property="reviewer"    column="reviewer"    />
+            <result property="reviewTime"    column="review_time"    />
+            <result property="colonyCount"    column="colony_count"    />
+            <result property="psychrophilicBacteria"    column="psychrophilic_bacteria"    />
+            <result property="aerobicSpores"    column="aerobic_spores"    />
+            <result property="thermotolerantSpores"    column="thermotolerant_spores"    />
+            <result property="thermophilicSpores"    column="thermophilic_spores"    />
+            <result property="thermotolerantThermophilicSpores"    column="thermotolerant_thermophilic_spores"    />
+            <result property="remark"    column="remark"    />
+            <result property="file"    column="file"    />
+            <result property="status"    column="status"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createByName"    column="create_by_name"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="deptId"    column="dept_id"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="carId"    column="car_id"    />
+            <result property="driverId"    column="driver_id"    />
+            <result property="driverName"    column="driver_name"    />
+            <result property="trailerId"    column="trailer_id"    />
+            <result property="trailerNumber"    column="trailer_number"    />
+            <result property="milkSourcePlanOrderNumber"    column="milk_source_plan_order_number"    />
+            <result property="applicationArea"    column="application_area"    />
+            <result property="smearTotalColony"    column="smear_total_colony"    />
+            <result property="applyPsychrophilicBacteria"    column="apply_psychrophilic_bacteria"    />
+            <result property="residualpH"    column="residualpH"    />
+            <result property="appearance"    column="appearance"    />
+            <result property="smearPerson"    column="smear_person"    />
+    </resultMap>
+
+    <sql id="selectOpMilkTankInspectionVo">
+        select a.op_milk_tank_inspection_id,
+               a.milk_tank_inspection_number,
+               a.license_plate_number,
+               a.entry_time,
+               a.destination,
+               a.samler_id,
+               a.sampler,
+               a.sampling_time,
+               a.tester_id,
+               a.tester,
+               a.test_date,
+               a.reviewer_id,
+               a.reviewer,
+               a.review_time,
+               a.colony_count,
+               a.psychrophilic_bacteria,
+               a.aerobic_spores,
+               a.thermotolerant_spores,
+               a.thermophilic_spores,
+               a.thermotolerant_thermophilic_spores,
+               a.remark,
+               a.file,
+               a.status,
+               a.create_by,
+               a.create_by_name,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.dept_id,
+               a.is_delete,
+               a.car_id,
+               a.driver_id,
+               a.driver_name,
+               a.trailer_id,
+               a.trailer_number,
+               a.milk_source_plan_order_number,
+               a.application_area,
+               a.smear_total_colony,
+               a.apply_psychrophilic_bacteria,
+               a.residualpH,
+               a.appearance,
+               a.smear_person
+        from op_milk_tank_inspection a
+    </sql>
+
+    <select id="selectOpMilkTankInspectionList" parameterType="OpMilkTankInspection" resultMap="OpMilkTankInspectionResult">
+        <include refid="selectOpMilkTankInspectionVo"/>
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.is_delete = '0'
+                        <if test="opMilkTankInspectionId != null  and opMilkTankInspectionId != ''"> and a.op_milk_tank_inspection_id = #{opMilkTankInspectionId}</if>
+                        <if test="milkTankInspectionNumber != null  and milkTankInspectionNumber != ''"> and a.milk_tank_inspection_number = #{milkTankInspectionNumber}</if>
+                        <if test="licensePlateNumber != null  and licensePlateNumber != ''"> and a.license_plate_number = #{licensePlateNumber}</if>
+                        <if test="entryTime != null "> and a.entry_time = #{entryTime}</if>
+                        <if test="destination != null  and destination != ''"> and a.destination = #{destination}</if>
+                        <if test="samlerId != null  and samlerId != ''"> and a.samler_id = #{samlerId}</if>
+                        <if test="sampler != null  and sampler != ''"> and a.sampler = #{sampler}</if>
+                        <if test="samplingTime != null "> and a.sampling_time = #{samplingTime}</if>
+                        <if test="testerId != null  and testerId != ''"> and a.tester_id = #{testerId}</if>
+                        <if test="tester != null  and tester != ''"> and a.tester = #{tester}</if>
+                        <if test="testDate != null "> and a.test_date = #{testDate}</if>
+                        <if test="reviewerId != null  and reviewerId != ''"> and a.reviewer_id = #{reviewerId}</if>
+                        <if test="reviewer != null  and reviewer != ''"> and a.reviewer = #{reviewer}</if>
+                        <if test="reviewTime != null "> and a.review_time = #{reviewTime}</if>
+                        <if test="colonyCount != null  and colonyCount != ''"> and a.colony_count = #{colonyCount}</if>
+                        <if test="psychrophilicBacteria != null  and psychrophilicBacteria != ''"> and a.psychrophilic_bacteria = #{psychrophilicBacteria}</if>
+                        <if test="aerobicSpores != null  and aerobicSpores != ''"> and a.aerobic_spores = #{aerobicSpores}</if>
+                        <if test="thermotolerantSpores != null  and thermotolerantSpores != ''"> and a.thermotolerant_spores = #{thermotolerantSpores}</if>
+                        <if test="thermophilicSpores != null  and thermophilicSpores != ''"> and a.thermophilic_spores = #{thermophilicSpores}</if>
+                        <if test="thermotolerantThermophilicSpores != null  and thermotolerantThermophilicSpores != ''"> and a.thermotolerant_thermophilic_spores = #{thermotolerantThermophilicSpores}</if>
+                        <if test="file != null  and file != ''"> and a.file = #{file}</if>
+                        <if test="status != null  and status != ''"> and a.status = #{status}</if>
+                        <if test="createByName != null  and createByName != ''"> and a.create_by_name like concat('%', #{createByName}, '%')</if>
+                        <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if>
+                        <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+                        <if test="milkSourcePlanOrderNumber != null  and milkSourcePlanOrderNumber != ''">
+                            and a.milk_source_plan_order_number like concat('%', #{milkSourcePlanOrderNumber}, '%')
+                        </if>
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectOpMilkTankInspectionByOpMilkTankInspectionId" parameterType="String" resultMap="OpMilkTankInspectionResult">
+        <include refid="selectOpMilkTankInspectionVo"/>
+        where a.op_milk_tank_inspection_id = #{opMilkTankInspectionId}
+        and a.is_delete = '0'
+    </select>
+
+    <insert id="insertOpMilkTankInspection" parameterType="OpMilkTankInspection">
+        insert into op_milk_tank_inspection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="opMilkTankInspectionId != null and opMilkTankInspectionId != ''">op_milk_tank_inspection_id,</if>
+                    <if test="milkTankInspectionNumber != null">milk_tank_inspection_number,</if>
+                    <if test="licensePlateNumber != null">license_plate_number,</if>
+                    <if test="entryTime != null">entry_time,</if>
+                    <if test="destination != null">destination,</if>
+                    <if test="samlerId != null">samler_id,</if>
+                    <if test="sampler != null">sampler,</if>
+                    <if test="samplingTime != null">sampling_time,</if>
+                    <if test="testerId != null">tester_id,</if>
+                    <if test="tester != null">tester,</if>
+                    <if test="testDate != null">test_date,</if>
+                    <if test="reviewerId != null">reviewer_id,</if>
+                    <if test="reviewer != null">reviewer,</if>
+                    <if test="reviewTime != null">review_time,</if>
+                    <if test="colonyCount != null">colony_count,</if>
+                    <if test="psychrophilicBacteria != null">psychrophilic_bacteria,</if>
+                    <if test="aerobicSpores != null">aerobic_spores,</if>
+                    <if test="thermotolerantSpores != null">thermotolerant_spores,</if>
+                    <if test="thermophilicSpores != null">thermophilic_spores,</if>
+                    <if test="thermotolerantThermophilicSpores != null">thermotolerant_thermophilic_spores,</if>
+                    <if test="remark != null">remark,</if>
+                    <if test="file != null">file,</if>
+                    <if test="status != null">status,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createByName != null">create_by_name,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="deptId != null">dept_id,</if>
+                    <if test="isDelete != null">is_delete,</if>
+                    <if test="carId != null and carId != ''">car_id,</if>
+                    <if test="driverId != null and driverId != ''">driver_id,</if>
+                    <if test="driverName != null">driver_name,</if>
+                    <if test="trailerId != null and trailerId != ''">trailer_id,</if>
+                    <if test="trailerNumber != null">trailer_number,</if>
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number,</if>
+                    <if test="applicationArea != null">application_area,</if>
+                    <if test="smearTotalColony != null">smear_total_colony,</if>
+                    <if test="applyPsychrophilicBacteria != null">apply_psychrophilic_bacteria,</if>
+                    <if test="residualpH != null">residualpH,</if>
+                    <if test="appearance != null">appearance,</if>
+                    <if test="smearPerson != null">smear_person,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="opMilkTankInspectionId != null and opMilkTankInspectionId != ''">#{opMilkTankInspectionId},</if>
+                    <if test="milkTankInspectionNumber != null">#{milkTankInspectionNumber},</if>
+                    <if test="licensePlateNumber != null">#{licensePlateNumber},</if>
+                    <if test="entryTime != null">#{entryTime},</if>
+                    <if test="destination != null">#{destination},</if>
+                    <if test="samlerId != null">#{samlerId},</if>
+                    <if test="sampler != null">#{sampler},</if>
+                    <if test="samplingTime != null">#{samplingTime},</if>
+                    <if test="testerId != null">#{testerId},</if>
+                    <if test="tester != null">#{tester},</if>
+                    <if test="testDate != null">#{testDate},</if>
+                    <if test="reviewerId != null">#{reviewerId},</if>
+                    <if test="reviewer != null">#{reviewer},</if>
+                    <if test="reviewTime != null">#{reviewTime},</if>
+                    <if test="colonyCount != null">#{colonyCount},</if>
+                    <if test="psychrophilicBacteria != null">#{psychrophilicBacteria},</if>
+                    <if test="aerobicSpores != null">#{aerobicSpores},</if>
+                    <if test="thermotolerantSpores != null">#{thermotolerantSpores},</if>
+                    <if test="thermophilicSpores != null">#{thermophilicSpores},</if>
+                    <if test="thermotolerantThermophilicSpores != null">#{thermotolerantThermophilicSpores},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="file != null">#{file},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createByName != null">#{createByName},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="deptId != null">#{deptId},</if>
+                    <if test="isDelete != null">#{isDelete},</if>
+                    <if test="carId != null and carId != ''">#{carId},</if>
+                    <if test="driverId != null and driverId != ''">#{driverId},</if>
+                    <if test="driverName != null">#{driverName},</if>
+                    <if test="trailerId != null and trailerId != ''">#{trailerId},</if>
+                    <if test="trailerNumber != null">#{trailerNumber},</if>
+                    <if test="milkSourcePlanOrderNumber != null">#{milkSourcePlanOrderNumber},</if>
+                    <if test="applicationArea != null">#{applicationArea},</if>
+                    <if test="smearTotalColony != null">#{smearTotalColony},</if>
+                    <if test="applyPsychrophilicBacteria != null">#{applyPsychrophilicBacteria},</if>
+                    <if test="residualpH != null">#{residualpH},</if>
+                    <if test="appearance != null">#{appearance},</if>
+                    <if test="smearPerson != null">#{smearPerson},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpMilkTankInspection" parameterType="OpMilkTankInspection">
+        update op_milk_tank_inspection
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="milkTankInspectionNumber != null">milk_tank_inspection_number = #{milkTankInspectionNumber},</if>
+                    <if test="licensePlateNumber != null">license_plate_number = #{licensePlateNumber},</if>
+                    <if test="entryTime != null">entry_time = #{entryTime},</if>
+                    <if test="destination != null">destination = #{destination},</if>
+                    <if test="samlerId != null">samler_id = #{samlerId},</if>
+                    <if test="sampler != null">sampler = #{sampler},</if>
+                    <if test="samplingTime != null">sampling_time = #{samplingTime},</if>
+                    <if test="testerId != null">tester_id = #{testerId},</if>
+                    <if test="tester != null">tester = #{tester},</if>
+                    <if test="testDate != null">test_date = #{testDate},</if>
+                    <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+                    <if test="reviewer != null">reviewer = #{reviewer},</if>
+                    <if test="reviewTime != null">review_time = #{reviewTime},</if>
+                    <if test="colonyCount != null">colony_count = #{colonyCount},</if>
+                    <if test="psychrophilicBacteria != null">psychrophilic_bacteria = #{psychrophilicBacteria},</if>
+                    <if test="aerobicSpores != null">aerobic_spores = #{aerobicSpores},</if>
+                    <if test="thermotolerantSpores != null">thermotolerant_spores = #{thermotolerantSpores},</if>
+                    <if test="thermophilicSpores != null">thermophilic_spores = #{thermophilicSpores},</if>
+                    <if test="thermotolerantThermophilicSpores != null">thermotolerant_thermophilic_spores = #{thermotolerantThermophilicSpores},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+                    <if test="file != null">file = #{file},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="createByName != null">create_by_name = #{createByName},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="deptId != null">dept_id = #{deptId},</if>
+                    <if test="isDelete != null">is_delete = #{isDelete},</if>
+                    <if test="carId != null and carId != ''">car_id = #{carId},</if>
+                    <if test="driverId != null and driverId != ''">driver_id = #{driverId},</if>
+                    <if test="driverName != null">driver_name = #{driverName},</if>
+                    <if test="trailerId != null and trailerId != ''">trailer_id = #{trailerId},</if>
+                    <if test="trailerNumber != null">trailer_number = #{trailerNumber},</if>
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number = #{milkSourcePlanOrderNumber},</if>
+                    <if test="applicationArea != null">application_area = #{applicationArea},</if>
+                    <if test="smearTotalColony != null">smear_total_colony = #{smearTotalColony},</if>
+                    <if test="applyPsychrophilicBacteria != null">apply_psychrophilic_bacteria = #{applyPsychrophilicBacteria},</if>
+                    <if test="residualpH != null">residualpH = #{residualpH},</if>
+                    <if test="appearance != null">appearance = #{appearance},</if>
+                    <if test="smearPerson != null">smear_person = #{smearPerson},</if>
+        </trim>
+        where op_milk_tank_inspection_id = #{opMilkTankInspectionId}
+    </update>
+
+
+    <update id="updateDeleteFlagById">
+        update op_milk_tank_inspection
+        set delete_id  = op_milk_tank_inspection_id,
+            update_time=#{now,jdbcType=TIMESTAMP},
+            update_by=#{updateUserId}
+        where op_milk_tank_inspection_id = #{opMilkTankInspectionId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_milk_tank_inspection
+        set delete_id  = op_milk_tank_inspection_id,
+            update_time=#{now,jdbcType=TIMESTAMP},
+            update_by=#{updateUserId}
+        where op_milk_tank_inspection_id in
+        <foreach item="opMilkTankInspectionId" collection="array" open="(" separator="," close=")">
+            #{opMilkTankInspectionId}
+        </foreach>
+    </update>
+
+
+</mapper>

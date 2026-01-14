@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.designateddepartmentinspection.mapper.OpSamplingTestItemDeptMapper">
+
+    <resultMap type="com.gmlimsqi.business.designateddepartmentinspection.domin.entity.OpSamplingTestItemDept" id="OpSamplingTestItemDeptResult">
+            <result property="opSamplingTestItemDeptId"    column="op_sampling_test_item_dept_id"    />
+            <result property="deptId"    column="dept_id"    />
+            <result property="designatedDeptId"    column="designated_dept_id"    />
+            <result property="itemId"    column="item_id"    />
+            <result property="itemCode"    column="item_code"    />
+            <result property="itemName"    column="item_name"    />
+            <result property="remark"    column="remark"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectOpSamplingTestItemDeptVo">
+        select op_sampling_test_item_dept_id,
+               dept_id,
+               designated_dept_id,
+               item_id,
+               item_code,
+               item_name,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               is_delete
+        from op_sampling_test_item_dept
+    </sql>
+
+    <select id="selectOpSamplingTestItemDeptList" parameterType="com.gmlimsqi.business.designateddepartmentinspection.domin.entity.OpSamplingTestItemDept" resultMap="OpSamplingTestItemDeptResult">
+        <include refid="selectOpSamplingTestItemDeptVo"/>
+        <where>
+            is_delete = '0'
+                        <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+                        <if test="designatedDeptId != null  and designatedDeptId != ''"> and designated_dept_id = #{designatedDeptId}</if>
+                        <if test="itemId != null  and itemId != ''"> and item_id = #{itemId}</if>
+                        <if test="itemCode != null  and itemCode != ''"> and item_code = #{itemCode}</if>
+                        <if test="itemName != null  and itemName != ''"> and item_name like concat('%', #{itemName}, '%')</if>
+                        <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+
+    <select id="selectOpSamplingTestItemDeptByOpSamplingTestItemDeptId" parameterType="String" resultMap="OpSamplingTestItemDeptResult">
+        <include refid="selectOpSamplingTestItemDeptVo"/>
+        where op_sampling_test_item_dept_id = #{opSamplingTestItemDeptId}
+        and is_delete = '0'
+    </select>
+
+    <insert id="insertOpSamplingTestItemDept" parameterType="com.gmlimsqi.business.designateddepartmentinspection.domin.entity.OpSamplingTestItemDept">
+        insert into op_sampling_test_item_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="opSamplingTestItemDeptId != null">op_sampling_test_item_dept_id,</if>
+                    <if test="deptId != null and deptId != ''">dept_id,</if>
+                    <if test="designatedDeptId != null">designated_dept_id,</if>
+                    <if test="itemId != null">item_id,</if>
+                    <if test="itemCode != null">item_code,</if>
+                    <if test="itemName != null">item_name,</if>
+                    <if test="remark != null">remark,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="isDelete != null and isDelete != ''">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="opSamplingTestItemDeptId != null">#{opSamplingTestItemDeptId},</if>
+                    <if test="deptId != null and deptId != ''">#{deptId},</if>
+                    <if test="designatedDeptId != null">#{designatedDeptId},</if>
+                    <if test="itemId != null">#{itemId},</if>
+                    <if test="itemCode != null">#{itemCode},</if>
+                    <if test="itemName != null">#{itemName},</if>
+                    <if test="remark != null">#{remark},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpSamplingTestItemDept" parameterType="com.gmlimsqi.business.designateddepartmentinspection.domin.entity.OpSamplingTestItemDept">
+        update op_sampling_test_item_dept
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
+                    <if test="designatedDeptId != null">designated_dept_id = #{designatedDeptId},</if>
+                    <if test="itemId != null">item_id = #{itemId},</if>
+                    <if test="itemCode != null">item_code = #{itemCode},</if>
+                    <if test="itemName != null">item_name = #{itemName},</if>
+                    <if test="remark != null">remark = #{remark},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+        </trim>
+        where op_sampling_test_item_dept_id = #{opSamplingTestItemDeptId}
+    </update>
+
+
+
+    <update id="updateDeleteFlagById" >
+        update op_sampling_test_item_dept set delete_id = op_sampling_test_item_dept_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_sampling_test_item_dept_id = #{opSamplingTestItemDeptId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_sampling_test_item_dept set delete_id = op_sampling_test_item_dept_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_sampling_test_item_dept_id in
+        <foreach item="opSamplingTestItemDeptId" collection="array" open="(" separator="," close=")">
+            #{opSamplingTestItemDeptId}
+        </foreach>
+    </update>
+
+
+</mapper>

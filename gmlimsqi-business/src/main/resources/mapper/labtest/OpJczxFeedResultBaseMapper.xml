@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxFeedResultBaseMapper">
+
+    <resultMap type="OpJczxFeedResultBase" id="OpJczxFeedResultBaseResult">
+        <result property="resultNo"    column="result_no"    />
+        <result property="opJczxFeedResultBaseId"    column="op_jczx_feed_result_base_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="modelNo"    column="model_no"    />
+        <result property="modelName"    column="model_name"    />
+        <result property="itemId"    column="item_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="testUser"    column="test_user"    />
+        <result property="testUserSignature"    column="test_user_signature"    />
+        <result property="status"    column="status"    />
+        <result property="checkUser"    column="check_user"    />
+        <result property="checkUserSignature"    column="check_user_signature"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="examineUser"    column="examine_user"    />
+        <result property="examineUserSignature"    column="examine_user_signature"    />
+        <result property="examineTime"    column="examine_time"    />
+        <result property="resultAddType"    column="result_add_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="testDate"    column="test_date"    />
+        <result property="testEndTime"    column="test_end_time"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="xxFirstTime"    column="xx_first_time"    />
+        <result property="xxSecondTime"    column="xx_second_time"    />
+        <result property="instrumentName"    column="instrument_name"    />
+        <result property="instrumentNo"    column="instrument_no"    />
+        <result property="testBasis"    column="test_basis"    />
+        <result property="testLocation"    column="test_location"    />
+        <result property="zysysj"    column="zysysj"    />
+        <result property="kbxhys"    column="kbxhys"    />
+        <result property="symph"    column="symph"    />
+        <result property="clqglzl"    column="clqglzl"    />
+        <result property="clhglzl"    column="clhglzl"    />
+        <result property="jzyz"    column="jzyz"    />
+        <result property="xxryph"    column="xxryph"    />
+        <result property="syfjydztj"    column="syfjydztj"    />
+        <result property="yqsyydtj"    column="yqsyydtj"    />
+        <result property="EDTAbzddryph"    column="EDTAbzddryph"    />
+        <result property="dgdddd"    column="dgdddd"    />
+        <result property="ddgbh"    column="ddgbh"    />
+        <result property="xgd"    column="xgd"    />
+        <result property="bzqxfcjxgxs"    column="bzqxfcjxgxs"    />
+        <result property="bzrypzph"    column="bzrypzph"    />
+        <result property="fmsarypzph"    column="fmsarypzph"    />
+        <result property="clqldzl"    column="clqldzl"    />
+        <result property="gzhldggzl"    column="gzhldggzl"    />
+        <result property="hhhldggzl"    column="hhhldggzl"    />
+        <result property="sjhph"    column="sjhph"    />
+        <result property="xxspzpc"    column="xxspzpc"    />
+        <result property="zdqtqsj"    column="zdqtqsj"    />
+        <result property="jzsjd"    column="jzsjd"    />
+        <result property="fysj"    column="fysj"    />
+        <result property="sydrtj"    column="sydrtj"    />
+        <result property="hgfcjxgxs"    column="hgfcjxgxs"    />
+        <result property="v"    column="v"    />
+        <result property="v0"    column="v0"    />
+        <result property="v1"    column="v1"    />
+        <result property="fuyusj"    column="fuyusj"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="sampleCount"    column="sample_count"    />
+        <result property="a0"    column="a0"    />
+    </resultMap>
+
+
+    <sql id="selectOpJczxFeedResultBaseVo">
+        select op_jczx_feed_result_base_id, result_no,
+               model_no, model_name, item_id, test_user, status, check_user, check_time, examine_user,
+               examine_time, result_add_type, remark, test_date, test_end_time, temperature, humidity, xx_first_time,
+               xx_second_time, instrument_name, instrument_no, test_basis, test_location, zysysj, kbxhys, symph, clqglzl,
+               clhglzl, jzyz, xxryph, syfjydztj, yqsyydtj, EDTAbzddryph, dgdddd, ddgbh, xgd, bzqxfcjxgxs, bzrypzph,
+               fmsarypzph, clqldzl, gzhldggzl, hhhldggzl, sjhph, xxspzpc, zdqtqsj, jzsjd, fysj, sydrtj, hgfcjxgxs, v,
+               fuyusj, create_time, create_by, update_time, update_by, delete_id,test_user_signature,check_user_signature,
+               examine_user_signature,parent_id,v0,v1,a0
+        from op_jczx_feed_result_base
+    </sql>
+
+    <select id="selectOpJczxFeedResultBaseList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxFeedResultBaseDto" resultMap="OpJczxFeedResultBaseResult">
+        select
+        b.*,
+        i.item_name,
+        (select count(*) from op_jczx_feed_result_info i where i.base_id=b.op_jczx_feed_result_base_id and i.delete_id='0'  AND (i.is_reset = '0' OR i.is_reset IS NULL )) as sample_count
+        from op_jczx_feed_result_base b
+        left join bs_labtest_items i on b.item_id=i.bs_labtest_items_id and i.is_delete='0'
+        <where>
+            and b.delete_id = '0'
+            and b.model_name !='近红外'
+            AND (
+            EXISTS (
+            SELECT 1 FROM op_jczx_feed_result_info info
+            WHERE info.base_id = b.op_jczx_feed_result_base_id
+            AND info.delete_id = '0'
+            AND (info.is_reset = '0' OR info.is_reset IS NULL )
+            )
+            )
+
+            <if test="resultNo != null  and resultNo != ''"> and b.result_no like concat('%', #{resultNo}, '%')</if>
+            <if test="modelNo != null  and modelNo != ''"> and b.model_no = #{modelNo}</if>
+            <if test="modelName != null  and modelName != ''"> and b.model_name like concat('%', #{modelName}, '%')</if>
+            <if test="itemId != null  and itemId != ''"> and b.item_id = #{itemId}</if>
+            <if test="itemName != null  and itemName != ''"> and i.item_name like concat('%', #{itemName}, '%')</if>
+
+            <if test="testUser != null  and testUser != ''"> and b.test_user like concat('%', #{testUser}, '%')</if>
+
+            <if test="permissionType == 'check'">
+                AND (
+                b.test_user = #{currentUserNickName}
+                OR
+                EXISTS (
+                SELECT 1
+                FROM bs_user_labtest_item uli
+                WHERE uli.bs_labtest_items_id = b.item_id
+                AND uli.user_id = #{currentUserId}  AND uli.user_type = '2'             AND uli.delete_id = '0'
+                )
+                )
+            </if>
+
+            <if test="status != null  and status != ''"> and b.status = #{status}</if>
+            <if test="statusList != null and statusList != ''">
+                AND FIND_IN_SET(b.status, #{statusList})
+            </if>
+            <if test="isTest != null  and isTest == '1'"> and b.test_user is not null </if>
+            <if test="isTest != null  and isTest == '0'"> and b.test_user is null </if>
+            <if test="checkUser != null  and checkUser != ''"> and b.check_user like concat('%', #{checkUser}, '%')</if>
+            <if test="examineUser != null  and examineUser != ''"> and b.examine_user like concat('%', #{examineUser}, '%')</if>
+            <if test="resultAddType != null  and resultAddType != ''"> and b.result_add_type = #{resultAddType}</if>
+            <if test="beginTestEndTime != null and beginTestEndTime != ''">
+                AND DATE(b.test_end_time) &gt;= #{beginTestEndTime}
+            </if>
+            <if test="endTestEndTime != null and endTestEndTime != ''">
+                AND DATE(b.test_end_time) &lt;= #{endTestEndTime}
+            </if>
+        </where>
+        order by b.create_time desc
+    </select>
+
+    <select id="selectJhwListList" parameterType="com.gmlimsqi.business.labtest.dto.OpJczxFeedResultBaseDto" resultMap="OpJczxFeedResultBaseResult">
+
+        SELECT
+        b.*,
+        (SELECT COUNT(DISTINCT i.entrust_order_sample_id)
+        FROM op_jczx_feed_result_info i
+        WHERE i.base_id = b.op_jczx_feed_result_base_id
+        AND i.delete_id = '0' AND (i.is_reset = '0' OR i.is_reset IS NULL )) AS sample_count
+        FROM op_jczx_feed_result_base b
+        <where>
+            and b.delete_id = '0'   and b.model_name='近红外'
+            AND (
+            EXISTS (
+            SELECT 1 FROM op_jczx_feed_result_info info
+            WHERE info.base_id = b.op_jczx_feed_result_base_id
+            AND info.delete_id = '0'
+            AND (info.is_reset = '0' OR info.is_reset IS NULL )
+            )
+            )
+            <if test="resultNo != null  and resultNo != ''"> and b.result_no like concat('%', #{resultNo}, '%')</if>
+            <if test="modelNo != null  and modelNo != ''"> and b.model_no = #{modelNo}</if>
+            <if test="modelName != null  and modelName != ''"> and b.model_name like concat('%', #{modelName}, '%')</if>
+            <if test="itemId != null  and itemId != ''"> and b.item_id = #{itemId}</if>
+            <if test="itemName != null  and itemName != ''"> and i.item_name like concat('%', #{itemName}, '%')</if>
+            <if test="testUser != null  and testUser != ''"> and b.test_user like concat('%', #{testUser}, '%')</if>
+            <if test="status != null  and status != ''"> and b.status = #{status}</if>
+            <if test="isTest != null  and isTest == '1'"> and b.test_user is not null </if>
+            <if test="isTest != null  and isTest == '0'"> and b.test_user is null </if>
+            <if test="checkUser != null  and checkUser != ''"> and b.check_user like concat('%', #{checkUser}, '%')</if>
+            <if test="examineUser != null  and examineUser != ''"> and b.examine_user like concat('%', #{examineUser}, '%')</if>
+            <if test="resultAddType != null  and resultAddType != ''"> and b.result_add_type = #{resultAddType}</if>
+            <if test="beginTestEndTime != null and beginTestEndTime != ''">
+                AND DATE(b.test_end_time) &gt;= #{beginTestEndTime}
+            </if>
+            <if test="endTestEndTime != null and endTestEndTime != ''">
+                AND DATE(b.test_end_time) &lt;= #{endTestEndTime}
+            </if>
+
+
+            <if test="status != null  and status != ''"> and b.status = #{status}</if>
+            <if test="statusList != null and statusList != ''">
+                AND FIND_IN_SET(b.status, #{statusList})
+            </if>
+        </where>
+        order by b.create_time desc
+    </select>
+    <select id="selectOpJczxFeedResultBaseByOpJczxFeedResultBaseId" parameterType="String" resultMap="OpJczxFeedResultBaseResult">
+        <include refid="selectOpJczxFeedResultBaseVo"/>
+        where op_jczx_feed_result_base_id = #{opJczxFeedResultBaseId}
+    </select>
+
+    <insert id="insertOpJczxFeedResultBase" parameterType="OpJczxFeedResultBase">
+        insert into op_jczx_feed_result_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxFeedResultBaseId != null">op_jczx_feed_result_base_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="resultNo != null">result_no,</if>
+            <if test="modelNo != null">model_no,</if>
+            <if test="modelName != null">model_name,</if>
+            <if test="itemId != null">item_id,</if>
+            <if test="testUser != null">test_user,</if>
+            <if test="testUserSignature != null">test_user_signature,</if>
+
+            <if test="status != null">status,</if>
+            <if test="checkUser != null">check_user,</if>
+            <if test="checkUserSignature != null">check_user_signature,</if>
+
+            <if test="checkTime != null">check_time,</if>
+            <if test="examineUser != null">examine_user,</if>
+            <if test="examineUserSignature != null">examine_user_signature,</if>
+
+            <if test="examineTime != null">examine_time,</if>
+            <if test="resultAddType != null">result_add_type,</if>
+            <if test="remark != null">remark,</if>
+            <if test="testDate != null">test_date,</if>
+            <if test="testEndTime != null">test_end_time,</if>
+            <if test="temperature != null">temperature,</if>
+            <if test="humidity != null">humidity,</if>
+            <if test="xxFirstTime != null">xx_first_time,</if>
+            <if test="xxSecondTime != null">xx_second_time,</if>
+            <if test="instrumentName != null">instrument_name,</if>
+            <if test="instrumentNo != null">instrument_no,</if>
+            <if test="testBasis != null">test_basis,</if>
+            <if test="testLocation != null">test_location,</if>
+            <if test="zysysj != null">zysysj,</if>
+            <if test="kbxhys != null">kbxhys,</if>
+            <if test="symph != null">symph,</if>
+            <if test="clqglzl != null">clqglzl,</if>
+            <if test="clhglzl != null">clhglzl,</if>
+            <if test="jzyz != null">jzyz,</if>
+            <if test="xxryph != null">xxryph,</if>
+            <if test="syfjydztj != null">syfjydztj,</if>
+            <if test="yqsyydtj != null">yqsyydtj,</if>
+            <if test="EDTAbzddryph != null">EDTAbzddryph,</if>
+            <if test="dgdddd != null">dgdddd,</if>
+            <if test="ddgbh != null">ddgbh,</if>
+            <if test="xgd != null">xgd,</if>
+            <if test="bzqxfcjxgxs != null">bzqxfcjxgxs,</if>
+            <if test="bzrypzph != null">bzrypzph,</if>
+            <if test="fmsarypzph != null">fmsarypzph,</if>
+            <if test="clqldzl != null">clqldzl,</if>
+            <if test="gzhldggzl != null">gzhldggzl,</if>
+            <if test="hhhldggzl != null">hhhldggzl,</if>
+            <if test="sjhph != null">sjhph,</if>
+            <if test="xxspzpc != null">xxspzpc,</if>
+            <if test="zdqtqsj != null">zdqtqsj,</if>
+            <if test="jzsjd != null">jzsjd,</if>
+            <if test="fysj != null">fysj,</if>
+            <if test="sydrtj != null">sydrtj,</if>
+            <if test="hgfcjxgxs != null">hgfcjxgxs,</if>
+            <if test="v != null">v,</if>
+            <if test="v0 != null">v0,</if>
+            <if test="v1 != null">v1,</if>
+            <if test="fuyusj != null">fuyusj,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="a0 != null">a0,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxFeedResultBaseId != null">#{opJczxFeedResultBaseId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="resultNo != null">#{resultNo},</if>
+
+            <if test="modelNo != null">#{modelNo},</if>
+            <if test="modelName != null">#{modelName},</if>
+            <if test="itemId != null">#{itemId},</if>
+            <if test="testUser != null">#{testUser},</if>
+            <if test="testUserSignature != null">#{testUserSignature},</if>
+            <if test="status != null">#{status},</if>
+            <if test="checkUser != null">#{checkUser},</if>
+            <if test="checkUserSignature != null">#{checkUserSignature},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="examineUser != null">#{examineUser},</if>
+            <if test="examineUserSignature != null">#{examineUserSignature},</if>
+            <if test="examineTime != null">#{examineTime},</if>
+            <if test="resultAddType != null">#{resultAddType},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="testDate != null">#{testDate},</if>
+            <if test="testEndTime != null">#{testEndTime},</if>
+            <if test="temperature != null">#{temperature},</if>
+            <if test="humidity != null">#{humidity},</if>
+            <if test="xxFirstTime != null">#{xxFirstTime},</if>
+            <if test="xxSecondTime != null">#{xxSecondTime},</if>
+            <if test="instrumentName != null">#{instrumentName},</if>
+            <if test="instrumentNo != null">#{instrumentNo},</if>
+            <if test="testBasis != null">#{testBasis},</if>
+            <if test="testLocation != null">#{testLocation},</if>
+            <if test="zysysj != null">#{zysysj},</if>
+            <if test="kbxhys != null">#{kbxhys},</if>
+            <if test="symph != null">#{symph},</if>
+            <if test="clqglzl != null">#{clqglzl},</if>
+            <if test="clhglzl != null">#{clhglzl},</if>
+            <if test="jzyz != null">#{jzyz},</if>
+            <if test="xxryph != null">#{xxryph},</if>
+            <if test="syfjydztj != null">#{syfjydztj},</if>
+            <if test="yqsyydtj != null">#{yqsyydtj},</if>
+            <if test="EDTAbzddryph != null">#{EDTAbzddryph},</if>
+            <if test="dgdddd != null">#{dgdddd},</if>
+            <if test="ddgbh != null">#{ddgbh},</if>
+            <if test="xgd != null">#{xgd},</if>
+            <if test="bzqxfcjxgxs != null">#{bzqxfcjxgxs},</if>
+            <if test="bzrypzph != null">#{bzrypzph},</if>
+            <if test="fmsarypzph != null">#{fmsarypzph},</if>
+            <if test="clqldzl != null">#{clqldzl},</if>
+            <if test="gzhldggzl != null">#{gzhldggzl},</if>
+            <if test="hhhldggzl != null">#{hhhldggzl},</if>
+            <if test="sjhph != null">#{sjhph},</if>
+            <if test="xxspzpc != null">#{xxspzpc},</if>
+            <if test="zdqtqsj != null">#{zdqtqsj},</if>
+            <if test="jzsjd != null">#{jzsjd},</if>
+            <if test="fysj != null">#{fysj},</if>
+            <if test="sydrtj != null">#{sydrtj},</if>
+            <if test="hgfcjxgxs != null">#{hgfcjxgxs},</if>
+            <if test="v != null">#{v},</if>
+            <if test="v0 != null">#{v0},</if>
+            <if test="v1 != null">#{v1},</if>
+            <if test="fuyusj != null">#{fuyusj},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="a0 != null">#{a0},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpJczxFeedResultBase" parameterType="OpJczxFeedResultBase">
+        update op_jczx_feed_result_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resultNo != null">result_no = #{resultNo},</if>
+            <if test="modelNo != null">model_no = #{modelNo},</if>
+            <if test="modelName != null">model_name = #{modelName},</if>
+            <if test="itemId != null">item_id = #{itemId},</if>
+            <if test="testUser != null">test_user = #{testUser},</if>
+            <if test="testUserSignature != null">test_user_signature = #{testUserSignature},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="checkUser != null">check_user = #{checkUser},</if>
+            <if test="checkUserSignature != null">check_user_signature = #{checkUserSignature},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="examineUser != null">examine_user = #{examineUser},</if>
+            <if test="examineUserSignature != null">examine_user_signature = #{examineUserSignature},</if>
+            <if test="examineTime != null">examine_time = #{examineTime},</if>
+            <if test="resultAddType != null">result_add_type = #{resultAddType},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="testDate != null">test_date = #{testDate},</if>
+            <if test="testEndTime != null">test_end_time = #{testEndTime},</if>
+            <if test="temperature != null">temperature = #{temperature},</if>
+            <if test="humidity != null">humidity = #{humidity},</if>
+            <if test="xxFirstTime != null">xx_first_time = #{xxFirstTime},</if>
+            <if test="xxSecondTime != null">xx_second_time = #{xxSecondTime},</if>
+            <if test="instrumentName != null">instrument_name = #{instrumentName},</if>
+            <if test="instrumentNo != null">instrument_no = #{instrumentNo},</if>
+            <if test="testBasis != null">test_basis = #{testBasis},</if>
+            <if test="testLocation != null">test_location = #{testLocation},</if>
+            <if test="zysysj != null">zysysj = #{zysysj},</if>
+            <if test="kbxhys != null">kbxhys = #{kbxhys},</if>
+            <if test="symph != null">symph = #{symph},</if>
+            <if test="clqglzl != null">clqglzl = #{clqglzl},</if>
+            <if test="clhglzl != null">clhglzl = #{clhglzl},</if>
+            <if test="jzyz != null">jzyz = #{jzyz},</if>
+            <if test="xxryph != null">xxryph = #{xxryph},</if>
+            <if test="syfjydztj != null">syfjydztj = #{syfjydztj},</if>
+            <if test="yqsyydtj != null">yqsyydtj = #{yqsyydtj},</if>
+            <if test="EDTAbzddryph != null">EDTAbzddryph = #{EDTAbzddryph},</if>
+            <if test="dgdddd != null">dgdddd = #{dgdddd},</if>
+            <if test="ddgbh != null">ddgbh = #{ddgbh},</if>
+            <if test="xgd != null">xgd = #{xgd},</if>
+            <if test="bzqxfcjxgxs != null">bzqxfcjxgxs = #{bzqxfcjxgxs},</if>
+            <if test="bzrypzph != null">bzrypzph = #{bzrypzph},</if>
+            <if test="fmsarypzph != null">fmsarypzph = #{fmsarypzph},</if>
+            <if test="clqldzl != null">clqldzl = #{clqldzl},</if>
+            <if test="gzhldggzl != null">gzhldggzl = #{gzhldggzl},</if>
+            <if test="hhhldggzl != null">hhhldggzl = #{hhhldggzl},</if>
+            <if test="sjhph != null">sjhph = #{sjhph},</if>
+            <if test="xxspzpc != null">xxspzpc = #{xxspzpc},</if>
+            <if test="zdqtqsj != null">zdqtqsj = #{zdqtqsj},</if>
+            <if test="jzsjd != null">jzsjd = #{jzsjd},</if>
+            <if test="fysj != null">fysj = #{fysj},</if>
+            <if test="sydrtj != null">sydrtj = #{sydrtj},</if>
+            <if test="hgfcjxgxs != null">hgfcjxgxs = #{hgfcjxgxs},</if>
+            <if test="v != null">v = #{v},</if>
+            <if test="v0 != null">v0 = #{v0},</if>
+            <if test="v1 != null">v1 = #{v1},</if>
+            <if test="fuyusj != null">fuyusj = #{fuyusj},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+
+            <if test="a0 != null">a0 = #{a0},</if>
+        </trim>
+        where op_jczx_feed_result_base_id = #{opJczxFeedResultBaseId}
+    </update>
+
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_feed_result_base set delete_id=op_jczx_feed_result_base_id ,update_time=now(),update_by=#{updateUser} where op_jczx_feed_result_base_id = #{opJczxFeedResultBaseId}
+    </update>
+
+
+    <resultMap type="com.gmlimsqi.business.labtest.vo.OpJczxFeedResultInitVo" id="OpJczxFeedResultInitVoResult">
+        <result property="resultAddType"    column="result_add_type"    />
+        <result property="temperature"      column="temperature"    />
+        <result property="humidity"         column="humidity"    />
+        <result property="instrumentName"   column="instrument_name"    />
+        <result property="instrumentNo"     column="instrument_code"    />
+        <result property="labLocation"      column="location_id"    />
+        <result property="testBasis"        column="zxbz"    />
+        <result property="testLocation"     column="location_name"    />
+        <result property="zysysj"           column="zysysj"    />
+        <result property="decimalPlaces"    column="decimal_places"    />
+        <result property="significantDigits" column="significant_digits"    />
+    </resultMap>
+
+    <select id="getInitInfo" parameterType="String" resultMap="OpJczxFeedResultInitVoResult">
+        SELECT
+            s.item_id,
+            i.zxbz,
+            f.NAME,
+            f.lower_limit,
+            f.upper_limit,
+            s.result_add_type,
+            i.decimal_places,
+            i.significant_digits,
+            -- 直接取配置表中的字段
+            cfg.instrument_name,
+            cfg.instrument_code,
+            cfg.location_id,
+            cfg.location_name
+        FROM
+            bs_invbill_item_standard s
+                LEFT JOIN bs_labtest_feature f ON s.feature_id = f.bs_labtest_feature_id AND f.is_delete = '0' AND f.is_enable = '1'
+                LEFT JOIN bs_labtest_items i ON s.item_id = i.bs_labtest_items_id AND i.is_delete = '0'
+                -- 关联配置表，直接取当前部门的配置
+                LEFT JOIN bs_item_dept_config cfg ON cfg.item_id = s.item_id AND cfg.dept_id = #{deptId} AND cfg.is_delete = '0'
+        WHERE
+            s.is_delete = '0'
+          AND s.invbill_code = #{invbillCode}
+          AND s.item_id = #{itemId}
+          AND s.dept_id = #{deptId}
+        -- 不需要 GROUP BY 了，因为是一对一（每个部门每个项目只有一条配置）
+        LIMIT 1
+    </select>
+
+    <select id="getInitInfo2" parameterType="String" resultMap="OpJczxFeedResultInitVoResult">
+        SELECT
+            s.item_id,
+            i.zxbz,
+            f.NAME,
+            f.lower_limit,
+            f.upper_limit,
+            s.result_add_type,
+            i.decimal_places,
+            i.significant_digits,
+            GROUP_CONCAT(DISTINCT inst.instrument_name SEPARATOR ',') AS instrument_name,
+            GROUP_CONCAT(DISTINCT inst.instrument_code SEPARATOR ',') AS instrument_code
+        FROM
+            bs_invbill_item_standard s
+                LEFT JOIN bs_labtest_feature f ON s.feature_id = f.bs_labtest_feature_id
+                AND f.is_delete = '0'
+                AND f.is_enable = '1'
+                LEFT JOIN bs_labtest_items i ON s.item_id = i.bs_labtest_items_id
+                AND i.is_delete = '0'
+                -- 新增关联：通过 item_id 和 dept_id 关联配置表获取设备
+                LEFT JOIN bs_item_dept_config cfg ON cfg.item_id = s.item_id
+                AND cfg.dept_id = #{deptId}
+                AND cfg.is_delete = '0'
+                LEFT JOIN bs_instruments inst ON cfg.instrument_id = inst.bs_instruments_id
+                AND inst.is_delete = '0'
+                AND inst.is_enable = '1'
+        WHERE
+            s.is_delete = '0'
+          AND s.invbill_code = #{invbillCode}
+          AND s.item_id = #{itemId}
+          AND s.dept_id = #{deptId}
+        GROUP BY
+            s.item_id,
+            s.zxbz,
+            f.NAME,
+            f.lower_limit,
+            f.upper_limit,
+            s.result_add_type,
+            i.decimal_places,
+            i.significant_digits
+    </select>
+
+    <update id="saveCheck" >
+        update op_jczx_feed_result_base set
+            check_time=#{checkTime},
+            check_user=#{checkUser},
+            check_user_signature=#{checkUserSignature},
+            status=#{status},
+            update_time=#{updateTime},
+            update_by=#{updateBy}
+        where op_jczx_feed_result_base_id = #{opJczxFeedResultBaseId}
+    </update>
+
+    <update id="saveExamine" >
+        update op_jczx_feed_result_base set
+            examine_user=#{examineUser},
+            examine_time=#{examineTime},
+            examine_user_signature=#{examineUserSignature},
+            status=#{status},
+            update_time=#{updateTime},
+            update_by=#{updateBy}
+        where op_jczx_feed_result_base_id = #{opJczxFeedResultBaseId}
+    </update>
+
+    <update id="backToSubmit" >
+        update op_jczx_feed_result_base set
+                                            status=#{status},
+                                            update_time=#{updateTime},
+                                            update_by=#{updateBy}
+        where op_jczx_feed_result_base_id = #{opJczxFeedResultBaseId}
+    </update>
+
+    <select id="selectCsfByParentId" parameterType="String" resultMap="OpJczxFeedResultBaseResult">
+        <include refid="selectOpJczxFeedResultBaseVo"/>
+        where parent_id = #{parentId}
+    </select>
+
+
+    <select id="selectLastBaseByModelNo" parameterType="String" resultMap="OpJczxFeedResultBaseResult">
+        <include refid="selectOpJczxFeedResultBaseVo"/>
+        where model_no = #{modelNo}
+        limit 1
+    </select>
+
+    <select id="countFeedByStatusAndTestUser" resultType="int">
+        SELECT COUNT(DISTINCT b.op_jczx_feed_result_base_id)
+        FROM op_jczx_feed_result_base b
+        WHERE b.delete_id = '0'
+          AND b.model_name != '近红外'
+          AND b.status = #{status}
+          AND EXISTS (
+            SELECT 1
+            FROM op_jczx_feed_result_info i
+            WHERE i.base_id = b.op_jczx_feed_result_base_id
+              AND i.delete_id = '0'
+              AND (i.is_reset = '0' OR i.is_reset IS NULL)
+        )
+          AND  EXISTS (
+            SELECT 1
+            FROM bs_user_labtest_item uli
+            WHERE uli.bs_labtest_items_id = b.item_id
+          AND uli.user_id = #{testUser}  AND uli.user_type = '2'             AND uli.delete_id = '0'
+            )
+    </select>
+
+
+    <select id="countFeedByStatusListAndTestUser" resultType="int">
+        SELECT COUNT(DISTINCT b.op_jczx_feed_result_base_id)
+        FROM op_jczx_feed_result_base b
+        WHERE b.delete_id = '0'
+        AND b.model_name != '近红外'
+        AND b.status IN
+        <foreach collection="statusList"
+                 item="st"
+                 open="("
+                 separator=","
+                 close=")">
+            #{st}
+        </foreach>
+        AND b.test_user = #{testUser}
+        AND EXISTS (
+        SELECT 1
+        FROM op_jczx_feed_result_info i
+        WHERE i.base_id = b.op_jczx_feed_result_base_id
+        AND i.delete_id = '0'
+        AND (i.is_reset = '0' OR i.is_reset IS NULL)
+        )
+    </select>
+</mapper>

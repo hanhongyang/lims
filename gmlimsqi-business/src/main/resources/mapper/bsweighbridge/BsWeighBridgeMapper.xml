@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.bsweighbridge.mapper.BsWeighBridgeMapper">
+
+    <resultMap type="BsWeighBridge" id="BsWeighBridgeResult">
+            <result property="id"    column="id"    />
+            <result property="cweightno"    column="cweightno"    />
+            <result property="weighingType"    column="weighing_type"    />
+            <result property="sginId"    column="sgin_id"    />
+            <result property="driverCode"    column="driver_code"    />
+            <result property="gmFlag"    column="gm_flag"    />
+            <result property="gmtime"    column="gmtime"    />
+            <result property="gmweight"    column="gmweight"    />
+            <result property="gpFlag"    column="gp_flag"    />
+            <result property="gptime"    column="gptime"    />
+            <result property="gpweight"    column="gpweight"    />
+            <result property="netWeight"    column="net_weight"    />
+            <result property="jsWeight"    column="js_weight"    />
+            <result property="materialCode"    column="material_code"    />
+            <result property="materialName"    column="material_name"    />
+            <result property="supplierCode"    column="supplier_code"    />
+            <result property="supplierName"    column="supplier_name"    />
+            <result property="warehouseCode"    column="warehouse_code"    />
+            <result property="warehouseName"    column="warehouse_name"    />
+            <result property="sapCode"    column="sap_code"    />
+            <result property="isUsed"    column="is_used"    />
+            <result property="fileInfo"    column="file_info"    />
+            <result property="firstWeighingFile"    column="first_weighing_file"    />
+            <result property="secondWeighingFile"    column="second_weighing_file"    />
+            <result property="voidOrNot"    column="void_or_not"    />
+            <result property="icc"    column="icc"    />
+            <result property="isend"    column="isend"    />
+            <result property="printCount"    column="print_count"    />
+            <result property="isUpload"    column="is_upload"    />
+            <result property="sapRes"    column="sap_res"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="materialVoucher"    column="material_voucher"    />
+            <result property="sys_type"    column="sys_type"    />
+            <result property="csh"    column="csh"    />
+            <result property="ishweight"    column="ishweight"    />
+            <result property="idelweight"    column="idelweight"    />
+            <result property="ibzqty"    column="ibzqty"    />
+            <result property="cniuhao"    column="cniuhao"    />
+            <result property="cordercode"    column="cordercode"    />
+            <result property="csap_hangxiangmu"    column="csap_hangxiangmu"    />
+            <result property="cordercode_TMR"    column="cordercode_TMR"    />
+            <result property="changxiangmu_TMR"    column="changxiangmu_TMR"    />
+            <result property="cvencode_TMR"    column="cvencode_TMR"    />
+            <result property="cvenname_TMR"    column="cvenname_TMR"    />
+            <result property="cordercode_jh"    column="cordercode_jh"    />
+            <result property="changxiangmu_jh"    column="changxiangmu_jh"    />
+            <result property="cpzcode"    column="cpzcode"    />
+            <result property="cpzcodeTmr"    column="cpzcodeTmr"    />
+            <result property="csapmess"    column="csapmess"    />
+            <result property="cpc"    column="cpc"    />
+    </resultMap>
+
+    <sql id="selectBsWeighBridgeVo">
+        select id,
+               cweightno,
+               weighing_type,
+               sgin_id,
+               driver_code,
+               gm_flag,
+               gmtime,
+               gmweight,
+               gp_flag,
+               gptime,
+               gpweight,
+               net_weight,
+               js_weight,
+               material_code,
+               material_name,
+               supplier_code,
+               supplier_name,
+               warehouse_code,
+               warehouse_name,
+               sap_code,
+               is_used,
+               file_info,
+               first_weighing_file,
+               second_weighing_file,
+               void_or_not,
+               icc,
+               isend,
+               print_count,
+               is_upload,
+               sap_res,
+               create_time,
+               update_time,
+               material_voucher,
+               sys_type,
+               csh,
+               ishweight,
+               idelweight,
+               ibzqty,
+               cniuhao,
+               cordercode,
+               csap_hangxiangmu,
+               cordercode_TMR,
+               changxiangmu_TMR,
+               cvencode_TMR,
+               cvenname_TMR,
+               cordercode_jh,
+               changxiangmu_jh,
+               cpzcode,
+               cpzcodeTmr,
+               csapmess,
+               cpc
+        from bs_weigh_bridge
+    </sql>
+
+    <select id="selectBsWeighBridgeList" parameterType="BsWeighBridge" resultMap="BsWeighBridgeResult">
+        <include refid="selectBsWeighBridgeVo"/>
+        <where>
+                        <if test="cweightno != null  and cweightno != ''"> and cweightno = #{cweightno}</if>
+                        <if test="weighingType != null  and weighingType != ''"> and weighing_type = #{weighingType}</if>
+                        <if test="sginId != null  and sginId != ''"> and sgin_id = #{sginId}</if>
+                        <if test="driverCode != null  and driverCode != ''"> and driver_code = #{driverCode}</if>
+                        <if test="gmFlag != null  and gmFlag != ''"> and gm_flag = #{gmFlag}</if>
+                        <if test="gmtime != null  and gmtime != ''"> and gmtime = #{gmtime}</if>
+                        <if test="gmweight != null  and gmweight != ''"> and gmweight = #{gmweight}</if>
+                        <if test="gpFlag != null  and gpFlag != ''"> and gp_flag = #{gpFlag}</if>
+                        <if test="gptime != null  and gptime != ''"> and gptime = #{gptime}</if>
+                        <if test="gpweight != null  and gpweight != ''"> and gpweight = #{gpweight}</if>
+                        <if test="netWeight != null  and netWeight != ''"> and net_weight = #{netWeight}</if>
+                        <if test="jsWeight != null  and jsWeight != ''"> and js_weight = #{jsWeight}</if>
+                        <if test="materialCode != null  and materialCode != ''"> and material_code = #{materialCode}</if>
+                        <if test="materialName != null  and materialName != ''"> and material_name like concat('%', #{materialName}, '%')</if>
+                        <if test="supplierCode != null  and supplierCode != ''"> and supplier_code = #{supplierCode}</if>
+                        <if test="supplierName != null  and supplierName != ''"> and supplier_name like concat('%', #{supplierName}, '%')</if>
+                        <if test="warehouseCode != null  and warehouseCode != ''"> and warehouse_code = #{warehouseCode}</if>
+                        <if test="warehouseName != null  and warehouseName != ''"> and warehouse_name like concat('%', #{warehouseName}, '%')</if>
+                        <if test="sapCode != null  and sapCode != ''"> and sap_code = #{sapCode}</if>
+                        <if test="isUsed != null  and isUsed != ''"> and is_used = #{isUsed}</if>
+                        <if test="fileInfo != null  and fileInfo != ''"> and file_info = #{fileInfo}</if>
+                        <if test="firstWeighingFile != null  and firstWeighingFile != ''"> and first_weighing_file = #{firstWeighingFile}</if>
+                        <if test="secondWeighingFile != null  and secondWeighingFile != ''"> and second_weighing_file = #{secondWeighingFile}</if>
+                        <if test="voidOrNot != null  and voidOrNot != ''"> and void_or_not = #{voidOrNot}</if>
+                        <if test="icc != null  and icc != ''"> and icc = #{icc}</if>
+                        <if test="isend != null  and isend != ''"> and isend = #{isend}</if>
+                        <if test="printCount != null  and printCount != ''"> and print_count = #{printCount}</if>
+                        <if test="isUpload != null  and isUpload != ''"> and is_upload = #{isUpload}</if>
+                        <if test="sapRes != null  and sapRes != ''"> and sap_res = #{sapRes}</if>
+        </where>
+    </select>
+
+    <select id="selectBsWeighBridgeById" parameterType="String" resultMap="BsWeighBridgeResult">
+        <include refid="selectBsWeighBridgeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBsWeighBridge" parameterType="BsWeighBridge">
+        insert into bs_weigh_bridge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">id,</if>
+                    <if test="cweightno != null">cweightno,</if>
+                    <if test="weighingType != null">weighing_type,</if>
+                    <if test="sginId != null">sgin_id,</if>
+                    <if test="driverCode != null">driver_code,</if>
+                    <if test="gmFlag != null">gm_flag,</if>
+                    <if test="gmtime != null">gmtime,</if>
+                    <if test="gmweight != null">gmweight,</if>
+                    <if test="gpFlag != null">gp_flag,</if>
+                    <if test="gptime != null">gptime,</if>
+                    <if test="gpweight != null">gpweight,</if>
+                    <if test="netWeight != null">net_weight,</if>
+                    <if test="jsWeight != null">js_weight,</if>
+                    <if test="materialCode != null">material_code,</if>
+                    <if test="materialName != null">material_name,</if>
+                    <if test="supplierCode != null">supplier_code,</if>
+                    <if test="supplierName != null">supplier_name,</if>
+                    <if test="warehouseCode != null">warehouse_code,</if>
+                    <if test="warehouseName != null">warehouse_name,</if>
+                    <if test="sapCode != null">sap_code,</if>
+                    <if test="isUsed != null">is_used,</if>
+                    <if test="fileInfo != null">file_info,</if>
+                    <if test="firstWeighingFile != null">first_weighing_file,</if>
+                    <if test="secondWeighingFile != null">second_weighing_file,</if>
+                    <if test="voidOrNot != null">void_or_not,</if>
+                    <if test="icc != null">icc,</if>
+                    <if test="isend != null">isend,</if>
+                    <if test="printCount != null">print_count,</if>
+                    <if test="isUpload != null">is_upload,</if>
+                    <if test="sapRes != null">sap_res,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="materialVoucher != null">material_voucher,</if>
+                    <if test="sys_type != null">sys_type,</if>
+                    <if test="csh != null">csh,</if>
+                    <if test="ishweight != null">ishweight,</if>
+                    <if test="idelweight != null">idelweight,</if>
+                    <if test="ibzqty != null">ibzqty,</if>
+                    <if test="cniuhao != null">cniuhao,</if>
+                    <if test="cordercode != null">cordercode,</if>
+                    <if test="csap_hangxiangmu != null">csap_hangxiangmu,</if>
+                    <if test="cordercode_TMR != null">cordercode_TMR,</if>
+                    <if test="changxiangmu_TMR != null">changxiangmu_TMR,</if>
+                    <if test="cvencode_TMR != null">cvencode_TMR,</if>
+                    <if test="cvenname_TMR != null">cvenname_TMR,</if>
+                    <if test="cordercode_jh != null">cordercode_jh,</if>
+                    <if test="changxiangmu_jh != null">changxiangmu_jh,</if>
+                    <if test="cpzcode != null">cpzcode,</if>
+                    <if test="cpzcodeTmr != null">cpzcodeTmr,</if>
+                    <if test="csapmess != null">csapmess,</if>
+                    <if test="cpc != null">cpc,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">#{id},</if>
+                    <if test="cweightno != null">#{cweightno},</if>
+                    <if test="weighingType != null">#{weighingType},</if>
+                    <if test="sginId != null">#{sginId},</if>
+                    <if test="driverCode != null">#{driverCode},</if>
+                    <if test="gmFlag != null">#{gmFlag},</if>
+                    <if test="gmtime != null">#{gmtime},</if>
+                    <if test="gmweight != null">#{gmweight},</if>
+                    <if test="gpFlag != null">#{gpFlag},</if>
+                    <if test="gptime != null">#{gptime},</if>
+                    <if test="gpweight != null">#{gpweight},</if>
+                    <if test="netWeight != null">#{netWeight},</if>
+                    <if test="jsWeight != null">#{jsWeight},</if>
+                    <if test="materialCode != null">#{materialCode},</if>
+                    <if test="materialName != null">#{materialName},</if>
+                    <if test="supplierCode != null">#{supplierCode},</if>
+                    <if test="supplierName != null">#{supplierName},</if>
+                    <if test="warehouseCode != null">#{warehouseCode},</if>
+                    <if test="warehouseName != null">#{warehouseName},</if>
+                    <if test="sapCode != null">#{sapCode},</if>
+                    <if test="isUsed != null">#{isUsed},</if>
+                    <if test="fileInfo != null">#{fileInfo},</if>
+                    <if test="firstWeighingFile != null">#{firstWeighingFile},</if>
+                    <if test="secondWeighingFile != null">#{secondWeighingFile},</if>
+                    <if test="voidOrNot != null">#{voidOrNot},</if>
+                    <if test="icc != null">#{icc},</if>
+                    <if test="isend != null">#{isend},</if>
+                    <if test="printCount != null">#{printCount},</if>
+                    <if test="isUpload != null">#{isUpload},</if>
+                    <if test="sapRes != null">#{sapRes},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="materialVoucher != null">#{materialVoucher},</if>
+                    <if test="sys_type != null">#{sys_type},</if>
+                    <if test="csh != null">#{csh},</if>
+                    <if test="ishweight != null">#{ishweight},</if>
+                    <if test="idelweight != null">#{idelweight},</if>
+                    <if test="ibzqty != null">#{ibzqty},</if>
+                    <if test="cniuhao != null">#{cniuhao},</if>
+                    <if test="cordercode != null">#{cordercode},</if>
+                    <if test="csap_hangxiangmu != null">#{csap_hangxiangmu},</if>
+                    <if test="cordercode_TMR != null">#{cordercode_TMR},</if>
+                    <if test="changxiangmu_TMR != null">#{changxiangmu_TMR},</if>
+                    <if test="cvencode_TMR != null">#{cvencode_TMR},</if>
+                    <if test="cvenname_TMR != null">#{cvenname_TMR},</if>
+                    <if test="cordercode_jh != null">#{cordercode_jh},</if>
+                    <if test="changxiangmu_jh != null">#{changxiangmu_jh},</if>
+                    <if test="cpzcode != null">#{cpzcode},</if>
+                    <if test="cpzcodeTmr != null">#{cpzcodeTmr},</if>
+                    <if test="csapmess != null">#{csapmess},</if>
+                    <if test="cpc != null">#{cpc},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsWeighBridge" parameterType="BsWeighBridge">
+        update bs_weigh_bridge
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="cweightno != null">cweightno = #{cweightno},</if>
+                    <if test="weighingType != null">weighing_type = #{weighingType},</if>
+                    <if test="sginId != null">sgin_id = #{sginId},</if>
+                    <if test="driverCode != null">driver_code = #{driverCode},</if>
+                    <if test="gmFlag != null">gm_flag = #{gmFlag},</if>
+                    <if test="gmtime != null">gmtime = #{gmtime},</if>
+                    <if test="gmweight != null">gmweight = #{gmweight},</if>
+                    <if test="gpFlag != null">gp_flag = #{gpFlag},</if>
+                    <if test="gptime != null">gptime = #{gptime},</if>
+                    <if test="gpweight != null">gpweight = #{gpweight},</if>
+                    <if test="netWeight != null">net_weight = #{netWeight},</if>
+                    <if test="jsWeight != null">js_weight = #{jsWeight},</if>
+                    <if test="materialCode != null">material_code = #{materialCode},</if>
+                    <if test="materialName != null">material_name = #{materialName},</if>
+                    <if test="supplierCode != null">supplier_code = #{supplierCode},</if>
+                    <if test="supplierName != null">supplier_name = #{supplierName},</if>
+                    <if test="warehouseCode != null">warehouse_code = #{warehouseCode},</if>
+                    <if test="warehouseName != null">warehouse_name = #{warehouseName},</if>
+                    <if test="sapCode != null">sap_code = #{sapCode},</if>
+                    <if test="isUsed != null">is_used = #{isUsed},</if>
+                    <if test="fileInfo != null">file_info = #{fileInfo},</if>
+                    <if test="firstWeighingFile != null">first_weighing_file = #{firstWeighingFile},</if>
+                    <if test="secondWeighingFile != null">second_weighing_file = #{secondWeighingFile},</if>
+                    <if test="voidOrNot != null">void_or_not = #{voidOrNot},</if>
+                    <if test="icc != null">icc = #{icc},</if>
+                    <if test="isend != null">isend = #{isend},</if>
+                    <if test="printCount != null">print_count = #{printCount},</if>
+                    <if test="isUpload != null">is_upload = #{isUpload},</if>
+                    <if test="sapRes != null">sap_res = #{sapRes},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="materialVoucher != null">material_voucher = #{materialVoucher},</if>
+                    <if test="sys_type != null">sys_type = #{sys_type},</if>
+                    <if test="csh != null">csh = #{csh},</if>
+                    <if test="ishweight != null">ishweight = #{ishweight},</if>
+                    <if test="idelweight != null">idelweight = #{idelweight},</if>
+                    <if test="ibzqty != null">ibzqty = #{ibzqty},</if>
+                    <if test="cniuhao != null">cniuhao = #{cniuhao},</if>
+                    <if test="cordercode != null">cordercode = #{cordercode},</if>
+                    <if test="csap_hangxiangmu != null">csap_hangxiangmu = #{csap_hangxiangmu},</if>
+                    <if test="cordercode_TMR != null">cordercode_TMR = #{cordercode_TMR},</if>
+                    <if test="changxiangmu_TMR != null">changxiangmu_TMR = #{changxiangmu_TMR},</if>
+                    <if test="cvencode_TMR != null">cvencode_TMR = #{cvencode_TMR},</if>
+                    <if test="cvenname_TMR != null">cvenname_TMR = #{cvenname_TMR},</if>
+                    <if test="cordercode_jh != null">cordercode_jh = #{cordercode_jh},</if>
+                    <if test="changxiangmu_jh != null">changxiangmu_jh = #{changxiangmu_jh},</if>
+                    <if test="cpzcode != null">cpzcode = #{cpzcode},</if>
+                    <if test="cpzcodeTmr != null">cpzcodeTmr = #{cpzcodeTmr},</if>
+                    <if test="csapmess != null">csapmess = #{csapmess},</if>
+                    <if test="cpc != null">cpc = #{cpc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagById" >
+        update bs_weigh_bridge set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update bs_weigh_bridge set delete_id = id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="IsExist" resultMap="BsWeighBridgeResult">
+        select *
+        from bs_weigh_bridge
+        where cweightno = #{cweightno}
+    </select>
+
+    <update id="updateBsWeighBridgeByCweightno">
+        update bs_weigh_bridge
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="weighingType != null">weighing_type = #{weighingType},</if>
+                    <if test="sginId != null">sgin_id = #{sginId},</if>
+                    <if test="driverCode != null">driver_code = #{driverCode},</if>
+                    <if test="gmFlag != null">gm_flag = #{gmFlag},</if>
+                    <if test="gmtime != null">gmtime = #{gmtime},</if>
+                    <if test="gmweight != null">gmweight = #{gmweight},</if>
+                    <if test="gpFlag != null">gp_flag = #{gpFlag},</if>
+                    <if test="gptime != null">gptime = #{gptime},</if>
+                    <if test="gpweight != null">gpweight = #{gpweight},</if>
+                    <if test="netWeight != null">net_weight = #{netWeight},</if>
+                    <if test="jsWeight != null">js_weight = #{jsWeight},</if>
+                    <if test="materialCode != null">material_code = #{materialCode},</if>
+                    <if test="materialName != null">material_name = #{materialName},</if>
+                    <if test="supplierCode != null">supplier_code = #{supplierCode},</if>
+                    <if test="supplierName != null">supplier_name = #{supplierName},</if>
+                    <if test="warehouseCode != null">warehouse_code = #{warehouseCode},</if>
+                    <if test="warehouseName != null">warehouse_name = #{warehouseName},</if>
+                    <if test="sapCode != null">sap_code = #{sapCode},</if>
+                    <if test="isUsed != null">is_used = #{isUsed},</if>
+                    <if test="fileInfo != null">file_info = #{fileInfo},</if>
+                    <if test="firstWeighingFile != null">first_weighing_file = #{firstWeighingFile},</if>
+                    <if test="secondWeighingFile != null">second_weighing_file = #{secondWeighingFile},</if>
+                    <if test="voidOrNot != null">void_or_not = #{voidOrNot},</if>
+                    <if test="icc != null">icc = #{icc},</if>
+                    <if test="isend != null">isend = #{isend},</if>
+                    <if test="printCount != null">print_count = #{printCount},</if>
+                    <if test="isUpload != null">is_upload = #{isUpload},</if>
+                    <if test="sapRes != null">sap_res = #{sapRes},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="materialVoucher != null">material_voucher = #{materialVoucher},</if>
+                    <if test="sys_type != null">sys_type = #{sys_type},</if>
+                    <if test="csh != null">csh = #{csh},</if>
+                    <if test="ishweight != null">ishweight = #{ishweight},</if>
+                    <if test="idelweight != null">idelweight = #{idelweight},</if>
+                    <if test="ibzqty != null">ibzqty = #{ibzqty},</if>
+                    <if test="cniuhao != null">cniuhao = #{cniuhao},</if>
+                    <if test="cordercode != null">cordercode = #{cordercode},</if>
+                    <if test="csap_hangxiangmu != null">csap_hangxiangmu = #{csap_hangxiangmu},</if>
+                    <if test="cordercode_TMR != null">cordercode_TMR = #{cordercode_TMR},</if>
+                    <if test="changxiangmu_TMR != null">changxiangmu_TMR = #{changxiangmu_TMR},</if>
+                    <if test="cvencode_TMR != null">cvencode_TMR = #{cvencode_TMR},</if>
+                    <if test="cvenname_TMR != null">cvenname_TMR = #{cvenname_TMR},</if>
+                    <if test="cordercode_jh != null">cordercode_jh = #{cordercode_jh},</if>
+                    <if test="changxiangmu_jh != null">changxiangmu_jh = #{changxiangmu_jh},</if>
+                    <if test="cpzcode != null">cpzcode = #{cpzcode},</if>
+                    <if test="cpzcodeTmr != null">cpzcodeTmr = #{cpzcodeTmr},</if>
+                    <if test="csapmess != null">csapmess = #{csapmess},</if>
+                    <if test="cpc != null">cpc = #{cpc},</if>
+        </trim>
+        where cweightno = #{cweightno}
+    </update>
+
+    <select id="selectBsWeighBridgeBySignIdAndMaterialVoucher"
+            resultMap="BsWeighBridgeResult">
+        <include refid="selectBsWeighBridgeVo"/>
+        where sgin_id = #{signId}
+            and material_voucher = #{materialVoucher}
+    </select>
+
+    <select id="selectLatestBsWeighBridgeByDriverCode"
+            resultMap="BsWeighBridgeResult">
+        <include refid="selectBsWeighBridgeVo"/>
+        where driver_code = #{driverCode}
+        order by create_time desc limit 1
+    </select>
+</mapper>

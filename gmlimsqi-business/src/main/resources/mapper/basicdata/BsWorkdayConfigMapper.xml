@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsWorkdayConfigMapper">
+
+    <resultMap type="BsWorkdayConfig" id="BsWorkdayConfigResult">
+        <result property="bsWorkdayConfigId"    column="bs_workday_config_id"    />
+        <result property="dateStr"    column="date_str"    />
+        <result property="year"    column="year"    />
+        <result property="month"    column="month"    />
+        <result property="day"    column="day"    />
+        <result property="isWorkday"    column="is_workday"    />
+        <result property="isHoliday"    column="is_holiday"    />
+        <result property="holidayName"    column="holiday_name"    />
+        <result property="isOvertime"    column="is_overtime"    />
+        <result property="weekDay"    column="week_day"    />
+        <result property="sourceType"    column="source_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBsWorkdayConfigVo">
+        select bs_workday_config_id, date_str, year, month, day, is_workday, is_holiday, holiday_name, is_overtime, week_day, source_type, create_time, update_time, create_by, update_by, remark from bs_workday_config
+    </sql>
+    <select id="selectWorkDayCount" resultType="int">
+        select count(1)
+        from bs_workday_config
+        where is_workday = 1
+          and date_str &gt;= #{startDate}
+          and date_str &lt;= #{endDate}
+    </select>
+    <select id="selectBsWorkdayConfigList" parameterType="BsWorkdayConfig" resultMap="BsWorkdayConfigResult">
+        <include refid="selectBsWorkdayConfigVo"/>
+        <where>
+            <if test="dateStr != null  and dateStr != ''"> and date_str = #{dateStr}</if>
+            <if test="year != null "> and year = #{year}</if>
+            <if test="month != null "> and month = #{month}</if>
+            <if test="isWorkday != null "> and is_workday = #{isWorkday}</if>
+            <if test="isHoliday != null "> and is_holiday = #{isHoliday}</if>
+            <if test="holidayName != null  and holidayName != ''"> and holiday_name like concat('%', #{holidayName}, '%')</if>
+        </where>
+        order by date_str desc
+    </select>
+
+    <select id="selectBsWorkdayConfigByDateStr" parameterType="String" resultMap="BsWorkdayConfigResult">
+        <include refid="selectBsWorkdayConfigVo"/>
+        where date_str = #{dateStr}
+    </select>
+
+    <select id="selectBsWorkdayConfigByBsWorkdayConfigId" parameterType="String" resultMap="BsWorkdayConfigResult">
+        <include refid="selectBsWorkdayConfigVo"/>
+        where bs_workday_config_id = #{bsWorkdayConfigId}
+    </select>
+
+    <select id="checkDateStrUnique" parameterType="String" resultType="int">
+        select count(1) from bs_workday_config where date_str = #{dateStr}
+    </select>
+
+    <insert id="insertBsWorkdayConfig" parameterType="BsWorkdayConfig">
+        insert into bs_workday_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsWorkdayConfigId != null">bs_workday_config_id,</if>
+            <if test="dateStr != null and dateStr != ''">date_str,</if>
+            <if test="year != null">year,</if>
+            <if test="month != null">month,</if>
+            <if test="day != null">day,</if>
+            <if test="isWorkday != null">is_workday,</if>
+            <if test="isHoliday != null">is_holiday,</if>
+            <if test="holidayName != null">holiday_name,</if>
+            <if test="isOvertime != null">is_overtime,</if>
+            <if test="weekDay != null">week_day,</if>
+            <if test="sourceType != null">source_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+            create_time,
+            update_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsWorkdayConfigId != null">#{bsWorkdayConfigId},</if>
+            <if test="dateStr != null and dateStr != ''">#{dateStr},</if>
+            <if test="year != null">#{year},</if>
+            <if test="month != null">#{month},</if>
+            <if test="day != null">#{day},</if>
+            <if test="isWorkday != null">#{isWorkday},</if>
+            <if test="isHoliday != null">#{isHoliday},</if>
+            <if test="holidayName != null">#{holidayName},</if>
+            <if test="isOvertime != null">#{isOvertime},</if>
+            <if test="weekDay != null">#{weekDay},</if>
+            <if test="sourceType != null">#{sourceType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+            sysdate(),
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateBsWorkdayConfig" parameterType="BsWorkdayConfig">
+        update bs_workday_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dateStr != null and dateStr != ''">date_str = #{dateStr},</if>
+            <if test="year != null">year = #{year},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="day != null">day = #{day},</if>
+            <if test="isWorkday != null">is_workday = #{isWorkday},</if>
+            <if test="isHoliday != null">is_holiday = #{isHoliday},</if>
+            <if test="holidayName != null">holiday_name = #{holidayName},</if>
+            <if test="isOvertime != null">is_overtime = #{isOvertime},</if>
+            <if test="weekDay != null">week_day = #{weekDay},</if>
+            <if test="sourceType != null">source_type = #{sourceType},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </trim>
+        where bs_workday_config_id = #{bsWorkdayConfigId}
+    </update>
+
+    <update id="updateWorkdayStatus">
+        update bs_workday_config
+        set is_workday = #{isWorkday},
+            source_type = 2,
+            update_by = #{updateBy},
+            update_time = sysdate()
+        where date_str = #{dateStr}
+    </update>
+
+    <delete id="deleteBsWorkdayConfigByBsWorkdayConfigId" parameterType="String">
+        delete from bs_workday_config where bs_workday_config_id = #{bsWorkdayConfigId}
+    </delete>
+
+    <delete id="deleteBsWorkdayConfigByBsWorkdayConfigIds" parameterType="String">
+        delete from bs_workday_config where bs_workday_config_id in
+        <foreach item="bsWorkdayConfigId" collection="array" open="(" separator="," close=")">
+            #{bsWorkdayConfigId}
+        </foreach>
+    </delete>
+
+    <select id="selectWorkdayConfigByYearMonth" resultMap="BsWorkdayConfigResult">
+        <include refid="selectBsWorkdayConfigVo"/>
+        where year = #{year} and month = #{month}
+        order by day asc
+    </select>
+    <!-- 批量插入工作日配置 -->
+    <insert id="batchInsertBsWorkdayConfig" parameterType="java.util.List">
+        insert into bs_workday_config (
+        bs_workday_config_id,
+        date_str,
+        year,
+        month,
+        day,
+        is_workday,
+        is_holiday,
+        holiday_name,
+        is_overtime,
+        week_day,
+        source_type,
+        create_by,
+        update_by,
+        remark,
+        create_time,
+        update_time
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.bsWorkdayConfigId},
+            #{item.dateStr},
+            #{item.year},
+            #{item.month},
+            #{item.day},
+            #{item.isWorkday},
+            #{item.isHoliday},
+            #{item.holidayName},
+            #{item.isOvertime},
+            #{item.weekDay},
+            #{item.sourceType},
+            #{item.createBy},
+            #{item.updateBy},
+            #{item.remark},
+            sysdate(),
+            sysdate()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 批量更新工作日配置（使用case when方式） -->
+    <update id="batchUpdateBsWorkdayConfig" parameterType="java.util.List">
+        update bs_workday_config
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_workday = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when bs_workday_config_id = #{item.bsWorkdayConfigId} then #{item.isWorkday}
+                </foreach>
+            </trim>
+            <trim prefix="is_holiday = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when bs_workday_config_id = #{item.bsWorkdayConfigId} then #{item.isHoliday}
+                </foreach>
+            </trim>
+            <trim prefix="holiday_name = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when bs_workday_config_id = #{item.bsWorkdayConfigId} then #{item.holidayName}
+                </foreach>
+            </trim>
+            <trim prefix="source_type = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when bs_workday_config_id = #{item.bsWorkdayConfigId} then #{item.sourceType}
+                </foreach>
+            </trim>
+            <trim prefix="update_by = case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when bs_workday_config_id = #{item.bsWorkdayConfigId} then #{item.updateBy}
+                </foreach>
+            </trim>
+            update_time = sysdate()
+        </trim>
+        where bs_workday_config_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.bsWorkdayConfigId}
+        </foreach>
+    </update>
+</mapper>

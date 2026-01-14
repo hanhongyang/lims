@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpOutentrustRegisterMapper">
+
+    <resultMap type="OpOutentrustRegister" id="OpOutentrustRegisterResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isEnable"    column="is_enable"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="entrustTime"    column="entrust_time"    />
+        <result property="sampleQuantity"    column="sample_quantity"    />
+        <result property="entrustLab"    column="entrust_lab"    />
+        <result property="fileAddres"    column="file_addres"    />
+    </resultMap>
+
+    <resultMap id="OpOutentrustRegisterOpOutentrustRegisterSampleResult" type="OpOutentrustRegister" extends="OpOutentrustRegisterResult">
+        <collection property="opOutentrustRegisterSampleList" ofType="OpOutentrustRegisterSample" column="id" select="selectOpOutentrustRegisterSampleList" />
+    </resultMap>
+
+    <resultMap type="OpOutentrustRegisterSample" id="OpOutentrustRegisterSampleResult">
+        <result property="outentrustRegisterId"    column="outentrust_register_id"    />
+        <result property="outentrustRegisterSampleId"    column="outentrust_register_sample_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="itemId"    column="item_id"    />
+    </resultMap>
+
+    <sql id="selectOpOutentrustRegisterVo">
+        select id,
+               dept_id,
+               is_delete,
+               is_enable,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               dept_name,
+               remark,
+               entrust_order_no,
+               entrust_time,
+               sample_quantity,
+               entrust_lab,
+               file_addres
+        from op_outentrust_register
+    </sql>
+
+    <select id="selectOpOutentrustRegisterList" parameterType="OpOutentrustRegister" resultMap="OpOutentrustRegisterResult">
+        <include refid="selectOpOutentrustRegisterVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="deptId != null  and deptId != ''"> and dept_id = #{deptId}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="isEnable != null  and isEnable != ''"> and is_enable = #{isEnable}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and entrust_order_no = #{entrustOrderNo}</if>
+            <if test="sendSampleDateStart != null "> and entrust_time >= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null "> and entrust_time &lt;= #{sendSampleDateEnd}</if>
+            <if test="sampleQuantity != null "> and sample_quantity = #{sampleQuantity}</if>
+            <if test="entrustLab != null  and entrustLab != ''"> and entrust_lab = #{entrustLab}</if>
+            <if test="fileAddres != null  and fileAddres != ''"> and file_addres = #{fileAddres}</if>
+        </where>
+    </select>
+
+    <select id="selectOpOutentrustRegisterById" parameterType="String" resultMap="OpOutentrustRegisterOpOutentrustRegisterSampleResult">
+        select id, dept_id, is_delete, is_enable, create_time, create_by, update_time, update_by, dept_name, remark, entrust_order_no, entrust_time, sample_quantity, entrust_lab, file_addres
+        from op_outentrust_register
+        where id = #{id}       and is_delete = '0'  <!-- 固定添加软删除条件 -->
+    </select>
+
+    <select id="selectOpOutentrustRegisterSampleList" resultType="OpOutentrustRegisterSample" resultMap="OpOutentrustRegisterSampleResult">
+        select outentrust_register_id, outentrust_register_sample_id, is_delete, create_time, create_by, update_time, update_by, sample_no, sample_name, item_name,item_id
+        from op_outentrust_register_sample
+        where outentrust_register_sample_id = #{outentrust_register_sample_id}
+    </select>
+
+    <insert id="insertOpOutentrustRegister" parameterType="OpOutentrustRegister">
+        insert into op_outentrust_register
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="isEnable != null and isEnable != ''">is_enable,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="remark != null">remark,</if>
+            <if test="entrustOrderNo != null">entrust_order_no,</if>
+            <if test="entrustTime != null">entrust_time,</if>
+            <if test="sampleQuantity != null">sample_quantity,</if>
+            <if test="entrustLab != null">entrust_lab,</if>
+            <if test="fileAddres != null">file_addres,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="isEnable != null and isEnable != ''">#{isEnable},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="entrustOrderNo != null">#{entrustOrderNo},</if>
+            <if test="entrustTime != null">#{entrustTime},</if>
+            <if test="sampleQuantity != null">#{sampleQuantity},</if>
+            <if test="entrustLab != null">#{entrustLab},</if>
+            <if test="fileAddres != null">#{fileAddres},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpOutentrustRegister" parameterType="OpOutentrustRegister">
+        update op_outentrust_register
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="isEnable != null and isEnable != ''">is_enable = #{isEnable},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="entrustOrderNo != null">entrust_order_no = #{entrustOrderNo},</if>
+            <if test="entrustTime != null">entrust_time = #{entrustTime},</if>
+            <if test="sampleQuantity != null">sample_quantity = #{sampleQuantity},</if>
+            <if test="entrustLab != null">entrust_lab = #{entrustLab},</if>
+            <if test="fileAddres != null">file_addres = #{fileAddres},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOpOutentrustRegisterById" parameterType="String">
+        delete from op_outentrust_register where id = #{id}
+    </delete>
+
+    <delete id="deleteOpOutentrustRegisterByIds" parameterType="String">
+        delete from op_outentrust_register where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_outentrust_register set is_delete=1  where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_outentrust_register set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+
+    <delete id="deleteOpOutentrustRegisterSampleByOutentrustRegisterSampleIds" parameterType="String">
+        delete from op_outentrust_register_sample where outentrust_register_sample_id in
+        <foreach item="outentrustRegisterSampleId" collection="array" open="(" separator="," close=")">
+            #{outentrustRegisterSampleId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteOpOutentrustRegisterSampleByOutentrustRegisterSampleId" parameterType="String">
+        delete from op_outentrust_register_sample where outentrust_register_sample_id = #{outentrustRegisterSampleId}
+    </delete>
+
+    <update id="updateDeleteFlagByOutentrustRegisterSampleIds" >
+        update op_outentrust_register_sample
+        set is_delete=1,
+        update_time=#{now,jdbcType=TIMESTAMP},
+        update_by=#{updateUserId}
+        where outentrust_register_sample_id in
+        <foreach item="item" collection="outentrustRegisterSampleId" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateDeleteFlagByOutentrustRegisterSampleId" >
+        update  op_outentrust_register_sample set is_delete=1  ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where outentrust_register_sample_id = #{outentrustRegisterSampleId}
+    </update>
+
+    <insert id="batchOpOutentrustRegisterSample">
+        insert into op_outentrust_register_sample( outentrust_register_id, outentrust_register_sample_id, is_delete, create_time, create_by, update_time, update_by, sample_no, sample_name, item_name,item_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.outentrustRegisterId}, #{item.outentrustRegisterSampleId}, #{item.isDelete}, #{item.createTime}, #{item.createBy}, #{item.updateTime}, #{item.updateBy}, #{item.sampleNo}, #{item.sampleName}, #{item.itemName},#{item.itemId})
+        </foreach>
+    </insert>
+
+    <insert id="batchOpOutentrustRegisterItem">
+        insert into op_outentrust_register_item(outentrust_register_id,outentrust_register_item_id, outentrust_register_sample_id, is_delete, create_time, create_by, update_time, update_by, sample_no, sample_name, item_name, items_id )
+         values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.outentrustRegisterId}, #{item.outentrustRegisterItemId}, #{item.outentrustRegisterSampleId}, #{item.isDelete},#{item.createTime}, #{item.createBy}, #{item.updateTime}, #{item.updateBy}, #{item.sampleNo}, #{item.sampleName}, #{item.itemName},#{item.itemsId})
+        </foreach>
+    </insert>
+
+    <update id="updateDeleteFlagByOutentrustRegisterId">
+        update  op_outentrust_register_sample set is_delete=1  ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where outentrust_register_id = #{outentrustRegisterSampleId}
+
+    </update>
+</mapper>

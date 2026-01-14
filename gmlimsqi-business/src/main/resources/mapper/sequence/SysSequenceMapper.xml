@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.sequence.mapper.SysSequenceMapper">
+  <resultMap id="BaseResultMap" type="com.gmlimsqi.business.sequence.domain.SysSequence">
+
+    <!--@Table sys_sequence-->
+    <id column="sequence_id" jdbcType="INTEGER" property="sequenceId"/>
+    <result column="revision" jdbcType="INTEGER" property="revision" />
+    <result column="sequence_code" jdbcType="VARCHAR" property="prefix" />
+    <result column="seq_year" jdbcType="INTEGER" property="seqYear" />
+    <result column="seq_month" jdbcType="INTEGER" property="seqMonth" />
+    <result column="seq_day" jdbcType="INTEGER" property="seqDay" />
+    <result column="sequence_value" jdbcType="INTEGER" property="sequenceValue" />
+    <result column="bill_code" jdbcType="VARCHAR" property="billCode" />
+    <result column="bill_name" jdbcType="VARCHAR" property="billName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+
+    sequence_id,revision, sequence_code, seq_year, seq_month, seq_day, sequence_value,bill_code,bill_name
+  </sql>
+  <insert id="insertSelective" parameterType="com.gmlimsqi.business.sequence.domain.SysSequence">
+
+    insert into sys_sequence
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="revision != null">
+        revision,
+      </if>
+      <if test="prefix != null">
+        sequence_code,
+      </if>
+      <if test="seqYear != null">
+        seq_year,
+      </if>
+      <if test="seqMonth != null">
+        seq_month,
+      </if>
+      <if test="seqDay != null">
+        seq_day,
+      </if>
+      <if test="sequenceValue != null">
+        sequence_value,
+      </if>
+      <if test="billCode != null and billCode != ''">
+        bill_code,
+      </if>
+      <if test="billName != null and billName != ''">
+        bill_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="revision != null">
+        #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="prefix != null">
+        #{prefix,jdbcType=VARCHAR},
+      </if>
+      <if test="seqYear != null">
+        #{seqYear,jdbcType=INTEGER},
+      </if>
+      <if test="seqMonth != null">
+        #{seqMonth,jdbcType=INTEGER},
+      </if>
+      <if test="seqDay != null">
+        #{seqDay,jdbcType=INTEGER},
+      </if>
+      <if test="sequenceValue != null">
+        #{sequenceValue,jdbcType=INTEGER},
+      </if>
+      <if test="billCode != null and billCode != ''">
+        #{billCode,jdbcType=VARCHAR},
+      </if>
+      <if test="billName != null and billName != ''">
+        #{billName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectBySequence" parameterType="com.gmlimsqi.business.sequence.domain.SysSequence" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from sys_sequence
+    <where>
+      sequence_code=#{prefix}
+      <if test="billCode != null and billCode != ''">
+        and bill_code=#{billCode}
+      </if>
+      <if test="seqYear != null">
+        and seq_year=#{seqYear}
+      </if>
+      <if test="seqMonth != null">
+        and seq_month=#{seqMonth}
+      </if>
+      <if test="seqDay != null">
+        and seq_day=#{seqDay}
+      </if>
+    </where>
+  </select>
+  <select id="selectBySequenceForUpdate" parameterType="com.gmlimsqi.business.sequence.domain.SysSequence" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from sys_sequence
+    <where>
+      sequence_code=#{prefix}
+      <if test="billCode != null and billCode != ''">
+        and bill_code=#{billCode}
+      </if>
+      <if test="seqYear != null">
+        and seq_year=#{seqYear}
+      </if>
+      <if test="seqMonth != null">
+        and seq_month=#{seqMonth}
+      </if>
+      <if test="seqDay != null">
+        and seq_day=#{seqDay}
+      </if>
+    </where>
+    for update
+  </select>
+  <update id="updateSequenceWithVersion" parameterType="com.gmlimsqi.business.sequence.domain.SysSequence" >
+    update sys_sequence
+    set sequence_value=#{sequenceValue},revision=revision+1
+    <where>
+      sequence_code=#{prefix}
+      and revision=#{revision}
+      <if test="billCode != null and billCode != ''">
+        and bill_code=#{billCode}
+      </if>
+      <if test="seqYear != null">
+        and seq_year=#{seqYear}
+      </if>
+      <if test="seqMonth != null">
+        and seq_month=#{seqMonth}
+      </if>
+      <if test="seqDay != null">
+        and seq_day=#{seqDay}
+      </if>
+    </where>
+  </update>
+  <update id="updateSequence" parameterType="com.gmlimsqi.business.sequence.domain.SysSequence" >
+    update sys_sequence
+    set sequence_value=#{sequenceValue}
+    <where>
+      sequence_code=#{prefix}
+      <if test="billCode != null and billCode != ''">
+        and bill_code=#{billCode}
+      </if>
+      <if test="seqYear != null">
+        and seq_year=#{seqYear}
+      </if>
+      <if test="seqMonth != null">
+        and seq_month=#{seqMonth}
+      </if>
+      <if test="seqDay != null">
+        and seq_day=#{seqDay}
+      </if>
+    </where>
+  </update>
+  <select id="getTotalSequence" resultType="java.math.BigDecimal">
+    select  sum(sequence_value) from sys_sequence
+  </select>
+</mapper>

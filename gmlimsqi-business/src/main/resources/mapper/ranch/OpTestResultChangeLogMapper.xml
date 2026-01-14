@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gmlimsqi.business.ranch.mapper.OpTestResultChangeLogMapper">
+
+    <!-- ======================= ResultMap ======================= -->
+    <resultMap id="OpTestResultChangeLogResultMap"
+               type="com.gmlimsqi.business.ranch.domain.OpTestResultChangeLog">
+        <id property="id" column="id"/>
+        <result property="resultId" column="result_id"/>
+        <result property="originResult" column="origin_result"/>
+        <result property="originCheckResult" column="origin_check_result"/>
+        <result property="newResult" column="new_result"/>
+        <result property="newCheckResult" column="new_check_result"/>
+        <result property="changeReason" column="change_reason"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <!-- ======================= 插入 ======================= -->
+    <insert id="insertOpTestResultChangeLog"
+            parameterType="com.gmlimsqi.business.ranch.domain.OpTestResultChangeLog"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO op_result_change_log
+        (result_id,
+         origin_result,
+         origin_check_result,
+         new_result,
+         new_check_result,
+         change_reason,
+         create_time,
+         create_by,
+         remark)
+        VALUES (#{resultId},
+                #{originResult},
+                #{originCheckResult},
+                #{newResult},
+                #{newCheckResult},
+                #{changeReason},
+                #{createTime},
+                #{createBy},
+                #{remark})
+    </insert>
+
+    <!-- ======================= 根据ID查询 ======================= -->
+    <select id="selectById"
+            parameterType="java.lang.Long"
+            resultMap="OpTestResultChangeLogResultMap">
+        SELECT id,
+               result_id,
+               origin_result,
+               origin_check_result,
+               new_result,
+               new_check_result,
+               change_reason,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               remark
+        FROM op_result_change_log
+        WHERE id = #{id}
+        LIMIT 1
+    </select>
+
+    <!-- ======================= 动态查询列表 ======================= -->
+    <select id="selectList"
+            parameterType="com.gmlimsqi.business.ranch.dto.changelog.ResultChangeLogQueryDTO"
+            resultMap="OpTestResultChangeLogResultMap">
+        SELECT
+        id,
+        result_id,
+        origin_result,
+        origin_check_result,
+        new_result,
+        new_check_result,
+        change_reason,
+        create_time,
+        create_by,
+        remark
+        FROM op_result_change_log
+        <where>
+            <if test="query.resultId != null and query.resultId != ''">
+                AND result_id = #{query.resultId}
+            </if>
+            <if test="query.originResult != null and query.originResult != ''">
+                AND origin_result = #{query.originResult}
+            </if>
+            <if test="query.originCheckResult != null and query.originCheckResult != ''">
+                AND origin_check_result = #{query.originCheckResult}
+            </if>
+            <if test="query.newResult != null and query.newResult != ''">
+                AND new_result = #{query.newResult}
+            </if>
+            <if test="query.newCheckResult != null and query.newCheckResult != ''">
+                AND new_check_result = #{query.newCheckResult}
+            </if>
+            <if test="query.createBy != null and query.createBy != ''">
+                AND create_by = #{query.createBy}
+            </if>
+            <if test="query.createTimeStart != null">
+                AND create_time <![CDATA[ >= ]]> #{query.createTimeStart}
+            </if>
+            <if test="query.createTimeEnd != null">
+                AND create_time <![CDATA[ <= ]]> #{query.createTimeEnd}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

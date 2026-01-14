@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.sap.accept.mapper.material.BsSapinfoMapper">
+
+    <resultMap type="com.gmlimsqi.sap.accept.domain.material.BsSapinfo" id="BsSapinfoResult">
+        <result property="id" column="id"/>
+        <result property="dcreatetime" column="dcreatetime"/>
+        <result property="dmodifytime" column="dmodifytime"/>
+        <result property="bsysdel" column="bsysdel"/>
+        <result property="ccode" column="ccode"/>
+        <result property="cname" column="cname"/>
+        <result property="cpwd" column="cpwd"/>
+        <result property="curl" column="curl"/>
+        <result property="cusername" column="cusername"/>
+    </resultMap>
+
+    <sql id="selectBsSapinfoVo">
+        select id,
+               dcreatetime,
+               dmodifytime,
+               bsysdel,
+               ccode,
+               cname,
+               cpwd,
+               curl,
+               cusername
+        from bs_sapinfo
+    </sql>
+
+    <select id="getSapConfig" resultMap="BsSapinfoResult">
+        select id,
+               dcreatetime,
+               dmodifytime,
+               bsysdel,
+               ccode,
+               cname,
+               cpwd,
+               curl,
+               cusername
+        from bs_sapinfo
+        where ccode = #{inventoryTB}
+        order by dcreatetime desc limit 1
+    </select>
+
+</mapper>

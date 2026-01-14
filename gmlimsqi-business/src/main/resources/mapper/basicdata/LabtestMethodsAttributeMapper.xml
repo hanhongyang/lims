@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.LabtestMethodsAttributeMapper">
+    
+    <resultMap type="LabtestMethodsAttribute" id="BsLabtestMethodsAttributeResult">
+        <result property="bsLabtestMethodsAttributeId"    column="bs_labtest_methods_attribute_id"    />
+        <result property="bsLabtestMethodsId"    column="bs_labtest_methods_id"    />
+        <result property="attributeName"    column="attribute_name"    />
+        <result property="attributeCode"    column="attribute_code"    />
+        <result property="attributeType"    column="attribute_type"    />
+        <result property="seqNo"    column="seq_no"    />
+        <result property="defaultValue"    column="default_value"    />
+        <result property="maxValue"    column="max_value"    />
+        <result property="minValue"    column="min_value"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBsLabtestMethodsAttributeVo">
+        select bs_labtest_methods_attribute_id, bs_labtest_methods_id, attribute_name, attribute_code, attribute_type, seq_no, default_value, max_value, min_value, is_delete, create_time, create_by, update_time, update_by from bs_labtest_methods_attribute
+    </sql>
+
+    <select id="selectBsLabtestMethodsAttributeList" parameterType="LabtestMethodsAttribute" resultMap="BsLabtestMethodsAttributeResult">
+        <include refid="selectBsLabtestMethodsAttributeVo"/>
+        <where>
+            and is_delete = '0'  <!-- 固定添加软删除条件 -->
+            <if test="bsLabtestMethodsId != null  and bsLabtestMethodsId != ''"> and bs_labtest_methods_id = #{bsLabtestMethodsId}</if>
+            <if test="attributeName != null  and attributeName != ''"> and attribute_name like concat('%', #{attributeName}, '%')</if>
+            <if test="attributeCode != null  and attributeCode != ''"> and attribute_code = #{attributeCode}</if>
+            <if test="attributeType != null  and attributeType != ''"> and attribute_type = #{attributeType}</if>
+        </where>
+        order by seq_no asc,create_time asc
+    </select>
+    
+    <select id="selectBsLabtestMethodsAttributeByBsLabtestMethodsAttributeId" parameterType="String" resultMap="BsLabtestMethodsAttributeResult">
+        <include refid="selectBsLabtestMethodsAttributeVo"/>
+        where bs_labtest_methods_attribute_id = #{bsLabtestMethodsAttributeId}
+        and is_delete = '0'  <!-- 固定添加软删除条件 -->
+        order by seq_no asc,create_time asc
+    </select>
+
+    <insert id="insertBsLabtestMethodsAttribute" parameterType="LabtestMethodsAttribute">
+        insert into bs_labtest_methods_attribute
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestMethodsAttributeId != null">bs_labtest_methods_attribute_id,</if>
+            <if test="bsLabtestMethodsId != null and bsLabtestMethodsId != ''">bs_labtest_methods_id,</if>
+            <if test="attributeName != null and attributeName != ''">attribute_name,</if>
+            <if test="attributeCode != null and attributeCode != ''">attribute_code,</if>
+            <if test="attributeType != null and attributeType != ''">attribute_type,</if>
+            <if test="seqNo != null">seq_no,</if>
+            <if test="defaultValue != null">default_value,</if>
+            <if test="maxValue != null">max_value,</if>
+            <if test="minValue != null">min_value,</if>
+            <if test="isDelete != null and isDelete != ''">is_delete,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bsLabtestMethodsAttributeId != null">#{bsLabtestMethodsAttributeId},</if>
+            <if test="bsLabtestMethodsId != null and bsLabtestMethodsId != ''">#{bsLabtestMethodsId},</if>
+            <if test="attributeName != null and attributeName != ''">#{attributeName},</if>
+            <if test="attributeCode != null and attributeCode != ''">#{attributeCode},</if>
+            <if test="attributeType != null and attributeType != ''">#{attributeType},</if>
+            <if test="seqNo != null">#{seqNo},</if>
+            <if test="defaultValue != null">#{defaultValue},</if>
+            <if test="maxValue != null">#{maxValue},</if>
+            <if test="minValue != null">#{minValue},</if>
+            <if test="isDelete != null and isDelete != ''">#{isDelete},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBsLabtestMethodsAttribute" parameterType="LabtestMethodsAttribute">
+        update bs_labtest_methods_attribute
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bsLabtestMethodsId != null and bsLabtestMethodsId != ''">bs_labtest_methods_id = #{bsLabtestMethodsId},</if>
+            <if test="attributeName != null and attributeName != ''">attribute_name = #{attributeName},</if>
+            <if test="attributeCode != null and attributeCode != ''">attribute_code = #{attributeCode},</if>
+            <if test="attributeType != null and attributeType != ''">attribute_type = #{attributeType},</if>
+            <if test="seqNo != null">seq_no = #{seqNo},</if>
+            <if test="defaultValue != null">default_value = #{defaultValue},</if>
+            <if test="maxValue != null">max_value = #{maxValue},</if>
+            <if test="minValue != null">min_value = #{minValue},</if>
+            <if test="isDelete != null and isDelete != ''">is_delete = #{isDelete},</if>
+<!--            <if test="createTime != null">create_time = #{createTime},</if>-->
+<!--            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>-->
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bs_labtest_methods_attribute_id = #{bsLabtestMethodsAttributeId}
+    </update>
+
+    <update id="deleteByMethodsId">
+        update bs_labtest_methods_attribute set
+            is_delete = 1,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where bs_labtest_methods_id = #{bsLabtestMethodsId}
+    </update>
+
+    <delete id="deleteBsLabtestMethodsAttributeByBsLabtestMethodsAttributeId" parameterType="String">
+        delete from bs_labtest_methods_attribute where bs_labtest_methods_attribute_id = #{bsLabtestMethodsAttributeId}
+    </delete>
+
+    <delete id="deleteBsLabtestMethodsAttributeByBsLabtestMethodsAttributeIds" parameterType="String">
+        delete from bs_labtest_methods_attribute where bs_labtest_methods_attribute_id in 
+        <foreach item="bsLabtestMethodsAttributeId" collection="array" open="(" separator="," close=")">
+            #{bsLabtestMethodsAttributeId}
+        </foreach>
+    </delete>
+</mapper>

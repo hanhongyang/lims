@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpJczxBloodReportBaseMapper">
+
+    <resultMap type="OpJczxBloodReportBase" id="OpJczxBloodReportBaseResult">
+        <result property="opJczxBloodReportBaseId"    column="op_jczx_blood_report_base_id"    />
+        <result property="reportNo"    column="report_no"    />
+        <result property="status"    column="status"    />
+        <result property="entrustDeptName"    column="entrust_dept_name"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="sampleAmount"    column="sample_amount"    />
+        <result property="animalType"    column="animal_type"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="testTime"    column="test_time"    />
+        <result property="sampleState"    column="sample_state"    />
+        <result property="testBasis"    column="test_basis"    />
+        <result property="testType"    column="test_type"    />
+        <result property="testEvaluation"    column="test_evaluation"    />
+        <result property="insturment"    column="insturment"    />
+        <result property="sampleBatchNo"    column="sample_batch_no"    />
+        <result property="testCriterion"    column="test_criterion"    />
+        <result property="testReferStandard"    column="test_refer_standard"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleModel"    column="sample_model"    />
+        <result property="conclusion"    column="conclusion"    />
+        <result property="remark"    column="remark"    />
+        <result property="editUserId"    column="edit_user_id"    />
+        <result property="checkUserId"    column="check_user_id"    />
+        <result property="checkTime"    column="check_time"    />
+        <result property="approveUserId"    column="approve_user_id"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deleteId"    column="delete_id"    />
+        <result property="editUser"    column="edit_user"    />
+        <result property="checkUser"    column="check_user"    />
+        <result property="approveUser"    column="approve_user"    />
+        <result property="bloodEntrustOrderId"    column="blood_entrust_order_id"    />
+        <result property="reportDate"    column="report_date"    />
+        <result property="bloodTaskItemType"    column="blood_task_item_type"    />
+        <result property="sendSampleDate"    column="send_sample_date"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="aIsShow"    column="a_is_show"    />
+        <result property="oIsShow"    column="o_is_show"    />
+        <result property="editTime"    column="edit_time"    />
+        <result property="pdfFileInfo"    column="pdf_file_info"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="returnReason"    column="return_reason"    />
+        <result property="sjph"    column="sjph"    />
+    </resultMap>
+
+    <sql id="selectOpJczxBloodReportBaseVo">
+        select
+            r.op_jczx_blood_report_base_id,
+            r.report_no,
+            r.report_date,
+            r.status,
+            r.entrust_dept_name,
+            r.sample_name,
+            r.sample_amount,
+            r.animal_type,
+            r.receive_time,
+            r.test_time,
+            r.sample_state,
+            r.test_basis,
+            r.test_type,
+            r.test_evaluation,
+            r.insturment,
+            r.sample_batch_no,
+            r.test_criterion,
+            r.test_refer_standard,
+            r.sample_no,
+            r.sample_model,
+            r.conclusion,
+            r.remark,
+            r.edit_user_id,
+            r.check_user_id,
+            r.check_time,
+            r.approve_user_id,
+            r.approve_time,
+            r.create_time,
+            r.create_by,
+            r.update_time,
+            r.update_by,
+            r.delete_id,
+            r.edit_user,
+            r.check_user,
+            r.approve_user,
+            r.blood_entrust_order_id,
+            r.blood_task_item_type,
+            r.send_sample_date,
+            r.a_is_show,
+            r.o_is_show,
+            r.edit_time,
+            r.pdf_file_info,
+            o.entrust_order_no
+                ,r.return_reason,
+            r.sjph
+        from op_jczx_blood_report_base r
+                 LEFT JOIN op_blood_entrust_order o on r.blood_entrust_order_id = o.op_blood_entrust_order_id and o.delete_id='0'
+    </sql>
+
+    <select id="selectOpJczxBloodReportBaseList" parameterType="OpJczxBloodReportBase" resultMap="OpJczxBloodReportBaseResult">
+        <include refid="selectOpJczxBloodReportBaseVo"/>
+        <where>
+            r.status !='6' and r.delete_id='0'
+            <if test="reportNo != null  and reportNo != ''"> and report_no = #{reportNo}</if>
+            <if test="beginReportTime != null">
+                AND DATE(report_date) >= #{beginReportTime}
+            </if>
+            <if test="endReportTime != null">
+                AND DATE(report_date) &lt;= #{endReportTime}
+            </if>
+            <if test="status != null  and status != ''"> and r.status = #{status}</if>
+            <if test="entrustDeptName != null  and entrustDeptName != ''"> and entrust_dept_name like concat('%', #{entrustDeptName}, '%')</if>
+            <if test="sampleName != null  and sampleName != ''"> and sample_name like concat('%', #{sampleName}, '%')</if>
+            <if test="sampleAmount != null  and sampleAmount != ''"> and sample_amount = #{sampleAmount}</if>
+            <if test="animalType != null  and animalType != ''"> and animal_type = #{animalType}</if>
+            <if test="receiveTime != null "> and r.receive_time = #{receiveTime}</if>
+            <if test="testTime != null "> and test_time = #{testTime}</if>
+            <if test="sampleState != null  and sampleState != ''"> and sample_state = #{sampleState}</if>
+            <if test="testBasis != null  and testBasis != ''"> and test_basis = #{testBasis}</if>
+            <if test="testType != null  and testType != ''"> and test_type = #{testType}</if>
+            <if test="insturment != null  and insturment != ''"> and insturment = #{insturment}</if>
+            <if test="sampleBatchNo != null  and sampleBatchNo != ''"> and sample_batch_no = #{sampleBatchNo}</if>
+            <if test="testCriterion != null  and testCriterion != ''"> and test_criterion = #{testCriterion}</if>
+            <if test="testReferStandard != null  and testReferStandard != ''"> and test_refer_standard = #{testReferStandard}</if>
+            <if test="sampleNo != null  and sampleNo != ''"> and sample_no = #{sampleNo}</if>
+            <if test="sampleModel != null  and sampleModel != ''"> and sample_model = #{sampleModel}</if>
+            <if test="conclusion != null  and conclusion != ''"> and conclusion = #{conclusion}</if>
+            <if test="editUserId != null  and editUserId != ''"> and edit_user_id = #{editUserId}</if>
+            <if test="checkUserId != null  and checkUserId != ''"> and check_user_id = #{checkUserId}</if>
+            <if test="checkTime != null "> and check_time = #{checkTime}</if>
+            <if test="approveUserId != null  and approveUserId != ''"> and approve_user_id = #{approveUserId}</if>
+            <if test="approveTime != null "> and approve_time = #{approveTime}</if>
+            <if test="deleteId != null  and deleteId != ''"> and r.delete_id = #{deleteId}</if>
+            <if test="editUser != null  and editUser != ''"> and edit_user = #{editUser}</if>
+            <if test="checkUser != null  and checkUser != ''"> and check_user = #{checkUser}</if>
+            <if test="approveUser != null  and approveUser != ''"> and approve_user = #{approveUser}</if>
+            <if test="bloodEntrustOrderId != null  and bloodEntrustOrderId != ''"> and blood_entrust_orderId = #{bloodEntrustOrderId}</if>
+            <if test="bloodTaskItemType != null  and bloodTaskItemType != ''"> and o.blood_task_item_type = #{bloodTaskItemType}</if>
+            <if test="sendSampleDate != null  and sendSampleDate != ''"> and o.send_sample_date = #{sendSampleDate}</if>
+            <if test="aIsShow != null  and aIsShow != ''"> and a_is_show = #{aIsShow}</if>
+            <if test="oIsShow != null  and oIsShow != ''"> and o_is_show = #{oIsShow}</if>
+            <if test="editTime != null "> and edit_time = #{editTime}</if>
+            <if test="entrustOrderNo != null "> and o.entrust_order_no = #{entrustOrderNo}</if>
+            <if test="bloodTaskItemTypeNotIn != null  and bloodTaskItemTypeNotIn != ''">
+                and o.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+            </if>
+        </where>
+        order by r.receive_time desc
+    </select>
+    
+    <select id="selectOpJczxBloodReportBaseByOpJczxBloodReportBaseId" parameterType="String" resultMap="OpJczxBloodReportBaseResult">
+        <include refid="selectOpJczxBloodReportBaseVo"/>
+        where op_jczx_blood_report_base_id = #{opJczxBloodReportBaseId}
+    </select>
+
+    <insert id="insertOpJczxBloodReportBase" parameterType="OpJczxBloodReportBase">
+        insert into op_jczx_blood_report_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opJczxBloodReportBaseId != null">op_jczx_blood_report_base_id,</if>
+            <if test="reportNo != null">report_no,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="testDeptName != null">test_dept_name,</if>
+            <if test="reportDate != null">report_date,</if>
+            <if test="entrustDeptName != null">entrust_dept_name,</if>
+            <if test="sampleName != null and sampleName != ''">sample_name,</if>
+            <if test="sampleAmount != null">sample_amount,</if>
+            <if test="animalType != null">animal_type,</if>
+            <if test="receiveTime != null">receive_time,</if>
+            <if test="testTime != null">test_time,</if>
+            <if test="sampleState != null">sample_state,</if>
+            <if test="testBasis != null">test_basis,</if>
+            <if test="testType != null">test_type,</if>
+            <if test="testEvaluation != null">test_evaluation,</if>
+            <if test="insturment != null">insturment,</if>
+            <if test="sampleBatchNo != null">sample_batch_no,</if>
+            <if test="testCriterion != null">test_criterion,</if>
+            <if test="testReferStandard != null">test_refer_standard,</if>
+            <if test="sampleNo != null">sample_no,</if>
+            <if test="sampleModel != null">sample_model,</if>
+            <if test="conclusion != null">conclusion,</if>
+            <if test="remark != null">remark,</if>
+            <if test="editUserId != null">edit_user_id,</if>
+            <if test="checkUserId != null">check_user_id,</if>
+            <if test="checkTime != null">check_time,</if>
+            <if test="approveUserId != null">approve_user_id,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deleteId != null and deleteId != ''">delete_id,</if>
+            <if test="editUser != null">edit_user,</if>
+            <if test="checkUser != null">check_user,</if>
+            <if test="approveUser != null">approve_user,</if>
+            <if test="bloodEntrustOrderId != null">blood_entrust_order_id,</if>
+            <if test="bloodTaskItemType != null">blood_task_item_type,</if>
+            <if test="sendSampleDate != null">send_sample_date,</if>
+            <if test="aIsShow != null">a_is_show,</if>
+            <if test="oIsShow != null">o_is_show,</if>
+            <if test="editTime != null">edit_time,</if>
+            <if test="pdfFileInfo != null">pdf_file_info,</if>
+            <if test="sjph != null">sjph,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opJczxBloodReportBaseId != null">#{opJczxBloodReportBaseId},</if>
+            <if test="reportNo != null">#{reportNo},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="testDeptName != null">#{testDeptName},</if>
+            <if test="reportDate != null">#{reportDate},</if>
+            <if test="entrustDeptName != null">#{entrustDeptName},</if>
+            <if test="sampleName != null and sampleName != ''">#{sampleName},</if>
+            <if test="sampleAmount != null">#{sampleAmount},</if>
+            <if test="animalType != null">#{animalType},</if>
+            <if test="receiveTime != null">#{receiveTime},</if>
+            <if test="testTime != null">#{testTime},</if>
+            <if test="sampleState != null">#{sampleState},</if>
+            <if test="testBasis != null">#{testBasis},</if>
+            <if test="testType != null">#{testType},</if>
+            <if test="testEvaluation != null">#{testEvaluation},</if>
+            <if test="insturment != null">#{insturment},</if>
+            <if test="sampleBatchNo != null">#{sampleBatchNo},</if>
+            <if test="testCriterion != null">#{testCriterion},</if>
+            <if test="testReferStandard != null">#{testReferStandard},</if>
+            <if test="sampleNo != null">#{sampleNo},</if>
+            <if test="sampleModel != null">#{sampleModel},</if>
+            <if test="conclusion != null">#{conclusion},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="editUserId != null">#{editUserId},</if>
+            <if test="checkUserId != null">#{checkUserId},</if>
+            <if test="checkTime != null">#{checkTime},</if>
+            <if test="approveUserId != null">#{approveUserId},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">#{deleteId},</if>
+            <if test="editUser != null">#{editUser},</if>
+            <if test="checkUser != null">#{checkUser},</if>
+            <if test="approveUser != null">#{approveUser},</if>
+            <if test="bloodEntrustOrderId != null">#{bloodEntrustOrderId},</if>
+            <if test="bloodTaskItemType != null">#{bloodTaskItemType},</if>
+            <if test="sendSampleDate != null">#{sendSampleDate},</if>
+            <if test="aIsShow != null">#{aIsShow},</if>
+            <if test="oIsShow != null">#{oIsShow},</if>
+            <if test="editTime != null">#{editTime},</if>
+            <if test="pdfFileInfo != null">#{pdfFileInfo},</if>
+            <if test="sjph != null">#{sjph},</if>
+        </trim>
+    </insert>
+    <update id="updateOpJczxBloodReportBase" parameterType="OpJczxBloodReportBase">
+        update op_jczx_blood_report_base
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportNo != null">report_no = #{reportNo},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="testDeptName != null">test_dept_name = #{testDeptName},</if>
+            <if test="reportDate != null">report_date = #{reportDate},</if>
+            <if test="entrustDeptName != null">entrust_dept_name = #{entrustDeptName},</if>
+            <if test="sampleName != null and sampleName != ''">sample_name = #{sampleName},</if>
+            <if test="sampleAmount != null">sample_amount = #{sampleAmount},</if>
+            <if test="animalType != null">animal_type = #{animalType},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="testTime != null">test_time = #{testTime},</if>
+            <if test="sampleState != null">sample_state = #{sampleState},</if>
+            <if test="testBasis != null">test_basis = #{testBasis},</if>
+            <if test="testType != null">test_type = #{testType},</if>
+            <if test="testEvaluation != null">test_evaluation = #{testEvaluation},</if>
+            <if test="insturment != null">insturment = #{insturment},</if>
+            <if test="sampleBatchNo != null">sample_batch_no = #{sampleBatchNo},</if>
+            <if test="testCriterion != null">test_criterion = #{testCriterion},</if>
+            <if test="testReferStandard != null">test_refer_standard = #{testReferStandard},</if>
+            <if test="sampleNo != null">sample_no = #{sampleNo},</if>
+            <if test="sampleModel != null">sample_model = #{sampleModel},</if>
+            <if test="conclusion != null">conclusion = #{conclusion},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="editUserId != null">edit_user_id = #{editUserId},</if>
+            <if test="checkUserId != null">check_user_id = #{checkUserId},</if>
+            <if test="checkTime != null">check_time = #{checkTime},</if>
+            <if test="approveUserId != null">approve_user_id = #{approveUserId},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deleteId != null and deleteId != ''">delete_id = #{deleteId},</if>
+            <if test="editUser != null">edit_user = #{editUser},</if>
+            <if test="checkUser != null">check_user = #{checkUser},</if>
+            <if test="approveUser != null">approve_user = #{approveUser},</if>
+            <if test="bloodEntrustOrderId != null">blood_entrust_order_id = #{bloodEntrustOrderId},</if>
+            <if test="bloodTaskItemType != null">blood_task_item_type = #{bloodTaskItemType},</if>
+            <if test="sendSampleDate != null">send_sample_date = #{sendSampleDate},</if>
+            <if test="aIsShow != null">a_is_show = #{aIsShow},</if>
+            <if test="oIsShow != null">o_is_show = #{oIsShow},</if>
+            <if test="editTime != null">edit_time = #{editTime},</if>
+            <if test="pdfFileInfo != null">pdf_file_info = #{pdfFileInfo},</if>
+            <if test="returnReason != null">return_reason = #{returnReason},</if>
+            <if test="sjph != null">sjph = #{sjph},</if>
+        </trim>
+        where op_jczx_blood_report_base_id = #{opJczxBloodReportBaseId}
+    </update>
+
+    <delete id="deleteOpJczxBloodReportBaseByOpJczxBloodReportBaseId" parameterType="String">
+        delete from op_jczx_blood_report_base where op_jczx_blood_report_base_id = #{opJczxBloodReportBaseId}
+    </delete>
+
+    <delete id="deleteOpJczxBloodReportBaseByOpJczxBloodReportBaseIds" parameterType="String">
+        delete from op_jczx_blood_report_base where op_jczx_blood_report_base_id in 
+        <foreach item="opJczxBloodReportBaseId" collection="array" open="(" separator="," close=")">
+            #{opJczxBloodReportBaseId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update op_jczx_blood_report_base set delete_id=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where op_jczx_blood_report_base_id = #{opJczxBloodReportBaseId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  op_jczx_blood_report_base set delete_id=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where op_jczx_blood_report_base_id in
+        <foreach item="opJczxBloodReportBaseId" collection="array" open="(" separator="," close=")">
+            #{opJczxBloodReportBaseId}
+        </foreach>
+    </update>
+
+    <select id="selectOpJczxBloodReportBaseListStatus0"
+            resultMap="OpJczxBloodReportBaseResult">
+        SELECT o.op_blood_entrust_order_id blood_entrust_order_id,
+        o.blood_task_item_type,
+        o.send_sample_date,
+        o.entrust_order_no,
+        o.receive_time,
+        o.entrust_dept_name,
+        o.total_sample_quantity as sample_amount,
+        '0' as status
+        FROM op_blood_entrust_order o
+        <where>
+            o.delete_id = '0'
+            AND o.status = '4'
+            AND NOT EXISTS(SELECT 1
+            FROM op_jczx_blood_report_base r
+            WHERE o.op_blood_entrust_order_id = r.blood_entrust_order_id)
+            <if test="beginReceiveTime != null">
+                AND DATE(o.receive_time) >= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null">
+                AND DATE(o.receive_time) &lt;= #{endReceiveTime}
+            </if>
+            <if test="bloodTaskItemType != null  and bloodTaskItemType != ''">
+                and o.blood_task_item_type = #{bloodTaskItemType}
+            </if>
+            <if test="bloodTaskItemTypeNotIn != null  and bloodTaskItemTypeNotIn != ''">
+                and o.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+            </if>
+            <if test="entrustDeptName != null  and entrustDeptName != ''"> and o.entrust_dept_name like concat('%', #{entrustDeptName}, '%')</if>
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+        </where>
+        order by o.receive_time desc
+    </select>
+
+    <select id="selectReportBaseByOrderId" parameterType="OpJczxBloodReportBase" resultMap="OpJczxBloodReportBaseResult">
+        <include refid="selectOpJczxBloodReportBaseVo"/>
+        WHERE r.blood_entrust_order_id = #{bloodEntrustOrderId} and r.delete_id = '0'
+    </select>
+
+    <select id="getStatus0Count" resultType="int">
+        SELECT count(*)
+        FROM op_blood_entrust_order o
+        where
+            o.delete_id = '0'
+            AND o.status = '4'
+        <if test="bloodTaskItemType != null  and bloodTaskItemType != ''"> and o.blood_task_item_type = #{bloodTaskItemType}</if>
+        <if test="bloodTaskItemTypeNotIn != null  and bloodTaskItemTypeNotIn != ''">
+            and o.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+        </if>
+            AND NOT EXISTS(SELECT 1
+            FROM op_jczx_blood_report_base r
+            WHERE o.op_blood_entrust_order_id = r.blood_entrust_order_id)
+            <if test="beginReceiveTime != null">
+                AND DATE(o.receive_time) >= #{beginReceiveTime}
+            </if>
+            <if test="endReceiveTime != null">
+                AND DATE(o.receive_time) &lt;= #{endReceiveTime}
+            </if>
+    </select>
+
+    <select id="getStatusCount" resultType="java.util.Map"  parameterType="OpJczxBloodReportBase">
+        SELECT r.status, COUNT(*) as count
+         from op_jczx_blood_report_base r
+        LEFT JOIN op_blood_entrust_order o ON r.blood_entrust_order_id = o.op_blood_entrust_order_id and o.delete_id='0'
+        where r.delete_id = '0' and r.status !='6'
+        <if test="bloodTaskItemType != null  and bloodTaskItemType != ''"> and o.blood_task_item_type = #{bloodTaskItemType}</if>
+        <if test="bloodTaskItemTypeNotIn != null  and bloodTaskItemTypeNotIn != ''">
+            and o.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+        </if>
+        GROUP BY r.status
+    </select>
+
+    <update id="updateStatus" parameterType="OpJczxBloodReportBase">
+        update op_jczx_blood_report_base set status=#{status},update_time =#{updateTime},update_by=#{updateBy}
+                                         where blood_entrust_order_id=#{bloodEntrustOrderId}
+
+    </update>
+
+</mapper>

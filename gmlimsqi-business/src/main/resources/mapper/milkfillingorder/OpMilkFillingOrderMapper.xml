@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.milkfillingorder.mapper.OpMilkFillingOrderMapper">
+
+    <resultMap type="OpMilkFillingOrder" id="OpMilkFillingOrderResult">
+            <result property="opMilkFillingOrderId"    column="op_milk_filling_order_id"    />
+            <result property="milkFillingOrderNumber"    column="milk_filling_order_number"    />
+            <result property="milkSourcePlanOrderNumber"    column="milk_source_plan_order_number"    />
+            <result property="inspectionMilkTankersId"    column="inspection_milk_tankers_id"    />
+            <result property="licensePlateNumber"    column="license_plate_number"    />
+            <result property="status"    column="status"    />
+            <result property="firstMilkingTime"    column="first_milking_time"    />
+            <result property="totalMilkCapacity"    column="total_milk_capacity"    />
+            <result property="deptId"    column="dept_id"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createByName"    column="create_by_name"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="preStepCompleted"    column="pre_step_completed"    />
+            <result property="isDelete"    column="is_delete"    />
+            <result property="reviewer"    column="reviewer"    />
+            <result property="reviewerId"    column="reviewer_id"    />
+            <result property="reviewTime"    column="review_time"    />
+            <result property="milkFillingTime"    column="milk_filling_time"    />
+            <result property="isPushMilkSource"    column="is_push_milk_source"    />
+            <result property="file"    column="file"    />
+            <result property="cweightno"    column="cweightno"    />
+            <result property="driverCode"    column="driver_code"    />
+            <result property="gmFlag"    column="gm_flag"    />
+            <result property="gmweight"    column="gmweight"    />
+            <result property="gmtime"    column="gmtime"    />
+            <result property="gpFlag"    column="gp_flag"    />
+            <result property="gpweight"    column="gpweight"    />
+            <result property="gptime"    column="gptime"    />
+            <result property="netWeight"    column="net_weight"    />
+            <result property="jsWeight"    column="js_weight"    />
+            <result property="dbCreateTime"    column="db_create_time"    />
+            <result property="isAssociatedWeighbridge" column="is_associated_weighbridge"/>
+            <result property="weighbridgeBillQuantity" column="weighbridge_bill_quantity"/>
+    </resultMap>
+
+    <sql id="selectOpMilkFillingOrderVo">
+        select a.op_milk_filling_order_id,
+               a.milk_filling_order_number,
+               a.milk_source_plan_order_number,
+               a.inspection_milk_tankers_id,
+               a.license_plate_number,
+               a.status,
+               a.first_milking_time,
+               a.total_milk_capacity,
+               a.dept_id,
+               a.create_by,
+               a.create_by_name,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               a.pre_step_completed,
+               a.is_delete,
+               a.reviewer,
+               a.reviewer_id,
+               a.review_time,
+               a.milk_filling_time,
+               a.is_push_milk_source,
+               a.file,
+               a.cweightno,
+               a.driver_code,
+               a.gm_flag,
+               a.gmweight,
+               a.gmtime,
+               a.gp_flag,
+               a.gpweight,
+               a.gptime,
+               a.net_weight,
+               a.js_weight,
+               a.db_create_time,
+               (CASE WHEN a.cweightno IS NOT NULL AND a.cweightno != '' THEN '1' ELSE '0' END) as is_associated_weighbridge,
+               a.net_weight as weighbridge_bill_quantity
+        from op_milk_filling_order a
+    </sql>
+
+    <select id="selectOpMilkFillingOrderList" parameterType="OpMilkFillingOrder" resultMap="OpMilkFillingOrderResult">
+        <include refid="selectOpMilkFillingOrderVo"/>
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            a.is_delete = '0' and a.pre_step_completed = '1'
+                        <if test="milkFillingOrderNumber != null  and milkFillingOrderNumber != ''"> and a.milk_filling_order_number = #{milkFillingOrderNumber}</if>
+                        <if test="milkSourcePlanOrderNumber != null  and milkSourcePlanOrderNumber != ''"> and a.milk_source_plan_order_number = #{milkSourcePlanOrderNumber}</if>
+                        <if test="inspectionMilkTankersId != null  and inspectionMilkTankersId != ''"> and a.inspection_milk_tankers_id = #{inspectionMilkTankersId}</if>
+                        <if test="licensePlateNumber != null  and licensePlateNumber != ''"> and a.license_plate_number = #{licensePlateNumber}</if>
+                        <if test="status != null  and status != ''"> and a.status = #{status}</if>
+                        <if test="firstMilkingTime != null "> and a.first_milking_time = #{firstMilkingTime}</if>
+                        <if test="totalMilkCapacity != null  and totalMilkCapacity != ''"> and a.total_milk_capacity = #{totalMilkCapacity}</if>
+                        <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if>
+                        <if test="createByName != null  and createByName != ''"> and a.create_by_name like concat('%', #{createByName}, '%')</if>
+                        <if test="preStepCompleted != null  and preStepCompleted != ''"> and a.pre_step_completed = #{preStepCompleted}</if>
+                        <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+                        <if test="reviewerId != null  and reviewerId != ''"> and a.reviewer_id = #{reviewerId}</if>
+                        <if test="reviewTime != null "> and a.review_time = #{reviewTime}</if>
+                        <if test="milkFillingStartTime != null "> and a.milk_filling_time >= #{milkFillingStartTime}</if>
+                        <if test="milkFillingEndTime != null "> and a.milk_filling_time &lt;= #{milkFillingEndTime}</if>
+            ${params.dataScope}
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectOpMilkFillingOrderByOpMilkFillingOrderId" parameterType="String" resultMap="OpMilkFillingOrderResult">
+        <include refid="selectOpMilkFillingOrderVo"/>
+        where a.op_milk_filling_order_id = #{opMilkFillingOrderId}
+        and a.is_delete = '0'
+    </select>
+
+    <insert id="insertOpMilkFillingOrder" parameterType="OpMilkFillingOrder">
+        insert into op_milk_filling_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="opMilkFillingOrderId != null">op_milk_filling_order_id,</if>
+                    <if test="milkFillingOrderNumber != null">milk_filling_order_number,</if>
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number,</if>
+                    <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id,</if>
+                    <if test="licensePlateNumber != null">license_plate_number,</if>
+                    <if test="status != null">status,</if>
+                    <if test="firstMilkingTime != null">first_milking_time,</if>
+                    <if test="totalMilkCapacity != null">total_milk_capacity,</if>
+                    <if test="deptId != null">dept_id,</if>
+                    <if test="createBy != null">create_by,</if>
+                    <if test="createByName != null">create_by_name,</if>
+                    <if test="createTime != null">create_time,</if>
+                    <if test="updateBy != null">update_by,</if>
+                    <if test="updateTime != null">update_time,</if>
+                    <if test="preStepCompleted != null">pre_step_completed,</if>
+                    <if test="isDelete != null">is_delete,</if>
+                    <if test="reviewer != null">reviewer,</if>
+                    <if test="reviewerId != null">reviewer_id,</if>
+                    <if test="reviewTime != null">review_time,</if>
+                    <if test="milkFillingTime != null">milk_filling_time,</if>
+                    <if test="isPushMilkSource != null">is_push_milk_source,</if>
+                    <if test="file != null">file,</if>
+                    <if test="cweightno != null">cweightno,</if>
+                    <if test="driverCode != null">driver_code,</if>
+                    <if test="gmFlag != null">gm_flag,</if>
+                    <if test="gmweight != null">gmweight,</if>
+                    <if test="gmtime != null">gmtime,</if>
+                    <if test="gpFlag != null">gp_flag,</if>
+                    <if test="gpweight != null">gpweight,</if>
+                    <if test="gptime != null">gptime,</if>
+                    <if test="netWeight != null">net_weight,</if>
+                    <if test="jsWeight != null">js_weight,</if>
+                    <if test="dbCreateTime != null">db_create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="opMilkFillingOrderId != null">#{opMilkFillingOrderId},</if>
+                    <if test="milkFillingOrderNumber != null">#{milkFillingOrderNumber},</if>
+                    <if test="milkSourcePlanOrderNumber != null">#{milkSourcePlanOrderNumber},</if>
+                    <if test="inspectionMilkTankersId != null">#{inspectionMilkTankersId},</if>
+                    <if test="licensePlateNumber != null">#{licensePlateNumber},</if>
+                    <if test="status != null">#{status},</if>
+                    <if test="firstMilkingTime != null">#{firstMilkingTime},</if>
+                    <if test="totalMilkCapacity != null">#{totalMilkCapacity},</if>
+                    <if test="deptId != null">#{deptId},</if>
+                    <if test="createBy != null">#{createBy},</if>
+                    <if test="createByName != null">#{createByName},</if>
+                    <if test="createTime != null">#{createTime},</if>
+                    <if test="updateBy != null">#{updateBy},</if>
+                    <if test="updateTime != null">#{updateTime},</if>
+                    <if test="preStepCompleted != null">#{preStepCompleted},</if>
+                    <if test="isDelete != null">#{isDelete},</if>
+                    <if test="reviewer != null">#{reviewer},</if>
+                    <if test="reviewerId != null">#{reviewerId},</if>
+                    <if test="reviewTime != null">#{reviewTime},</if>
+                    <if test="milkFillingTime != null">#{milkFillingTime},</if>
+                    <if test="isPushMilkSource != null">#{isPushMilkSource},</if>
+                    <if test="file != null">#{file},</if>
+                    <if test="cweightno != null">#{cweightno},</if>
+                    <if test="driverCode != null">#{driverCode},</if>
+                    <if test="gmFlag != null">#{gmFlag},</if>
+                    <if test="gmweight != null">#{gmweight},</if>
+                    <if test="gmtime != null">#{gmtime},</if>
+                    <if test="gpFlag != null">#{gpFlag},</if>
+                    <if test="gpweight != null">#{gpweight},</if>
+                    <if test="gptime != null">#{gptime},</if>
+                    <if test="netWeight != null">#{netWeight},</if>
+                    <if test="jsWeight != null">#{jsWeight},</if>
+                    <if test="dbCreateTime != null">#{dbCreateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpMilkFillingOrder" parameterType="OpMilkFillingOrder">
+        update op_milk_filling_order
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="milkFillingOrderNumber != null">milk_filling_order_number = #{milkFillingOrderNumber},</if>
+                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number = #{milkSourcePlanOrderNumber},</if>
+                    <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id = #{inspectionMilkTankersId},</if>
+                    <if test="licensePlateNumber != null">license_plate_number = #{licensePlateNumber},</if>
+                    <if test="status != null">status = #{status},</if>
+                    <if test="firstMilkingTime != null">first_milking_time = #{firstMilkingTime},</if>
+                    <if test="totalMilkCapacity != null">total_milk_capacity = #{totalMilkCapacity},</if>
+                    <if test="deptId != null">dept_id = #{deptId},</if>
+                    <if test="createByName != null">create_by_name = #{createByName},</if>
+                    <if test="updateBy != null">update_by = #{updateBy},</if>
+                    <if test="updateTime != null">update_time = #{updateTime},</if>
+                    <if test="preStepCompleted != null">pre_step_completed = #{preStepCompleted},</if>
+                    <if test="isDelete != null">is_delete = #{isDelete},</if>
+                    <if test="reviewer != null">reviewer = #{reviewer},</if>
+                    <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+                    <if test="reviewTime != null">review_time = #{reviewTime},</if>
+                    <if test="milkFillingTime != null">milk_filling_time = #{milkFillingTime},</if>
+                    <if test="isPushMilkSource != null">is_push_milk_source = #{isPushMilkSource},</if>
+                    <if test="file != null">file = #{file},</if>
+                    <if test="cweightno != null">cweightno = #{cweightno},</if>
+                    <if test="driverCode != null">driver_code = #{driverCode},</if>
+                    <if test="gmFlag != null">gm_flag = #{gmFlag},</if>
+                    <if test="gmweight != null">gmweight = #{gmweight},</if>
+                    <if test="gmtime != null">gmtime = #{gmtime},</if>
+                    <if test="gpFlag != null">gp_flag = #{gpFlag},</if>
+                    <if test="gpweight != null">gpweight = #{gpweight},</if>
+                    <if test="gptime != null">gptime = #{gptime},</if>
+                    <if test="netWeight != null">net_weight = #{netWeight},</if>
+                    <if test="jsWeight != null">js_weight = #{jsWeight},</if>
+        </trim>
+        where op_milk_filling_order_id = #{opMilkFillingOrderId}
+    </update>
+
+
+
+    <update id="updateDeleteFlagById" >
+        update op_milk_filling_order set delete_id = op_milk_filling_order_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_milk_filling_order_id = #{opMilkFillingOrderId}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update op_milk_filling_order set delete_id = op_milk_filling_order_id ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}
+        where op_milk_filling_order_id in
+        <foreach item="opMilkFillingOrderId" collection="array" open="(" separator="," close=")">
+            #{opMilkFillingOrderId}
+        </foreach>
+    </update>
+
+    <select id="selectOpMilkFillingOrderByMilkTankersId"
+            resultMap="OpMilkFillingOrderResult">
+        <include refid="selectOpMilkFillingOrderVo"/>
+        where a.inspection_milk_tankers_id = #{milkTankersId}
+    </select>
+
+    <select id="selectUnassociatedOpMilkFillingOrderList"
+            parameterType="OpMilkFillingOrder" resultMap="OpMilkFillingOrderResult">
+        <include refid="selectOpMilkFillingOrderVo"/>
+        <where>
+            a.cweightno is null or a.cweightno = ''
+            and a.net_weight is null or a.net_weight = ''
+            and a.is_delete = '0' and a.pre_step_completed = '1'
+            <if test="milkFillingOrderNumber != null  and milkFillingOrderNumber != ''"> and a.milk_filling_order_number = #{milkFillingOrderNumber}</if>
+            <if test="milkSourcePlanOrderNumber != null  and milkSourcePlanOrderNumber != ''"> and a.milk_source_plan_order_number = #{milkSourcePlanOrderNumber}</if>
+            <if test="inspectionMilkTankersId != null  and inspectionMilkTankersId != ''"> and a.inspection_milk_tankers_id = #{inspectionMilkTankersId}</if>
+            <if test="licensePlateNumber != null  and licensePlateNumber != ''"> and a.license_plate_number = #{licensePlateNumber}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="firstMilkingTime != null "> and a.first_milking_time = #{firstMilkingTime}</if>
+            <if test="totalMilkCapacity != null  and totalMilkCapacity != ''"> and a.total_milk_capacity = #{totalMilkCapacity}</if>
+            <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if>
+            <if test="createByName != null  and createByName != ''"> and a.create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="preStepCompleted != null  and preStepCompleted != ''"> and a.pre_step_completed = #{preStepCompleted}</if>
+            <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+            <if test="reviewerId != null  and reviewerId != ''"> and a.reviewer_id = #{reviewerId}</if>
+            <if test="reviewTime != null "> and a.review_time = #{reviewTime}</if>
+            <if test="milkFillingStartTime != null "> and a.milk_filling_time >= #{milkFillingStartTime}</if>
+            <if test="milkFillingEndTime != null "> and a.milk_filling_time &lt;= #{milkFillingEndTime}</if>
+            <if test="opMilkFillingOrderId != null  and opMilkFillingOrderId != ''"> and a.op_milk_filling_order_id = #{opMilkFillingOrderId}</if>
+        </where>
+    </select>
+
+    <select id="selectUnPushedMilkSourceOpMilkFillingOrderList"
+            parameterType="OpMilkFillingOrder" resultMap="OpMilkFillingOrderResult">
+        <include refid="selectOpMilkFillingOrderVo"/>
+        <where>
+            a.cweightno is not null or a.cweightno != ''
+            and a.net_weight is not null or a.net_weight != ''
+            and a.is_delete = '0' and a.pre_step_completed = '1'
+            and a.status = '1'
+            and a.is_push_milk_source = '0'
+        </where>
+    </select>
+</mapper>

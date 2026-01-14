@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.basicdata.mapper.BsMilkWarehouseMapper">
+    
+    <resultMap type="BsMilkWarehouse" id="BsMilkWarehouseResult">
+        <result property="id"    column="id"    />
+        <result property="warehouseStatus"    column="warehouse_status"    />
+        <result property="warehouseName"    column="warehouse_name"    />
+        <result property="warehouseAddress"    column="warehouse_address"    />
+        <result property="warehouseNumber"    column="warehouse_number"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deptName"    column="dept_name"    />
+    </resultMap>
+
+    <sql id="selectBsMilkWarehouseVo">
+        select id,
+               warehouse_status,
+               warehouse_name,
+               warehouse_address,
+               warehouse_number,
+               dept_id,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from bs_milk_warehouse
+    </sql>
+
+    <select id="selectBsMilkWarehouseList" parameterType="BsMilkWarehouse" resultMap="BsMilkWarehouseResult">
+        select a.id,
+               a.warehouse_status,
+               a.warehouse_name,
+               a.warehouse_address,
+               a.warehouse_number,
+               a.dept_id,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               d.dept_name
+        from bs_milk_warehouse a
+        left join sys_dept d on a.dept_id = d.dept_id
+        <where>
+            <if test="warehouseStatus != null  and warehouseStatus != ''"> and a.warehouse_status = #{warehouseStatus}</if>
+            <if test="warehouseName != null  and warehouseName != ''"> and a.warehouse_name like concat('%', #{warehouseName}, '%')</if>
+            <if test="warehouseAddress != null  and warehouseAddress != ''"> and a.warehouse_address = #{warehouseAddress}</if>
+            <if test="warehouseNumber != null  and warehouseNumber != ''"> and a.warehouse_number like concat('%', #{warehouseNumber}, '%')</if>
+            <if test="deptId != null  and deptId != ''"> and a.dept_id = #{deptId}</if>
+            <if test="deptName != null and deptName != ''">
+                and d.dept_name like concat('%', #{deptName}, '%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectBsMilkWarehouseById" parameterType="String" resultMap="BsMilkWarehouseResult">
+        <include refid="selectBsMilkWarehouseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertBsMilkWarehouse" parameterType="BsMilkWarehouse">
+        insert into bs_milk_warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="warehouseStatus != null">warehouse_status,</if>
+            <if test="warehouseName != null">warehouse_name,</if>
+            <if test="warehouseAddress != null">warehouse_address,</if>
+            <if test="warehouseNumber != null">warehouse_number,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="warehouseStatus != null">#{warehouseStatus},</if>
+            <if test="warehouseName != null">#{warehouseName},</if>
+            <if test="warehouseAddress != null">#{warehouseAddress},</if>
+            <if test="warehouseNumber != null">#{warehouseNumber},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBsMilkWarehouse" parameterType="BsMilkWarehouse">
+        update bs_milk_warehouse
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="warehouseStatus != null">warehouse_status = #{warehouseStatus},</if>
+            <if test="warehouseName != null">warehouse_name = #{warehouseName},</if>
+            <if test="warehouseAddress != null">warehouse_address = #{warehouseAddress},</if>
+            <if test="warehouseNumber != null">warehouse_number = #{warehouseNumber},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBsMilkWarehouseById" parameterType="String">
+        delete from bs_milk_warehouse where id = #{id}
+    </delete>
+
+    <delete id="deleteBsMilkWarehouseByIds" parameterType="String">
+        delete from bs_milk_warehouse where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateDeleteFlagById" >
+        update bs_milk_warehouse set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId} where id = #{id}
+    </update>
+
+    <update id="updateDeleteFlagByIds">
+        update  bs_milk_warehouse set is_delete=1 ,update_time=#{now,jdbcType=TIMESTAMP},update_by=#{updateUserId}  where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+</mapper>

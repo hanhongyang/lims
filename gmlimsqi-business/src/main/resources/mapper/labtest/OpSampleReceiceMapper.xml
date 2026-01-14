@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmlimsqi.business.labtest.mapper.OpSampleReceiceMapper">
+
+    <resultMap type="com.gmlimsqi.business.labtest.vo.OpSampleReceiveVo" id="OpSampleReceiveVo">
+        <result property="opEntrustOrderId"    column="op_entrust_order_id"    />
+        <result property="orderSampleId"    column="order_sample_id"    />
+        <result property="entrustOrderNo"    column="entrust_order_no"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="pcrTaskItemType"    column="pcr_task_item_type"    />
+        <result property="sampleAmount"    column="sample_amount"    />
+
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="requiresJudgement"    column="requires_judgement"    />
+        <result property="allowsSubcontracting"    column="allows_subcontracting"    />
+        <result property="reportReceiveType"    column="report_receive_type"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="sendSampleDate"    column="send_sample_date"    />
+        <result property="testTime"    column="test_time"    />
+        <result property="testUser"    column="test_user"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="testMethod"    column="test_method"    />
+        <result property="isReturn"    column="is_return"    />
+        <result property="returnReason"    column="return_reason"    />
+    </resultMap>
+
+
+
+    <select id="selectSampleReceiveList" parameterType="com.gmlimsqi.business.labtest.dto.OpSampleReceiveDto" resultMap="OpSampleReceiveVo">
+        select * from (
+        <!-- 饲料部分 -->
+        select
+        d.dept_name,
+        fo.status,
+        fo.entrust_order_no,
+        fos.name as sample_name,
+        fos.sample_no,
+        fos.test_method,
+        GROUP_CONCAT(i.item_name SEPARATOR ',') AS item_name,
+        '1' as type,
+        fo.remark,
+        fo.requires_judgement,
+        fo.allows_subcontracting,
+        fo.report_receive_type,
+        fo.send_sample_date,
+        fo.receive_time,
+        fo.op_feed_entrust_order_id as op_entrust_order_id,
+        fos.op_feed_entrust_order_sample_id as order_sample_id,
+        fo.create_time
+        from op_feed_entrust_order fo
+        left join op_feed_entrust_order_sample fos on fos.feed_entrust_order_id=fo.op_feed_entrust_order_id and fos.is_delete='0'
+        left join op_feed_entrust_order_item fi on fi.op_feed_entrust_order_sample_id =fos.op_feed_entrust_order_sample_id and fi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=fi.item_id and i.is_delete='0'
+        left join sys_dept d on fo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and fo.delete_id = '0'
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and fo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and fo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and fo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null  and isReceive != ''"> and fos.is_receive = #{isReceive}</if>
+        </where>
+        GROUP BY fo.op_feed_entrust_order_id, fos.op_feed_entrust_order_sample_id
+        <!-- 疾病部分 -->
+        union all
+        select
+        d.dept_name,
+        bo.status,
+        bo.entrust_order_no,
+        bos.sample_name as sample_name,
+        bos.sample_no,
+        '' as test_method,
+        GROUP_CONCAT(i.item_name SEPARATOR ',') AS item_name,
+        '2' as type,
+        bos.remark,
+        '' requires_judgement,
+        '' allows_subcontracting,
+        '' report_receive_type,
+        bo.send_sample_date,
+        bo.receive_time,
+        bo.op_blood_entrust_order_id as op_entrust_order_id,
+        bos.op_blood_entrust_order_sample_id as order_sample_id,
+        bo.create_time
+        from op_blood_entrust_order bo
+        left join op_blood_entrust_order_sample bos on bos.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bos.is_delete='0'
+        left join op_blood_entrust_order_item bi on bi.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=bi.item_id and i.is_delete='0'
+        left join sys_dept d on bo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and bo.delete_id = '0'
+            and bo.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and bo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and bo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and bo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null  and isReceive != ''"> and bos.is_receive = #{isReceive}</if>
+        </where>
+        GROUP BY bo.op_blood_entrust_order_id, bos.op_blood_entrust_order_sample_id
+        <!-- 早孕部分 -->
+        union all
+        select
+        d.dept_name,
+        bo.status,
+        bo.entrust_order_no,
+        bos.sample_name as sample_name,
+        bos.sample_no,
+        '' as test_method,
+        GROUP_CONCAT(i.item_name SEPARATOR ',') AS item_name,
+        '4' as type,
+        bos.remark,
+        '' requires_judgement,
+        '' allows_subcontracting,
+        '' report_receive_type,
+        bo.send_sample_date,
+        bo.receive_time,
+        bo.op_blood_entrust_order_id as op_entrust_order_id,
+        bos.op_blood_entrust_order_sample_id as order_sample_id,
+        bo.create_time
+        from op_blood_entrust_order bo
+        left join op_blood_entrust_order_sample bos on bos.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bos.is_delete='0'
+        left join op_blood_entrust_order_item bi on bi.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=bi.item_id and i.is_delete='0'
+        left join sys_dept d on bo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and bo.delete_id = '0'
+            and bo.blood_task_item_type = '9'
+
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and bo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and bo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and bo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null  and isReceive != ''"> and bos.is_receive = #{isReceive}</if>
+        </where>
+        GROUP BY bo.op_blood_entrust_order_id, bos.op_blood_entrust_order_sample_id
+        <!-- 生化部分 -->
+        union all
+        select
+        d.dept_name,
+        bo.status,
+        bo.entrust_order_no,
+        bos.sample_name as sample_name,
+        bos.sample_no,
+        '' as test_method,
+        GROUP_CONCAT(i.item_name SEPARATOR ',') AS item_name,
+        '5' as type,
+        bos.remark,
+        '' requires_judgement,
+        '' allows_subcontracting,
+        '' report_receive_type,
+        bo.send_sample_date,
+        bo.receive_time,
+        bo.op_blood_entrust_order_id as op_entrust_order_id,
+        bos.op_blood_entrust_order_sample_id as order_sample_id,
+        bo.create_time
+        from op_blood_entrust_order bo
+        left join op_blood_entrust_order_sample bos on bos.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bos.is_delete='0'
+        left join op_blood_entrust_order_item bi on bi.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=bi.item_id and i.is_delete='0'
+        left join sys_dept d on bo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and bo.delete_id = '0'
+            and bo.blood_task_item_type = '8'
+
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and bo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and bo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and bo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null  and isReceive != ''"> and bos.is_receive = #{isReceive}</if>
+        </where>
+        GROUP BY bo.op_blood_entrust_order_id, bos.op_blood_entrust_order_sample_id
+
+        <!-- pcr部分 -->
+        union all
+        select
+        d.dept_name,
+        po.status,
+        po.entrust_order_no,
+        pos.name as sample_name,
+        pos.sample_no,
+        '' as test_method,
+        GROUP_CONCAT(i.item_name SEPARATOR ',') AS item_name,
+        '3' as type,
+        pos.remark,
+        '' requires_judgement,
+        '' allows_subcontracting,
+        '' report_receive_type,
+        po.send_sample_date,
+        po.receive_time,
+        po.op_pcr_entrust_order_id as op_entrust_order_id,
+        pos.op_pcr_entrust_order_sample_id as order_sample_id,
+        po.create_time
+        from op_pcr_entrust_order po
+        left join op_pcr_entrust_order_sample pos on pos.pcr_entrust_order_id=po.op_pcr_entrust_order_id and pos.is_delete='0'
+        left join op_pcr_entrust_order_item pi on pi.pcr_entrust_order_sample_id=pos.op_pcr_entrust_order_sample_id and pi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=pi.item_id and i.is_delete='0'
+        left join sys_dept d on po.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and po.delete_id = '0'
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and po.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and po.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and po.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null  and isReceive != ''"> and pos.is_receive = #{isReceive}</if>
+        </where>
+        GROUP BY po.op_pcr_entrust_order_id, pos.op_pcr_entrust_order_sample_id
+        ) t
+        <where>
+            <if test="type != null and type != ''">
+                and t.type = #{type}
+            </if>
+        </where>
+        <choose>
+            <when test="isReceive != null and isReceive == 1">
+                order by t.receive_time desc
+            </when>
+
+            <when test="isReceive != null and isReceive == 0">
+                order by t.send_sample_date desc,t.create_time desc
+            </when>
+
+            <otherwise>
+                order by t.send_sample_date desc,t.create_time desc
+            </otherwise>
+        </choose>
+    </select>
+    <select id="selectSampleReceiveListNotReceive" parameterType="com.gmlimsqi.business.labtest.dto.OpSampleReceiveDto" resultMap="OpSampleReceiveVo">
+
+        select
+        d.dept_name,
+        '' as pcr_task_item_type,
+        fo.status,
+        '1' as type,
+        fo.entrust_order_no,
+        COUNT(DISTINCT fos.op_feed_entrust_order_sample_id) AS sample_amount,
+        MAX(fos.test_method) as test_method,
+        GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ',') AS item_name,
+        fo.remark,
+        fo.requires_judgement,
+        fo.allows_subcontracting,
+        fo.report_receive_type,
+        fo.send_sample_date,
+        fo.receive_time,
+        fo.op_feed_entrust_order_id as op_entrust_order_id,
+        fo.create_time,
+        fo.is_return,
+        fo.return_reason
+        from op_feed_entrust_order fo
+        left join op_feed_entrust_order_sample fos on fos.feed_entrust_order_id=fo.op_feed_entrust_order_id and fos.is_delete='0'
+        left join op_feed_entrust_order_item fi on fi.op_feed_entrust_order_sample_id =fos.op_feed_entrust_order_sample_id and fi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=fi.item_id and i.is_delete='0'
+        left join sys_dept d on fo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and fo.delete_id = '0' and fo.is_return = '0'  AND (fo.receiver_id IS NULL OR fo.receiver_id = '')
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and fo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="sendSampleDateStart != null"> and fo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and fo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+        </where>
+        GROUP BY fo.op_feed_entrust_order_id
+        order by fo.send_sample_date desc,fo.create_time desc
+    </select>
+    <select id="selectSampleReceiveListIsReceive" parameterType="com.gmlimsqi.business.labtest.dto.OpSampleReceiveDto" resultMap="OpSampleReceiveVo">
+        select
+        d.dept_name,
+        '' as pcr_task_item_type,
+        fo.status,
+        fo.entrust_order_no,
+
+        /* 修改部分：保留你刚才改的字段 */
+        fos.sample_no,
+        fos.name as sample_name,
+        '1' as type,
+        MAX(fos.test_method) as test_method,
+        GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ',') AS item_name,
+        fo.remark,
+        fo.requires_judgement,
+        fo.allows_subcontracting,
+        fo.report_receive_type,
+        fo.send_sample_date,
+        fo.receive_time,
+        fo.op_feed_entrust_order_id as op_entrust_order_id,
+        fo.create_time,
+        fo.is_return,
+        fo.return_reason
+        from op_feed_entrust_order fo
+        left join op_feed_entrust_order_sample fos on fos.feed_entrust_order_id=fo.op_feed_entrust_order_id and fos.is_delete='0'
+        left join op_feed_entrust_order_item fi on fi.op_feed_entrust_order_sample_id =fos.op_feed_entrust_order_sample_id and fi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=fi.item_id and i.is_delete='0'
+        left join sys_dept d on fo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and fo.delete_id = '0' and fo.is_return = '0' AND fo.receiver_id IS NOT NULL AND fo.receiver_id != ''
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and fo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="sendSampleDateStart != null"> and fo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and fo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+        </where>
+
+        GROUP BY
+        fos.op_feed_entrust_order_sample_id,
+        fo.op_feed_entrust_order_id,
+        d.dept_id
+
+        order by fo.send_sample_date desc,fo.create_time desc
+    </select>
+
+    <select id="selectSampleReceiveList2" parameterType="com.gmlimsqi.business.labtest.dto.OpSampleReceiveDto" resultMap="OpSampleReceiveVo">
+        select * from (
+        select
+        d.dept_name,
+        '' as pcr_task_item_type,
+        bo.status,
+        bo.entrust_order_no,
+        COUNT(DISTINCT bos.op_blood_entrust_order_sample_id) AS sample_amount,
+        '' as test_method,
+        GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ',') AS item_name,
+        '2' as type,
+        MAX(bos.remark) as remark,
+        '' requires_judgement,
+        '' allows_subcontracting,
+        '' report_receive_type,
+        bo.send_sample_date,
+        bo.receive_time,
+        bo.op_blood_entrust_order_id as op_entrust_order_id,
+        bo.create_time,
+        bo.is_return,
+        bo.return_reason
+        from op_blood_entrust_order bo
+        left join op_blood_entrust_order_sample bos on bos.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bos.is_delete='0'
+        left join op_blood_entrust_order_item bi on bi.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=bi.item_id and i.is_delete='0'
+        left join sys_dept d on bo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and bo.delete_id = '0' and bo.is_return = '0'
+            and bo.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and bo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and bo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and bo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null and isReceive != ''">
+                <choose>
+                    <when test="isReceive == 1">
+                        AND bo.receiver_id IS NOT NULL AND bo.receiver_id != ''
+                    </when>
+                    <when test="isReceive == 0">
+                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        GROUP BY bo.op_blood_entrust_order_id
+
+        union all
+        select
+        d.dept_name,
+        '' as pcr_task_item_type,
+        bo.status,
+        bo.entrust_order_no,
+        COUNT(DISTINCT bos.op_blood_entrust_order_sample_id) AS sample_amount,
+        '' as test_method,
+        GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ',') AS item_name,
+        '4' as type,
+        MAX(bos.remark) as remark,
+        '' requires_judgement,
+        '' allows_subcontracting,
+        '' report_receive_type,
+        bo.send_sample_date,
+        bo.receive_time,
+        bo.op_blood_entrust_order_id as op_entrust_order_id,
+        bo.create_time,
+        bo.is_return,
+        bo.return_reason
+        from op_blood_entrust_order bo
+        left join op_blood_entrust_order_sample bos on bos.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bos.is_delete='0'
+        left join op_blood_entrust_order_item bi on bi.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=bi.item_id and i.is_delete='0'
+        left join sys_dept d on bo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and bo.delete_id = '0' and bo.is_return = '0'
+            and bo.blood_task_item_type = '9'
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and bo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and bo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and bo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null and isReceive != ''">
+                <choose>
+                    <when test="isReceive == 1">
+                        AND bo.receiver_id IS NOT NULL AND bo.receiver_id != ''
+                    </when>
+                    <when test="isReceive == 0">
+                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        GROUP BY bo.op_blood_entrust_order_id
+
+        union all
+        select
+        d.dept_name,
+        '' as pcr_task_item_type,
+        bo.status,
+        bo.entrust_order_no,
+        COUNT(DISTINCT bos.op_blood_entrust_order_sample_id) AS sample_amount,
+        '' as test_method,
+        GROUP_CONCAT(DISTINCT bo.biochemistry_item_type SEPARATOR ',') AS item_name,
+        '5' as type,
+        MAX(bos.remark) as remark,
+        '' requires_judgement,
+        '' allows_subcontracting,
+        '' report_receive_type,
+        bo.send_sample_date,
+        bo.receive_time,
+        bo.op_blood_entrust_order_id as op_entrust_order_id,
+        bo.create_time,
+        bo.is_return,
+        bo.return_reason
+        from op_blood_entrust_order bo
+        left join op_blood_entrust_order_sample bos on bos.op_blood_entrust_order_id=bo.op_blood_entrust_order_id and bos.is_delete='0'
+        left join sys_dept d on bo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and bo.delete_id = '0' and bo.is_return = '0'
+            and bo.blood_task_item_type = '8'
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and bo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and bo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and bo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null and isReceive != ''">
+                <choose>
+                    <when test="isReceive == 1">
+                        AND bo.receiver_id IS NOT NULL AND bo.receiver_id != ''
+                    </when>
+                    <when test="isReceive == 0">
+                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        GROUP BY bo.op_blood_entrust_order_id
+
+        union all
+        select
+        d.dept_name,
+        GROUP_CONCAT(DISTINCT pos.pcr_task_item_type SEPARATOR ',') as pcr_task_item_type,
+        po.status,
+        po.entrust_order_no,
+        COUNT(DISTINCT pos.op_pcr_entrust_order_sample_id) AS sample_amount,
+        '' as test_method,
+        '' as item_name,
+        '3' as type,
+        MAX(pos.remark) as remark,
+        '' requires_judgement,
+        '' allows_subcontracting,
+        '' report_receive_type,
+        po.send_sample_date,
+        po.receive_time,
+        po.op_pcr_entrust_order_id as op_entrust_order_id,
+        po.create_time,
+        po.is_return,
+        po.return_reason
+        from op_pcr_entrust_order po
+        left join op_pcr_entrust_order_sample pos on pos.pcr_entrust_order_id=po.op_pcr_entrust_order_id and pos.is_delete='0'
+        left join sys_dept d on po.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and po.delete_id = '0' and po.is_return = '0'
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and po.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name = #{deptName}</if>
+            <if test="sendSampleDateStart != null"> and po.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and po.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+            <if test="isReceive != null and isReceive != ''">
+                <choose>
+                    <when test="isReceive == 1">
+                        AND po.receiver_id IS NOT NULL AND po.receiver_id != ''
+                    </when>
+                    <when test="isReceive == 0">
+                        AND (po.receiver_id IS NULL OR po.receiver_id = '')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        GROUP BY po.op_pcr_entrust_order_id
+        ) t
+        <where>
+            <if test="type != null and type != ''">
+                and t.type = #{type}
+            </if>
+        </where>
+        <choose>
+            <when test="isReceive != null and isReceive == 1">
+                order by t.receive_time desc
+            </when>
+            <when test="isReceive != null and isReceive == 0">
+                order by t.send_sample_date desc,t.create_time desc
+            </when>
+            <otherwise>
+                order by t.send_sample_date desc,t.create_time desc
+            </otherwise>
+        </choose>
+    </select>
+
+
+</mapper>
