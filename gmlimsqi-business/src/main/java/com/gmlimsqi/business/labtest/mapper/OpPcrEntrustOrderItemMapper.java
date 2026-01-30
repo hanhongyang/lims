@@ -92,4 +92,15 @@ public interface OpPcrEntrustOrderItemMapper
     List<OpPcrEntrustOrderItem> seletKbyBySampleId(@Param("opPcrEntrustOrderSampleId")String opPcrEntrustOrderSampleId);
 
     List<OpPcrEntrustOrderItem> getBaseByResultNo(@Param("resultNo")String resultNo);
+
+    /**
+     * 根据样品ID查询项目列表（包含已删除的）
+     * 用于查看历史记录时，显示已删除样品的项目详情
+     */
+    List<OpPcrEntrustOrderItem> selectItemsBySampleIdIncludeDeleted(@Param("sampleId") String sampleId);
+
+    /**
+     * 根据样品ID删除项目 (这里实现为软删除，以保留历史)
+     */
+    int deleteBySampleId(@Param("sampleId") String sampleId, @Param("updateBy") String updateBy);
 }

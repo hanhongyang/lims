@@ -47,6 +47,7 @@ public interface IOpPcrEntrustOrderService
      */
     public int updateOpPcrEntrustOrder(OpPcrEntrustOrder opPcrEntrustOrder);
 
+    void withdrawOrder(String orderId);
 
     String downloadImportModel(HttpServletResponse response);
 }

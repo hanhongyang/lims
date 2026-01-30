@@ -41,6 +41,16 @@
         <result property="upperLimit" column="upper_limit"/>
         <result property="lowerLimit" column="lower_limit"/>
         <result property="qualitativeOrQuantitative" column="qualitative_or_quantitative"/>
+        <result property="testLine" column="test_line"/>
+        <result property="parallel1TareWeight" column="parallel1_tare_weight"/>
+        <result property="parallel1BeforeDryingWeight" column="parallel1_before_drying_weight"/>
+        <result property="parallel1AfterDryingWeight" column="parallel1_after_drying_weight"/>
+        <result property="parallel1Value" column="parallel1_value"/>
+        <result property="parallel2TareWeight" column="parallel2_tare_weight"/>
+        <result property="parallel2BeforeDryingWeight" column="parallel2_before_drying_weight"/>
+        <result property="parallel2AfterDryingWeight" column="parallel2_after_drying_weight"/>
+        <result property="parallel2Value" column="parallel2_value"/>
+        <result property="averageValue" column="average_value"/>
     </resultMap>
 
     <sql id="selectOpTestResultInfoVo">
@@ -79,7 +89,17 @@
                d.feature_id,
                d.upper_limit,
                d.lower_limit,
-               d.qualitative_or_quantitative
+               d.qualitative_or_quantitative,
+               d.test_line,
+               d.parallel1_tare_weight,
+               d.parallel1_before_drying_weight,
+               d.parallel1_after_drying_weight,
+               d.parallel1_value,
+               d.parallel2_tare_weight,
+               d.parallel2_before_drying_weight,
+               d.parallel2_after_drying_weight,
+               d.parallel2_value,
+               d.average_value
         from op_test_result_info d
     </sql>
 
@@ -172,6 +192,36 @@
             <if test="qualitativeOrQuantitative != null">
                 qualitative_or_quantitative,
             </if>
+            <if test="testLine != null and testLine != ''">
+                test_line,
+            </if>
+            <if test="parallel1TareWeight != null">
+                parallel1_tare_weight,
+            </if>
+            <if test="parallel1BeforeDryingWeight != null">
+                parallel1_before_drying_weight,
+            </if>
+            <if test="parallel1AfterDryingWeight != null">
+                parallel1_after_drying_weight,
+            </if>
+            <if test="parallel1Value != null">
+                parallel1_value,
+            </if>
+            <if test="parallel2TareWeight != null">
+                parallel2_tare_weight,
+            </if>
+            <if test="parallel2BeforeDryingWeight != null">
+                parallel2_before_drying_weight,
+            </if>
+            <if test="parallel2AfterDryingWeight != null">
+                parallel2_after_drying_weight,
+            </if>
+            <if test="parallel2Value != null">
+                parallel2_value,
+            </if>
+            <if test="averageValue != null">
+                average_value,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -221,6 +271,36 @@
             </if>
             <if test="qualitativeOrQuantitative != null">
                 #{qualitativeOrQuantitative},
+            </if>
+            <if test="testLine != null and testLine != ''">
+                #{testLine},
+            </if>
+            <if test="parallel1TareWeight != null">
+                #{parallel1TareWeight},
+            </if>
+            <if test="parallel1BeforeDryingWeight != null">
+                #{parallel1BeforeDryingWeight},
+            </if>
+            <if test="parallel1AfterDryingWeight != null">
+                #{parallel1AfterDryingWeight},
+            </if>
+            <if test="parallel1Value != null">
+                #{parallel1Value},
+            </if>
+            <if test="parallel2TareWeight != null">
+                #{parallel2TareWeight},
+            </if>
+            <if test="parallel2BeforeDryingWeight != null">
+                #{parallel2BeforeDryingWeight},
+            </if>
+            <if test="parallel2AfterDryingWeight != null">
+                #{parallel2AfterDryingWeight},
+            </if>
+            <if test="parallel2Value != null">
+                #{parallel2Value},
+            </if>
+            <if test="averageValue != null">
+                #{averageValue},
             </if>
         </trim>
     </insert>
@@ -273,6 +353,36 @@
             <if test="qualitativeOrQuantitative != null">
                 qualitative_or_quantitative = #{qualitativeOrQuantitative},
             </if>
+            <if test="testLine != null and testLine != ''">
+                test_line = #{testLine},
+            </if>
+            <if test="parallel1TareWeight != null">
+                parallel1_tare_weight = #{parallel1TareWeight},
+            </if>
+            <if test="parallel1BeforeDryingWeight != null">
+                parallel1_before_drying_weight = #{parallel1BeforeDryingWeight},
+            </if>
+            <if test="parallel1AfterDryingWeight != null">
+                parallel1_after_drying_weight = #{parallel1AfterDryingWeight},
+            </if>
+            <if test="parallel1Value != null">
+                parallel1_value = #{parallel1Value},
+            </if>
+            <if test="parallel2TareWeight != null">
+                parallel2_tare_weight = #{parallel2TareWeight},
+            </if>
+            <if test="parallel2BeforeDryingWeight != null">
+                parallel2_before_drying_weight = #{parallel2BeforeDryingWeight},
+            </if>
+            <if test="parallel2AfterDryingWeight != null">
+                parallel2_after_drying_weight = #{parallel2AfterDryingWeight},
+            </if>
+            <if test="parallel2Value != null">
+                parallel2_value = #{parallel2Value},
+            </if>
+            <if test="averageValue != null">
+                average_value = #{averageValue},
+            </if>
         </trim>
         where id = #{id}
     </update>
@@ -300,8 +410,31 @@
     </update>
 
 
-    <update id="updateRetestFlagById" >
-        update op_test_result_info set retest_flag = '1' ,update_time=now(),update_by=#{updateUser}
+    <update id="updateRetestFlagById">
+        update op_test_result_info set retest_flag = #{retestFlag}, update_by = #{updateUser}, update_time = sysdate() where id = #{id}
+    </update>
+
+    <update id="updateRetestFlagByBaseId">
+        update op_test_result_info 
+        set retest_flag = #{retestFlag}, 
+            update_by = #{updateUser}, 
+            update_time = sysdate() 
+        where base_id = #{baseId} 
+        and delete_id = '0'
+    </update>
+
+    <update id="clearResultById" parameterType="String">
+        update op_test_result_info
+        set result = null,
+            check_result = null,
+            update_time = sysdate()
+        where id = #{id}
+    </update>
+
+    <update id="updateRetestFlag">
+        update op_test_result_info
+        set retest_flag = #{retestFlag},
+            update_time = sysdate()
         where id = #{id}
     </update>
 </mapper>

@@ -25,6 +25,7 @@
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="deleteId"    column="delete_id"    />
+        <result property="sampleNo"    column="sample_no"    />
     </resultMap>
 
     <sql id="selectOpTestResultBaseVo">
@@ -47,8 +48,15 @@
                d.create_by,
                d.update_time,
                d.update_by,
-               d.delete_id
+               d.delete_id,
+               i.sample_no
         from op_test_result_base d
+        left join (
+            select base_id, max(sample_no) as sample_no
+            from op_test_result_info
+            where delete_id = '0'
+            group by base_id
+        ) i on d.id = i.base_id
     </sql>
 
     <select id="selectOpTestResultBaseList" parameterType="OpTestResultBase" resultMap="OpTestResultBaseResult">
@@ -56,6 +64,7 @@
         <where>
             d.delete_id = '0'
             <if test="resultNo != null  and resultNo != ''">and d.result_no = #{resultNo}</if>
+            <if test="sampleNo != null  and sampleNo != ''">and i.sample_no like concat('%', #{sampleNo}, '%')</if>
             <if test="deptName != null  and deptName != ''">and d.dept_name like concat('%', #{deptName}, '%')</if>
             <if test="itemName != null  and itemName != ''">and d.item_name like concat('%', #{itemName}, '%')</if>
             <if test="itemId != null  and itemId != ''">and d.item_id = #{itemId}</if>
@@ -75,7 +84,53 @@
                 </choose>
             </if>
         </where>
-        order by test_time desc
+        ORDER BY
+        CASE WHEN status = 4 THEN update_time ELSE test_time END DESC
+    </select>
+
+    <select id="selectRetestPendingList" parameterType="OpTestResultBase" resultMap="OpTestResultBaseResult">
+        select d.id,
+               d.dept_id,
+               d.result_no,
+               d.dept_name,
+               d.item_name,
+               d.item_id,
+               d.examine_user,
+               d.examine_user_id,
+               d.examine_time,
+               d.test_time,
+               d.test_user,
+               d.test_user_id,
+               d.result_add_type,
+               d.status,
+               d.return_reason,
+               d.create_time,
+               d.create_by,
+               d.update_time,
+               d.update_by,
+               d.delete_id,
+               i.sample_no
+        from op_test_result_base d
+        left join (
+            select base_id, max(sample_no) as sample_no
+            from op_test_result_info
+            where delete_id = '0'
+            group by base_id
+        ) i on d.id = i.base_id
+        where d.delete_id = '0'
+        and exists (
+            select 1 from op_test_result_info ri
+            where ri.base_id = d.id
+            and ri.retest_flag = '2'
+            and ri.delete_id = '0'
+        )
+        and d.status = '3'
+        <if test="resultNo != null  and resultNo != ''">and d.result_no = #{resultNo}</if>
+        <if test="sampleNo != null  and sampleNo != ''">and i.sample_no like concat('%', #{sampleNo}, '%')</if>
+        <if test="deptName != null  and deptName != ''">and d.dept_name like concat('%', #{deptName}, '%')</if>
+        <if test="itemName != null  and itemName != ''">and d.item_name like concat('%', #{itemName}, '%')</if>
+        <if test="testUser != null  and testUser != ''">and d.test_user = #{testUser}</if>
+        ORDER BY d.update_time DESC
     </select>
 
     <select id="selectOpTestResultBaseById" parameterType="String" resultMap="OpTestResultBaseResult">
@@ -244,7 +299,7 @@
         WHERE
         -- 基础条件（已接收、未删除、待化验）
         ps.is_receive = '1'
-        AND (tri.id IS NULL OR otrb.status = '0')
+        AND (tri.id IS NULL OR otrb.status = '1')
         AND ps.is_delete = '0'
         AND pi.is_delete = '0'
         AND (tri.id IS NULL OR tri.retest_flag = '1')

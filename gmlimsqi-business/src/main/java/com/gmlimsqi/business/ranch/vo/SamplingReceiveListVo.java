@@ -48,6 +48,12 @@ public class SamplingReceiveListVo {
     @Excel(name = "接收人id")
     private String receiverId;
 
+    /** 创建人 */
+    private String createBy;
+
+    /** 创建时间 */
+    private String createTime;
+
     /** 感官性状 0不合格 1合格 */
     @Excel(name = "感官性状 0不合格 1合格")
     private String ggQualityResult;
@@ -75,6 +81,12 @@ public class SamplingReceiveListVo {
     /** 物料编码 */
     @Excel(name = "物料编码")
     private String invbillCode;
+
+    /** 样品类型 */
+    private String samplingType;
+
+    /** 样品新增的类型0：手动新增，1：扫码新增 */
+    private String isscan;
 
     /**
      * 检测项目列表

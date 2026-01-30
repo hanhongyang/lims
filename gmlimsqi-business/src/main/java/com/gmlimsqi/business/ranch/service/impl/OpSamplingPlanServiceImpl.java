@@ -27,6 +27,7 @@ import com.gmlimsqi.business.util.CodeGeneratorUtil;
 import com.gmlimsqi.business.util.SpringStoredProcCaller;
 import com.gmlimsqi.business.util.UserCacheService;
 import com.gmlimsqi.common.core.domain.entity.SysDept;
+import com.gmlimsqi.common.core.domain.entity.SysUser;
 import com.gmlimsqi.common.enums.SamplePlanStatusEnum;
 import com.gmlimsqi.common.enums.YesNo2Enum;
 import com.gmlimsqi.common.exception.BusinessException;
@@ -424,7 +425,9 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
         if (opSamplingPlan.getOpSamplingPlanId() != null) {
             List<OpSamplingPlanSample> opSamplingPlanSamples = opSamplingPlanSampleMapper.selectOpSamplingPlanSampleListByPlanId(opSamplingPlan.getOpSamplingPlanId());
             for (OpSamplingPlanSample oldSample : opSamplingPlanSamples) {
-                oldSampleNos.add(oldSample.getSampleNo());
+                if (StringUtils.isNotEmpty(oldSample.getSampleNo())) {
+                    oldSampleNos.add(oldSample.getSampleNo());
+                }
             }
         }
         int row = 0;
@@ -442,7 +445,7 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
             }
             // 提交时，保存取样人、取样时间
             if (status.equals(SamplePlanStatusEnum.WSAPLE.getCode())) {
-                opSamplingPlan.setSampleTime(DateUtils.dateTime());
+                opSamplingPlan.setSampleTime(DateUtils.getNowDate());
                 opSamplingPlan.setSamplerId(String.valueOf(SecurityUtils.getUserId()));
                 opSamplingPlan.setSamplerName(SecurityUtils.getLoginUser().getUser().getNickName());
             }
@@ -491,19 +494,19 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
                 // 判断取样单号是否有值
                 if (StringUtils.isEmpty(sample.getSampleNo())) {
                     try {
-                        if (sample.getSamplingType().equals("0")) {
+                        if ("0".equals(sample.getSamplingType())) {
                             String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_FINISHED_PRODUCT_SAMPLING_ORDER);
                             sample.setSampleNo(resultNo);
                         }
-                        if (sample.getSamplingType().equals("1")) {
+                        if ("1".equals(sample.getSamplingType())) {
                             String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_INVENTORY_SAMPLING_ORDER);
                             sample.setSampleNo(resultNo);
                         }
-                        if (sample.getSamplingType().equals("2")) {
+                        if ("2".equals(sample.getSamplingType())) {
                             String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_FEED_SAMPLING_ORDER);
                             sample.setSampleNo(resultNo);
                         }
-                        if (sample.getSamplingType().equals("3")) {
+                        if ("3".equals(sample.getSamplingType())) {
                             String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_YLQYD);
                             sample.setSampleNo(resultNo);
                         }
@@ -590,7 +593,7 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
                 String ggQualityResult = sample.getGgQualityResult();
                 if ("0".equals(ggQualityResult)) {
                     // 删除重新插入
-                    opSampleUnqualityMapper.deleteOpSampleUnqualityBySourceId(sampleId);
+                    opSampleUnqualityMapper.deleteOpSampleUnqualityBySourceId(sampleId, new Date(), String.valueOf(SecurityUtils.getUserId()));
                     // 整合感官不合格数据
                         OpSampleUnquality opSampleUnquality = new OpSampleUnquality();
                         opSampleUnquality.setSourceId(sampleId);
@@ -605,8 +608,18 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
                         opSampleUnquality.setProcessingType("1");
                         opSampleUnquality.setStatus("0");
                         opSampleUnquality.setCfilepath(sample.getGgQualityFileIds());
-                        opSampleUnquality.setSupplierCode(sample.getSupplierCode());
-                        opSampleUnquality.setSupplierName(sample.getSupplierName());
+                        if (StringUtils.isNotEmpty(sample.getSupplierCode())) {
+                            opSampleUnquality.setSupplierCode(sample.getSupplierCode());
+                        }
+                        if (StringUtils.isNotEmpty(sample.getSupplierName())) {
+                            opSampleUnquality.setSupplierName(sample.getSupplierName());
+                        }
+                        if (StringUtils.isNotEmpty(opSamplingPlan.getDriverName())) {
+                            opSampleUnquality.setDriverName(opSamplingPlan.getDriverName());
+                        }
+                        if (StringUtils.isNotEmpty(opSamplingPlan.getDriverCode())) {
+                            opSampleUnquality.setDriverCode(opSamplingPlan.getDriverCode());
+                        }
 
                         if (StringUtils.isNotEmpty(opSamplingPlan.getSignInId())) {
                             opSampleUnquality.setSignInId(opSamplingPlan.getSignInId());
@@ -661,7 +674,7 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
      * @param notifyDTO 来自 egap 系统的通知数据
      */
     @Override
-    @Transactional // 确保此操作在一个新事务中
+    @Transactional
     public void processSignInNotification(SignInNotificationDTO notifyDTO, String urlPrefix) {
 
         // 1. 创建一个新的 LIMS 取样计划实体
@@ -675,7 +688,6 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
         // --- 3. 填充 LIMS 系统自身的业务字段 ---
 
         // A. [!! 关键 !!] 根据 DTO 的 destinationCode 查询 LIMS 的 deptId
-
         String egapDeptCode = notifyDTO.getDestinationCode();
         if (StringUtils.isEmpty(egapDeptCode)) {
             logger.error("接收签到通知失败: egap 系统未提供 destinationCode");
@@ -693,66 +705,144 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
         // 设置 LIMS 的部门 ID
         newPlan.setDeptId(limsDept.get(0).getDeptId().toString());
 
-        if (StringUtils.isNotEmpty(notifyDTO.getFileBase64())) {
-            try {
-                // 1. 构造一个文件名
-                // 优先使用 DTO 中的 filePath (如果它包含文件名)，否则使用车牌号
-                String originalFilename = "随车检验报告.png"; // 默认
-                if (StringUtils.isNotEmpty(notifyDTO.getOriginalFilename())) {
-                    // (您需要根据 filePath 的实际格式解析出文件名)
-                    // 假设 filePath 就是文件名:
-                    originalFilename = notifyDTO.getOriginalFilename();
-                } else if (StringUtils.isNotEmpty(notifyDTO.getDriverCode())) {
-                    originalFilename = notifyDTO.getDriverCode() + "_随车检验报告.png";
+        // --- 处理Base64附件列表 ---
+        List<String> fileIds = new ArrayList<>();
+        List<String> fileUrls = new ArrayList<>();
+
+        // 检查是否有Base64附件
+        if (notifyDTO.getFileBase64() != null && !notifyDTO.getFileBase64().isEmpty()) {
+            // 获取Base64列表
+            List<String> base64List = notifyDTO.getFileBase64();
+
+            // 先生成送检单号，用于文件名
+            String samplingPlanNo = codeGeneratorUtil.generateSAMPLEPlanNo();
+            String timestamp = DateUtils.dateTimeNow("yyyyMMddHHmmss");
+
+            logger.info("开始处理Base64附件，数量: {}", base64List.size());
+
+            // 遍历所有Base64文件
+            for (int i = 0; i < base64List.size(); i++) {
+                String fileBase64 = base64List.get(i);
+
+                if (StringUtils.isNotEmpty(fileBase64)) {
+                    try {
+                        // 1. 生成统一的文件名
+                        String originalFilename = generateUnifiedFilename(
+                                samplingPlanNo,
+                                timestamp,
+                                i,
+                                determineFileExtension(fileBase64)
+                        );
+
+                        logger.debug("开始上传第 {} 个附件，文件名: {}", i + 1, originalFilename);
+
+                        // 2. 调用上传接口（调用base64上传方法）
+                        SysUploadFile fileInfo = sysUploadFileService.uploadBase64File(
+                                fileBase64,
+                                originalFilename,
+                                urlPrefix
+                        );
+
+                        // 3. 收集文件信息
+                        fileIds.add(fileInfo.getFileId());
+                        fileUrls.add(fileInfo.getUrl());
+
+                        logger.info("成功上传第 {} 个附件: {}, 文件ID: {}",
+                                i + 1, originalFilename, fileInfo.getFileId());
+
+                    } catch (Exception e) {
+                        logger.error("上传Base64文件失败，序号 {}: {}", i, e.getMessage(), e);
+                        // 根据业务需求决定：继续处理其他文件 或 抛出异常
+                        // 这里选择记录日志但继续处理其他文件，避免一个文件失败导致整个流程失败
+                    }
                 }
-
-
-                // 3. 调用服务
-                SysUploadFile fileInfo = sysUploadFileService.uploadBase64File(
-                        notifyDTO.getFileBase64(),
-                        originalFilename,
-                        urlPrefix
-                );
-
-                // 4. 将 FileId 和 Url 存入 Plan
-                newPlan.setCarFileId(fileInfo.getFileId());
-                newPlan.setCarFileUrl(fileInfo.getUrl());
-
-            } catch (Exception e) {
-                logger.error("处理签到通知时，保存Base64文件失败: {}", e.getMessage());
-                // 根据业务需求，这里可以选择是抛出异常回滚事务，还是仅记录日志继续执行
-                throw new ServiceException("处理失败: 保存附件时出错: " + e.getMessage());
             }
         }
-        // B. 设置主键 (复用 'add' 方法的逻辑)
+
+        // 将文件ID和URL用逗号分隔存储
+        if (!fileIds.isEmpty()) {
+            // 将List转换为逗号分隔的String
+            String fileIdStr = String.join(",", fileIds);
+            String fileUrlStr = String.join(",", fileUrls);
+
+            // 存储到实体中
+            newPlan.setCarFileId(fileIdStr);
+            newPlan.setCarFileUrl(fileUrlStr);
+
+            logger.info("保存附件信息 - 文件ID数量: {}, 文件URL数量: {}",
+                    fileIds.size(), fileUrls.size());
+            logger.debug("文件ID列表: {}", fileIdStr);
+            logger.debug("文件URL列表: {}", fileUrlStr);
+        } else {
+            logger.info("没有附件需要保存");
+        }
+
+        // B. 设置主键
         newPlan.setOpSamplingPlanId(IdUtils.simpleUUID());
 
-        // C. 生成唯一的"送检单号" (复用 'add' 方法的逻辑)
+        // C. 生成唯一的"送检单号"
         newPlan.setSamplingPlanNo(codeGeneratorUtil.generateSAMPLEPlanNo());
+
         // D. 设置取样计划状态为 "待取样"
-        newPlan.setStatus(SamplePlanStatusEnum.WSAPLE.getCode()); // "0" (待取样)
+        newPlan.setStatus(SamplePlanStatusEnum.WSAPLE.getCode());
 
         // E. 设置其他默认值
-        newPlan.setIsReceive(YesNo2Enum.NO.getCode()); // "0" (未接收)
+        newPlan.setIsReceive(YesNo2Enum.NO.getCode());
 
         // --- 4. 关键: 手动填充审计字段 ---
-        // (因为这是 @Anonymous 匿名调用, SecurityUtils.getLoginUser() 会是 null)
-
-        // 错误示范: newPlan.fillCreateInfo(); (这会抛出空指针异常)
-
-        // [正确做法] 手动设置
         newPlan.setCreateTime(DateUtils.getNowDate());
-        newPlan.setCreateBy("EgapSystemApi"); // 使用一个硬编码的字符串来标识"系统"
-        newPlan.setSignInId(notifyDTO.getId()); // 关联签到 ID
+        newPlan.setCreateBy("EgapSystemApi");
+        newPlan.setSignInId(notifyDTO.getId());
+
         // --- 5. 插入数据库 ---
-        // (复用 'add' 方法的插入逻辑)
         int rows = opSamplingPlanMapper.insertOpSamplingPlan(newPlan);
 
         if (rows == 0) {
             throw new ServiceException("自动创建取样计划失败，数据库未受影响");
         }
 
-        logger.info("已成功处理 egap 签到通知，并创建了 LIMS 取样计划: {}", newPlan.getSamplingPlanNo());
+        logger.info("已成功处理 egap 签到通知，并创建了 LIMS 取样计划: {}, 附件数量: {}",
+                newPlan.getSamplingPlanNo(), fileIds.size());
+    }
+
+    /**
+     * 生成统一的文件名
+     */
+    private String generateUnifiedFilename(String samplingPlanNo, String timestamp, int index, String fileExtension) {
+        // 确保序号是两位数，保持文件名长度一致
+        String formattedIndex = String.format("%02d", index);
+
+        // 替换可能存在的非法字符
+        String safeSamplingPlanNo = samplingPlanNo.replaceAll("[^a-zA-Z0-9]", "_");
+
+        return String.format("%s_%s_%s.%s",
+                safeSamplingPlanNo,
+                timestamp,
+                formattedIndex,
+                fileExtension);
+    }
+
+    /**
+     * 根据Base64字符串判断文件类型
+     */
+    private String determineFileExtension(String base64) {
+        if (StringUtils.isEmpty(base64)) {
+            return "jpg"; // 默认
+        }
+
+        // 检查Base64前缀来判断文件类型
+        if (base64.startsWith("/9j/") || base64.contains("data:image/jpeg")) {
+            return "jpg";
+        } else if (base64.startsWith("iVBORw0KGgo") || base64.contains("data:image/png")) {
+            return "png";
+        } else if (base64.startsWith("R0lGOD") || base64.contains("data:image/gif")) {
+            return "gif";
+        } else if (base64.startsWith("JVBER") || base64.contains("data:application/pdf")) {
+            return "pdf";
+        } else {
+            // 默认返回jpg
+            return "jpg";
+        }
     }
 
     /**
@@ -789,6 +879,23 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
                 // 查询检测项目列表
                 List<OpSamplingPlanItem> itemList = opSamplingPlanItemMapper.selectOpSamplingPlanItemBySampleId(samplingReceiveListVo.getSamplingPlanSampleId());
                 samplingReceiveListVo.setOpSamplingPlanItemList(itemList);
+
+                /** 如果取样人为空 那么把创建人设置为取样人 */
+                if (StringUtils.isNotBlank(samplingReceiveListVo.getCreateBy())&&StringUtils.isEmpty(samplingReceiveListVo.getSamplerName())){
+                    if (samplingReceiveListVo.getCreateBy().matches("^\\d+$")){
+                        Long userId = Long.valueOf(samplingReceiveListVo.getCreateBy());
+                        SysUser user = sysUserMapper.selectUserById(userId);
+                        if (user != null) {
+                            String nickName = user.getNickName(); // 获取用户姓名
+                            samplingReceiveListVo.setSamplerName(nickName);
+                        }
+                    }else{
+                        samplingReceiveListVo.setSamplerName(samplingReceiveListVo.getCreateBy());
+                    }
+                }
+                if (samplingReceiveListVo.getSampleTime()==null&&samplingReceiveListVo.getCreateTime()!=null){
+                    samplingReceiveListVo.setSampleTime(samplingReceiveListVo.getCreateTime());
+                }
             }
         }
         return receiveListVos;
@@ -955,7 +1062,7 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
         // 如果状态是 "取样完成" (status='1')，则记录取样人信息。
         // (我假设 '1' 对应 SamplePlanStatusEnum.YSAPLE.getCode())
         if (SamplePlanStatusEnum.YSAPLE.getCode().equals(status)) {
-            planToUpdate.setSampleTime(DateUtils.dateTime()); // 记录取样时间
+            planToUpdate.setSampleTime(DateUtils.getNowDate()); // 记录取样时间
             planToUpdate.setSamplerId(String.valueOf(SecurityUtils.getUserId()));
             planToUpdate.setSamplerName(SecurityUtils.getLoginUser().getUser().getNickName());
         }
@@ -1068,6 +1175,10 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
                 opFinishedProductSamplingPlanMapper.updateOpFinishedProductSamplingPlan(opFinishedProductSamplingPlan);
             }
 
+            if (StringUtils.isNotEmpty(sample.getIsReceive()) && "1".equals(sample.getIsReceive())){
+                throw new ServiceException("已接收的样品不能修改");
+            }
+
             if (!StringUtils.isEmpty(sample.getOpSamplingPlanSampleId())) {
                 opSamplingPlanSampleMapper.deleteOpSamplingPlanSampleByOpSamplingPlanSampleId(sample.getOpSamplingPlanSampleId());
             }
@@ -1083,15 +1194,15 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
             if (StringUtils.isEmpty(sample.getSampleNo())) {
                 try {
                     if (sample.getSamplingType().equals("0")) {
-                        String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_FINISHED_PRODUCT_SAMPLING_PLAN);
+                        String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_FINISHED_PRODUCT_SAMPLING_ORDER);
                         sample.setSampleNo(resultNo);
                     }
                     if (sample.getSamplingType().equals("1")) {
-                        String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_INVENTORY_SAMPLING_PLAN);
+                        String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_INVENTORY_SAMPLING_ORDER);
                         sample.setSampleNo(resultNo);
                     }
                     if (sample.getSamplingType().equals("2")) {
-                        String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_FEED_SAMPLING_PLAN);
+                        String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_FEED_SAMPLING_ORDER);
                         sample.setSampleNo(resultNo);
                     }
                     if (sample.getSamplingType().equals("3")) {
@@ -1100,7 +1211,7 @@ public class OpSamplingPlanServiceImpl implements IOpSamplingPlanService {
                     }
 
                 } catch (BusinessException e) {
-                    throw new RuntimeException("生成装奶单编号失败: " + e.getMessage());
+                    throw new RuntimeException("生成编号失败: " + e.getMessage());
                 }
             }
 

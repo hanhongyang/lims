@@ -192,7 +192,7 @@ public class OpSamplingPlanSampleVO extends BaseEntity {
     private String file;
 
     /** 附件url */
-    private List<String> fileUrl;
+    private String fileUrl;
 
     /** 取样类型 0：成品，1：库存，2：垫料 */
     @Excel(name = "取样类型 0：成品，1：库存，2：垫料")
@@ -231,5 +231,9 @@ public class OpSamplingPlanSampleVO extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "取样时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private String sampleTime;
+
+    /** 是否扫描 */
+    @Excel(name = "是否扫描")
+    private String isscan;
 
 }

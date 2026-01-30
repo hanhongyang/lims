@@ -7,6 +7,7 @@ import com.gmlimsqi.common.annotation.Excel;
 import com.gmlimsqi.common.core.domain.BaseEntity;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 化验结果信息对象 op_test_result_info
@@ -129,5 +130,56 @@ public class OpTestResultInfo extends BaseEntity implements BaseEntity.CreateAwa
 
     /** 样品化验项目信息 */
     private OpSamplingPlanItem opSamplingPlanItem;
+
+    /** 检测线 */
+    @Excel(name = "检测线")
+    private String testLine;
+
+    /**
+     * 平行样1皮重/g
+     */
+    private String parallel1TareWeight;
+
+    /**
+     * 平行样1烘前重量/g
+     */
+    private String parallel1BeforeDryingWeight;
+
+    /**
+     * 平行样1烘后重量/g
+     */
+    private String parallel1AfterDryingWeight;
+
+    /**
+     * 平行样1值
+     */
+    private String parallel1Value;
+
+    /**
+     * 平行样2皮重/g
+     */
+    private String parallel2TareWeight;
+
+    /**
+     * 平行样2烘前重量/g
+     */
+    private String parallel2BeforeDryingWeight;
+
+    /**
+     * 平行样2烘后重量/g
+     */
+    private String parallel2AfterDryingWeight;
+
+    /**
+     * 平行样2值
+     */
+    private String parallel2Value;
+
+    /**
+     * 平均值
+     */
+    private String averageValue;
+
+    private List<OpTestResultInfoSub> subList;
 
 }

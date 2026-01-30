@@ -1,15 +1,13 @@
 package com.gmlimsqi.business.unquality.service.impl;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.List;
 
 import com.gmlimsqi.business.unquality.domain.YktReadDTO;
 import com.gmlimsqi.business.util.CodeGeneratorUtil;
 import com.gmlimsqi.common.core.domain.entity.SysDept;
 import com.gmlimsqi.common.exception.BusinessException;
+import com.gmlimsqi.common.utils.DateUtils;
 import com.gmlimsqi.common.utils.StringUtils;
 import com.gmlimsqi.common.utils.uuid.IdUtils;
 import com.gmlimsqi.business.util.UserCacheService;
@@ -22,9 +20,8 @@ import com.gmlimsqi.system.mapper.SysDeptMapper;
 import org.mybatis.spring.annotation.MapperScannerRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-    import java.util.ArrayList;
 
-    import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional;
     import com.gmlimsqi.business.unquality.domain.OpSampleUnqualityDetail;
 import com.gmlimsqi.business.unquality.mapper.OpSampleUnqualityMapper;
 import com.gmlimsqi.business.unquality.domain.OpSampleUnquality;
@@ -60,7 +57,9 @@ public class OpSampleUnqualityServiceImpl implements IOpSampleUnqualityService
     @Override
     public OpSampleUnquality selectOpSampleUnqualityByOpSampleUnqualityId(String opSampleUnqualityId)
     {
-        return opSampleUnqualityMapper.selectOpSampleUnqualityByOpSampleUnqualityId(opSampleUnqualityId);
+        OpSampleUnquality opSampleUnquality = opSampleUnqualityMapper.selectOpSampleUnqualityByOpSampleUnqualityId(opSampleUnqualityId);
+        opSampleUnquality.setCreateBy(userCacheService.getUsername(opSampleUnquality.getCreateBy()));
+        return opSampleUnquality;
     }
 
     /**
@@ -106,11 +105,9 @@ public class OpSampleUnqualityServiceImpl implements IOpSampleUnqualityService
             // 根据来源id查询是否有值，有则修改感官不合格单
             OpSampleUnquality existing = opSampleUnqualityMapper.selectOpSampleUnqualityBySourceId(opSampleUnquality.getSourceId(),
                     "感官不合格");
-            if (existing != null) {
-                if ("1".equals(existing.getStatus())){
-                    return 0;
-                }
+            if (existing != null && !"1".equals(existing.getStatus())) {
                 // 更新现有记录，感官不合格单没有子表，无需操作子表
+                opSampleUnquality.setOpSampleUnqualityId(existing.getOpSampleUnqualityId());
                 opSampleUnquality.fillUpdateInfo();
                 count = opSampleUnqualityMapper.updateOpSampleUnquality(opSampleUnquality);
             }else {
@@ -146,11 +143,9 @@ public class OpSampleUnqualityServiceImpl implements IOpSampleUnqualityService
             // 根据来源id查询是否有值，有则修改化验不合格单
             OpSampleUnquality existing = opSampleUnqualityMapper.selectOpSampleUnqualityBySourceId(opSampleUnquality.getSourceId(),
                     "化验不合格");
-            if (existing != null) {
-                if ("1".equals(existing.getStatus())){
-                    return 0;
-                }
+            if (existing != null && !"1".equals(existing.getStatus())) {
                 // 更新现有记录，化验不合格单有子表，需要更新子表
+                opSampleUnquality.setOpSampleUnqualityId(existing.getOpSampleUnqualityId());
                 opSampleUnquality.fillUpdateInfo();
 
                 // 判断子表是否存在该化验项目，不存在则新增子表
@@ -163,6 +158,8 @@ public class OpSampleUnqualityServiceImpl implements IOpSampleUnqualityService
                     if (!exists) {
                         // 设置子表主键
                         opSampleUnqualityDetail.setOpSampleUnqualityDetailId(IdUtils.simpleUUID());
+                        // 设置关联主表ID
+                        opSampleUnqualityDetail.setOpSampleUnqualityId(existing.getOpSampleUnqualityId());
                         // 新增子表记录
                         opSampleUnqualityMapper.insertOpSampleUnqualityDetail(opSampleUnqualityDetail);
                     } else {
@@ -254,23 +251,38 @@ public class OpSampleUnqualityServiceImpl implements IOpSampleUnqualityService
         return opSampleUnqualityMapper.updateOpSampleUnqualityByDiBang(opSampleUnqualityIds);
     }
 
-    @Override
-    public int updateOpSampleUnqualityManually(String opSampleUnqualityId) {
-        OpSampleUnquality opSampleUnquality = opSampleUnqualityMapper.selectOpSampleUnqualityByOpSampleUnqualityId(opSampleUnqualityId);
-        if ("2".equals(opSampleUnquality.getProcessingType())){
-            throw new RuntimeException("该处理单已完成 不需要关闭");
+     @Override
+    public int updateOpSampleUnqualityManually(OpSampleUnquality opSampleUnquality) {
+        String opSampleUnqualityId = opSampleUnquality.getOpSampleUnqualityId();
+        OpSampleUnquality oldOpSampleUnquality = opSampleUnqualityMapper.selectOpSampleUnqualityByOpSampleUnqualityId(opSampleUnqualityId);
+
+        if (oldOpSampleUnquality != null) {
+            if ("1".equals(oldOpSampleUnquality.getStatus())){
+                throw new RuntimeException("该处理单已完成,无法关闭");
+            }
         }
-        if (!"1".equals(opSampleUnquality.getProcessingType())){
-            throw new RuntimeException("该处理单已完成 不需要关闭");
+
+        if (StringUtils.isBlank(opSampleUnquality.getManualClosingRemark())){
+            throw new RuntimeException("请输入手动关闭备注");
         }
-        return opSampleUnqualityMapper.updateOpSampleUnqualityManually(opSampleUnqualityId);
+
+        opSampleUnquality.setProcessingType("3");
+        opSampleUnquality.setStatus("1");
+        opSampleUnquality.setUpdateBy(SecurityUtils.getUsername());
+        opSampleUnquality.setUpdateTime(DateUtils.getNowDate());
+
+        return opSampleUnqualityMapper.updateOpSampleUnquality(opSampleUnquality);
     }
 
+    @Override
+    public int deleteOpSampleUnqualityBySourceId(String sourceId) {
+        return opSampleUnqualityMapper.deleteOpSampleUnqualityBySourceId(sourceId, new Date(), SecurityUtils.getUserId().toString());
+    }
 
     /**
-         * 新增样品不合格处理单详情信息
-         * * @param opSampleUnquality 样品不合格处理单对象
-         */
+     * 新增样品不合格处理单详情信息
+     * * @param opSampleUnquality 样品不合格处理单对象
+     */
         public void insertOpSampleUnqualityDetail(OpSampleUnquality opSampleUnquality)
         {
             List<OpSampleUnqualityDetail> opSampleUnqualityDetailList = opSampleUnquality.getOpSampleUnqualityDetailList();
@@ -285,7 +297,7 @@ public class OpSampleUnqualityServiceImpl implements IOpSampleUnqualityService
                 }
                 if (!list.isEmpty())
                 {
-                        opSampleUnqualityMapper.batchOpSampleUnqualityDetail(list);
+                    opSampleUnqualityMapper.batchOpSampleUnqualityDetail(list);
                 }
             }
         }

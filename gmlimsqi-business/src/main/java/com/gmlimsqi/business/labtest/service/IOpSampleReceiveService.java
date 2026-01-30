@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface IOpSampleReceiveService {
     List<OpSampleReceiveVo> selectSampleReceiveList(OpSampleReceiveDto sampleReceiveDto);
+    List<OpSampleReceiveVo> selectJhwSampleReceiveList(OpSampleReceiveDto sampleReceiveDto);
 
     OpSampleReceiveDetailVo selectSampleReceiveByEntrustOrderNo(String type, String entrustOrderNo);
 

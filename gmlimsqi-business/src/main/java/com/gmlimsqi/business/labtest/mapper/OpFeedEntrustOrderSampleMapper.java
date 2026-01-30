@@ -2,6 +2,7 @@ package com.gmlimsqi.business.labtest.mapper;
 
 import java.util.List;
 
+import com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrder;
 import com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrderSample;
 import org.apache.ibatis.annotations.Param;
 
@@ -83,4 +84,6 @@ public interface OpFeedEntrustOrderSampleMapper
     void updateReturnReason(@Param("returnReason")String returnReason, @Param("sampleNo")String sampleNo);
 
     void updateDeleteByNo(@Param("updateBy") String updateBy,@Param("sampleNo")String sampleNo);
+
+    OpFeedEntrustOrderSample selectBySampleNo(@Param("sampleNo")String sampleNo);
 }

@@ -933,6 +933,13 @@
             <if test="begintestTime != null ">and b.test_end_time >= #{begintestTime}</if>
             <if test="endtestTime != null ">and b.test_end_time &lt;= #{endtestTime}</if>
             <if test="fileName != null and fileName != ''">and f.original_name like concat('%',#{fileName},'%')</if>
+            <if test="exportFileName != null and exportFileName != ''">and b.export_file_name like concat('%',#{exportFileName},'%')</if>
+            <if test="isTest != null and isTest == '1'.toString()">
+                AND b.test_user_id is not null
+            </if>
+            <if test="isTest != null and isTest == '2'.toString()">
+                AND b.test_user_id is null
+            </if>
         </where>
         group by
             b.result_no,
@@ -1041,6 +1048,12 @@
         </if>
         <if test="bloodTaskItemTypeNotIn != null  and bloodTaskItemTypeNotIn != ''">
             and b.blood_task_item_type IN ('0','1', '2', '3', '4', '5', '6', '7')
+        </if>
+        <if test="isTest != null and isTest == '1'.toString()">
+            AND b.test_user_id is not null
+        </if>
+        <if test="isTest != null and isTest == '2'.toString()">
+            AND b.test_user_id is null
         </if>
         group by
         b.result_no,
@@ -1396,7 +1409,73 @@
                      WHERE r.blood_entrust_order_sample_id = s.op_blood_entrust_order_sample_id
                  )
                    -- 固定范围：0 ~ 7
+                   AND o.blood_task_item_type = '9'
+                 GROUP BY
+                     o.op_blood_entrust_order_id,
+                     o.blood_task_item_type
+             ) t
+    </select>
+
+    <select id="countPcrWaitAccept" resultType="int">
+        SELECT COUNT(1)
+        FROM (SELECT o.op_pcr_entrust_order_id,
+                     s.pcr_task_item_type
+              FROM op_pcr_entrust_order o
+                       INNER JOIN op_pcr_entrust_order_sample s
+                                  ON o.op_pcr_entrust_order_id = s.pcr_entrust_order_id
+                                      AND s.is_delete = '0'
+              WHERE o.delete_id = '0'
+                AND o.is_return = '0'
+                AND o.status = '1'
+              GROUP BY o.op_pcr_entrust_order_id,
+                       s.pcr_task_item_type) t
+    </select>
+
+    <select id="countDiseaseWaitAccept" resultType="int">
+        SELECT COUNT(1)
+        FROM (
+                 SELECT
+                     o.op_blood_entrust_order_id,
+                     o.blood_task_item_type
+                 FROM op_blood_entrust_order o
+                          INNER JOIN op_blood_entrust_order_sample s
+                                     ON o.op_blood_entrust_order_id = s.op_blood_entrust_order_id
+                                         AND s.is_delete = '0'
+                 WHERE o.delete_id = '0'
+                   AND o.is_return = '0'
+                   AND o.status = '1'
                    AND o.blood_task_item_type IN ('0','1','2','3','4','5','6','7')
+                 GROUP BY
+                     o.op_blood_entrust_order_id,
+                     o.blood_task_item_type
+             ) t
+    </select>
+
+    <select id="countBiochemistryWaitAccept" resultType="int">
+        SELECT count(distinct  o.op_blood_entrust_order_id  )
+        FROM op_blood_entrust_order o
+                 INNER JOIN op_blood_entrust_order_sample s
+                            ON o.op_blood_entrust_order_id = s.op_blood_entrust_order_id AND s.is_delete = '0'
+        WHERE o.delete_id = '0'
+          AND o.is_return = '0'
+          AND o.status = '1'
+          AND o.blood_task_item_type = '8'
+    </select>
+
+    <select id="countEarlyPregnancyWaitAccept" resultType="int">
+        SELECT COUNT(1)
+        FROM (
+                 SELECT
+                     o.op_blood_entrust_order_id,
+                     o.blood_task_item_type
+                 FROM op_blood_entrust_order o
+                          INNER JOIN op_blood_entrust_order_sample s
+                                     ON o.op_blood_entrust_order_id = s.op_blood_entrust_order_id
+                                         AND s.is_delete = '0'
+                 WHERE o.delete_id = '0'
+                   AND o.is_return = '0'
+                   AND o.status = '1'
+                   AND o.blood_task_item_type = '9'
                  GROUP BY
                      o.op_blood_entrust_order_id,
                      o.blood_task_item_type

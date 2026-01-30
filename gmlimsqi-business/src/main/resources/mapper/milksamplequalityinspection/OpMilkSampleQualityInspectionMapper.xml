@@ -5,74 +5,98 @@
 <mapper namespace="com.gmlimsqi.business.milksamplequalityinspection.mapper.OpMilkSampleQualityInspectionMapper">
 
     <resultMap type="OpMilkSampleQualityInspection" id="OpMilkSampleQualityInspectionResult">
-            <result property="opMilkSampleQualityInspectionId"    column="op_milk_sample_quality_inspection_id"    />
-            <result property="milkSourcePlanOrderNumber"    column="milk_source_plan_order_number"    />
-            <result property="opMilkFillingOrderId"    column="op_Milk_filling_order_id"    />
-            <result property="inspectionMilkTankersId"    column="inspection_milk_tankers_id"    />
-            <result property="status"    column="status"    />
-            <result property="preStepCompleted"    column="pre_step_completed"    />
-            <result property="licensePlateNumber"    column="license_plate_number"    />
-            <result property="milkSampleQualityInspectionNumber"    column="milk_sample_quality_inspection_number"    />
-            <result property="destination"    column="destination"    />
-            <result property="entryTime"    column="entry_time"    />
-            <result property="samplerId"    column="sampler_id"    />
-            <result property="sampler"    column="sampler"    />
-            <result property="samplingTime"    column="sampling_time"    />
-            <result property="testerId"    column="tester_id"    />
-            <result property="tester"    column="tester"    />
-            <result property="testTime"    column="test_time"    />
-            <result property="reviewerId"    column="reviewer_id"    />
-            <result property="reviewer"    column="reviewer"    />
-            <result property="reviewTime"    column="review_time"    />
-            <result property="milkTemperature"    column="milk_temperature"    />
-            <result property="milkTempPhoto"    column="milk_temp_photo"    />
-            <result property="remark"    column="remark"    />
-            <result property="file"    column="file"    />
-            <result property="fatPercent"    column="fat_percent"    />
-            <result property="proteinPercent"    column="protein_percent"    />
-            <result property="phosphateTest"    column="phosphate_test"    />
-            <result property="acidity"    column="acidity"    />
-            <result property="roseBengal"    column="rose_bengal"    />
-            <result property="bromothymolBlue"    column="bromothymol_blue"    />
-            <result property="ferricChloride"    column="ferric_chloride"    />
-            <result property="methyleneBlueTest"    column="methylene_blue_test"    />
-            <result property="bloodMilkTest"    column="blood_milk_test"    />
-            <result property="e50"    column="e50"    />
-            <result property="sensoryIndex"    column="sensory_index"    />
-            <result property="createBy"    column="create_by"    />
-            <result property="createByName"    column="create_by_name"    />
-            <result property="createTime"    column="create_time"    />
-            <result property="updateBy"    column="update_by"    />
-            <result property="updateTime"    column="update_time"    />
-            <result property="deptId"    column="dept_id"    />
-            <result property="isDelete"    column="is_delete"    />
-            <result property="isPushMilkSource"    column="is_push_milk_source"    />
-            <result property="isSampling"    column="is_sampling"    />
-            <result property="exceptionType"    column="exception_type"    />
-            <result property="exceptionDesc"    column="exception_desc"    />
-            <result property="isExceptionSubmit"    column="is_exception_submit"    />
-            <result property="alcoholType"    column="alcohol_type"    />
-            <result property="alcoholValue"    column="alcohol_value"    />
-            <result property="alcoholPhoto"    column="alcohol_photo"    />
-            <result property="phosphatePhoto"    column="phosphate_photo"    />
-            <result property="bloodMilkTestPhoto"    column="blood_milk_test_photo"    />
-            <result property="sensoryIndexPhoto"    column="sensory_index_photo"    />
-            <result property="aflatoxinPhoto" column="aflatoxin_photo"/>
-            <result property="antibioticPhoto" column="antibiotic_photo"/>
-            <result property="acidityPhoto" column="acidity_photo"/>
-            <result property="betaLactam"    column="beta_lactam"    />
-            <result property="tetracyclines"    column="tetracyclines"    />
-            <result property="ceftiofur"    column="ceftiofur"    />
-            <result property="cephalexin"    column="cephalexin"    />
-            <result property="aflatoxinM1"    column="aflatoxin_m1"    />
-            <result property="quinolone"    column="quinolone"    />
-            <result property="freezingPoint"    column="freezing_point"    />
-            <result property="antibioticResidue"    column="antibiotic_residue"    />
-            <result property="flunixin"    column="flunixin"    />
-            <result property="meloxicam"    column="meloxicam"    />
-            <result property="streptomycin"    column="streptomycin"    />
-            <result property="kanamycin"    column="kanamycin"    />
-            <result property="monensin"    column="monensin"    />
+        <result property="opMilkSampleQualityInspectionId"    column="op_milk_sample_quality_inspection_id"    />
+        <result property="milkSourcePlanOrderNumber"    column="milk_source_plan_order_number"    />
+        <result property="opMilkFillingOrderId"    column="op_Milk_filling_order_id"    />
+        <result property="inspectionMilkTankersId"    column="inspection_milk_tankers_id"    />
+        <result property="status"    column="status"    />
+        <result property="preStepCompleted"    column="pre_step_completed"    />
+        <result property="licensePlateNumber"    column="license_plate_number"    />
+        <result property="milkSampleQualityInspectionNumber"    column="milk_sample_quality_inspection_number"    />
+        <result property="destination"    column="destination"    />
+        <result property="entryTime"    column="entry_time"    />
+        <result property="samplerId"    column="sampler_id"    />
+        <result property="sampler"    column="sampler"    />
+        <result property="samplingTime"    column="sampling_time"    />
+        <result property="testerId"    column="tester_id"    />
+        <result property="tester"    column="tester"    />
+        <result property="testTime"    column="test_time"    />
+        <result property="reviewerId"    column="reviewer_id"    />
+        <result property="reviewer"    column="reviewer"    />
+        <result property="reviewTime"    column="review_time"    />
+        <result property="milkTemperature"    column="milk_temperature"    />
+        <result property="milkTempPhoto"    column="milk_temp_photo"    />
+        <result property="remark"    column="remark"    />
+        <result property="file"    column="file"    />
+        <result property="fatPercent"    column="fat_percent"    />
+        <result property="fatPercentPhoto" column="fat_percent_photo"/>
+        <result property="proteinPercent"    column="protein_percent"    />
+        <result property="proteinPercentPhoto" column="protein_percent_photo"/>
+        <result property="phosphateTest"    column="phosphate_test"    />
+        <result property="acidity"    column="acidity"    />
+        <result property="roseBengal"    column="rose_bengal"    />
+        <result property="roseBengalPhoto" column="rose_bengal_photo"/>
+        <result property="bromothymolBlue"    column="bromothymol_blue"    />
+        <result property="bromothymolBluePhoto" column="bromothymol_blue_photo"/>
+        <result property="ferricChloride"    column="ferric_chloride"    />
+        <result property="ferricChloridePhoto" column="ferric_chloride_photo"/>
+        <result property="methyleneBlueTest"    column="methylene_blue_test"    />
+        <result property="methyleneBlueTestPhoto" column="methylene_blue_test_photo"/>
+        <result property="bloodMilkTest"    column="blood_milk_test"    />
+        <result property="e50"    column="e50"    />
+        <result property="e50Photo" column="e50_photo"/>
+        <result property="sensoryIndex"    column="sensory_index"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isPushMilkSource"    column="is_push_milk_source"    />
+        <result property="isSampling"    column="is_sampling"    />
+        <result property="exceptionType"    column="exception_type"    />
+        <result property="exceptionDesc"    column="exception_desc"    />
+        <result property="isExceptionSubmit"    column="is_exception_submit"    />
+        <result property="alcoholType"    column="alcohol_type"    />
+        <result property="alcoholValue"    column="alcohol_value"    />
+        <result property="alcoholPhoto"    column="alcohol_photo"    />
+        <result property="phosphateTestPhoto"    column="phosphate_test_photo"    />
+        <result property="bloodMilkTestPhoto"    column="blood_milk_test_photo"    />
+        <result property="sensoryIndexPhoto"    column="sensory_index_photo"    />
+        <result property="aflatoxinM1Photo" column="aflatoxin_m1_photo"/>
+        <result property="antibioticPhoto" column="antibiotic_photo"/>
+        <result property="acidityPhoto" column="acidity_photo"/>
+        <result property="betaLactam"    column="beta_lactam"    />
+        <result property="betaLactamPhoto" column="beta_lactam_photo"/>
+        <result property="tetracyclines"    column="tetracyclines"    />
+        <result property="tetracyclinesPhoto" column="tetracyclines_photo"/>
+        <result property="ceftiofur"    column="ceftiofur"    />
+        <result property="ceftiofurPhoto" column="ceftiofur_photo"/>
+        <result property="cefalexin"    column="cefalexin"    />
+        <result property="cefalexinPhoto" column="cefalexin_photo"/>
+        <result property="aflatoxinM1"    column="aflatoxin_m1"    />
+        <result property="quinolone"    column="quinolone"    />
+        <result property="quinolonePhoto" column="quinolone_photo"/>
+        <result property="freezingPoint"    column="freezing_point"    />
+        <result property="freezingPointPhoto" column="freezing_point_photo"/>
+        <result property="antibioticResidue"    column="antibiotic_residue"    />
+        <result property="antibioticResiduePhoto" column="antibiotic_residue_photo"/>
+        <result property="flunixin"    column="flunixin"    />
+        <result property="flunixinPhoto" column="flunixin_photo"/>
+        <result property="meloxicam"    column="meloxicam"    />
+        <result property="meloxicamPhoto" column="meloxicam_photo"/>
+        <result property="streptomycin"    column="streptomycin"    />
+        <result property="streptomycinPhoto" column="streptomycin_photo"/>
+        <result property="kanamycin"    column="kanamycin"    />
+        <result property="kanamycinPhoto" column="kanamycin_photo"/>
+        <result property="monensin"    column="monensin"    />
+        <result property="monensinPhoto" column="monensin_photo"/>
+        <result property="imidacloprid"    column="imidacloprid"    />
+        <result property="imidaclopridPhoto" column="imidacloprid_photo"/>
+        <result property="acetamiprid"    column="acetamiprid"    />
+        <result property="acetamipridPhoto" column="acetamiprid_photo"/>
+        <result property="isManuallyAdd" column="is_manually_add"/>
     </resultMap>
 
     <sql id="selectOpMilkSampleQualityInspectionVo">
@@ -100,15 +124,22 @@
                a.remark,
                a.file,
                a.fat_percent,
+               a.fat_percent_photo,
                a.protein_percent,
+               a.protein_percent_photo,
                a.phosphate_test,
                a.acidity,
                a.rose_bengal,
+               a.rose_bengal_photo,
                a.bromothymol_blue,
+               a.bromothymol_blue_photo,
                a.ferric_chloride,
+               a.ferric_chloride_photo,
                a.methylene_blue_test,
+               a.methylene_blue_test_photo,
                a.blood_milk_test,
                a.e50,
+               a.e50_photo,
                a.sensory_index,
                a.create_by,
                a.create_by_name,
@@ -125,25 +156,42 @@
                a.alcohol_type,
                a.alcohol_value,
                a.alcohol_photo,
-               a.phosphate_photo,
+               a.phosphate_test_photo,
                a.blood_milk_test_photo,
                a.sensory_index_photo,
-               a.aflatoxin_photo,
+               a.aflatoxin_m1_photo,
                a.antibiotic_photo,
                a.acidity_photo,
                a.beta_lactam,
+               a.beta_lactam_photo,
                a.tetracyclines,
+               a.tetracyclines_photo,
                a.ceftiofur,
-               a.cephalexin,
+               a.ceftiofur_photo,
+               a.cefalexin,
+               a.cefalexin_photo,
                a.aflatoxin_m1,
                a.quinolone,
+               a.quinolone_photo,
                a.freezing_point,
+               a.freezing_point_photo,
                a.antibiotic_residue,
+               a.antibiotic_residue_photo,
                a.flunixin,
+               a.flunixin_photo,
                a.meloxicam,
+               a.meloxicam_photo,
                a.streptomycin,
+               a.streptomycin_photo,
                a.kanamycin,
-               a.monensin
+               a.kanamycin_photo,
+               a.monensin,
+               a.monensin_photo,
+               a.imidacloprid,
+               a.imidacloprid_photo,
+               a.acetamiprid,
+               a.acetamiprid_photo,
+               a.is_manually_add
         from op_milk_sample_quality_inspection a
     </sql>
 
@@ -205,215 +253,287 @@
     <insert id="insertOpMilkSampleQualityInspection" parameterType="OpMilkSampleQualityInspection">
         insert into op_milk_sample_quality_inspection
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="opMilkSampleQualityInspectionId != null">op_milk_sample_quality_inspection_id,</if>
-                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number,</if>
-                    <if test="opMilkFillingOrderId != null">op_Milk_filling_order_id,</if>
-                    <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id,</if>
-                    <if test="status != null">status,</if>
-                    <if test="preStepCompleted != null">pre_step_completed,</if>
-                    <if test="licensePlateNumber != null">license_plate_number,</if>
-                    <if test="milkSampleQualityInspectionNumber != null">milk_sample_quality_inspection_number,</if>
-                    <if test="destination != null">destination,</if>
-                    <if test="entryTime != null">entry_time,</if>
-                    <if test="samplerId != null">sampler_id,</if>
-                    <if test="sampler != null">sampler,</if>
-                    <if test="samplingTime != null">sampling_time,</if>
-                    <if test="testerId != null">tester_id,</if>
-                    <if test="tester != null">tester,</if>
-                    <if test="testTime != null">test_time,</if>
-                    <if test="reviewerId != null">reviewer_id,</if>
-                    <if test="reviewer != null">reviewer,</if>
-                    <if test="reviewTime != null">review_time,</if>
-                    <if test="milkTemperature != null">milk_temperature,</if>
-                    <if test="milkTempPhoto != null">milk_temp_photo,</if>
-                    <if test="remark != null">remark,</if>
-                    <if test="file != null">file,</if>
-                    <if test="fatPercent != null">fat_percent,</if>
-                    <if test="proteinPercent != null">protein_percent,</if>
-                    <if test="phosphateTest != null">phosphate_test,</if>
-                    <if test="acidity != null">acidity,</if>
-                    <if test="roseBengal != null">rose_bengal,</if>
-                    <if test="bromothymolBlue != null">bromothymol_blue,</if>
-                    <if test="ferricChloride != null">ferric_chloride,</if>
-                    <if test="methyleneBlueTest != null">methylene_blue_test,</if>
-                    <if test="bloodMilkTest != null">blood_milk_test,</if>
-                    <if test="e50 != null">e50,</if>
-                    <if test="sensoryIndex != null">sensory_index,</if>
-                    <if test="createBy != null">create_by,</if>
-                    <if test="createByName != null">create_by_name,</if>
-                    <if test="createTime != null">create_time,</if>
-                    <if test="updateBy != null">update_by,</if>
-                    <if test="updateTime != null">update_time,</if>
-                    <if test="deptId != null">dept_id,</if>
-                    <if test="isDelete != null">is_delete,</if>
-                    <if test="isPushMilkSource != null">is_push_milk_source,</if>
-                    <if test="isSampling != null">is_sampling,</if>
-                    <if test="exceptionType != null">exception_type,</if>
-                    <if test="exceptionDesc != null">exception_desc,</if>
-                    <if test="isExceptionSubmit != null">is_exception_submit,</if>
-                    <if test="alcoholType != null">alcohol_type,</if>
-                    <if test="alcoholValue != null">alcohol_value,</if>
-                    <if test="alcoholPhoto != null">alcohol_photo,</if>
-                    <if test="phosphatePhoto != null">phosphate_photo,</if>
-                    <if test="bloodMilkTestPhoto != null">blood_milk_test_photo,</if>
-                    <if test="sensoryIndexPhoto != null">sensory_index_photo,</if>
-                    <if test="aflatoxinPhoto != null">aflatoxin_photo,</if>
-                    <if test="antibioticPhoto != null">antibiotic_photo,</if>
-                    <if test="acidityPhoto != null">acidity_photo,</if>
-                    <if test="betaLactam != null">beta_lactam,</if>
-                    <if test="tetracyclines != null">tetracyclines,</if>
-                    <if test="ceftiofur != null">ceftiofur,</if>
-                    <if test="cephalexin != null">cephalexin,</if>
-                    <if test="aflatoxinM1 != null">aflatoxin_m1,</if>
-                    <if test="quinolone != null">quinolone,</if>
-                    <if test="freezingPoint != null">freezing_point,</if>
-                    <if test="antibioticResidue != null">antibiotic_residue,</if>
-                    <if test="flunixin != null">flunixin,</if>
-                    <if test="meloxicam != null">meloxicam,</if>
-                    <if test="streptomycin != null">streptomycin,</if>
-                    <if test="kanamycin != null">kanamycin,</if>
-                    <if test="monensin != null">monensin,</if>
+            <if test="opMilkSampleQualityInspectionId != null">op_milk_sample_quality_inspection_id,</if>
+            <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number,</if>
+            <if test="opMilkFillingOrderId != null">op_Milk_filling_order_id,</if>
+            <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id,</if>
+            <if test="status != null">status,</if>
+            <if test="preStepCompleted != null">pre_step_completed,</if>
+            <if test="licensePlateNumber != null">license_plate_number,</if>
+            <if test="milkSampleQualityInspectionNumber != null">milk_sample_quality_inspection_number,</if>
+            <if test="destination != null">destination,</if>
+            <if test="entryTime != null">entry_time,</if>
+            <if test="samplerId != null">sampler_id,</if>
+            <if test="sampler != null">sampler,</if>
+            <if test="samplingTime != null">sampling_time,</if>
+            <if test="testerId != null">tester_id,</if>
+            <if test="tester != null">tester,</if>
+            <if test="testTime != null">test_time,</if>
+            <if test="reviewerId != null">reviewer_id,</if>
+            <if test="reviewer != null">reviewer,</if>
+            <if test="reviewTime != null">review_time,</if>
+            <if test="milkTemperature != null">milk_temperature,</if>
+            <if test="milkTempPhoto != null">milk_temp_photo,</if>
+            <if test="remark != null">remark,</if>
+            <if test="file != null">file,</if>
+            <if test="fatPercent != null">fat_percent,</if>
+            <if test="fatPercentPhoto != null">fat_percent_photo,</if>
+            <if test="proteinPercent != null">protein_percent,</if>
+            <if test="proteinPercentPhoto != null">protein_percent_photo,</if>
+            <if test="phosphateTest != null">phosphate_test,</if>
+            <if test="acidity != null">acidity,</if>
+            <if test="roseBengal != null">rose_bengal,</if>
+            <if test="roseBengalPhoto != null">rose_bengal_photo,</if>
+            <if test="bromothymolBlue != null">bromothymol_blue,</if>
+            <if test="bromothymolBluePhoto != null">bromothymol_blue_photo,</if>
+            <if test="ferricChloride != null">ferric_chloride,</if>
+            <if test="ferricChloridePhoto != null">ferric_chloride_photo,</if>
+            <if test="methyleneBlueTest != null">methylene_blue_test,</if>
+            <if test="methyleneBlueTestPhoto != null">methylene_blue_test_photo,</if>
+            <if test="bloodMilkTest != null">blood_milk_test,</if>
+            <if test="e50 != null">e50,</if>
+            <if test="e50Photo != null">e50_photo,</if>
+            <if test="sensoryIndex != null">sensory_index,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="isPushMilkSource != null">is_push_milk_source,</if>
+            <if test="isSampling != null">is_sampling,</if>
+            <if test="exceptionType != null">exception_type,</if>
+            <if test="exceptionDesc != null">exception_desc,</if>
+            <if test="isExceptionSubmit != null">is_exception_submit,</if>
+            <if test="alcoholType != null">alcohol_type,</if>
+            <if test="alcoholValue != null">alcohol_value,</if>
+            <if test="alcoholPhoto != null">alcohol_photo,</if>
+            <if test="phosphateTestPhoto != null">phosphate_test_photo,</if>
+            <if test="bloodMilkTestPhoto != null">blood_milk_test_photo,</if>
+            <if test="sensoryIndexPhoto != null">sensory_index_photo,</if>
+            <if test="aflatoxinM1Photo != null">aflatoxin_m1_photo,</if>
+            <if test="antibioticPhoto != null">antibiotic_photo,</if>
+            <if test="acidityPhoto != null">acidity_photo,</if>
+            <if test="betaLactam != null">beta_lactam,</if>
+            <if test="betaLactamPhoto != null">beta_lactam_photo,</if>
+            <if test="tetracyclines != null">tetracyclines,</if>
+            <if test="tetracyclinesPhoto != null">tetracyclines_photo,</if>
+            <if test="ceftiofur != null">ceftiofur,</if>
+            <if test="ceftiofurPhoto != null">ceftiofur_photo,</if>
+            <if test="cefalexin != null">cefalexin,</if>
+            <if test="cefalexinPhoto != null">cefalexin_photo,</if>
+            <if test="aflatoxinM1 != null">aflatoxin_m1,</if>
+            <if test="quinolone != null">quinolone,</if>
+            <if test="quinolonePhoto != null">quinolone_photo,</if>
+            <if test="freezingPoint != null">freezing_point,</if>
+            <if test="freezingPointPhoto != null">freezing_point_photo,</if>
+            <if test="antibioticResidue != null">antibiotic_residue,</if>
+            <if test="antibioticResiduePhoto != null">antibiotic_residue_photo,</if>
+            <if test="flunixin != null">flunixin,</if>
+            <if test="flunixinPhoto != null">flunixin_photo,</if>
+            <if test="meloxicam != null">meloxicam,</if>
+            <if test="meloxicamPhoto != null">meloxicam_photo,</if>
+            <if test="streptomycin != null">streptomycin,</if>
+            <if test="streptomycinPhoto != null">streptomycin_photo,</if>
+            <if test="kanamycin != null">kanamycin,</if>
+            <if test="kanamycinPhoto != null">kanamycin_photo,</if>
+            <if test="monensin != null">monensin,</if>
+            <if test="monensinPhoto != null">monensin_photo,</if>
+            <if test="imidacloprid != null">imidacloprid,</if>
+            <if test="imidaclopridPhoto != null">imidacloprid_photo,</if>
+            <if test="acetamiprid != null">acetamiprid,</if>
+            <if test="acetamipridPhoto != null">acetamiprid_photo,</if>
+            <if test="isManuallyAdd != null">is_manually_add,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="opMilkSampleQualityInspectionId != null">#{opMilkSampleQualityInspectionId},</if>
-                    <if test="milkSourcePlanOrderNumber != null">#{milkSourcePlanOrderNumber},</if>
-                    <if test="opMilkFillingOrderId != null">#{opMilkFillingOrderId},</if>
-                    <if test="inspectionMilkTankersId != null">#{inspectionMilkTankersId},</if>
-                    <if test="status != null">#{status},</if>
-                    <if test="preStepCompleted != null">#{preStepCompleted},</if>
-                    <if test="licensePlateNumber != null">#{licensePlateNumber},</if>
-                    <if test="milkSampleQualityInspectionNumber != null">#{milkSampleQualityInspectionNumber},</if>
-                    <if test="destination != null">#{destination},</if>
-                    <if test="entryTime != null">#{entryTime},</if>
-                    <if test="samplerId != null">#{samplerId},</if>
-                    <if test="sampler != null">#{sampler},</if>
-                    <if test="samplingTime != null">#{samplingTime},</if>
-                    <if test="testerId != null">#{testerId},</if>
-                    <if test="tester != null">#{tester},</if>
-                    <if test="testTime != null">#{testTime},</if>
-                    <if test="reviewerId != null">#{reviewerId},</if>
-                    <if test="reviewer != null">#{reviewer},</if>
-                    <if test="reviewTime != null">#{reviewTime},</if>
-                    <if test="milkTemperature != null">#{milkTemperature},</if>
-                    <if test="milkTempPhoto != null">#{milkTempPhoto},</if>
-                    <if test="remark != null">#{remark},</if>
-                    <if test="file != null">#{file},</if>
-                    <if test="fatPercent != null">#{fatPercent},</if>
-                    <if test="proteinPercent != null">#{proteinPercent},</if>
-                    <if test="phosphateTest != null">#{phosphateTest},</if>
-                    <if test="acidity != null">#{acidity},</if>
-                    <if test="roseBengal != null">#{roseBengal},</if>
-                    <if test="bromothymolBlue != null">#{bromothymolBlue},</if>
-                    <if test="ferricChloride != null">#{ferricChloride},</if>
-                    <if test="methyleneBlueTest != null">#{methyleneBlueTest},</if>
-                    <if test="bloodMilkTest != null">#{bloodMilkTest},</if>
-                    <if test="e50 != null">#{e50},</if>
-                    <if test="sensoryIndex != null">#{sensoryIndex},</if>
-                    <if test="createBy != null">#{createBy},</if>
-                    <if test="createByName != null">#{createByName},</if>
-                    <if test="createTime != null">#{createTime},</if>
-                    <if test="updateBy != null">#{updateBy},</if>
-                    <if test="updateTime != null">#{updateTime},</if>
-                    <if test="deptId != null">#{deptId},</if>
-                    <if test="isDelete != null">#{isDelete},</if>
-                    <if test="isPushMilkSource != null">#{isPushMilkSource},</if>
-                    <if test="isSampling != null">#{isSampling},</if>
-                    <if test="exceptionType != null">#{exceptionType},</if>
-                    <if test="exceptionDesc != null">#{exceptionDesc},</if>
-                    <if test="isExceptionSubmit != null">#{isExceptionSubmit},</if>
-                    <if test="alcoholType != null">#{alcoholType},</if>
-                    <if test="alcoholValue != null">#{alcoholValue},</if>
-                    <if test="alcoholPhoto != null">#{alcoholPhoto},</if>
-                    <if test="phosphatePhoto != null">#{phosphatePhoto},</if>
-                    <if test="bloodMilkTestPhoto != null">#{bloodMilkTestPhoto},</if>
-                    <if test="sensoryIndexPhoto != null">#{sensoryIndexPhoto},</if>
-                    <if test="aflatoxinPhoto != null">#{aflatoxinPhoto},</if>
-                    <if test="antibioticPhoto != null">#{antibioticPhoto},</if>
-                    <if test="acidityPhoto != null">#{acidityPhoto},</if>
-                    <if test="betaLactam != null">#{betaLactam},</if>
-                    <if test="tetracyclines != null">#{tetracyclines},</if>
-                    <if test="ceftiofur != null">#{ceftiofur},</if>
-                    <if test="cephalexin != null">#{cephalexin},</if>
-                    <if test="aflatoxinM1 != null">#{aflatoxinM1},</if>
-                    <if test="quinolone != null">#{quinolone},</if>
-                    <if test="freezingPoint != null">#{freezingPoint},</if>
-                    <if test="antibioticResidue != null">#{antibioticResidue},</if>
-                    <if test="flunixin != null">#{flunixin},</if>
-                    <if test="meloxicam != null">#{meloxicam},</if>
-                    <if test="streptomycin != null">#{streptomycin},</if>
-                    <if test="kanamycin != null">#{kanamycin},</if>
-                    <if test="monensin != null">#{monensin},</if>
+            <if test="opMilkSampleQualityInspectionId != null">#{opMilkSampleQualityInspectionId},</if>
+            <if test="milkSourcePlanOrderNumber != null">#{milkSourcePlanOrderNumber},</if>
+            <if test="opMilkFillingOrderId != null">#{opMilkFillingOrderId},</if>
+            <if test="inspectionMilkTankersId != null">#{inspectionMilkTankersId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="preStepCompleted != null">#{preStepCompleted},</if>
+            <if test="licensePlateNumber != null">#{licensePlateNumber},</if>
+            <if test="milkSampleQualityInspectionNumber != null">#{milkSampleQualityInspectionNumber},</if>
+            <if test="destination != null">#{destination},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+            <if test="samplerId != null">#{samplerId},</if>
+            <if test="sampler != null">#{sampler},</if>
+            <if test="samplingTime != null">#{samplingTime},</if>
+            <if test="testerId != null">#{testerId},</if>
+            <if test="tester != null">#{tester},</if>
+            <if test="testTime != null">#{testTime},</if>
+            <if test="reviewerId != null">#{reviewerId},</if>
+            <if test="reviewer != null">#{reviewer},</if>
+            <if test="reviewTime != null">#{reviewTime},</if>
+            <if test="milkTemperature != null">#{milkTemperature},</if>
+            <if test="milkTempPhoto != null">#{milkTempPhoto},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="file != null">#{file},</if>
+            <if test="fatPercent != null">#{fatPercent},</if>
+            <if test="fatPercentPhoto != null">#{fatPercentPhoto},</if>
+            <if test="proteinPercent != null">#{proteinPercent},</if>
+            <if test="proteinPercentPhoto != null">#{proteinPercentPhoto},</if>
+            <if test="phosphateTest != null">#{phosphateTest},</if>
+            <if test="acidity != null">#{acidity},</if>
+            <if test="roseBengal != null">#{roseBengal},</if>
+            <if test="roseBengalPhoto != null">#{roseBengalPhoto},</if>
+            <if test="bromothymolBlue != null">#{bromothymolBlue},</if>
+            <if test="bromothymolBluePhoto != null">#{bromothymolBluePhoto},</if>
+            <if test="ferricChloride != null">#{ferricChloride},</if>
+            <if test="ferricChloridePhoto != null">#{ferricChloridePhoto},</if>
+            <if test="methyleneBlueTest != null">#{methyleneBlueTest},</if>
+            <if test="methyleneBlueTestPhoto != null">#{methyleneBlueTestPhoto},</if>
+            <if test="bloodMilkTest != null">#{bloodMilkTest},</if>
+            <if test="e50 != null">#{e50},</if>
+            <if test="e50Photo != null">#{e50Photo},</if>
+            <if test="sensoryIndex != null">#{sensoryIndex},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="isPushMilkSource != null">#{isPushMilkSource},</if>
+            <if test="isSampling != null">#{isSampling},</if>
+            <if test="exceptionType != null">#{exceptionType},</if>
+            <if test="exceptionDesc != null">#{exceptionDesc},</if>
+            <if test="isExceptionSubmit != null">#{isExceptionSubmit},</if>
+            <if test="alcoholType != null">#{alcoholType},</if>
+            <if test="alcoholValue != null">#{alcoholValue},</if>
+            <if test="alcoholPhoto != null">#{alcoholPhoto},</if>
+            <if test="phosphateTestPhoto != null">#{phosphateTestPhoto},</if>
+            <if test="bloodMilkTestPhoto != null">#{bloodMilkTestPhoto},</if>
+            <if test="sensoryIndexPhoto != null">#{sensoryIndexPhoto},</if>
+            <if test="aflatoxinM1Photo != null">#{aflatoxinM1Photo},</if>
+            <if test="antibioticPhoto != null">#{antibioticPhoto},</if>
+            <if test="acidityPhoto != null">#{acidityPhoto},</if>
+            <if test="betaLactam != null">#{betaLactam},</if>
+            <if test="betaLactamPhoto != null">#{betaLactamPhoto},</if>
+            <if test="tetracyclines != null">#{tetracyclines},</if>
+            <if test="tetracyclinesPhoto != null">#{tetracyclinesPhoto},</if>
+            <if test="ceftiofur != null">#{ceftiofur},</if>
+            <if test="ceftiofurPhoto != null">#{ceftiofurPhoto},</if>
+            <if test="cefalexin != null">#{cefalexin},</if>
+            <if test="cefalexinPhoto != null">#{cefalexinPhoto},</if>
+            <if test="aflatoxinM1 != null">#{aflatoxinM1},</if>
+            <if test="quinolone != null">#{quinolone},</if>
+            <if test="quinolonePhoto != null">#{quinolonePhoto},</if>
+            <if test="freezingPoint != null">#{freezingPoint},</if>
+            <if test="freezingPointPhoto != null">#{freezingPointPhoto},</if>
+            <if test="antibioticResidue != null">#{antibioticResidue},</if>
+            <if test="antibioticResiduePhoto != null">#{antibioticResiduePhoto},</if>
+            <if test="flunixin != null">#{flunixin},</if>
+            <if test="flunixinPhoto != null">#{flunixinPhoto},</if>
+            <if test="meloxicam != null">#{meloxicam},</if>
+            <if test="meloxicamPhoto != null">#{meloxicamPhoto},</if>
+            <if test="streptomycin != null">#{streptomycin},</if>
+            <if test="streptomycinPhoto != null">#{streptomycinPhoto},</if>
+            <if test="kanamycin != null">#{kanamycin},</if>
+            <if test="kanamycinPhoto != null">#{kanamycinPhoto},</if>
+            <if test="monensin != null">#{monensin},</if>
+            <if test="monensinPhoto != null">#{monensinPhoto},</if>
+            <if test="imidacloprid != null">#{imidacloprid},</if>
+            <if test="imidaclopridPhoto != null">#{imidaclopridPhoto},</if>
+            <if test="acetamiprid != null">#{acetamiprid},</if>
+            <if test="acetamipridPhoto != null">#{acetamipridPhoto},</if>
+            <if test="isManuallyAdd != null">#{isManuallyAdd},</if>
         </trim>
     </insert>
 
     <update id="updateOpMilkSampleQualityInspection" parameterType="OpMilkSampleQualityInspection">
         update op_milk_sample_quality_inspection
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number = #{milkSourcePlanOrderNumber},</if>
-                    <if test="opMilkFillingOrderId != null">op_Milk_filling_order_id = #{opMilkFillingOrderId},</if>
-                    <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id = #{inspectionMilkTankersId},</if>
-                    <if test="status != null">status = #{status},</if>
-                    <if test="preStepCompleted != null">pre_step_completed = #{preStepCompleted},</if>
-                    <if test="licensePlateNumber != null">license_plate_number = #{licensePlateNumber},</if>
-                    <if test="milkSampleQualityInspectionNumber != null">milk_sample_quality_inspection_number = #{milkSampleQualityInspectionNumber},</if>
-                    <if test="destination != null">destination = #{destination},</if>
-                    <if test="entryTime != null">entry_time = #{entryTime},</if>
-                    <if test="samplerId != null">sampler_id = #{samplerId},</if>
-                    <if test="sampler != null">sampler = #{sampler},</if>
-                    <if test="samplingTime != null">sampling_time = #{samplingTime},</if>
-                    <if test="testerId != null">tester_id = #{testerId},</if>
-                    <if test="tester != null">tester = #{tester},</if>
-                    <if test="testTime != null">test_time = #{testTime},</if>
-                    <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
-                    <if test="reviewer != null">reviewer = #{reviewer},</if>
-                    <if test="reviewTime != null">review_time = #{reviewTime},</if>
-                    <if test="milkTemperature != null">milk_temperature = #{milkTemperature},</if>
-                    <if test="milkTempPhoto != null">milk_temp_photo = #{milkTempPhoto},</if>
-                    <if test="remark != null">remark = #{remark},</if>
-                    <if test="file != null">file = #{file},</if>
-                    <if test="fatPercent != null">fat_percent = #{fatPercent},</if>
-                    <if test="proteinPercent != null">protein_percent = #{proteinPercent},</if>
-                    <if test="phosphateTest != null">phosphate_test = #{phosphateTest},</if>
-                    <if test="acidity != null">acidity = #{acidity},</if>
-                    <if test="roseBengal != null">rose_bengal = #{roseBengal},</if>
-                    <if test="bromothymolBlue != null">bromothymol_blue = #{bromothymolBlue},</if>
-                    <if test="ferricChloride != null">ferric_chloride = #{ferricChloride},</if>
-                    <if test="methyleneBlueTest != null">methylene_blue_test = #{methyleneBlueTest},</if>
-                    <if test="bloodMilkTest != null">blood_milk_test = #{bloodMilkTest},</if>
-                    <if test="e50 != null">e50 = #{e50},</if>
-                    <if test="sensoryIndex != null">sensory_index = #{sensoryIndex},</if>
-                    <if test="createByName != null">create_by_name = #{createByName},</if>
-                    <if test="updateBy != null">update_by = #{updateBy},</if>
-                    <if test="updateTime != null">update_time = #{updateTime},</if>
-                    <if test="deptId != null">dept_id = #{deptId},</if>
-                    <if test="isDelete != null">is_delete = #{isDelete},</if>
-                    <if test="isPushMilkSource != null">is_push_milk_source = #{isPushMilkSource},</if>
-                    <if test="isSampling != null">is_sampling = #{isSampling},</if>
-                    <if test="exceptionType != null">exception_type = #{exceptionType},</if>
-                    <if test="exceptionDesc != null">exception_desc = #{exceptionDesc},</if>
-                    <if test="isExceptionSubmit != null">is_exception_submit = #{isExceptionSubmit},</if>
-                    <if test="alcoholType != null">alcohol_type = #{alcoholType},</if>
-                    <if test="alcoholValue != null">alcohol_value = #{alcoholValue},</if>
-                    <if test="alcoholPhoto != null">alcohol_photo = #{alcoholPhoto},</if>
-                    <if test="phosphatePhoto != null">phosphate_photo = #{phosphatePhoto},</if>
-                    <if test="bloodMilkTestPhoto != null">blood_milk_test_photo = #{bloodMilkTestPhoto},</if>
-                    <if test="sensoryIndexPhoto != null">sensory_index_photo = #{sensoryIndexPhoto},</if>
-                    <if test="aflatoxinPhoto != null">aflatoxin_photo = #{aflatoxinPhoto},</if>
-                    <if test="antibioticPhoto != null">antibiotic_photo = #{antibioticPhoto},</if>
-                    <if test="acidityPhoto != null">acidity_photo = #{acidityPhoto},</if>
-                    <if test="betaLactam != null">beta_lactam = #{betaLactam},</if>
-                    <if test="tetracyclines != null">tetracyclines = #{tetracyclines},</if>
-                    <if test="ceftiofur != null">ceftiofur = #{ceftiofur},</if>
-                    <if test="cephalexin != null">cephalexin = #{cephalexin},</if>
-                    <if test="aflatoxinM1 != null">aflatoxin_m1 = #{aflatoxinM1},</if>
-                    <if test="quinolone != null">quinolone = #{quinolone},</if>
-                    <if test="freezingPoint != null">freezing_point = #{freezingPoint},</if>
-                    <if test="antibioticResidue != null">antibiotic_residue = #{antibioticResidue},</if>
-                    <if test="flunixin != null">flunixin = #{flunixin},</if>
-                    <if test="meloxicam != null">meloxicam = #{meloxicam},</if>
-                    <if test="streptomycin != null">streptomycin = #{streptomycin},</if>
-                    <if test="kanamycin != null">kanamycin = #{kanamycin},</if>
-                    <if test="monensin != null">monensin = #{monensin},</if>
+            <if test="milkSourcePlanOrderNumber != null">milk_source_plan_order_number = #{milkSourcePlanOrderNumber},</if>
+            <if test="opMilkFillingOrderId != null">op_Milk_filling_order_id = #{opMilkFillingOrderId},</if>
+            <if test="inspectionMilkTankersId != null">inspection_milk_tankers_id = #{inspectionMilkTankersId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="preStepCompleted != null">pre_step_completed = #{preStepCompleted},</if>
+            <if test="licensePlateNumber != null">license_plate_number = #{licensePlateNumber},</if>
+            <if test="milkSampleQualityInspectionNumber != null">milk_sample_quality_inspection_number = #{milkSampleQualityInspectionNumber},</if>
+            <if test="destination != null">destination = #{destination},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+            <if test="samplerId != null">sampler_id = #{samplerId},</if>
+            <if test="sampler != null">sampler = #{sampler},</if>
+            <if test="samplingTime != null">sampling_time = #{samplingTime},</if>
+            <if test="testerId != null">tester_id = #{testerId},</if>
+            <if test="tester != null">tester = #{tester},</if>
+            <if test="testTime != null">test_time = #{testTime},</if>
+            <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+            <if test="reviewer != null">reviewer = #{reviewer},</if>
+            <if test="reviewTime != null">review_time = #{reviewTime},</if>
+            <if test="milkTemperature != null">milk_temperature = #{milkTemperature},</if>
+            <if test="milkTempPhoto != null">milk_temp_photo = #{milkTempPhoto},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="file != null">file = #{file},</if>
+            <if test="fatPercent != null">fat_percent = #{fatPercent},</if>
+            <if test="fatPercentPhoto != null">fat_percent_photo = #{fatPercentPhoto},</if>
+            <if test="proteinPercent != null">protein_percent = #{proteinPercent},</if>
+            <if test="proteinPercentPhoto != null">protein_percent_photo = #{proteinPercentPhoto},</if>
+            <if test="phosphateTest != null">phosphate_test = #{phosphateTest},</if>
+            <if test="acidity != null">acidity = #{acidity},</if>
+            <if test="roseBengal != null">rose_bengal = #{roseBengal},</if>
+            <if test="roseBengalPhoto != null">rose_bengal_photo = #{roseBengalPhoto},</if>
+            <if test="bromothymolBlue != null">bromothymol_blue = #{bromothymolBlue},</if>
+            <if test="bromothymolBluePhoto != null">bromothymol_blue_photo = #{bromothymolBluePhoto},</if>
+            <if test="ferricChloride != null">ferric_chloride = #{ferricChloride},</if>
+            <if test="ferricChloridePhoto != null">ferric_chloride_photo = #{ferricChloridePhoto},</if>
+            <if test="methyleneBlueTest != null">methylene_blue_test = #{methyleneBlueTest},</if>
+            <if test="methyleneBlueTestPhoto != null">methylene_blue_test_photo = #{methyleneBlueTestPhoto},</if>
+            <if test="bloodMilkTest != null">blood_milk_test = #{bloodMilkTest},</if>
+            <if test="e50 != null">e50 = #{e50},</if>
+            <if test="e50Photo != null">e50_photo = #{e50Photo},</if>
+            <if test="sensoryIndex != null">sensory_index = #{sensoryIndex},</if>
+            <if test="createByName != null">create_by_name = #{createByName},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="isPushMilkSource != null">is_push_milk_source = #{isPushMilkSource},</if>
+            <if test="isSampling != null">is_sampling = #{isSampling},</if>
+            <if test="exceptionType != null">exception_type = #{exceptionType},</if>
+            <if test="exceptionDesc != null">exception_desc = #{exceptionDesc},</if>
+            <if test="isExceptionSubmit != null">is_exception_submit = #{isExceptionSubmit},</if>
+            <if test="alcoholType != null">alcohol_type = #{alcoholType},</if>
+            <if test="alcoholValue != null">alcohol_value = #{alcoholValue},</if>
+            <if test="alcoholPhoto != null">alcohol_photo = #{alcoholPhoto},</if>
+            <if test="phosphateTestPhoto != null">phosphate_test_photo = #{phosphateTestPhoto},</if>
+            <if test="bloodMilkTestPhoto != null">blood_milk_test_photo = #{bloodMilkTestPhoto},</if>
+            <if test="sensoryIndexPhoto != null">sensory_index_photo = #{sensoryIndexPhoto},</if>
+            <if test="aflatoxinM1Photo != null">aflatoxin_m1_photo = #{aflatoxinM1Photo},</if>
+            <if test="antibioticPhoto != null">antibiotic_photo = #{antibioticPhoto},</if>
+            <if test="acidityPhoto != null">acidity_photo = #{acidityPhoto},</if>
+            <if test="betaLactam != null">beta_lactam = #{betaLactam},</if>
+            <if test="betaLactamPhoto != null">beta_lactam_photo = #{betaLactamPhoto},</if>
+            <if test="tetracyclines != null">tetracyclines = #{tetracyclines},</if>
+            <if test="tetracyclinesPhoto != null">tetracyclines_photo = #{tetracyclinesPhoto},</if>
+            <if test="ceftiofur != null">ceftiofur = #{ceftiofur},</if>
+            <if test="ceftiofurPhoto != null">ceftiofur_photo = #{ceftiofurPhoto},</if>
+            <if test="cefalexin != null">cefalexin = #{cefalexin},</if>
+            <if test="cefalexinPhoto != null">cefalexin_photo = #{cefalexinPhoto},</if>
+            <if test="aflatoxinM1 != null">aflatoxin_m1 = #{aflatoxinM1},</if>
+            <if test="quinolone != null">quinolone = #{quinolone},</if>
+            <if test="quinolonePhoto != null">quinolone_photo = #{quinolonePhoto},</if>
+            <if test="freezingPoint != null">freezing_point = #{freezingPoint},</if>
+            <if test="freezingPointPhoto != null">freezing_point_photo = #{freezingPointPhoto},</if>
+            <if test="antibioticResidue != null">antibiotic_residue = #{antibioticResidue},</if>
+            <if test="antibioticResiduePhoto != null">antibiotic_residue_photo = #{antibioticResiduePhoto},</if>
+            <if test="flunixin != null">flunixin = #{flunixin},</if>
+            <if test="flunixinPhoto != null">flunixin_photo = #{flunixinPhoto},</if>
+            <if test="meloxicam != null">meloxicam = #{meloxicam},</if>
+            <if test="meloxicamPhoto != null">meloxicam_photo = #{meloxicamPhoto},</if>
+            <if test="streptomycin != null">streptomycin = #{streptomycin},</if>
+            <if test="streptomycinPhoto != null">streptomycin_photo = #{streptomycinPhoto},</if>
+            <if test="kanamycin != null">kanamycin = #{kanamycin},</if>
+            <if test="kanamycinPhoto != null">kanamycin_photo = #{kanamycinPhoto},</if>
+            <if test="monensin != null">monensin = #{monensin},</if>
+            <if test="monensinPhoto != null">monensin_photo = #{monensinPhoto},</if>
+            <if test="imidacloprid != null">imidacloprid = #{imidacloprid},</if>
+            <if test="imidaclopridPhoto != null">imidacloprid_photo = #{imidaclopridPhoto},</if>
+            <if test="acetamiprid != null">acetamiprid = #{acetamiprid},</if>
+            <if test="acetamipridPhoto != null">acetamiprid_photo = #{acetamipridPhoto},</if>
+            <if test="isManuallyAdd != null">is_manually_add = #{isManuallyAdd},</if>
         </trim>
         where op_milk_sample_quality_inspection_id = #{opMilkSampleQualityInspectionId}
     </update>
@@ -461,16 +581,16 @@
     <select id="selectOpMilkSampleQIExceptionList"
             resultMap="OpMilkSampleQIExceptionResultMap">
         select
-            a.op_milk_sample_quality_inspection_id,
-            a.license_plate_number,
-            a.milk_sample_quality_inspection_number,
-            a.milk_source_plan_order_number,
-            a.tester,
-            a.test_time,
-            a.exception_type,
-            a.exception_desc,
-            a.is_exception_submit,
-            b.scheduling_date
+        a.op_milk_sample_quality_inspection_id,
+        a.license_plate_number,
+        a.milk_sample_quality_inspection_number,
+        a.milk_source_plan_order_number,
+        a.tester,
+        a.test_time,
+        a.exception_type,
+        a.exception_desc,
+        a.is_exception_submit,
+        b.scheduling_date
         from op_milk_sample_quality_inspection a
         left join op_inspection_milk_tankers b on a.inspection_milk_tankers_id = b.inspection_milk_tankers_id
         <where>
@@ -581,55 +701,55 @@
                 AND test_date &lt;= #{testEndTime}
             </if>
         </where>
-<!--        UNION-->
-<!--        SELECT-->
-<!--        a.test_time,-->
-<!--        a.license_plate_number,-->
-<!--        '' as milk_bin_name,-->
-<!--        a.destination,-->
-<!--        b.total_milk_capacity,-->
-<!--        a.milk_temperature,-->
-<!--        a.fat_percent,-->
-<!--        a.protein_percent,-->
-<!--        a.alcohol_type,-->
-<!--        a.alcohol_value,-->
-<!--        a.phosphate_test,-->
-<!--        a.acidity,-->
-<!--        a.antibiotic_residue,-->
-<!--        a.aflatoxin_m1,-->
-<!--        a.beta_lactam,-->
-<!--        a.tetracyclines,-->
-<!--        a.ceftiofur,-->
-<!--        a.cephalexin,-->
-<!--        a.flunixin,-->
-<!--        a.meloxicam,-->
-<!--        a.streptomycin,-->
-<!--        a.quinolone,-->
-<!--        a.kanamycin,-->
-<!--        a.monensin,-->
-<!--        a.rose_bengal,-->
-<!--        a.bromothymol_blue,-->
-<!--        a.ferric_chloride,-->
-<!--        a.methylene_blue_test,-->
-<!--        a.blood_milk_test,-->
-<!--        a.freezing_point,-->
-<!--        a.e50,-->
-<!--        a.sensory_index,-->
-<!--        a.sampler,-->
-<!--        a.tester,-->
-<!--        a.dept_id-->
-<!--        FROM op_milk_sample_quality_inspection a-->
-<!--        LEFT JOIN op_milk_filling_order b on a.op_Milk_filling_order_id=b.op_milk_filling_order_id-->
-<!--        <where>-->
-<!--            <if test="deptId != null and deptId != ''">-->
-<!--                a.dept_id = #{deptId}-->
-<!--            </if>-->
-<!--            <if test="testStartTime != null">-->
-<!--                AND a.test_time >= #{testStartTime}-->
-<!--            </if>-->
-<!--            <if test="testEndTime != null">-->
-<!--                AND a.test_time &lt;= #{testEndTime}-->
-<!--            </if>-->
-<!--        </where>-->
+        <!--        UNION-->
+        <!--        SELECT-->
+        <!--        a.test_time,-->
+        <!--        a.license_plate_number,-->
+        <!--        '' as milk_bin_name,-->
+        <!--        a.destination,-->
+        <!--        b.total_milk_capacity,-->
+        <!--        a.milk_temperature,-->
+        <!--        a.fat_percent,-->
+        <!--        a.protein_percent,-->
+        <!--        a.alcohol_type,-->
+        <!--        a.alcohol_value,-->
+        <!--        a.phosphate_test,-->
+        <!--        a.acidity,-->
+        <!--        a.antibiotic_residue,-->
+        <!--        a.aflatoxin_m1,-->
+        <!--        a.beta_lactam,-->
+        <!--        a.tetracyclines,-->
+        <!--        a.ceftiofur,-->
+        <!--        a.cephalexin,-->
+        <!--        a.flunixin,-->
+        <!--        a.meloxicam,-->
+        <!--        a.streptomycin,-->
+        <!--        a.quinolone,-->
+        <!--        a.kanamycin,-->
+        <!--        a.monensin,-->
+        <!--        a.rose_bengal,-->
+        <!--        a.bromothymol_blue,-->
+        <!--        a.ferric_chloride,-->
+        <!--        a.methylene_blue_test,-->
+        <!--        a.blood_milk_test,-->
+        <!--        a.freezing_point,-->
+        <!--        a.e50,-->
+        <!--        a.sensory_index,-->
+        <!--        a.sampler,-->
+        <!--        a.tester,-->
+        <!--        a.dept_id-->
+        <!--        FROM op_milk_sample_quality_inspection a-->
+        <!--        LEFT JOIN op_milk_filling_order b on a.op_Milk_filling_order_id=b.op_milk_filling_order_id-->
+        <!--        <where>-->
+        <!--            <if test="deptId != null and deptId != ''">-->
+        <!--                a.dept_id = #{deptId}-->
+        <!--            </if>-->
+        <!--            <if test="testStartTime != null">-->
+        <!--                AND a.test_time >= #{testStartTime}-->
+        <!--            </if>-->
+        <!--            <if test="testEndTime != null">-->
+        <!--                AND a.test_time &lt;= #{testEndTime}-->
+        <!--            </if>-->
+        <!--        </where>-->
     </select>
 </mapper>

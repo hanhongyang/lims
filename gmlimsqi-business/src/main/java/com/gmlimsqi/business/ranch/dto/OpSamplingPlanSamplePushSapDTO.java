@@ -168,7 +168,7 @@ public class OpSamplingPlanSamplePushSapDTO extends BaseEntity implements BaseEn
     private String fileInfo;
 
     /** 附件url */
-    private List<String> fileUrl;
+    private String fileUrl;
 
     /** 样品类型 0：成品，1：库存，2：垫料 */
     @Excel(name = "样品类型 sampling_type 0：成品（牧场自己生产），1：库存，2：垫料，3：原料（采购的）")

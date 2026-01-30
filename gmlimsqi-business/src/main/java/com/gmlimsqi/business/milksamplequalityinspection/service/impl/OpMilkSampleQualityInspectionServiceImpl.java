@@ -8,7 +8,6 @@ import com.gmlimsqi.business.milksamplequalityinspection.domain.OpMilkSampleQIEx
 import com.gmlimsqi.business.milksamplequalityinspection.domain.OpMilkSampleQualityInspection;
 import com.gmlimsqi.business.milksamplequalityinspection.mapper.OpMilkSampleQualityInspectionMapper;
 import com.gmlimsqi.business.milksamplequalityinspection.service.IOpMilkSampleQualityInspectionService;
-import com.gmlimsqi.business.milksamplequalityinspection.service.MilkSampleQualityInspectionChangeLogService;
 import com.gmlimsqi.business.rmts.entity.dto.FactoryQualityDTO;
 import com.gmlimsqi.business.rmts.entity.dto.PhotoSyncDTO;
 import com.gmlimsqi.business.rmts.entity.dto.QualitySyncDTO;
@@ -17,7 +16,6 @@ import com.gmlimsqi.business.rmts.service.RmtsRanchLimsService;
 import com.gmlimsqi.business.util.CodeGeneratorUtil;
 import com.gmlimsqi.business.util.IdListHandler;
 import com.gmlimsqi.business.util.UserCacheService;
-import com.gmlimsqi.common.change.constant.ChangeLogConstant;
 import com.gmlimsqi.common.core.domain.R;
 import com.gmlimsqi.common.core.domain.entity.SysDept;
 import com.gmlimsqi.common.core.domain.entity.SysUser;
@@ -72,9 +70,6 @@ public class OpMilkSampleQualityInspectionServiceImpl implements IOpMilkSampleQu
     @Autowired
     private OpInspectionMilkTankersMapper opInspectionMilkTankersMapper;
 
-    @Autowired
-    private MilkSampleQualityInspectionChangeLogService changeLogService;
-
     /**
      * 查询奶样质检
      * * @param opMilkSampleQualityInspectionId 奶样质检主键
@@ -86,43 +81,178 @@ public class OpMilkSampleQualityInspectionServiceImpl implements IOpMilkSampleQu
         OpMilkSampleQualityInspection opMilkSampleQualityInspection = opMilkSampleQualityInspectionMapper.
                 selectOpMilkSampleQualityInspectionByOpMilkSampleQualityInspectionId(opMilkSampleQualityInspectionId);
 
+        // 奶温照片
         if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getMilkTempPhoto())){
             SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getMilkTempPhoto());
             opMilkSampleQualityInspection.setMilkTempPhotoUrl(sysUploadFile.getUrl());
         }
 
+        // 酒精照片
         if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAlcoholPhoto())){
             SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAlcoholPhoto());
             opMilkSampleQualityInspection.setAlcoholPhotoUrl(sysUploadFile.getUrl());
         }
 
-        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getPhosphatePhoto())){
-            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getPhosphatePhoto());
-            opMilkSampleQualityInspection.setPhosphatePhotoUrl(sysUploadFile.getUrl());
+        // 磷酸盐照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getPhosphateTestPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getPhosphateTestPhoto());
+            opMilkSampleQualityInspection.setPhosphateTestPhotoUrl(sysUploadFile.getUrl());
         }
 
+        // 血奶检测照片
         if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getBloodMilkTestPhoto())){
             SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getBloodMilkTestPhoto());
             opMilkSampleQualityInspection.setBloodMilkTestPhotoUrl(sysUploadFile.getUrl());
         }
 
+        // 感官指标照片
         if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getSensoryIndexPhoto())){
             SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getSensoryIndexPhoto());
             opMilkSampleQualityInspection.setSensoryIndexPhotoUrl(sysUploadFile.getUrl());
         }
-        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAflatoxinPhoto())){
-            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAflatoxinPhoto());
-            opMilkSampleQualityInspection.setAflatoxinPhotoUrl(sysUploadFile.getUrl());
+
+        // 黄曲霉毒素M1照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAflatoxinM1Photo())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAflatoxinM1Photo());
+            opMilkSampleQualityInspection.setAflatoxinM1PhotoUrl(sysUploadFile.getUrl());
         }
 
+        // 抗生素照片
         if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAntibioticPhoto())){
             SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAntibioticPhoto());
             opMilkSampleQualityInspection.setAntibioticPhotoUrl(sysUploadFile.getUrl());
         }
 
+        // 酸度照片
         if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAcidityPhoto())){
             SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAcidityPhoto());
             opMilkSampleQualityInspection.setAcidityPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 脂肪%照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getFatPercentPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getFatPercentPhoto());
+            opMilkSampleQualityInspection.setFatPercentPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 蛋白%照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getProteinPercentPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getProteinPercentPhoto());
+            opMilkSampleQualityInspection.setProteinPercentPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 玫瑰红照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getRoseBengalPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getRoseBengalPhoto());
+            opMilkSampleQualityInspection.setRoseBengalPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 溴百里香酚蓝照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getBromothymolBluePhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getBromothymolBluePhoto());
+            opMilkSampleQualityInspection.setBromothymolBluePhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 三氯化铁照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getFerricChloridePhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getFerricChloridePhoto());
+            opMilkSampleQualityInspection.setFerricChloridePhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 美兰试验(4小时)照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getMethyleneBlueTestPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getMethyleneBlueTestPhoto());
+            opMilkSampleQualityInspection.setMethyleneBlueTestPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // E50照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getE50Photo())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getE50Photo());
+            opMilkSampleQualityInspection.setE50PhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // β-内酰胺照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getBetaLactamPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getBetaLactamPhoto());
+            opMilkSampleQualityInspection.setBetaLactamPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 四环素类照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getTetracyclinesPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getTetracyclinesPhoto());
+            opMilkSampleQualityInspection.setTetracyclinesPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 头孢噻呋照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getCeftiofurPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getCeftiofurPhoto());
+            opMilkSampleQualityInspection.setCeftiofurPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 头孢氨苄照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getCefalexinPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getCefalexinPhoto());
+            opMilkSampleQualityInspection.setCefalexinPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 喹诺酮照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getQuinolonePhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getQuinolonePhoto());
+            opMilkSampleQualityInspection.setQuinolonePhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 冰点照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getFreezingPointPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getFreezingPointPhoto());
+            opMilkSampleQualityInspection.setFreezingPointPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 解抗剂照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAntibioticResiduePhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAntibioticResiduePhoto());
+            opMilkSampleQualityInspection.setAntibioticResiduePhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 氟尼辛照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getFlunixinPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getFlunixinPhoto());
+            opMilkSampleQualityInspection.setFlunixinPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 美洛昔康照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getMeloxicamPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getMeloxicamPhoto());
+            opMilkSampleQualityInspection.setMeloxicamPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 链霉素/双氢链霉素照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getStreptomycinPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getStreptomycinPhoto());
+            opMilkSampleQualityInspection.setStreptomycinPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 卡那照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getKanamycinPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getKanamycinPhoto());
+            opMilkSampleQualityInspection.setKanamycinPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 莫能菌素照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getMonensinPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getMonensinPhoto());
+            opMilkSampleQualityInspection.setMonensinPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 乳中吡虫啉照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getImidaclopridPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getImidaclopridPhoto());
+            opMilkSampleQualityInspection.setImidaclopridPhotoUrl(sysUploadFile.getUrl());
+        }
+
+        // 乳中啶虫脒照片
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAcetamipridPhoto())){
+            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAcetamipridPhoto());
+            opMilkSampleQualityInspection.setAcetamipridPhotoUrl(sysUploadFile.getUrl());
         }
 
         // 处理附件，按逗号分隔
@@ -222,35 +352,36 @@ public class OpMilkSampleQualityInspectionServiceImpl implements IOpMilkSampleQu
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int updateOpMilkSampleQualityInspection(OpMilkSampleQualityInspection opMilkSampleQualityInspection)
+    public String updateOpMilkSampleQualityInspection(OpMilkSampleQualityInspection opMilkSampleQualityInspection)
     {
         // 查询检查单是否存在
         OpMilkSampleQualityInspection status =
                 selectOpMilkSampleQualityInspectionByOpMilkSampleQualityInspectionId(opMilkSampleQualityInspection.getOpMilkSampleQualityInspectionId());
         if (status == null) {
-            throw new IllegalArgumentException("检查单不存在");
+            throw new IllegalArgumentException("奶样质检单不存在");
         }
 
-        if ("2".equals(status.getStatus())){
-            throw new IllegalArgumentException("已审核的质检单不能重复审核");
-        }
-
-        // 记录日志
-//        changeLogService.recordUpdateLog(status, opMilkSampleQualityInspection, ChangeLogConstant.OP_TYPE_UPDATE);
+//        if ("2".equals(status.getStatus())){
+//            throw new IllegalArgumentException("已审核的奶样质检单不能修改");
+//        }
 
         // 自动填充更新信息
         opMilkSampleQualityInspection.fillUpdateInfo();
-        return opMilkSampleQualityInspectionMapper.updateOpMilkSampleQualityInspection(opMilkSampleQualityInspection);
+        opMilkSampleQualityInspection.setTesterId(SecurityUtils.getUserId().toString());
+        SysUser sysUser = sysUserMapper.selectUserById(SecurityUtils.getLoginUser().getUserId());
+        opMilkSampleQualityInspection.setTester(sysUser.getNickName());
+        opMilkSampleQualityInspectionMapper.updateOpMilkSampleQualityInspection(opMilkSampleQualityInspection);
+        return opMilkSampleQualityInspection.getOpMilkSampleQualityInspectionId();
     }
 
     @Override
     @Transactional
     public int auditOpMilkSampleQualityInspection(String inspectionMilkTankersId) {
-        // 检查单是否存在
+        // 质检单是否存在
         OpMilkSampleQualityInspection opMilkSampleQualityInspection =
                 selectOpMilkSampleQualityInspectionByOpMilkSampleQualityInspectionId(inspectionMilkTankersId);
         if (opMilkSampleQualityInspection == null) {
-            throw new IllegalArgumentException("检查单不存在");
+            throw new IllegalArgumentException("质检单不存在");
         }
 
         // 检查单是否已审核
@@ -280,10 +411,14 @@ public class OpMilkSampleQualityInspectionServiceImpl implements IOpMilkSampleQu
 
         opMilkSampleQualityInspection.setReviewTime(new Date());
 
-        this.pushMilkSource(inspectionMilkTankersId);
+        int i = opMilkSampleQualityInspectionMapper.updateOpMilkSampleQualityInspection(opMilkSampleQualityInspection);
+
+        if ("0".equals(opMilkSampleQualityInspection.getIsManuallyAdd())){
+            this.pushMilkSource(inspectionMilkTankersId);
+        }
 
         // ------------推送奶源逻辑结束
-        return opMilkSampleQualityInspectionMapper.updateOpMilkSampleQualityInspection(opMilkSampleQualityInspection);
+        return i;
     }
 
     @Override
@@ -303,31 +438,48 @@ public class OpMilkSampleQualityInspectionServiceImpl implements IOpMilkSampleQu
 
         QualitySyncDTO qualitySyncDTO = new QualitySyncDTO();
         qualitySyncDTO.setOrderNumber(opMilkSampleQualityInspection.getMilkSourcePlanOrderNumber());
+
+        if (StringUtils.isEmpty(opInspectionMilkTankers.getCarId())) {
+            throw new IllegalArgumentException("推送奶源失败，车辆ID为空");
+        }
         qualitySyncDTO.setCarId(Integer.valueOf(opInspectionMilkTankers.getCarId()));
         qualitySyncDTO.setCarNumber(opInspectionMilkTankers.getLicensePlateNumber());
+
+        if (StringUtils.isEmpty(opInspectionMilkTankers.getDriverId())) {
+            throw new IllegalArgumentException("推送奶源失败，司机ID为空");
+        }
         qualitySyncDTO.setDriverId(Integer.valueOf(opInspectionMilkTankers.getDriverId()));
         qualitySyncDTO.setDriverName(opInspectionMilkTankers.getDriverName());
+
+        if (StringUtils.isEmpty(opInspectionMilkTankers.getTrailerId())) {
+            throw new IllegalArgumentException("推送奶源失败，挂车ID为空");
+        }
         qualitySyncDTO.setTrailerId(Integer.valueOf(opInspectionMilkTankers.getTrailerId()));
         qualitySyncDTO.setTrailerNumber(opInspectionMilkTankers.getTrailerNumber());
+
+        if (StringUtils.isEmpty(opMilkSampleQualityInspection.getMilkTemperature())) {
+            throw new IllegalArgumentException("推送奶源失败，奶温为空");
+        }
         qualitySyncDTO.setTemperature(Double.parseDouble(opMilkSampleQualityInspection.getMilkTemperature()));
-        qualitySyncDTO.setReasonType(opMilkSampleQualityInspection.getExceptionType() == null ?
-                "无" : opMilkSampleQualityInspection.getExceptionType());
-        qualitySyncDTO.setAlcohol(opMilkSampleQualityInspection.getAlcoholValue());
+
+        qualitySyncDTO.setReasonType(StringUtils.nvl(opMilkSampleQualityInspection.getExceptionType(), "无"));
+        qualitySyncDTO.setAlcohol(StringUtils.nvl(opMilkSampleQualityInspection.getAlcoholValue(), ""));
 
         // 整合抗生素，将四个字段逗号拼接为一个字段
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(opMilkSampleQualityInspection.getBetaLactam());
+        stringBuilder.append(StringUtils.nvl(opMilkSampleQualityInspection.getBetaLactam(), ""));
         stringBuilder.append(",");
-        stringBuilder.append(opMilkSampleQualityInspection.getTetracyclines());
+        stringBuilder.append(StringUtils.nvl(opMilkSampleQualityInspection.getTetracyclines(), ""));
         stringBuilder.append(",");
-        stringBuilder.append(opMilkSampleQualityInspection.getCeftiofur());
+        stringBuilder.append(StringUtils.nvl(opMilkSampleQualityInspection.getCeftiofur(), ""));
         stringBuilder.append(",");
-        stringBuilder.append(opMilkSampleQualityInspection.getCephalexin());
+        stringBuilder.append(StringUtils.nvl(opMilkSampleQualityInspection.getCefalexin(), ""));
         qualitySyncDTO.setAntibiotic(stringBuilder.toString());
-        qualitySyncDTO.setAflatoxin(opMilkSampleQualityInspection.getAflatoxinM1());
-        qualitySyncDTO.setExperiment(opMilkSampleQualityInspection.getAcidity());
-        qualitySyncDTO.setTasteAndSmell(opMilkSampleQualityInspection.getSensoryIndex());
-        qualitySyncDTO.setPhosphate(opMilkSampleQualityInspection.getPhosphateTest());
+
+        qualitySyncDTO.setAflatoxin(StringUtils.nvl(opMilkSampleQualityInspection.getAflatoxinM1(), ""));
+        qualitySyncDTO.setExperiment(StringUtils.nvl(opMilkSampleQualityInspection.getAcidity(), ""));
+        qualitySyncDTO.setTasteAndSmell(StringUtils.nvl(opMilkSampleQualityInspection.getSensoryIndex(), ""));
+        qualitySyncDTO.setPhosphate(StringUtils.nvl(opMilkSampleQualityInspection.getPhosphateTest(), ""));
         qualitySyncDTO.setStatus("1");
 
         R r = rmtsRanchLimsService.qualityInfo(qualitySyncDTO);
@@ -373,10 +525,10 @@ public class OpMilkSampleQualityInspectionServiceImpl implements IOpMilkSampleQu
             }
         }
         // 黄曲霉毒素M1图片
-        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAflatoxinPhotoUrl())){
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getAflatoxinM1PhotoUrl())){
             try {
                 // 查询相对路径
-                SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAflatoxinPhoto());
+                SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getAflatoxinM1Photo());
                 String base64 = ImageUtils.imageUrlToBase64(sysUploadFile.getFilePath());
                 photoSyncDTO.setAflatoxinPhoto(base64);
             }catch (IOException e){
@@ -406,10 +558,10 @@ public class OpMilkSampleQualityInspectionServiceImpl implements IOpMilkSampleQu
             }
         }
         // 磷酸盐实验
-        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getPhosphatePhotoUrl())){
+        if (StringUtils.isNotEmpty(opMilkSampleQualityInspection.getPhosphateTestPhotoUrl())){
             try {
                 // 查询相对路径
-                SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getPhosphatePhoto());
+                SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(opMilkSampleQualityInspection.getPhosphateTestPhoto());
                 String base64 = ImageUtils.imageUrlToBase64(sysUploadFile.getFilePath());
                 photoSyncDTO.setPhosphatePhoto(base64);
             }catch (IOException e){
@@ -435,6 +587,44 @@ public class OpMilkSampleQualityInspectionServiceImpl implements IOpMilkSampleQu
         }
 
         return opMilkSampleQualityInspectionMapper.updateOpMilkSampleQualityInspection(opMilkSampleQualityInspection);
+    }
+
+    @Override
+    public int manuallyAdd(OpMilkSampleQualityInspection opMilkSampleQualityInspection) {
+        if (StringUtils.isEmpty(opMilkSampleQualityInspection.getOpMilkSampleQualityInspectionId())) {
+            opMilkSampleQualityInspection.setOpMilkSampleQualityInspectionId(IdUtils.simpleUUID());
+        }
+
+        // +++ 自动填充部门ID，用于数据权限 +++
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (StringUtils.isNotNull(loginUser))
+        {
+            // 假设您的实体类中有名为 setDeptId 的方法
+            // (请确保您的 OpMilkSampleQualityInspection 实体类中有 setDeptId(String deptId) 方法)
+            opMilkSampleQualityInspection.setDeptId(loginUser.getDeptId().toString());
+        }
+
+        try {
+            String resultNo = codeGeneratorUtil.generateCode(CODE_TYPE_MILK_SAMPLE_QUALITY_INSPECTION);
+            opMilkSampleQualityInspection.setMilkSampleQualityInspectionNumber(resultNo);
+        } catch (BusinessException e) {
+            throw new RuntimeException("生成奶样质检单编号失败: " + e.getMessage());
+        }
+
+        SysUser sysUser = sysUserMapper.selectUserById(loginUser.getUserId());
+        opMilkSampleQualityInspection.setCreateByName(sysUser.getNickName());
+        opMilkSampleQualityInspection.setStatus("1");
+        opMilkSampleQualityInspection.setPreStepCompleted("1");
+        opMilkSampleQualityInspection.setIsDelete("0");
+        opMilkSampleQualityInspection.setIsPushMilkSource("0");
+        opMilkSampleQualityInspection.setIsSampling("1");
+        opMilkSampleQualityInspection.setTesterId(SecurityUtils.getUserId().toString());
+        opMilkSampleQualityInspection.setTester(sysUser.getNickName());
+        opMilkSampleQualityInspection.setIsManuallyAdd("1");
+
+        // 自动填充创建/更新信息
+        opMilkSampleQualityInspection.fillCreateInfo();
+        return opMilkSampleQualityInspectionMapper.insertOpMilkSampleQualityInspection(opMilkSampleQualityInspection);
     }
 
     @Override

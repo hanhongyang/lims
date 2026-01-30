@@ -35,6 +35,10 @@
             <result property="batch" column="batch" />
             <result property="originalCweightno" column="original_cweightno" />
             <result property="writeOffCweightno" column="write_off_cweightno" />
+            <result property="manualClosingRemark" column="manual_closing_remark" />
+            <result property="newMaterialVoucher" column="new_material_voucher" />
+            <result property="driverName" column="driver_name" />
+            <result property="driverCode" column="driver_code" />
     </resultMap>
 
         <resultMap id="OpSampleUnqualityOpSampleUnqualityDetailResult" type="OpSampleUnquality" extends="OpSampleUnqualityResult">
@@ -92,8 +96,12 @@
                sign_in_id,
                batch,
                original_cweightno,
-               write_off_cweightno
-               supplier_name
+               write_off_cweightno,
+               manual_closing_remark,
+               new_material_voucher,
+               supplier_name,
+               driver_name,
+               driver_code
         from op_sample_unquality d
     </sql>
 
@@ -169,6 +177,10 @@
                     <if test="originalCweightno != null">original_cweightno,</if>
                     <if test="writeOffCweightno != null">write_off_cweightno,</if>
                     <if test="signInId != null">sign_in_id,</if>
+                    <if test="manualClosingRemark != null">manual_closing_remark,</if>
+                    <if test="newMaterialVoucher != null">new_material_voucher,</if>
+                    <if test="driverName != null">driver_name,</if>
+                    <if test="driverCode != null">driver_code,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                     <if test="opSampleUnqualityId != null">#{opSampleUnqualityId},</if>
@@ -201,6 +213,10 @@
                     <if test="originalCweightno != null">#{originalCweightno},</if>
                     <if test="writeOffCweightno != null">#{writeOffCweightno},</if>
                     <if test="signInId != null">#{signInId},</if>
+                    <if test="manualClosingRemark != null">#{manualClosingRemark},</if>
+                    <if test="newMaterialVoucher != null">#{newMaterialVoucher},</if>
+                    <if test="driverName != null">#{driverName},</if>
+                    <if test="driverCode != null">#{driverCode},</if>
         </trim>
     </insert>
 
@@ -221,19 +237,23 @@
                     <if test="deptId != null">dept_id = #{deptId},</if>
                     <if test="ccltype != null">ccltype = #{ccltype},</if>
                     <if test="ctype != null">ctype = #{ctype},</if>
-                    <if test="ikjweight != null">ikjweight = #{ikjweight},</if>
-                    <if test="ikjmoney != null">ikjmoney = #{ikjmoney},</if>
+                    <if test="ikjweight != null and ikjweight != ''">ikjweight = #{ikjweight},</if>
+                    <if test="ikjmoney != null and ikjmoney != ''">ikjmoney = #{ikjmoney},</if>
                     <if test="cunqualityinfo != null">cunqualityinfo = #{cunqualityinfo},</if>
                     <if test="processingType != null">processing_type = #{processingType},</if>
                     <if test="sapName != null">sap_name = #{sapName},</if>
                     <if test="cfilepath != null">cfilepath = #{cfilepath},</if>
-                    <if test="iProportionkjweight != null">i_proportionkjweight = #{iProportionkjweight},</if>
+                    <if test="iProportionkjweight != null and iProportionkjweight != ''">i_proportionkjweight = #{iProportionkjweight},</if>
                     <if test="supplierCode != null and supplierCode != ''">supplier_code = #{supplierCode},</if>
                     <if test="supplierName != null and supplierName != ''">supplier_name = #{supplierName},</if>
                     <if test="batch != null">batch = #{batch},</if>
                     <if test="originalCweightno != null">original_cweightno = #{originalCweightno},</if>
                     <if test="writeOffCweightno != null">write_off_cweightno = #{writeOffCweightno},</if>
                     <if test="signInId != null">sign_in_id = #{signInId},</if>
+                    <if test="manualClosingRemark != null">manual_closing_remark = #{manualClosingRemark},</if>
+                    <if test="newMaterialVoucher != null">new_material_voucher = #{newMaterialVoucher},</if>
+                    <if test="driverName != null">driver_name = #{driverName},</if>
+                    <if test="driverCode != null">driver_code = #{driverCode},</if>
         </trim>
         where op_sample_unquality_id = #{opSampleUnqualityId}
     </update>
@@ -308,7 +328,11 @@
                a.batch,
                a.original_cweightno,
                a.write_off_cweightno,
-               a.sign_in_id
+               a.sign_in_id,
+               a.manual_closing_remark,
+               a.new_material_voucher,
+               a.driver_name,
+               a.driver_code
         from op_sample_unquality a
         left join op_sampling_plan_sample b on a.source_id = b.op_sampling_plan_sample_id AND b.is_delete = 0
         left join op_sampling_plan c on b.sampling_plan_id = c.op_sampling_plan_id AND c.delete_id = 0
@@ -340,6 +364,8 @@
     <insert id="insertOpSampleUnqualityDetail">
         insert into op_sample_unquality_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opSampleUnqualityDetailId != null and opSampleUnqualityDetailId != ''">op_sample_unquality_detail_id,</if>
+            <if test="opSampleUnqualityId != null and opSampleUnqualityId != ''">op_sample_unquality_id,</if>
             <if test="itemId != null and itemId != ''">item_id,</if>
             <if test="itemCode != null and itemCode != ''">item_code,</if>
             <if test="itemName != null and itemName != ''">item_name,</if>
@@ -349,6 +375,8 @@
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opSampleUnqualityDetailId != null and opSampleUnqualityDetailId != ''">#{opSampleUnqualityDetailId},</if>
+            <if test="opSampleUnqualityId != null and opSampleUnqualityId != ''">#{opSampleUnqualityId},</if>
             <if test="itemId != null and itemId != ''">#{itemId},</if>
             <if test="itemCode != null and itemCode != ''">#{itemCode},</if>
             <if test="itemName != null and itemName != ''">#{itemName},</if>
@@ -381,7 +409,7 @@
     </update>
     <update id="updateOpSampleUnqualityManually">
         update op_sample_unquality
-        set processing_type = 3,update_time = now(),status = 1
+        set processing_type = 3,update_time = now(),status = 1,manual_closing_remark = #{manualClosingRemark}
         where op_sample_unquality_id = #{opSampleUnqualityIdS}
     </update>
 

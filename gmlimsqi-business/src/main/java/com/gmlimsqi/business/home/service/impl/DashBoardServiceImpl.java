@@ -34,6 +34,10 @@ public class DashBoardServiceImpl implements IDashBoardService {
         pcrStats.setWaitTest(
                 opJczxTestTaskService.countPcrWaitTest()
         );
+        //PCR待受理数
+        pcrStats.setWaitAccept(
+                opJczxTestTaskService.countPcrWaitAccept()
+        );
         stats.setPcr(pcrStats);
 
         // ==================== 3. 疾病检测统计 ====================
@@ -41,6 +45,10 @@ public class DashBoardServiceImpl implements IDashBoardService {
         // 疾病待测试项目数
         diseaseStats.setWaitTest(
                 opJczxTestTaskService.countDiseaseWaitTest()
+        );
+        //疾病待受理数
+        diseaseStats.setWaitAccept(
+                opJczxTestTaskService.countDiseaseWaitAccept()
         );
         stats.setDisease(diseaseStats);
 
@@ -50,6 +58,10 @@ public class DashBoardServiceImpl implements IDashBoardService {
         biochemistryStats.setWaitTest(
                 opJczxTestTaskService.countBiochemistryWaitTest()
         );
+        //生化待受理数
+        biochemistryStats.setWaitAccept(
+                opJczxTestTaskService.countBiochemistryWaitAccept()
+        );
         stats.setBiochemistry(biochemistryStats);
 
         // ==================== 5. 早孕检测统计 ====================
@@ -57,6 +69,10 @@ public class DashBoardServiceImpl implements IDashBoardService {
         // 早孕待测试项目数
         earlyPregnancyStats.setWaitTest(
                 opJczxTestTaskService.countEarlyPregnancyWaitTest()
+        );
+        //早孕待受理数
+        earlyPregnancyStats.setWaitAccept(
+                opJczxTestTaskService.countEarlyPregnancyWaitAccept()
         );
         stats.setEarlyPregnancy(earlyPregnancyStats);
 

@@ -56,7 +56,12 @@
 
         </where>
     </select>
-
+    <select id="selectDeletedSamplesByOrderId" parameterType="String" resultMap="OpPcrEntrustOrderSampleResult">
+        <include refid="selectOpPcrEntrustOrderSampleVo"/>
+        where pcr_entrust_order_id = #{orderId}
+        and is_delete = '1'
+        order by sequence
+    </select>
     <update id="updateOpPcrEntrustOrderSample" parameterType="OpPcrEntrustOrderSample">
         update op_pcr_entrust_order_sample
         <trim prefix="SET" suffixOverrides=",">

@@ -494,7 +494,7 @@ public class OpMilkFillingOrderServiceImpl implements IOpMilkFillingOrderService
             for (OpMilkFillingOrderDetail detail : detailList) {
                 milkWarehouseNumber.append(detail.getMilkWarehouseName()).append(",");
             }
-            if (milkWarehouseNumber.length() > 0) {
+            if (!milkWarehouseNumber.isEmpty()) {
                 milkWarehouseNumber.deleteCharAt(milkWarehouseNumber.length() - 1);
             }
         }

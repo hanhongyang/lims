@@ -4,6 +4,7 @@ import com.gmlimsqi.business.inspectionmilktankers.domain.OpInspectionMilkTanker
 import com.gmlimsqi.business.milkbinqualityinspection.domain.OpMilkSourcePlanVO;
 import com.gmlimsqi.business.milkbinqualityinspection.mapper.OpMilkSourcePlanMonitorMapper;
 import com.gmlimsqi.business.milkbinqualityinspection.service.IOpMilkSourcePlanService;
+import com.gmlimsqi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class IOpMilkSourcePlanServiceImpl implements IOpMilkSourcePlanService {
 
     @Override
     public List<OpMilkSourcePlanVO> selectMilkSourcePlanMonitorList(OpInspectionMilkTankers opInspectionMilkTankers) {
+        if (!SecurityUtils.isAdmin(SecurityUtils.getUserId())) {
+            opInspectionMilkTankers.setDeptId(String.valueOf(SecurityUtils.getDeptId()));
+        }
         return opMilkSourcePlanMonitorMapper.selectMilkSourcePlanMonitorList(opInspectionMilkTankers);
     }
 }

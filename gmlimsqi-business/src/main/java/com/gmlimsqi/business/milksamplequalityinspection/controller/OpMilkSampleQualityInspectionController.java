@@ -79,13 +79,23 @@ public class OpMilkSampleQualityInspectionController extends BaseController {
     }
 
     /**
+     * 手动新增奶样质检
+     */
+//    @PreAuthorize("@ss.hasPermi('milkSampleQualityInspection:inspection:add')")
+    @Log(title = "奶样质检", businessType = BusinessType.INSERT)
+    @PostMapping("/manuallyAdd")
+    public AjaxResult manuallyAdd(@RequestBody OpMilkSampleQualityInspection opMilkSampleQualityInspection) {
+        return toAjax(opMilkSampleQualityInspectionService.manuallyAdd(opMilkSampleQualityInspection));
+    }
+
+    /**
      * 修改奶样质检
      */
 //    @PreAuthorize("@ss.hasPermi('milkSampleQualityInspection:inspection:edit')")
     @Log(title = "奶样质检", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody OpMilkSampleQualityInspection opMilkSampleQualityInspection) {
-        return toAjax(opMilkSampleQualityInspectionService.updateOpMilkSampleQualityInspection(opMilkSampleQualityInspection));
+        return AjaxResult.success("修改成功",opMilkSampleQualityInspectionService.updateOpMilkSampleQualityInspection(opMilkSampleQualityInspection));
     }
 
     /**
@@ -112,8 +122,8 @@ public class OpMilkSampleQualityInspectionController extends BaseController {
      * 手动推送奶源
      */
     @Log(title = "奶样质检", businessType = BusinessType.UPDATE)
-    @PutMapping("/pushMilkSource")
-    public AjaxResult pushMilkSource(@RequestBody String opMilkSampleQualityInspectionId) {
+    @PutMapping("/pushMilkSource/{opMilkSampleQualityInspectionId}")
+    public AjaxResult pushMilkSource(@PathVariable String opMilkSampleQualityInspectionId) {
         return toAjax(opMilkSampleQualityInspectionService.pushMilkSource(opMilkSampleQualityInspectionId));
     }
 

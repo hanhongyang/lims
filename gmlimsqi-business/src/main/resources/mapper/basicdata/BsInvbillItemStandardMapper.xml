@@ -31,6 +31,7 @@
         <result property="testModelNo"    column="test_model_no"    />
         <result property="testModelName"    column="test_model_name"    />
         <result property="invbillCode"    column="invbill_code"    />
+        <result property="unitOfMeasurement"    column="unit_of_measurement"    />
     </resultMap>
 
     <!-- 物料项目标准Vo结果映射 -->
@@ -186,6 +187,7 @@
         f.name,
         f.lower_limit,
         f.upper_limit,
+        f.unit_of_measurement,
         d.sap_name,
         s.create_by,
         s.update_by,

@@ -138,12 +138,17 @@ public interface OpSampleUnqualityMapper
      */
     int updateOpSampleUnqualityByDiBang(List<String> opSampleUnqualityIds);
 
-    int updateOpSampleUnqualityManually(String opSampleUnqualityIdS);
+    /**
+     * 手动关闭样品不合格处理单
+     * @param opSampleUnquality 样品不合格处理单对象
+     * @return
+     */
+    int updateOpSampleUnqualityManually(OpSampleUnquality opSampleUnquality);
 
     /**
      * 根据来源id删除样品不合格处理单
      * @param sourceId 来源id
      * @return 结果
      */
-     int deleteOpSampleUnqualityBySourceId(String sourceId);
+     int deleteOpSampleUnqualityBySourceId(@Param("sourceId") String sourceId, @Param("now") Date now, @Param("updateUserId") String updateUserId);
 }

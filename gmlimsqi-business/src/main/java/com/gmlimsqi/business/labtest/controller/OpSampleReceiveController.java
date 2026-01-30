@@ -43,6 +43,18 @@ public class OpSampleReceiveController  extends BaseController {
     }
 
     /**
+     * 查询样品接收列表
+     */
+    //@PreAuthorize("@ss.hasPermi('labtest:sampleReceive:list')")
+    @GetMapping("/jhwlist")
+    public TableDataInfo selectJhwSampleReceiveList(OpSampleReceiveDto sampleReceiveDto)
+    {
+        startPage();
+        List<OpSampleReceiveVo> list = sampleReceiveService.selectJhwSampleReceiveList(sampleReceiveDto);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出样品接收列表
      */
     //@PreAuthorize("@ss.hasPermi('labtest:sampleReceive:export')")

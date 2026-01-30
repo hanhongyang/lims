@@ -56,7 +56,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isReceive" column="is_receive"    />
         <result property="model" column="model"    />
         <result property="samplerId" column="sampler_id"    />
-    </resultMap>
+        <result property="samplingType" column="sampling_type"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isscan" column="isscan"/>
+     </resultMap>
     <sql id="selectOpSamplingPlanVo">
         select s.op_sampling_plan_id,
                s.sampling_plan_no,
@@ -313,13 +317,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ps.gg_quality_describe,
         ps.gg_quality_result,
         ps.invbill_code,
+        ps.sampling_type,
         GROUP_CONCAT(pi.item_name SEPARATOR ',') as item_names,
         ps.is_receive,
         ps.receive_time,
         ps.receiver_id,
         p.sampler_name,
         p.sample_time,
-        p.update_time
+        p.update_time,
+        ps.create_by,
+        ps.create_time,
+        ps.isscan
         FROM
         op_sampling_plan_sample ps
         LEFT JOIN
@@ -328,10 +336,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         op_sampling_plan_item pi ON ps.op_sampling_plan_sample_id = pi.sampling_plan_sample_id AND pi.is_delete = '0'
         LEFT JOIN sys_dept d ON ps.dept_id = d.dept_id
         where ps.is_delete = '0'
+        and (ps.sample_no is not null or ps.sample_no != '')
         <if test="sampleNo != null  and sampleNo != ''">and ps.sample_no like concat('%',#{sampleNo},'%')</if>
         <if test="isReceive != null  and isReceive != ''">and ps.is_receive = #{isReceive}</if>
-        <if test="newSamplingTypes != null and newSamplingTypes != ''">
-            and ps.new_sampling_type = #{newSamplingTypes}
+        <if test="samplingType != null and samplingType != ''">
+            and ps.sampling_type = #{samplingType}
+        </if>
+        <if test="invbillName != null and invbillName != ''">
+            and ps.invbill_name like concat('%',#{invbillName},'%')
         </if>
         GROUP BY
         ps.op_sampling_plan_sample_id, ps.sample_no,ps.invbill_name,ps.model,ps.production_date,ps.shelf_life,
@@ -366,7 +378,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ps.receiver_id,
         p.sampler_name,
         p.sample_time,
-        p.update_time
+        p.update_time,
+        ps.create_by,
+        ps.create_time,
+        ps.isscan
         FROM
         op_sampling_plan_sample ps
         INNER JOIN
@@ -402,7 +417,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ps.receiver_id,
         p.sampler_name,
         p.sample_time,
-        p.update_time
+        p.update_time,
+        ps.create_by,
+        ps.create_time,
+        ps.isscan
         FROM
         op_sampling_plan_sample ps
         LEFT JOIN

@@ -99,7 +99,7 @@ public class OpMilkBinQualityInspectionController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody OpMilkBinQualityInspection opMilkBinQualityInspection)
     {
-        return toAjax(opMilkBinQualityInspectionService.updateOpMilkBinQualityInspection(opMilkBinQualityInspection));
+        return AjaxResult.success("修改成功",opMilkBinQualityInspectionService.updateOpMilkBinQualityInspection(opMilkBinQualityInspection));
     }
 
     /**
@@ -107,8 +107,8 @@ public class OpMilkBinQualityInspectionController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('milkbin:inspection:edit')")
     @Log(title = "奶仓质检单", businessType = BusinessType.UPDATE)
-    @PostMapping("/audit")
-    public AjaxResult audit(@RequestBody String id)
+    @PostMapping("/audit/{id}")
+    public AjaxResult audit(@PathVariable("id") String id)
     {
         return toAjax(opMilkBinQualityInspectionService.auditOpMilkBinQualityInspection(id));
     }

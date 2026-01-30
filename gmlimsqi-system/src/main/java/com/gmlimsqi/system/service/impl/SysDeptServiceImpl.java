@@ -11,7 +11,9 @@ import com.gmlimsqi.common.exception.ServiceException;
 import com.gmlimsqi.common.utils.SecurityUtils;
 import com.gmlimsqi.common.utils.StringUtils;
 import com.gmlimsqi.common.utils.spring.SpringUtils;
+import com.gmlimsqi.system.domain.SysDeptMilkConfig;
 import com.gmlimsqi.system.mapper.SysDeptMapper;
+import com.gmlimsqi.system.mapper.SysDeptMilkConfigMapper;
 import com.gmlimsqi.system.mapper.SysRoleMapper;
 import com.gmlimsqi.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
 
     @Autowired
     private SysRoleMapper roleMapper;
+
+    @Autowired
+    private SysDeptMilkConfigMapper milkConfigMapper;
 
     /**
      * 查询部门管理数据
@@ -278,6 +283,12 @@ public class SysDeptServiceImpl implements ISysDeptService {
         SysDept sysDept = new SysDept();
         return deptMapper.selectDeptList(sysDept);
 
+    }
+
+    @Override
+    public List<SysDeptMilkConfig> getLoginUserMilkSourceCode() {
+        Long deptId = SecurityUtils.getLoginUser().getDeptId();
+        return milkConfigMapper.selectMilkSourceCodeByDeptId(deptId);
     }
 
     /**

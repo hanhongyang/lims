@@ -69,6 +69,14 @@ public class SysDeptController extends BaseController {
     }
 
     /**
+     * 根据当前登录用户获取对应的奶源系统部门编码
+     */
+    @GetMapping(value = "/getMilkSourceCode")
+    public AjaxResult getMilkSourceCode() {
+        return AjaxResult.success(deptService.getLoginUserMilkSourceCode());
+    }
+
+    /**
      * 根据用户查询当前部门和子部门
      */
     @GetMapping(value = "/getLoginUserDeptAndChildren")

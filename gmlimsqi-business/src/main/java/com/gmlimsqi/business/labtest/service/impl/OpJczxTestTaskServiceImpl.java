@@ -82,7 +82,8 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
     private IOpJczxBloodReportBaseService opJczxBloodReportBaseService;
     @Autowired
     private ISysConfigService configService;
-
+    @Autowired
+    private OpJczxBloodReportBaseMapper opJczxBloodReportBaseMapper;
     @Override
     public OpJczxTestTaskVo selectOpJczxTestTaskByOpJczxTestTaskId(String entrustOrderItemId)
     {
@@ -199,6 +200,12 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
                     setEndOfDay(opJczxTestTaskDto.getEndTestDate());
                 }
                 return opJczxTestTaskMapper.selectBloodTestTaskListIsTest(opJczxTestTaskDto);
+            }else if ("2".equals(isTest)) {
+                // 化验中
+                if (opJczxTestTaskDto.getEndTestDate() != null) {
+                    setEndOfDay(opJczxTestTaskDto.getEndTestDate());
+                }
+                return opJczxTestTaskMapper.selectBloodTestTaskListIsTest(opJczxTestTaskDto);
             }
             // 再按 Tab 状态区分（审核维度）
             if ("2".equals(status)) {
@@ -223,6 +230,15 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
                 return opJczxTestTaskMapper.selectPcrTestTaskList(opJczxTestTaskDto);
             } else if ("1".equals(isTest)) {
                 // 已化验
+                if (opJczxTestTaskDto.getEndTestDate() != null) {
+                    setEndOfDay(opJczxTestTaskDto.getEndTestDate());
+                }
+                if (opJczxTestTaskDto.getEndTestEndTime() != null) {
+                    setEndOfDay(opJczxTestTaskDto.getEndTestEndTime());
+                }
+                return opJczxTestTaskMapper.selectPcrTestTaskListIsTest(opJczxTestTaskDto);
+            }else if ("2".equals(isTest)) {
+                // 化验中
                 if (opJczxTestTaskDto.getEndTestDate() != null) {
                     setEndOfDay(opJczxTestTaskDto.getEndTestDate());
                 }
@@ -618,6 +634,21 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
                 if(base!=null){
                     //如果是生化、早孕流转到待发送
                     if("8".equals(base.getBloodTaskItemType()) || "9".equals(base.getBloodTaskItemType())){
+                        // 校验：检查该委托单是否已存在有效报告，防止重复生成
+                        // 查询该委托单最新的一条报告记录
+                        List<OpJczxBloodReportBase> existingReport = opJczxBloodReportBaseMapper.selectReportBaseByOrderIdLimit1(orderId);
+
+                        if(CollectionUtil.isNotEmpty(existingReport)){
+                            // 如果存在报告，且状态不是"6"(作废/已退回)，则视为有效报告，跳过新报告生成
+                            // 注意：状态 '6' 对应 JczxFeedReportStatusEnum.ZF (作废)，退回操作会置为 6
+                            if (!"6".equals(existingReport.get(0).getStatus())) {
+                                // 日志记录（可选）
+                                 System.out.println("委托单 " + orderId + " 已存在有效报告(状态" + existingReport.get(0).getStatus() + ")，跳过生成。");
+                                continue;
+                            }
+                        }
+
+
                         //制作
                         OpJczxBloodReportBase opJczxBloodReportBase = new OpJczxBloodReportBase();
                         opJczxBloodReportBase.setStatus(JczxFeedReportStatusEnum.DZZ.getCode());
@@ -811,13 +842,18 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
             setCellValue(headerRow, colIndex++, "所属牧场");
             setCellValue(headerRow, colIndex++, "样品名称");
             setCellValue(headerRow, colIndex++, "样品描述");
-            setCellValue(headerRow, colIndex++, "委托备注");
-            setCellValue(headerRow, colIndex++, "样品编号");
+
 
             // 添加排序后的项目名称作为列标题
             for (String itemName : itemNames) {
                 setCellValue(headerRow, colIndex++, itemName);
             }
+
+            int remarkColIndex = colIndex++;    // 记录 委托备注 列索引
+            int sampleNoColIndex = colIndex++;  // 记录 样品编号 列索引
+
+            setCellValue(headerRow, remarkColIndex, "委托备注");
+            setCellValue(headerRow, sampleNoColIndex, "样品编号");
 
             // 记录试剂盒批号列的索引（现在在最前面）
             int tqsjhCol = 0; // 提取试剂盒批号列索引
@@ -836,15 +872,15 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
                 setCellValue(row, 3, sample.getEntrustDeptName()); // 所属牧场
                 setCellValue(row, 4, sample.getInvbillName()); // 样品名称
                 setCellValue(row, 5, sample.getSampleName()); // 样品描述
-                setCellValue(row, 6, sample.getRemark()); // 委托备注
-                setCellValue(row, 7, sample.getSampleNo()); // 样品编号
+                setCellValue(row, remarkColIndex, sample.getRemark()); // 委托备注 (放到后面)
+                setCellValue(row, sampleNoColIndex, sample.getSampleNo()); // 样品编号 (放到最后)
                 // 项目列留空（用于后续填写结果）
             }
 
             // 在样品数据后添加固定行（空白样、阳性对照、阴性对照）
             int fixedRowStart = startRow + sampleList.size();
-            addFixedRows(sheet, fixedRowStart, tqsjhCol, kzsjhCol, itemNames.size());
-
+            //addFixedRows(sheet, fixedRowStart, tqsjhCol, kzsjhCol, sampleNoColIndex);
+            addFixedRows(sheet, fixedRowStart, tqsjhCol, kzsjhCol, sampleNoColIndex, 5);
             // --- 优化点：自动调整所有列的宽度，并增加额外边距 ---
             int totalCols = headerRow.getLastCellNum();
             for (int i = 0; i < totalCols; i++) {
@@ -886,17 +922,17 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
         }
 
         // 3. 定义4联和7联的项目集合（用于匹配）
-        Set<String> fourChainItems = new HashSet<>(Arrays.asList("牛冠状病毒", "牛轮状病毒", "隐孢子虫", "肠毒素型细菌-大肠杆菌"));
+        Set<String> fourChainItems = new HashSet<>(Arrays.asList("牛冠状病毒", "牛轮状病毒", "隐孢子虫", "肠毒素型细菌-大肠杆菌","产气荚膜梭菌"));
         Set<String> sevenChainItems = new HashSet<>(Arrays.asList("牛冠状病毒", "牛病毒性腹泻病毒", "牛呼吸道合胞体病毒", "牛副流感病毒3型", "牛支原体", "溶血性曼氏杆菌", "多杀巴斯德杆菌"));
 
         // 4. 判断逻辑：如果是 4联
         if (distinctSet.size() == 4 && distinctSet.containsAll(fourChainItems)) {
             if ("1".equals(blTemplateType)) {
                 // 4联中文顺序
-                return Arrays.asList("牛轮状病毒", "牛冠状病毒", "肠毒素型细菌-大肠杆菌", "隐孢子虫");
+                return Arrays.asList("牛轮状病毒", "牛冠状病毒", "肠毒素型细菌-大肠杆菌", "隐孢子虫","产气荚膜梭菌");
             } else {
                 // 4联英文顺序 (默认)
-                return Arrays.asList("牛冠状病毒", "牛轮状病毒", "隐孢子虫", "肠毒素型细菌-大肠杆菌");
+                return Arrays.asList("牛冠状病毒", "牛轮状病毒", "隐孢子虫", "肠毒素型细菌-大肠杆菌","产气荚膜梭菌");
             }
         }
 
@@ -918,7 +954,7 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
         List<List<String>> sortRules = Arrays.asList(
                 Arrays.asList("金黄色葡萄球菌"),
                 // 旧的4联规则作为兜底（虽然上面已经处理了，但保留无害）
-                Arrays.asList("牛冠状病毒", "牛轮状病毒", "隐孢子虫", "肠毒素型细菌-大肠杆菌"),
+                Arrays.asList("牛冠状病毒", "牛轮状病毒", "隐孢子虫", "肠毒素型细菌-大肠杆菌","产气荚膜梭菌"),
                 // 旧的7联规则作为兜底
                 Arrays.asList("牛冠状病毒", "牛病毒性腹泻病毒", "牛呼吸道合胞体病毒", "牛副流感病毒3型", "牛支原体", "溶血性曼氏杆菌", "多杀巴斯德杆菌"),
                 Arrays.asList("绿脓杆菌", "无乳链球菌", "β-内酰胺酶抗性基因", "停乳链球菌", "克雷伯氏菌属", "牛支原体", "大肠杆菌", "金黄色葡萄球菌"),
@@ -965,7 +1001,7 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
         // 定义六种固定排序规则
         List<List<String>> sortRules = Arrays.asList(
                 Arrays.asList("金黄色葡萄球菌"),
-                Arrays.asList("牛冠状病毒", "牛轮状病毒", "隐孢子虫", "肠毒素型细菌-大肠杆菌"),
+                Arrays.asList("牛冠状病毒", "牛轮状病毒", "隐孢子虫", "肠毒素型细菌-大肠杆菌","产气荚膜梭菌"),
                 Arrays.asList("牛冠状病毒", "牛病毒性腹泻病毒", "牛呼吸道合胞体病毒", "牛副流感病毒3型", "牛支原体", "溶血性曼氏杆菌", "多杀巴斯德杆菌"),
                 Arrays.asList("绿脓杆菌", "无乳链球菌", "β-内酰胺酶抗性基因", "停乳链球菌", "克雷伯氏菌属", "牛支原体", "大肠杆菌", "金黄色葡萄球菌"),
                 Arrays.asList("牛支原体"),
@@ -982,29 +1018,57 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
         // 如果没有完全匹配的规则，按原始顺序返回
         return originalItemList;
     }
-
     /**
      * 添加固定行（空白样、阳性对照、阴性对照）- 更新方法签名
+     * 【修改点】：增加了 int sampleDescColIndex 参数
      */
-    private void addFixedRows(XSSFSheet sheet, int startRow, int tqsjhCol, int kzsjhCol, int itemCount) {
+    private void addFixedRows(XSSFSheet sheet, int startRow, int tqsjhCol, int kzsjhCol, int sampleNoColIndex, int sampleDescColIndex) {
         // 空白样
         Row blankRow = sheet.createRow(startRow);
-        setCellValue(blankRow, 7, "空白样"); // 样品编号（第7列）
+        setCellValue(blankRow, sampleNoColIndex, "空白样"); // 样品编号列
+        setCellValue(blankRow, sampleDescColIndex, "空白样"); // 【新增】：样品描述列
         setCellValue(blankRow, tqsjhCol, ""); // 提取试剂盒批号
         setCellValue(blankRow, kzsjhCol, ""); // 扩增试剂盒批号
 
         // 阳性对照
         Row positiveRow = sheet.createRow(startRow + 1);
-        setCellValue(positiveRow, 7, "阳性对照"); // 样品编号（第7列）
+        setCellValue(positiveRow, sampleNoColIndex, "阳性对照"); // 样品编号列
+        setCellValue(positiveRow, sampleDescColIndex, "阳性对照"); // 【新增】：样品描述列
         setCellValue(positiveRow, tqsjhCol, ""); // 提取试剂盒批号
         setCellValue(positiveRow, kzsjhCol, ""); // 扩增试剂盒批号
 
         // 阴性对照
         Row negativeRow = sheet.createRow(startRow + 2);
-        setCellValue(negativeRow, 7, "阴性对照"); // 样品编号（第7列）
+        setCellValue(negativeRow, sampleNoColIndex, "阴性对照"); // 样品编号列
+        setCellValue(negativeRow, sampleDescColIndex, "阴性对照"); // 【新增】：样品描述列
         setCellValue(negativeRow, tqsjhCol, ""); // 提取试剂盒批号
         setCellValue(negativeRow, kzsjhCol, ""); // 扩增试剂盒批号
     }
+    /**
+     * 添加固定行（空白样、阳性对照、阴性对照）- 更新方法签名
+     */
+//    private void addFixedRows(XSSFSheet sheet, int startRow, int tqsjhCol, int kzsjhCol, int sampleNoColIndex) {
+//        // 空白样
+//        Row blankRow = sheet.createRow(startRow);
+//        // --- [修改] --- 将 7 改为 sampleNoColIndex
+//        setCellValue(blankRow, sampleNoColIndex, "空白样");
+//        setCellValue(blankRow, tqsjhCol, ""); // 提取试剂盒批号
+//        setCellValue(blankRow, kzsjhCol, ""); // 扩增试剂盒批号
+//
+//        // 阳性对照
+//        Row positiveRow = sheet.createRow(startRow + 1);
+//        // --- [修改] --- 将 7 改为 sampleNoColIndex
+//        setCellValue(positiveRow, sampleNoColIndex, "阳性对照");
+//        setCellValue(positiveRow, tqsjhCol, ""); // 提取试剂盒批号
+//        setCellValue(positiveRow, kzsjhCol, ""); // 扩增试剂盒批号
+//
+//        // 阴性对照
+//        Row negativeRow = sheet.createRow(startRow + 2);
+//        // --- [修改] --- 将 7 改为 sampleNoColIndex
+//        setCellValue(negativeRow, sampleNoColIndex, "阴性对照");
+//        setCellValue(negativeRow, tqsjhCol, ""); // 提取试剂盒批号
+//        setCellValue(negativeRow, kzsjhCol, ""); // 扩增试剂盒批号
+//    }
 
     /**
      * 填充Excel模板
@@ -1307,5 +1371,25 @@ public class OpJczxTestTaskServiceImpl implements IOpJczxTestTaskService
     @Override
     public int countEarlyPregnancyWaitTest() {
         return opJczxTestTaskMapper.countEarlyPregnancyWaitTest();
+    }
+
+    @Override
+    public int countPcrWaitAccept() {
+        return opJczxTestTaskMapper.countPcrWaitAccept();
+    }
+
+    @Override
+    public int countDiseaseWaitAccept() {
+        return opJczxTestTaskMapper.countDiseaseWaitAccept();
+    }
+
+    @Override
+    public int countBiochemistryWaitAccept() {
+        return opJczxTestTaskMapper.countBiochemistryWaitAccept();
+    }
+
+    @Override
+    public int countEarlyPregnancyWaitAccept() {
+        return opJczxTestTaskMapper.countEarlyPregnancyWaitAccept();
     }
 }

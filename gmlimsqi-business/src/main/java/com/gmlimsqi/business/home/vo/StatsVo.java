@@ -78,6 +78,11 @@ public class StatsVo {
          * 待化验
          */
         private Integer waitTest;
+
+        /**
+         * 待受理
+         */
+        private Integer waitAccept;
     }
 
     /**

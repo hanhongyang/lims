@@ -136,7 +136,7 @@ public class OpSamplingPlan extends BaseEntity implements BaseEntity.CreateAware
     //取样时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String  sampleTime;
+    private Date  sampleTime;
     //取样人id
     private String samplerId;
     //随车检验报告id
@@ -157,6 +157,9 @@ public class OpSamplingPlan extends BaseEntity implements BaseEntity.CreateAware
     private String newSamplingTypes;
 
     private String samplingType;
+
+    /** 物料名称 */
+    private String invbillName;
 
     /** 开始时间（支持前端传yyyy-MM-dd格式） */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8") // 时区必须加，避免解析偏移

@@ -112,7 +112,8 @@ public class OpBloodEntrustOrder extends BaseEntity implements BaseEntity.Create
      */
     @Excel(name = "状态")
     private String status;
-
+    //删除样品数量
+    private Integer scypsl;
     /**
      * 删除id（0为未删除，删除则为id）
      */
@@ -174,5 +175,9 @@ public class OpBloodEntrustOrder extends BaseEntity implements BaseEntity.Create
 
     /** 退回原因 */
     private String returnReason;
+    /** 变更日志 (新增) */
+    private List<OpBloodEntrustOrderChangeLog> changeLogs;
 
+    /** 已删除的样品列表 (新增) */
+    private List<OpBloodEntrustOrderSample> deletedSampleList;
 }

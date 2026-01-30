@@ -13,6 +13,7 @@
         <result property="sampleName"    column="sample_name"    />
         <result property="pcrTaskItemType"    column="pcr_task_item_type"    />
         <result property="sampleAmount"    column="sample_amount"    />
+        <result property="batchNo"    column="batch_no"    />
 
         <result property="sampleNo"    column="sample_no"    />
         <result property="itemName"    column="item_name"    />
@@ -28,6 +29,7 @@
         <result property="testMethod"    column="test_method"    />
         <result property="isReturn"    column="is_return"    />
         <result property="returnReason"    column="return_reason"    />
+        <result property="jhwNo"    column="jhw_no"    />
     </resultMap>
 
 
@@ -231,7 +233,6 @@
         </choose>
     </select>
     <select id="selectSampleReceiveListNotReceive" parameterType="com.gmlimsqi.business.labtest.dto.OpSampleReceiveDto" resultMap="OpSampleReceiveVo">
-
         select
         d.dept_name,
         '' as pcr_task_item_type,
@@ -239,8 +240,21 @@
         '1' as type,
         fo.entrust_order_no,
         COUNT(DISTINCT fos.op_feed_entrust_order_sample_id) AS sample_amount,
-        MAX(fos.test_method) as test_method,
-        GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ',') AS item_name,
+        /* 修正了原SQL中 test_method 缺少 SEPARATOR 关键字的语法瑕疵 */
+        GROUP_CONCAT(DISTINCT fos.test_method SEPARATOR ',') as test_method,
+
+        /* --- 修改开始 --- */
+        /* 使用 CONCAT_WS 自动处理逗号。如果存在 item_name，则用逗号连接；如果不存在，则直接显示 Dairyland */
+        CONCAT_WS(',',
+        GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ','),
+        CASE
+        /* 判断该订单下是否有任意一个样品的 test_method 为 1 */
+        WHEN SUM(IF(fos.test_method = '1', 1, 0)) > 0 THEN 'Dairyland近红外'
+        ELSE NULL
+        END
+        ) AS item_name,
+        /* --- 修改结束 --- */
+
         fo.remark,
         fo.requires_judgement,
         fo.allows_subcontracting,
@@ -257,7 +271,7 @@
         left join bs_labtest_items i on i.bs_labtest_items_id=fi.item_id and i.is_delete='0'
         left join sys_dept d on fo.entrust_dept_id=d.dept_id and d.del_flag='0'
         <where>
-            and fo.delete_id = '0' and fo.is_return = '0'  AND (fo.receiver_id IS NULL OR fo.receiver_id = '')
+            and fo.delete_id = '0' and fo.is_return = '0'  AND (fo.receiver_id IS NULL OR fo.receiver_id = '') and fo.status!='0'
             <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and fo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
             <if test="deptName != null "> and d.dept_name like concat('%', #{deptName}, '%')</if>
             <if test="sendSampleDateStart != null"> and fo.send_sample_date &gt;= #{sendSampleDateStart}</if>
@@ -272,13 +286,23 @@
         '' as pcr_task_item_type,
         fo.status,
         fo.entrust_order_no,
-
-        /* 修改部分：保留你刚才改的字段 */
         fos.sample_no,
         fos.name as sample_name,
         '1' as type,
         MAX(fos.test_method) as test_method,
-        GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ',') AS item_name,
+
+        /* --- 修改开始 --- */
+        /* 使用 CONCAT_WS，如果 test_method 是 '1'，追加 Dairyland近红外 */
+        CONCAT_WS(',',
+        GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ','),
+        CASE
+        /* 因为是按样品分组，直接判断当前样品的 test_method 即可 */
+        WHEN MAX(fos.test_method) = '1' THEN 'Dairyland近红外'
+        ELSE NULL
+        END
+        ) AS item_name,
+        /* --- 修改结束 --- */
+
         fo.remark,
         fo.requires_judgement,
         fo.allows_subcontracting,
@@ -310,6 +334,45 @@
         order by fo.send_sample_date desc,fo.create_time desc
     </select>
 
+    <select id="selectJhwSampleReceiveListIsReceive" parameterType="com.gmlimsqi.business.labtest.dto.OpSampleReceiveDto" resultMap="OpSampleReceiveVo">
+        select
+        d.dept_name,
+        '' as pcr_task_item_type,
+        fo.status,
+        fo.entrust_order_no,
+        fos.sample_no,
+        fos.name as sample_name,
+        '1' as type,
+        MAX(fos.test_method) as test_method,
+        fo.remark,
+        fo.requires_judgement,
+        fo.allows_subcontracting,
+        fo.report_receive_type,
+        fo.send_sample_date,
+        fo.receive_time,
+        fo.op_feed_entrust_order_id as op_entrust_order_id,
+        fo.create_time,
+        fo.is_return,
+        fos.jhw_no,
+        fo.return_reason,
+        fos.batch_no
+        from op_feed_entrust_order fo
+        left join op_feed_entrust_order_sample fos on fos.feed_entrust_order_id=fo.op_feed_entrust_order_id and fos.is_delete='0'
+        left join op_feed_entrust_order_item fi on fi.op_feed_entrust_order_sample_id =fos.op_feed_entrust_order_sample_id and fi.is_delete='0'
+        left join bs_labtest_items i on i.bs_labtest_items_id=fi.item_id and i.is_delete='0'
+        left join sys_dept d on fo.entrust_dept_id=d.dept_id and d.del_flag='0'
+        <where>
+            and fo.delete_id = '0' and fo.is_return = '0' AND fo.receiver_id IS NOT NULL AND fo.receiver_id != ''
+            and fos.test_method='1'
+            <if test="entrustOrderNo != null  and entrustOrderNo != ''"> and fo.entrust_order_no like concat('%', #{entrustOrderNo}, '%')</if>
+            <if test="deptName != null "> and d.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="sendSampleDateStart != null"> and fo.send_sample_date &gt;= #{sendSampleDateStart}</if>
+            <if test="sendSampleDateEnd != null"> and fo.send_sample_date &lt;= #{sendSampleDateEnd}</if>
+        </where>
+
+        order by fo.send_sample_date desc,fo.create_time desc
+    </select>
+
     <select id="selectSampleReceiveList2" parameterType="com.gmlimsqi.business.labtest.dto.OpSampleReceiveDto" resultMap="OpSampleReceiveVo">
         select * from (
         select
@@ -321,7 +384,15 @@
         '' as test_method,
         GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ',') AS item_name,
         '2' as type,
-        MAX(bos.remark) as remark,
+        -- 使用CONCAT_WS自动跳过NULL和空字符串
+        GROUP_CONCAT(DISTINCT
+        CASE
+        WHEN bos.remark IS NOT NULL AND TRIM(bos.remark) != ''
+        THEN bos.remark
+        ELSE NULL
+        END
+        SEPARATOR ','
+        ) AS remark,
         '' requires_judgement,
         '' allows_subcontracting,
         '' report_receive_type,
@@ -349,7 +420,7 @@
                         AND bo.receiver_id IS NOT NULL AND bo.receiver_id != ''
                     </when>
                     <when test="isReceive == 0">
-                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '')
+                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '') and bo.status!='0'
                     </when>
                 </choose>
             </if>
@@ -366,7 +437,15 @@
         '' as test_method,
         GROUP_CONCAT(DISTINCT i.item_name SEPARATOR ',') AS item_name,
         '4' as type,
-        MAX(bos.remark) as remark,
+        -- 使用CONCAT_WS自动跳过NULL和空字符串
+        GROUP_CONCAT(DISTINCT
+        CASE
+        WHEN bos.remark IS NOT NULL AND TRIM(bos.remark) != ''
+        THEN bos.remark
+        ELSE NULL
+        END
+        SEPARATOR ','
+        ) AS remark,
         '' requires_judgement,
         '' allows_subcontracting,
         '' report_receive_type,
@@ -394,7 +473,7 @@
                         AND bo.receiver_id IS NOT NULL AND bo.receiver_id != ''
                     </when>
                     <when test="isReceive == 0">
-                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '')
+                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '') and bo.status!='0'
                     </when>
                 </choose>
             </if>
@@ -411,7 +490,15 @@
         '' as test_method,
         GROUP_CONCAT(DISTINCT bo.biochemistry_item_type SEPARATOR ',') AS item_name,
         '5' as type,
-        MAX(bos.remark) as remark,
+        -- 使用CONCAT_WS自动跳过NULL和空字符串
+        GROUP_CONCAT(DISTINCT
+        CASE
+        WHEN bos.remark IS NOT NULL AND TRIM(bos.remark) != ''
+        THEN bos.remark
+        ELSE NULL
+        END
+        SEPARATOR ','
+        ) AS remark,
         '' requires_judgement,
         '' allows_subcontracting,
         '' report_receive_type,
@@ -437,7 +524,7 @@
                         AND bo.receiver_id IS NOT NULL AND bo.receiver_id != ''
                     </when>
                     <when test="isReceive == 0">
-                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '')
+                        AND (bo.receiver_id IS NULL OR bo.receiver_id = '') and bo.status!='0'
                     </when>
                 </choose>
             </if>
@@ -479,7 +566,7 @@
                         AND po.receiver_id IS NOT NULL AND po.receiver_id != ''
                     </when>
                     <when test="isReceive == 0">
-                        AND (po.receiver_id IS NULL OR po.receiver_id = '')
+                        AND (po.receiver_id IS NULL OR po.receiver_id = '') and po.status!='0'
                     </when>
                 </choose>
             </if>

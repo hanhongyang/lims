@@ -72,6 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sn" column="sn" />
         <result property="pdjg" column="pdjg" />
         <result property="mnh" column="mnh" />
+        <result property="reportStatus" column="report_status" />
     </resultMap>
     <!-- 委托单详情结果映射 -->
     <resultMap id="SampleModelMap" type="com.gmlimsqi.business.labtest.bo.OpJczxBloodTestModelBo">
@@ -407,10 +408,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             i.update_time, i.update_by, i.delete_id ,i.sp,i.gh,i.file_id,i.a_ypxj,i.a_test_result,i.o_ypxj,i.o_test_result,i.examine_note,b.examine_pass_flag,i.od,
             i.zaoyun_test_result,i.test_remark,i.sh_zdb,i.sh_bdb,i.sh_zg,i.sh_lzg,i.sh_mlz,i.sh_wjl,i.sh_nlz,i.sh_jlz,
             i.sh_llz,i.sh_tlz,i.sh_tielz,i.sh_xlz,i.sh_gysz,i.sh_qds,i.sh_fzhx,i.sh_ppt,i.sh_xynsd,i.sh_gczam,i.sh_gbzam,
-            i.sh_jxlsm,i.import_cow_no,i.sjph,i.o_sjph,i.a_sjph,i.dnh,i.bw,i.sn,i.pdjg,i.mnh
+            i.sh_jxlsm,i.import_cow_no,i.sjph,i.o_sjph,i.a_sjph,i.dnh,i.bw,i.sn,i.pdjg,i.mnh,report.status as report_status
         FROM
             op_jczx_blood_result_info i
                 LEFT JOIN op_jczx_blood_result_base b ON i.base_id = b.op_jczx_blood_result_base_id AND b.delete_id = '0'
+                LEFT JOIN op_blood_entrust_order_sample sample ON i.sample_no = sample.sample_no and sample.is_delete='0'
+                LEFT JOIN op_jczx_blood_report_base report
+                          ON sample.op_blood_entrust_order_id = report.blood_entrust_order_id
+                              AND report.delete_id = '0'
+                              AND report.status != '6'
         WHERE
             i.delete_id = '0'
           AND b.result_no=#{resultNo}
@@ -507,7 +513,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY CAST(i.sequence AS SIGNED) ASC
     </select>
 
-
+    <select id="selectDeletedSamplesByOrderId" parameterType="String" resultMap="OpBloodEntrustOrderSampleResult">
+        <include refid="selectOpBloodEntrustOrderSampleVo"/>
+        where op_blood_entrust_order_id = #{orderId}
+        and is_delete = '1'
+        order by sequence asc
+    </select>
 
     <select id="selectExamineBySampleNoList" parameterType="java.util.List" resultMap="OpBloodEntrustOrderSampleResult">
         select

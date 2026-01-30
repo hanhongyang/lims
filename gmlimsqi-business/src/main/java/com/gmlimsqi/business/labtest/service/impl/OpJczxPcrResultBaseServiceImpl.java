@@ -372,6 +372,11 @@ public class OpJczxPcrResultBaseServiceImpl implements IOpJczxPcrResultBaseServi
             info.setItemName("隐孢子虫");
             opJczxPcrResultInfoMapper.updateOpJczxPcrResultInfo(info);
         }
+        if (StringUtils.isNotEmpty(bo.getItem18()) && "产气荚膜梭菌".equals(info.getPcrEntrustOrderItemId())){
+            info.setTestResult(bo.getItem18());
+            info.setItemName("产气荚膜梭菌");
+            opJczxPcrResultInfoMapper.updateOpJczxPcrResultInfo(info);
+        }
         if (StringUtils.isNotEmpty(bo.getItem5()) && "肠毒素型细菌-大肠杆菌".equals(info.getPcrEntrustOrderItemId())){
             info.setTestResult(bo.getItem5());
             info.setItemName("肠毒素型细菌-大肠杆菌");
@@ -506,6 +511,19 @@ public class OpJczxPcrResultBaseServiceImpl implements IOpJczxPcrResultBaseServi
                 throw new RuntimeException("隐孢子虫项目不存在");
             }
             item.setItemName("隐孢子虫");
+            item.setItemId(itemId);
+            entrustOrderItemMapper.updateResultBySampleNo(item);
+        }
+        if (StringUtils.isNotEmpty(pcrResultImportBo.getItem18())){
+            info.setTestResult(pcrResultImportBo.getItem18());
+            info.setItemName("产气荚膜梭菌");
+            opJczxPcrResultInfoMapper.updateResultBySampleNoItemName(info);
+            item.setTestResult(pcrResultImportBo.getItem18());
+            String itemId = itemNameIdSet.get("产气荚膜梭菌");
+            if(StringUtils.isEmpty(itemId)){
+                throw new RuntimeException("产气荚膜梭菌项目不存在");
+            }
+            item.setItemName("产气荚膜梭菌");
             item.setItemId(itemId);
             entrustOrderItemMapper.updateResultBySampleNo(item);
         }

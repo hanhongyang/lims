@@ -49,6 +49,11 @@ public interface OpTestResultBaseMapper
     public int updateOpTestResultBase(OpTestResultBase opTestResultBase);
 
     /**
+     * 查询待审核的复检记录
+     */
+    public List<OpTestResultBase> selectRetestPendingList(OpTestResultBase opTestResultBase);
+
+    /**
      * 通过样品化验主键更新删除标志
      *
      * @param id 样品化验ID

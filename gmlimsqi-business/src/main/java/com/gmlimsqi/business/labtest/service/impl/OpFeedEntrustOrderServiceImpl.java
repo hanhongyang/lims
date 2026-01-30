@@ -11,6 +11,7 @@ import com.gmlimsqi.business.labtest.service.IOpSampleReceiveService;
 import com.gmlimsqi.business.util.CodeGeneratorUtil;
 import com.gmlimsqi.business.util.UserInfoProcessor;
 import com.gmlimsqi.common.annotation.DataScope;
+import com.gmlimsqi.common.core.domain.entity.SysUser;
 import com.gmlimsqi.common.enums.EntrustOrderStatusEnum;
 import com.gmlimsqi.common.enums.EntrustOrderTypeEnum;
 import com.gmlimsqi.common.enums.YesNo2Enum;
@@ -20,6 +21,7 @@ import com.gmlimsqi.common.utils.SecurityUtils;
 import com.gmlimsqi.common.utils.StringUtils;
 import com.gmlimsqi.common.utils.uuid.IdUtils;
 import com.gmlimsqi.system.service.ISysConfigService;
+import com.gmlimsqi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +57,8 @@ public class OpFeedEntrustOrderServiceImpl implements IOpFeedEntrustOrderService
     private CodeGeneratorUtil codeGeneratorUtil;
     @Autowired
     private IOpSampleReceiveService sampleReceiveService;
-
+    @Autowired
+    private ISysUserService sysUserService;
     @Autowired
     private BsWorkdayConfigMapper bsWorkdayConfigMapper;
 
@@ -89,39 +92,70 @@ public class OpFeedEntrustOrderServiceImpl implements IOpFeedEntrustOrderService
     @Override
     public OpFeedEntrustOrder selectOpFeedEntrustOrderByOpFeedEntrustOrderId(String opFeedEntrustOrderId)
     {
-
-        // 1. 查询主表和正常的样品/项目 (is_delete = 0)
+        // 1. 查询主表和正常的样品/项目
         OpFeedEntrustOrder order = opFeedEntrustOrderMapper.selectOrderDetailById(opFeedEntrustOrderId);
 
         if (order != null) {
-            // 2. 查询已删除样品
+            // 2. 查询所有“已删除”状态的样品
             List<OpFeedEntrustOrderSample> deletedSamples = opFeedEntrustOrderSampleMapper.selectDeletedSamplesByOrderId(opFeedEntrustOrderId);
+
+            // 【核心修改开始】：过滤掉非接收方删除的样品
+            if (deletedSamples != null && !deletedSamples.isEmpty()) {
+                // 获取检测中心（接收方）的部门ID
+                String jczxDeptIdStr = configService.selectConfigByKey("jczx.deptId");
+
+                // 使用迭代器安全删除元素
+                Iterator<OpFeedEntrustOrderSample> iterator = deletedSamples.iterator();
+                while (iterator.hasNext()) {
+                    OpFeedEntrustOrderSample sample = iterator.next();
+                    String deleteBy = sample.getUpdateBy(); // 获取执行删除的人
+
+                    // 如果没有删除人信息，默认不显示，直接移除
+                    if (StringUtils.isEmpty(deleteBy)) {
+                        iterator.remove();
+                        continue;
+                    }
+
+                    // 查询该用户的部门信息
+                    // 注意：为了性能，如果有大量删除数据，建议批量查询用户。但通常删除数据量很少，循环查问题不大。
+                    SysUser user = sysUserService.selectUserById(Long.valueOf(deleteBy));
+
+                    // 判断逻辑：
+                    // 如果查不到用户 OR 用户部门为空 OR 用户部门 != 检测中心部门ID
+                    // 则认为是委托方（非接收方）删除的，从列表中移除，不给看
+                    if (user == null || user.getDeptId() == null ||
+                            !String.valueOf(user.getDeptId()).equals(jczxDeptIdStr)) {
+                        iterator.remove();
+                    }
+                }
+            }
+            // 【核心修改结束】
+
+            // 设置过滤后的列表
             order.setDeletedSampleList(deletedSamples);
-            // 【核心修复】遍历已删除的样品，手动填充它们的检测项目 (即使项目也是 is_delete=1)
+
+            // 3. 填充已删除样品的检测项目（针对过滤后剩下的样品）
             if (deletedSamples != null && !deletedSamples.isEmpty()) {
                 for (OpFeedEntrustOrderSample delSample : deletedSamples) {
-                    // 你需要在 ItemMapper 增加一个方法：查指定样品下的所有项目(含已删除)
                     List<OpFeedEntrustOrderItem> delItems = opFeedEntrustOrderItemMapper.selectItemsBySampleIdIncludeDeleted(delSample.getOpFeedEntrustOrderSampleId());
-                    // 还需要把 Item 的名称查出来 (关联 bs_labtest_items)
                     delSample.setTestItem(delItems);
                 }
-                order.setDeletedSampleList(deletedSamples);
             }
-            // 3. 【新增】查询修改日志 (需要你在 Mapper 加这个方法，或者在这里循环查，建议 Mapper 加 selectLogsByBusinessIds)
-            // 这里为了演示，假设你有一个 changeLogMapper.selectLogsByOrderId(orderId)
-            // 或者收集所有 sampleId (包括 deletedSamples) 去查日志
+
+            // 4. 查询修改日志 (保持原有逻辑)
             List<String> allIds = new ArrayList<>();
-            allIds.add(order.getOpFeedEntrustOrderId()); // 订单ID
+            allIds.add(order.getOpFeedEntrustOrderId());
             if (order.getSampleList() != null) {
                 order.getSampleList().forEach(s -> allIds.add(s.getOpFeedEntrustOrderSampleId()));
             }
+            // 这里也只添加过滤后剩下的已删除样品ID查日志
             if (deletedSamples != null) {
                 deletedSamples.forEach(s -> allIds.add(s.getOpFeedEntrustOrderSampleId()));
             }
 
             if (!allIds.isEmpty()) {
                 List<OpFeedEntrustOrderChangeLog> logs = changeLogMapper.selectLogsByBusinessIds(allIds);
-                order.setChangeLogs(logs); // 记得在 OpFeedEntrustOrder 实体类加这个字段
+                order.setChangeLogs(logs);
             }
         }
         return order;
@@ -186,6 +220,12 @@ public class OpFeedEntrustOrderServiceImpl implements IOpFeedEntrustOrderService
         }
         // 自动填充创建/更新信息
         opFeedEntrustOrder.fillCreateInfo();
+        // 根据 isSubmit 决定初始状态
+        if (Boolean.TRUE.equals(opFeedEntrustOrder.getIsSubmit())) {
+            opFeedEntrustOrder.setStatus(EntrustOrderStatusEnum.DSL.getCode()); // 1
+        } else {
+            opFeedEntrustOrder.setStatus(EntrustOrderStatusEnum.DTJ.getCode()); // 0
+        }
         try {
             String orderNo = codeGeneratorUtil.generateFeedEntrustOrderNo();
             opFeedEntrustOrder.setEntrustOrderNo(orderNo);
@@ -242,6 +282,15 @@ public class OpFeedEntrustOrderServiceImpl implements IOpFeedEntrustOrderService
         if (oldFullOrder == null) {
             throw new RuntimeException("委托单不存在");
         }
+        // 如果是“提交/撤回”操作（isSubmit != null），则严格校验状态；
+        // 如果是“仅保存”操作（isSubmit == null，通常是接收方修改），则允许修改。
+        if (opFeedEntrustOrder.getIsSubmit() != null) {
+            // 如果试图改变状态（提交或存草稿），必须确保当前是 待提交(0) 或 已驳回(6)
+            if (!EntrustOrderStatusEnum.DTJ.getCode().equals(oldFullOrder.getStatus()) &&
+                    !EntrustOrderStatusEnum.YBH.getCode().equals(oldFullOrder.getStatus())) {
+                throw new RuntimeException("当前委托单已提交或受理，不允许修改状态，请先撤回");
+            }
+        }// else: 如果 isSubmit 为 null，说明是接收方或管理员在修改业务数据，不做状态拦截（
 
         // 将旧样品转为 Map，方便按 ID 快速查找 (Key: sampleId, Value: sample对象)
         Map<String, OpFeedEntrustOrderSample> oldSampleMap = new HashMap<>();
@@ -285,6 +334,31 @@ public class OpFeedEntrustOrderServiceImpl implements IOpFeedEntrustOrderService
                 oldFullOrder.getAllowsSubcontracting(), opFeedEntrustOrder.getAllowsSubcontracting(), logList, currentUsername);
         compareAndLog(orderId, "ORDER", "reportReceiveType", "报告领取方式",
                 oldFullOrder.getReportReceiveType(), opFeedEntrustOrder.getReportReceiveType(), logList, currentUsername);
+        // 如果是接收操作（isReceive=Y），计算本次操作删除的样品数量并记录
+        if (YesNo2Enum.YES.getCode().equals(opFeedEntrustOrder.getIsReceive())) {
+            long deleteCount = 0;
+            // 确保旧数据存在 (oldSampleMap 在方法开头已构建)
+            if (oldSampleMap != null && !oldSampleMap.isEmpty()) {
+                // 1. 获取前端本次提交的所有有效样品ID集合
+                Set<String> inputIds = new HashSet<>();
+                List<OpFeedEntrustOrderSample> inputSampleList = opFeedEntrustOrder.getSampleList();
+                if (inputSampleList != null) {
+                    inputSampleList.stream()
+                            .map(OpFeedEntrustOrderSample::getOpFeedEntrustOrderSampleId)
+                            .filter(StringUtils::isNotEmpty) // 过滤掉没有ID的新增样品
+                            .forEach(inputIds::add);
+                }
+
+                // 2. 遍历旧数据，如果在提交的ID集合中不存在，则视为本次被删除
+                for (String oldId : oldSampleMap.keySet()) {
+                    if (!inputIds.contains(oldId)) {
+                        deleteCount++;
+                    }
+                }
+            }
+            // 3. 设置删除数量字段 (注意类型转换，这里假设数据库是 int/Integer)
+            opFeedEntrustOrder.setScypsl((int)deleteCount);
+        }
         opFeedEntrustOrder.fillUpdateInfo();
         // 更新主表
         opFeedEntrustOrderMapper.updateOpFeedEntrustOrder(opFeedEntrustOrder);
@@ -373,21 +447,36 @@ public class OpFeedEntrustOrderServiceImpl implements IOpFeedEntrustOrderService
             changeLogMapper.insertBatch(logList);
         }
 
-        // 7. 其他原有逻辑
-        opFeedEntrustOrder.setIsReturn("0");
-        opFeedEntrustOrder.setStatus(EntrustOrderStatusEnum.DSL.getCode());
-
         // 注意：这里不需要再 updateOpFeedEntrustOrder 了，因为第3步已经更新过主表了
         // 如果你需要更新状态，可以单独写一个 updateStatus 或者复用
         // 为了保险起见，或者如果 updateOpFeedEntrustOrder 包含状态更新逻辑，可以再调用一次，或者手动更新状态对象
         // 建议：直接构建一个只更新状态的对象，避免覆盖上面的字段
         OpFeedEntrustOrder statusUpdater = new OpFeedEntrustOrder();
         statusUpdater.setOpFeedEntrustOrderId(orderId);
-        statusUpdater.setIsReturn("0");
-        statusUpdater.setStatus(EntrustOrderStatusEnum.DSL.getCode());
         statusUpdater.setUpdateBy(opFeedEntrustOrder.getUpdateBy());
         statusUpdater.setUpdateTime(new Date());
-        int count = opFeedEntrustOrderMapper.updateOpFeedEntrustOrder(statusUpdater);
+        boolean statusChanged = false;
+
+        // 只有当 isSubmit 明确不为 null 时，才进行状态流转
+        if (opFeedEntrustOrder.getIsSubmit() != null) {
+            if (Boolean.TRUE.equals(opFeedEntrustOrder.getIsSubmit())) {
+                // 动作：提交 -> 变更为 待受理(1)
+                statusUpdater.setStatus(EntrustOrderStatusEnum.DSL.getCode());
+                // 提交时重置退回状态
+                statusUpdater.setIsReturn("0");
+            } else {
+                // 动作：存草稿 -> 变更为 待提交(0)
+                statusUpdater.setStatus(EntrustOrderStatusEnum.DTJ.getCode());
+            }
+            statusChanged = true;
+        }
+        // 如果 isSubmit 为 null，则完全不设置 status 字段，MyBatis 会忽略该字段的更新，从而保持原状态（如检测中、已受理等）
+
+        // 如果状态有变更，执行更新
+        if (statusChanged) {
+             opFeedEntrustOrderMapper.updateOpFeedEntrustOrder(statusUpdater);
+        }
+
 
         List<String> newSampleIds = new ArrayList<>();
         List<String> orderIds = new ArrayList<>();
@@ -412,7 +501,7 @@ public class OpFeedEntrustOrderServiceImpl implements IOpFeedEntrustOrderService
             // 修改
             opFeedEntrustOrderMapper.updateExecutionPeriod(calculate.getExecutionPeriod(),calculate.getOpFeedEntrustOrderId());
         }
-        return count;
+        return 1;
     }
     // 简单的转字符串防空指针
     private String toString(Object obj) {
@@ -450,92 +539,106 @@ public class OpFeedEntrustOrderServiceImpl implements IOpFeedEntrustOrderService
         }
     }
 
-    /**
-     * 修改饲料样品委托单
-     * 
-     * @param opFeedEntrustOrder 饲料样品委托单
-     * @return 结果
-     */
+
     @Override
-    @Transactional
-    public int updateOpFeedEntrustOrder(OpFeedEntrustOrder opFeedEntrustOrder)
-    {
-        //如果状态不是待处理，则不允许修改
-        OpFeedEntrustOrder selectOrder = opFeedEntrustOrderMapper.selectOpFeedEntrustOrderByOpFeedEntrustOrderId(opFeedEntrustOrder.getOpFeedEntrustOrderId());
-        if(selectOrder==null){
-            throw new RuntimeException("委托单不存在");
-        }
-//        if(!EntrustOrderStatusEnum.DSL.getCode().equals(selectOrder.getStatus()) &&
-//                !EntrustOrderStatusEnum.YBH.getCode().equals(selectOrder.getStatus())){
-//            throw new RuntimeException("委托单已受理，不允许修改");
-//        }
+    public void withdrawOrder(String orderId) {
+        OpFeedEntrustOrder order = opFeedEntrustOrderMapper.selectOpFeedEntrustOrderByOpFeedEntrustOrderId(orderId);
+        if (order == null) throw new BusinessException("订单不存在");
 
-        // 自动填充更新信息
-        opFeedEntrustOrder.fillUpdateInfo();
-        //先删除再插入
-        feedEntrustOrderSampleMapper.updateDeleteByOrderId(opFeedEntrustOrder.getUpdateBy(), opFeedEntrustOrder.getOpFeedEntrustOrderId());
-        opFeedEntrustOrderItemMapper.updateDeleteByOrderId(opFeedEntrustOrder.getUpdateBy(),opFeedEntrustOrder.getOpFeedEntrustOrderId());
-        List<String> newSampleIds = new ArrayList<>();
-        if (opFeedEntrustOrder.getSampleList() != null && !opFeedEntrustOrder.getSampleList().isEmpty()) {
-            for (OpFeedEntrustOrderSample sample : opFeedEntrustOrder.getSampleList()) {
-                String oldSampleId = sample.getOpFeedEntrustOrderSampleId();
-                sample.setFeedEntrustOrderId(opFeedEntrustOrder.getOpFeedEntrustOrderId());
-                sample.setOpFeedEntrustOrderSampleId(IdUtils.simpleUUID());
-                sample.fillCreateInfo();
-                newSampleIds.add(sample.getOpFeedEntrustOrderSampleId());
-                feedEntrustOrderSampleMapper.insertOpFeedEntrustOrderSample(sample);
-                if (sample.getTestItem() != null && !sample.getTestItem().isEmpty()) {
-                    List<OpFeedEntrustOrderItem> itemList = new ArrayList<>();
-                    for (OpFeedEntrustOrderItem testItem : sample.getTestItem()) {
-                        String oldItemId = testItem.getOpFeedEntrustOrderItemId();
-                        OpFeedEntrustOrderItem item = new OpFeedEntrustOrderItem();
-                        item.setOpFeedEntrustOrderItemId(IdUtils.simpleUUID());
-                        item.setOpFeedEntrustOrderSampleId(sample.getOpFeedEntrustOrderSampleId());
-                        item.setItemId(testItem.getItemId());
-                        item.fillCreateInfo();
-                        itemList.add(item);
-                        updateBussinessTableItemId(oldItemId,item.getOpFeedEntrustOrderItemId());
-                    }
-                    if (!itemList.isEmpty()) {
-                        opFeedEntrustOrderItemMapper.insertBatch(itemList);
-                    }
-                }
-
-                //更新result_info表和report_info、op_jczx_feed_report_base表的id
-                String newSampleId = sample.getOpFeedEntrustOrderSampleId();
-
-                updateBussinessTableSampleId(oldSampleId,newSampleId);
-
-            }
+        // 只有 待受理(1) 的单子可以撤回 (如果已经检测中，就不允许撤回了)
+        if (!EntrustOrderStatusEnum.DSL.getCode().equals(order.getStatus())) {
+            throw new BusinessException("当前状态不允许撤回（仅待受理状态可撤回）");
         }
 
-        // 提交时修改为未退回状态
-        opFeedEntrustOrder.setIsReturn("0");
-        opFeedEntrustOrder.setStatus(EntrustOrderStatusEnum.DSL.getCode());
-        int count = opFeedEntrustOrderMapper.updateOpFeedEntrustOrder(opFeedEntrustOrder);
+        OpFeedEntrustOrder update = new OpFeedEntrustOrder();
+        update.setOpFeedEntrustOrderId(orderId);
+        update.setStatus(EntrustOrderStatusEnum.DTJ.getCode()); // 变回 0
+        update.setUpdateBy(SecurityUtils.getUserId().toString());
+        update.setUpdateTime(new Date());
 
-        //接收
-        if(YesNo2Enum.YES.getCode().equals(opFeedEntrustOrder.getIsReceive())){
-            OpSampleReceiveDto dto = new OpSampleReceiveDto();
-            dto.setType(EntrustOrderTypeEnum.FEED.getCode());
-            String[] sampleIds = newSampleIds.toArray(String[]::new);
-            dto.setSampleIds(sampleIds);
-            sampleReceiveService.add(dto);
-            //如果状态不是待处理，则不允许修改
-            OpFeedEntrustOrder calculate = opFeedEntrustOrderMapper.selectOpFeedEntrustOrderByOpFeedEntrustOrderId(opFeedEntrustOrder.getOpFeedEntrustOrderId());
-            // 计算执行期限
-            calculateExecutionPeriod(calculate, bsWorkdayConfigMapper);
-            // 修改
-            opFeedEntrustOrderMapper.updateExecutionPeriod(calculate.getExecutionPeriod(),calculate.getOpFeedEntrustOrderId());
-        }
-
-
-
-
-
-
-        return count;
+        opFeedEntrustOrderMapper.updateOpFeedEntrustOrder(update);
     }
+
+//    @Override
+//    @Transactional
+//    public int updateOpFeedEntrustOrder(OpFeedEntrustOrder opFeedEntrustOrder)
+//    {
+//        //如果状态不是待处理，则不允许修改
+//        OpFeedEntrustOrder selectOrder = opFeedEntrustOrderMapper.selectOpFeedEntrustOrderByOpFeedEntrustOrderId(opFeedEntrustOrder.getOpFeedEntrustOrderId());
+//        if(selectOrder==null){
+//            throw new RuntimeException("委托单不存在");
+//        }
+////        if(!EntrustOrderStatusEnum.DSL.getCode().equals(selectOrder.getStatus()) &&
+////                !EntrustOrderStatusEnum.YBH.getCode().equals(selectOrder.getStatus())){
+////            throw new RuntimeException("委托单已受理，不允许修改");
+////        }
+//
+//        // 自动填充更新信息
+//        opFeedEntrustOrder.fillUpdateInfo();
+//        //先删除再插入
+//        feedEntrustOrderSampleMapper.updateDeleteByOrderId(opFeedEntrustOrder.getUpdateBy(), opFeedEntrustOrder.getOpFeedEntrustOrderId());
+//        opFeedEntrustOrderItemMapper.updateDeleteByOrderId(opFeedEntrustOrder.getUpdateBy(),opFeedEntrustOrder.getOpFeedEntrustOrderId());
+//        List<String> newSampleIds = new ArrayList<>();
+//        if (opFeedEntrustOrder.getSampleList() != null && !opFeedEntrustOrder.getSampleList().isEmpty()) {
+//            for (OpFeedEntrustOrderSample sample : opFeedEntrustOrder.getSampleList()) {
+//                String oldSampleId = sample.getOpFeedEntrustOrderSampleId();
+//                sample.setFeedEntrustOrderId(opFeedEntrustOrder.getOpFeedEntrustOrderId());
+//                sample.setOpFeedEntrustOrderSampleId(IdUtils.simpleUUID());
+//                sample.fillCreateInfo();
+//                newSampleIds.add(sample.getOpFeedEntrustOrderSampleId());
+//                feedEntrustOrderSampleMapper.insertOpFeedEntrustOrderSample(sample);
+//                if (sample.getTestItem() != null && !sample.getTestItem().isEmpty()) {
+//                    List<OpFeedEntrustOrderItem> itemList = new ArrayList<>();
+//                    for (OpFeedEntrustOrderItem testItem : sample.getTestItem()) {
+//                        String oldItemId = testItem.getOpFeedEntrustOrderItemId();
+//                        OpFeedEntrustOrderItem item = new OpFeedEntrustOrderItem();
+//                        item.setOpFeedEntrustOrderItemId(IdUtils.simpleUUID());
+//                        item.setOpFeedEntrustOrderSampleId(sample.getOpFeedEntrustOrderSampleId());
+//                        item.setItemId(testItem.getItemId());
+//                        item.fillCreateInfo();
+//                        itemList.add(item);
+//                        updateBussinessTableItemId(oldItemId,item.getOpFeedEntrustOrderItemId());
+//                    }
+//                    if (!itemList.isEmpty()) {
+//                        opFeedEntrustOrderItemMapper.insertBatch(itemList);
+//                    }
+//                }
+//
+//                //更新result_info表和report_info、op_jczx_feed_report_base表的id
+//                String newSampleId = sample.getOpFeedEntrustOrderSampleId();
+//
+//                updateBussinessTableSampleId(oldSampleId,newSampleId);
+//
+//            }
+//        }
+//
+//        // 提交时修改为未退回状态
+//        opFeedEntrustOrder.setIsReturn("0");
+//        opFeedEntrustOrder.setStatus(EntrustOrderStatusEnum.DSL.getCode());
+//        int count = opFeedEntrustOrderMapper.updateOpFeedEntrustOrder(opFeedEntrustOrder);
+//
+//        //接收
+//        if(YesNo2Enum.YES.getCode().equals(opFeedEntrustOrder.getIsReceive())){
+//            OpSampleReceiveDto dto = new OpSampleReceiveDto();
+//            dto.setType(EntrustOrderTypeEnum.FEED.getCode());
+//            String[] sampleIds = newSampleIds.toArray(String[]::new);
+//            dto.setSampleIds(sampleIds);
+//            sampleReceiveService.add(dto);
+//            //如果状态不是待处理，则不允许修改
+//            OpFeedEntrustOrder calculate = opFeedEntrustOrderMapper.selectOpFeedEntrustOrderByOpFeedEntrustOrderId(opFeedEntrustOrder.getOpFeedEntrustOrderId());
+//            // 计算执行期限
+//            calculateExecutionPeriod(calculate, bsWorkdayConfigMapper);
+//            // 修改
+//            opFeedEntrustOrderMapper.updateExecutionPeriod(calculate.getExecutionPeriod(),calculate.getOpFeedEntrustOrderId());
+//        }
+//
+//
+//
+//
+//
+//
+//        return count;
+//    }
 
     private void updateBussinessTableSampleId(String oldSampleId, String newSampleId) {
         feedReportBaseMapper.updateSampleId(oldSampleId,newSampleId);

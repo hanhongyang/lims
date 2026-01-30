@@ -105,4 +105,17 @@ public class OpInspectionMilkTankersController extends BaseController {
     public AjaxResult pushMilkSource(@PathVariable("inspectionMilkTankersId") String inspectionMilkTankersId) {
         return toAjax(opInspectionMilkTankersService.pushMilkSource(inspectionMilkTankersId));
     }
+
+    /**
+     * 变更计划单
+     * @param opInspectionMilkTankers
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('inspectionMilk:tankers:change')")
+    @Log(title = "奶罐车检查", businessType = BusinessType.UPDATE)
+    @PutMapping("/changePlan")
+    public AjaxResult changePlan(@RequestBody OpInspectionMilkTankers opInspectionMilkTankers) {
+        return toAjax(opInspectionMilkTankersService.changePlan(opInspectionMilkTankers));
+    }
+
 }

@@ -276,4 +276,9 @@
         update op_feed_entrust_order_sample set is_delete=1 ,update_time=now(),update_by=#{updateBy}
         where sample_no = #{sampleNo}
     </update>
+
+<select id="selectBySampleNo" parameterType="String" resultMap="OpFeedEntrustOrderSampleResult">
+    <include refid="selectOpFeedEntrustOrderSampleVo"/>
+    WHERE sample_no =#{sampleNo} and is_delete='0'
+</select>
 </mapper>

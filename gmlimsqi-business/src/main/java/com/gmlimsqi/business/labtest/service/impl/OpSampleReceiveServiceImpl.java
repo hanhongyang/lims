@@ -89,6 +89,24 @@ public class OpSampleReceiveServiceImpl implements IOpSampleReceiveService {
         return opSampleReceiveVos;
     }
 
+
+    @Override
+    public List<OpSampleReceiveVo> selectJhwSampleReceiveList(OpSampleReceiveDto sampleReceiveDto) {
+        // 处理结束日期，设置为当天的23:59:59
+        if (sampleReceiveDto.getSendSampleDateEnd() != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sampleReceiveDto.getSendSampleDateEnd());
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            sampleReceiveDto.setSendSampleDateEnd(calendar.getTime());
+        }
+        List<OpSampleReceiveVo> opSampleReceiveVos = new ArrayList<>();
+        opSampleReceiveVos = sampleReceiceMapper.selectJhwSampleReceiveListIsReceive(sampleReceiveDto);
+
+        return opSampleReceiveVos;
+    }
+
     @Override
     public OpSampleReceiveDetailVo selectSampleReceiveByEntrustOrderNo(String type, String entrustOrderNo) {
 

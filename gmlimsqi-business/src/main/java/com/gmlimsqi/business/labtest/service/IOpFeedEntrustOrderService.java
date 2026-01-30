@@ -43,7 +43,7 @@ public interface IOpFeedEntrustOrderService
      * @param opFeedEntrustOrder 饲料样品委托单
      * @return 结果
      */
-    public int updateOpFeedEntrustOrder(OpFeedEntrustOrder opFeedEntrustOrder);
+   // public int updateOpFeedEntrustOrder(OpFeedEntrustOrder opFeedEntrustOrder);
 
     /**
      * 修改饲料样品委托单
@@ -56,6 +56,6 @@ public interface IOpFeedEntrustOrderService
      * 获取饲料样品委托单打印（化学法）详细信息
      */
     OpFeedEntrustOrder selectPrintOpFeedEntrustOrderByOpFeedEntrustOrderId(String opFeedEntrustOrderId);
-
+     void withdrawOrder(String orderId);
     List<OpFeedEntrustOrderSample> selectJhwItemList(List<String> sampleIdList);
 }

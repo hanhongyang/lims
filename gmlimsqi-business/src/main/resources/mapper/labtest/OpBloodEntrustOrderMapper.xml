@@ -37,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isReturn"    column="is_return"    />
         <result property="returnTime"    column="return_time"    />
         <result property="returnReason"    column="return_reason"    />
+        <result property="scypsl"    column="scypsl"    />
     </resultMap>
 
     <sql id="selectOpBloodEntrustOrderVo">
@@ -44,7 +45,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                entrust_contact_phone, entrust_contact_email, send_sample_date, send_sample_user_id, send_sample_user_name,
                total_sample_quantity, receiver, receiver_id, reject_reason, status, create_time, create_by, update_time,
                update_by, delete_id ,is_zaoyun,blood_task_item_type, examine_user,
-               examine_user_id, examine_time,biochemistry_item_type,receive_time,report_id,is_return,return_time,return_reason
+               examine_user_id, examine_time,biochemistry_item_type,receive_time,report_id,is_return,return_time,return_reason,
+               scypsl
         from op_blood_entrust_order
     </sql>
 
@@ -111,6 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isReturn != null">is_return,</if>
             <if test="returnTime != null">return_time,</if>
             <if test="returnReason != null">return_reason,</if>
+            <if test="scypsl != null">scypsl,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="opBloodEntrustOrderId != null">#{opBloodEntrustOrderId},</if>
@@ -139,6 +142,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isReturn != null">#{isReturn},</if>
             <if test="returnTime != null">#{returnTime},</if>
             <if test="returnReason != null">#{returnReason},</if>
+            <if test="scypsl != null">#{scypsl},</if>
          </trim>
     </insert>
 
@@ -173,6 +177,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isReturn != null">is_return = #{isReturn},</if>
             <if test="returnTime != null">return_time = #{returnTime},</if>
             <if test="returnReason != null">return_reason = #{returnReason},</if>
+            <if test="scypsl != null">scypsl = #{scypsl},</if>
         </trim>
         where op_blood_entrust_order_id = #{opBloodEntrustOrderId}
     </update>

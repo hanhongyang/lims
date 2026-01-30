@@ -12,6 +12,7 @@ import com.gmlimsqi.business.labtest.mapper.OpFeedEntrustOrderMapper;
 import com.gmlimsqi.business.labtest.mapper.OpFeedEntrustOrderSampleMapper;
 import com.gmlimsqi.business.labtest.mapper.OpJczxFeedReportBaseMapper;
 import com.gmlimsqi.business.labtest.service.IOpJczxFeedReportBaseService;
+import com.gmlimsqi.business.labtest.service.IOpJczxFeedResultBaseService;
 import com.gmlimsqi.business.labtest.vo.*;
 import com.gmlimsqi.business.util.CodeGeneratorUtil;
 import com.gmlimsqi.business.util.FileConvertUtils;
@@ -69,7 +70,8 @@ public class OpJczxFeedReportBaseServiceImpl implements IOpJczxFeedReportBaseSer
     IBsWorkdayConfigService bsWorkdayConfigService;
     @Autowired
     private BsContactMapper bsContactMapper;
-
+    @Autowired
+    private IOpJczxFeedResultBaseService feedResultBaseService;
     @Value("${ruoyi.profile}")
     private String profile;
 
@@ -1006,6 +1008,12 @@ public class OpJczxFeedReportBaseServiceImpl implements IOpJczxFeedReportBaseSer
             OpJczxFeedReportBase base = opJczxFeedReportBaseMapper.selectOpJczxFeedReportBaseByOpJczxFeedReportBaseId(opJczxFeedReportBaseId);
 
             opFeedEntrustOrderSampleMapper.updateReturnReason(opReportBase.getReturnReason(),base.getSampleNo());
+
+        }
+        //通过后，回填牧场化验单
+        if(JczxFeedReportStatusEnum.YPZ.getCode().equals(opReportBase.getStatus())){
+            OpFeedEntrustOrderSample sample = opFeedEntrustOrderSampleMapper.selectOpFeedEntrustOrderSampleByOpFeedEntrustOrderSampleId(opReportBase.getFeedEntrustOrderSampleId());
+            feedResultBaseService.addRanchResult(sample.getSampleNo(),opJczxFeedReportBaseId);
         }
         opReportBase.setIssuanceTime(DateUtils.getNowDate());
         return opJczxFeedReportBaseMapper.updateOpJczxFeedReportBase(opReportBase);

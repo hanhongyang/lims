@@ -24,7 +24,7 @@ public interface OpBloodEntrustOrderSampleMapper
      * @return 血样样品委托-样品对应
      */
     public OpBloodEntrustOrderSample selectOpBloodEntrustOrderSampleByOpBloodEntrustOrderId(String opBloodEntrustOrderId);
-
+    List<OpBloodEntrustOrderSample> selectDeletedSamplesByOrderId(String orderId);
     /**
      * 查询血样样品委托-样品对应列表
      * 

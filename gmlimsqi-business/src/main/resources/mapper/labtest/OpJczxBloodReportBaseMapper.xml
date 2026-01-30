@@ -157,7 +157,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectOpJczxBloodReportBaseByOpJczxBloodReportBaseId" parameterType="String" resultMap="OpJczxBloodReportBaseResult">
         <include refid="selectOpJczxBloodReportBaseVo"/>
-        where op_jczx_blood_report_base_id = #{opJczxBloodReportBaseId}
+        where op_jczx_blood_report_base_id = #{opJczxBloodReportBaseId} and r.delete_id='0'
     </select>
 
     <insert id="insertOpJczxBloodReportBase" parameterType="OpJczxBloodReportBase">
@@ -361,9 +361,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by o.receive_time desc
     </select>
 
-    <select id="selectReportBaseByOrderId" parameterType="OpJczxBloodReportBase" resultMap="OpJczxBloodReportBaseResult">
+    <select id="selectReportBaseByOrderIdLimit1" parameterType="OpJczxBloodReportBase" resultMap="OpJczxBloodReportBaseResult">
         <include refid="selectOpJczxBloodReportBaseVo"/>
         WHERE r.blood_entrust_order_id = #{bloodEntrustOrderId} and r.delete_id = '0'
+        order by create_time desc
+        limit 1
     </select>
 
     <select id="getStatus0Count" resultType="int">

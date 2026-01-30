@@ -61,5 +61,17 @@ public interface IOpSampleUnqualityService
      */
     int updateOpSampleUnqualityByDiBang(List<String> opSampleUnqualityIds);
 
-    int updateOpSampleUnqualityManually(String opSampleUnqualityId);
+    /**
+     * 手动修改样品不合格处理单
+     * @param opSampleUnquality
+     * @return
+     */
+    int updateOpSampleUnqualityManually(OpSampleUnquality opSampleUnquality);
+
+    /**
+     * 根据来源id删除样品不合格处理单
+     * @param sourceId 来源id
+     * @return 结果
+     */
+    int deleteOpSampleUnqualityBySourceId(String sourceId);
 }

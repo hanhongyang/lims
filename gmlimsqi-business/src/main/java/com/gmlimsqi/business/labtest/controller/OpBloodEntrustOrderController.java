@@ -132,7 +132,16 @@ public class OpBloodEntrustOrderController extends BaseController
             throw new RuntimeException("下载导入模板失败");
         }
     }
-
+    /**
+     * 撤回委托单（将待受理状态变回待提交）
+     */
+    @Log(title = "饲料样品委托单", businessType = BusinessType.UPDATE)
+    @GetMapping("/withdraw/{opBloodEntrustOrderId}")
+    public AjaxResult withdraw(@PathVariable("opBloodEntrustOrderId") String opBloodEntrustOrderId)
+    {
+        opBloodEntrustOrderService.withdrawOrder(opBloodEntrustOrderId);
+        return success();
+    }
     /**
      * 检查牛号是否重复（只检查当前列表内）
      * @param sampleList 样本列表

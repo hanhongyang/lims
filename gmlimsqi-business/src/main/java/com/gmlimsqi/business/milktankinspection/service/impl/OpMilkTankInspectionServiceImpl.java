@@ -3,8 +3,6 @@ package com.gmlimsqi.business.milktankinspection.service.impl;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.gmlimsqi.business.inspectionmilktankers.domain.OpInspectionMilkTankers;
-import com.gmlimsqi.business.milkfillingorder.domain.OpMilkFillingOrder;
 import com.gmlimsqi.business.milktankinspection.domain.OpMilkTankInspection;
 import com.gmlimsqi.business.milktankinspection.mapper.OpMilkTankInspectionMapper;
 import com.gmlimsqi.business.milktankinspection.service.IOpMilkTankInspectionService;
@@ -15,12 +13,12 @@ import com.gmlimsqi.common.utils.uuid.IdUtils;
 import com.gmlimsqi.business.util.UserCacheService;
 import com.gmlimsqi.common.utils.SecurityUtils;
 import com.gmlimsqi.common.core.domain.model.LoginUser;
-import com.gmlimsqi.common.annotation.DataScope;
 import com.gmlimsqi.system.domain.SysUploadFile;
 import com.gmlimsqi.system.mapper.SysUploadFileMapper;
 import com.gmlimsqi.system.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 奶罐车质检Service业务层处理
@@ -139,6 +137,7 @@ public class OpMilkTankInspectionServiceImpl implements IOpMilkTankInspectionSer
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateOpMilkTankInspection(OpMilkTankInspection opMilkTankInspection)
     {
         OpMilkTankInspection old = opMilkTankInspectionMapper.
@@ -154,37 +153,37 @@ public class OpMilkTankInspectionServiceImpl implements IOpMilkTankInspectionSer
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int audit(String opMilkTankInspectionId) {
-        // 检查单是否存在
-        OpMilkTankInspection opMilkTankInspection = selectOpMilkTankInspectionByOpMilkTankInspectionId(opMilkTankInspectionId);
-        if (opMilkTankInspection == null) {
+
+        OpMilkTankInspection old = selectOpMilkTankInspectionByOpMilkTankInspectionId(opMilkTankInspectionId);
+        if (old == null) {
             throw new IllegalArgumentException("奶罐车质检单不存在");
         }
-
-        // 检查单是否已审核
-        if ("1".equals(opMilkTankInspection.getStatus())){
+        if ("1".equals(old.getStatus())) {
             throw new IllegalArgumentException("已审核的奶罐车质检单不能重复审核");
         }
 
-        // 更新检查单状态为已审核
-        opMilkTankInspection.setStatus("1");
-        // 自动填充更新信息
-        opMilkTankInspection.fillUpdateInfo();
-        // 从登录用户获取审核人信息
+        // 拷贝一份 new（避免直接改 old，导致对比不出来差异）
+        OpMilkTankInspection newDO = new OpMilkTankInspection();
+        // 方式1：手动复制主键（建议你用 BeanUtils.copyProperties）
+        org.springframework.beans.BeanUtils.copyProperties(old, newDO);
+
+        // ======= 设置审核信息 =======
+        newDO.setStatus("1");
+        newDO.fillUpdateInfo();
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        if (StringUtils.isNotNull(loginUser)){
-            opMilkTankInspection.setReviewerId(loginUser.getUserId().toString());
+        if (StringUtils.isNotNull(loginUser)) {
+            newDO.setReviewerId(loginUser.getUserId().toString());
         }
-
-        // 从用户表获取审核人名称
-        SysUser sysUser = sysUserMapper.selectUserById(Long.parseLong(opMilkTankInspection.getReviewerId()));
-        if (StringUtils.isNotNull(sysUser)){
-            opMilkTankInspection.setReviewer(sysUser.getNickName());
+        SysUser sysUser = sysUserMapper.selectUserById(Long.parseLong(newDO.getReviewerId()));
+        if (StringUtils.isNotNull(sysUser)) {
+            newDO.setReviewer(sysUser.getNickName());
         }
+        newDO.setReviewTime(new Date());
 
-        opMilkTankInspection.setReviewTime(new Date());
-
-        return opMilkTankInspectionMapper.updateOpMilkTankInspection(opMilkTankInspection);
+        // 入库更新
+        return opMilkTankInspectionMapper.updateOpMilkTankInspection(newDO);
     }
 
 }

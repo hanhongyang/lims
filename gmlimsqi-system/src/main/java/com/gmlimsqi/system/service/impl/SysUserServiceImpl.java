@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
 
+import com.gmlimsqi.common.utils.DateUtils;
 import com.gmlimsqi.system.domain.*;
 import com.gmlimsqi.system.mapper.*;
 import com.gmlimsqi.system.service.ISysUploadFileService;
@@ -265,6 +266,8 @@ public class SysUserServiceImpl implements ISysUserService
         insertUserPost(user);
         // 新增用户与角色管理
         insertUserRole(user);
+        // 新增用户时，设置密码修改时间为当前
+        user.setPwdUpdateDate(DateUtils.getNowDate());
         return rows;
     }
 

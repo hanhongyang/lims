@@ -75,6 +75,7 @@ public interface OpJczxFeedResultInfoMapper
     List<OpJczxFeedResultInfo> getResultBySampleNo(OpJczxFeedResultBaseDto dto);
 
     List<OpJczxFeedResultInfo> getResultBySampleNo2(@Param("sampleNo") String  sampleNo);
+    List<OpJczxFeedResultInfo> getResultBySampleNo3(@Param("sampleNo") String  sampleNo);
 
     void updateItemId(@Param("oldItemId")String oldItemId,@Param("newItemId") String newItemId);
 

@@ -119,4 +119,9 @@ public class SysDept extends BaseEntity {
      * 邮箱授权码
      */
     private String emailAuthorizationCode;
+
+    /**
+     * 牧场简码
+     */
+    private String pastureCode;
 }

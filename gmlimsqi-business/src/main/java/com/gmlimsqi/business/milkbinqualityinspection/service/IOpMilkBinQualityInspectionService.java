@@ -42,7 +42,7 @@ public interface IOpMilkBinQualityInspectionService
      * @param opMilkBinQualityInspection 奶仓质检单
      * @return 结果
      */
-    public int updateOpMilkBinQualityInspection(OpMilkBinQualityInspection opMilkBinQualityInspection);
+    public String updateOpMilkBinQualityInspection(OpMilkBinQualityInspection opMilkBinQualityInspection);
 
     /**
      * 审核奶仓质检单

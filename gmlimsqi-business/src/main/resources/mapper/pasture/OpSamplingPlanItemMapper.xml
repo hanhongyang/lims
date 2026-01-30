@@ -26,6 +26,7 @@
         <result property="bsInvbillItemStandardId" column="bs_invbill_item_standard_id"/>
         <result property="testStatus" column="test_status"/>
         <result property="checkResult" column="check_result"/>
+        <result property="unitOfMeasurement" column="unit_of_measurement"/>
     </resultMap>
 
     <sql id="selectOpSamplingPlanItemVo">
@@ -48,7 +49,8 @@
                feature_name,
                reference_range,
                feature_id,
-               bs_invbill_item_standard_id
+               bs_invbill_item_standard_id,
+               unit_of_measurement
         from op_sampling_plan_item
     </sql>
 
@@ -160,6 +162,9 @@
             <if test="bsInvbillItemStandardId != null">
                 bs_invbill_item_standard_id,
             </if>
+            <if test="unitOfMeasurement != null">
+                unit_of_measurement,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="opSamplingPlanItemId != null">
@@ -222,6 +227,9 @@
             <if test="bsInvbillItemStandardId != null">
                 #{bsInvbillItemStandardId},
             </if>
+            <if test="unitOfMeasurement != null">
+                #{unitOfMeasurement},
+            </if>
         </trim>
     </insert>
 
@@ -279,6 +287,9 @@
             <if test="bsInvbillItemStandardId != null">
                 bs_invbill_item_standard_id = #{bsInvbillItemStandardId},
             </if>
+            <if test="unitOfMeasurement != null">
+                unit_of_measurement = #{unitOfMeasurement},
+            </if>
         </trim>
         where op_sampling_plan_item_id = #{opSamplingPlanItemId}
     </update>
@@ -333,7 +344,8 @@
         feature_name,
         reference_range,
         feature_id,
-        bs_invbill_item_standard_id
+        bs_invbill_item_standard_id,
+        unit_of_measurement
         ) VALUES
         <foreach collection="list" item="item" separator=",">
             (
@@ -356,7 +368,8 @@
             #{item.featureName},
             #{item.referenceRange},
             #{item.featureId},
-            #{item.bsInvbillItemStandardId}
+            #{item.bsInvbillItemStandardId},
+            #{item.unitOfMeasurement}
             )
         </foreach>
     </insert>
@@ -407,6 +420,7 @@
             i.reference_range,
             i.feature_id,
             i.bs_invbill_item_standard_id,
+            i.unit_of_measurement,
             tri.check_result,
             trb.status as test_status
         FROM op_sampling_plan_item i

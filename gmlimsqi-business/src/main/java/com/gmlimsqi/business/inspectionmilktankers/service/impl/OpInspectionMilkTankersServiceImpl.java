@@ -9,11 +9,13 @@ import com.gmlimsqi.business.inspectionmilktankers.domain.OpInspectionMilkTanker
 import com.gmlimsqi.business.inspectionmilktankers.mapper.OpInspectionMilkTankersMapper;
 import com.gmlimsqi.business.inspectionmilktankers.service.IOpInspectionMilkTankersService;
 import com.gmlimsqi.business.leadsealsheet.domain.OpLeadSealSheet;
+import com.gmlimsqi.business.leadsealsheet.mapper.OpLeadSealSheetMapper;
 import com.gmlimsqi.business.leadsealsheet.service.IOpLeadSealSheetService;
 import com.gmlimsqi.business.milkfillingorder.domain.OpMilkFillingOrder;
 import com.gmlimsqi.business.milkfillingorder.mapper.OpMilkFillingOrderMapper;
 import com.gmlimsqi.business.milkfillingorder.service.IOpMilkFillingOrderService;
 import com.gmlimsqi.business.milksamplequalityinspection.domain.OpMilkSampleQualityInspection;
+import com.gmlimsqi.business.milksamplequalityinspection.mapper.OpMilkSampleQualityInspectionMapper;
 import com.gmlimsqi.business.milksamplequalityinspection.service.IOpMilkSampleQualityInspectionService;
 import com.gmlimsqi.business.rmts.entity.dto.PhotoSyncDTO;
 import com.gmlimsqi.business.rmts.service.RmtsRanchLimsService;
@@ -33,6 +35,7 @@ import com.gmlimsqi.system.domain.SysUploadFile;
 import com.gmlimsqi.system.mapper.SysDeptMapper;
 import com.gmlimsqi.system.mapper.SysUploadFileMapper;
 import com.gmlimsqi.system.mapper.SysUserMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +47,7 @@ import static com.gmlimsqi.business.util.CodeGeneratorUtil.CODE_TYPE_INSPECTION_
  * * @author hhy
  * @date 2025-11-10
  */
+@Slf4j
 @Service
 public class OpInspectionMilkTankersServiceImpl implements IOpInspectionMilkTankersService
 {
@@ -69,7 +73,13 @@ public class OpInspectionMilkTankersServiceImpl implements IOpInspectionMilkTank
     private IOpLeadSealSheetService opLeadSealSheetService;
 
     @Autowired
+    private OpLeadSealSheetMapper opLeadSealSheetMapper;
+
+    @Autowired
     private IOpMilkSampleQualityInspectionService opMilkSampleQualityInspectionService;
+
+    @Autowired
+    private OpMilkSampleQualityInspectionMapper opMilkSampleQualityInspectionMapper;
 
     @Autowired
     private SysUploadFileMapper sysUploadFileMapper;
@@ -180,6 +190,7 @@ public class OpInspectionMilkTankersServiceImpl implements IOpInspectionMilkTank
         opMilkSampleQualityInspection.setLicensePlateNumber(opInspectionMilkTankers.getLicensePlateNumber());
         opMilkSampleQualityInspection.setOpMilkFillingOrderId(opMilkFillingOrderId);
         opMilkSampleQualityInspection.setDeptId(deptId.toString());
+        opMilkSampleQualityInspection.setEntryTime(opInspectionMilkTankers.getEntryTime());
         opMilkSampleQualityInspectionService.insertOpMilkSampleQualityInspection(opMilkSampleQualityInspection);
 
         // 新增时默认设置删除标志为 '0'
@@ -282,9 +293,13 @@ public class OpInspectionMilkTankersServiceImpl implements IOpInspectionMilkTank
         // 更新装奶单
         opMilkFillingOrderMapper.updateOpMilkFillingOrder(opMilkFillingOrder);
 
-        this.pushMilkSource(inspectionMilkTankersId);
+        int i = opInspectionMilkTankersMapper.updateOpInspectionMilkTankers(inspectionMilkTankers);
 
-        return opInspectionMilkTankersMapper.updateOpInspectionMilkTankers(inspectionMilkTankers);
+        int i1 = this.pushMilkSource(inspectionMilkTankersId);
+
+        System.out.println("修改奶罐车检查状态为1，推送奶源状态为1" + i1);
+
+        return i;
     }
 
     @Override
@@ -346,9 +361,76 @@ public class OpInspectionMilkTankersServiceImpl implements IOpInspectionMilkTank
 
         R r = rmtsRanchLimsService.photoSync(photoSyncDTO);
         if (r.getCode() == 200){
+            System.out.println("修改奶罐车检查推送奶源状态为1");
             inspectionMilkTankers.setIsPushMilkSource("1");
         }
         // ---------------------------推送奶源逻辑结束
         return opInspectionMilkTankersMapper.updateOpInspectionMilkTankers(inspectionMilkTankers);
+    }
+
+    @Override
+    @Transactional
+    public int changePlan(OpInspectionMilkTankers opInspectionMilkTankers) {
+        // 变更奶罐车检查，装奶单，奶样质检，铅封单计划
+        if (StringUtils.isEmpty(opInspectionMilkTankers.getMilkSourcePlanOrderNumber())) {
+            throw new IllegalArgumentException("请选择计划单号");
+        }
+
+        // 根据奶罐车id查询装奶单
+        OpMilkFillingOrder opMilkFillingOrder = opMilkFillingOrderMapper.selectOpMilkFillingOrderByMilkTankersId(opInspectionMilkTankers.getInspectionMilkTankersId());
+        if (opMilkFillingOrder == null) {
+            throw new IllegalArgumentException("审核检查单失败，未找到对应的装奶单");
+        }
+
+        opInspectionMilkTankers.setIsPushMilkSource("0");
+        opInspectionMilkTankers.setOrderNumber(opInspectionMilkTankers.getInspectionMilkTankersNumber());
+
+        // 更新装奶单计划
+        opMilkFillingOrder.setMilkSourcePlanOrderNumber(opInspectionMilkTankers.getMilkSourcePlanOrderNumber());
+        opMilkFillingOrder.setLicensePlateNumber(opInspectionMilkTankers.getLicensePlateNumber());
+        opMilkFillingOrder.setIsPushMilkSource("0");
+        opMilkFillingOrderMapper.updateOpMilkFillingOrder(opMilkFillingOrder);
+
+        // 根据奶罐车id查询铅封单
+        OpLeadSealSheet opLeadSealSheet = opLeadSealSheetMapper.selectOpLeadSealSheetByMilkTankersId(opInspectionMilkTankers.getInspectionMilkTankersId());
+        if (opLeadSealSheet == null) {
+            throw new IllegalArgumentException("审核检查单失败，未找到对应的铅封单");
+        }
+
+        // 更新铅封单计划
+        opLeadSealSheet.setMilkSourcePlanOrderNumber(opInspectionMilkTankers.getMilkSourcePlanOrderNumber());
+        opLeadSealSheet.setLicensePlateNumber(opInspectionMilkTankers.getLicensePlateNumber());
+        opLeadSealSheet.setIsPushMilkSource("0");
+        opLeadSealSheetMapper.updateOpLeadSealSheet(opLeadSealSheet);
+
+        // 根据奶罐车id查询奶样质检单
+        OpMilkSampleQualityInspection opMilkSampleQualityInspection = opMilkSampleQualityInspectionMapper.selectOpMilkSampleQualityInspectionByInspectionMilkTankersId(opInspectionMilkTankers.getInspectionMilkTankersId());
+        if (opMilkSampleQualityInspection == null) {
+            throw new IllegalArgumentException("审核检查单失败，未找到对应的奶样质检单");
+        }
+
+        // 更新奶样质检单计划
+        opMilkSampleQualityInspection.setMilkSourcePlanOrderNumber(opInspectionMilkTankers.getMilkSourcePlanOrderNumber());
+        opMilkSampleQualityInspection.setLicensePlateNumber(opInspectionMilkTankers.getLicensePlateNumber());
+        opMilkSampleQualityInspection.setIsPushMilkSource("0");
+        opMilkSampleQualityInspectionMapper.updateOpMilkSampleQualityInspection(opMilkSampleQualityInspection);
+
+        int i = opInspectionMilkTankersMapper.updateOpInspectionMilkTankers(opInspectionMilkTankers);
+
+        try{
+            // 重新推送奶源系统-奶罐车检查
+            this.pushMilkSource(opInspectionMilkTankers.getInspectionMilkTankersId());
+            // 重新推送奶源系统-装奶单
+            opMilkFillingOrderService.pushMilkSource(opMilkFillingOrder.getOpMilkFillingOrderId());
+            // 重新推送奶源系统-铅封单
+            opLeadSealSheetService.pushMilkSource(opLeadSealSheet.getOpLeadSealSheetId());
+            // 重新推送奶源系统-奶样质检单
+            opMilkSampleQualityInspectionService.pushMilkSource(opMilkSampleQualityInspection.getOpMilkSampleQualityInspectionId());
+        }catch (Exception e){
+            log.error("变更奶罐车计划失败，异常信息：{}", e.getMessage());
+        }
+
+        // 更新奶罐车计划
+        return i;
     }
 }

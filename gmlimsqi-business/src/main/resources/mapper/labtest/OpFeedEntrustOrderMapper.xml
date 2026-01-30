@@ -241,7 +241,8 @@
             u.nick_name as receiver_name,
             s.report_id,
             i.op_feed_entrust_order_item_id,
-            s.material_sample_no
+            s.material_sample_no,
+            s.jhw_no
         FROM op_feed_entrust_order o
                  LEFT JOIN op_feed_entrust_order_sample s ON o.op_feed_entrust_order_id = s.feed_entrust_order_id AND s.is_delete = '0'
                 left join business_invbill ib on s.invbill_code=ib.sap_code and ib.del_flag='0'
@@ -316,6 +317,7 @@
             <result property="producerUnit"    column="producer_unit"    />
             <result property="sampleRemark"    column="sample_remark"    />
             <result property="materialSampleNo"    column="material_sample_no"    />
+            <result property="jhwNo"    column="jhw_no"    />
             <collection property="testItem" ofType="com.gmlimsqi.business.labtest.domain.OpFeedEntrustOrderItem">
                 <result property="opFeedEntrustOrderItemId" column="op_feed_entrust_order_item_id"/>
                 <result property="itemId" column="item_id"/>
@@ -395,4 +397,9 @@
           AND old_item.item_id = #{dictItemId}
           AND r.delete_id = '0'
     </update>
+    <select id="selectOrderBySampleNo" parameterType="String" resultMap="OpFeedEntrustOrderResult">
+        select o.* from op_feed_entrust_order o
+                            inner join op_feed_entrust_order_sample s on s.feed_entrust_order_id=o.op_feed_entrust_order_id and s.is_delete='0'
+        where s.sample_no =#{sampleNo} and o.delete_id='0'
+    </select>
 </mapper>

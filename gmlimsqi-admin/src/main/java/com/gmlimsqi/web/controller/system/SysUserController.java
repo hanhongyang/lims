@@ -1,9 +1,11 @@
 package com.gmlimsqi.web.controller.system;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gmlimsqi.common.core.domain.model.LoginUser;
 import com.gmlimsqi.framework.web.service.SysPasswordService;
 import com.gmlimsqi.system.domain.SysUserSign;
 import org.apache.commons.lang3.ArrayUtils;
@@ -204,7 +206,17 @@ public class SysUserController extends BaseController
 
         // 1. 从 user 对象中获取【明文】密码
         String newPassword = user.getPassword();
+        SysUser sysUser = userService.selectUserById(user.getUserId());
+        String userName = sysUser.getUserName();
+        // 检查是否包含用户名
+        if (newPassword.toLowerCase().contains(userName.toLowerCase())) {
+            return error("密码不能包含用户名");
+        }
 
+        // 检查是否包含手机号
+        if (StringUtils.isNotEmpty(sysUser.getPhonenumber()) && newPassword.contains(sysUser.getPhonenumber())) {
+            return error("密码不能包含手机号码");
+        }
         // 在加密前，校验这个明文密码的复杂度
         passwordService.validateNewPassword(newPassword);
 

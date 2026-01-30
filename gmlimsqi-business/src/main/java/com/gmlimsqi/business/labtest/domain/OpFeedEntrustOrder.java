@@ -22,11 +22,16 @@ public class OpFeedEntrustOrder extends BaseEntity implements BaseEntity.CreateA
 
     /** id */
     private String opFeedEntrustOrderId;
-
+    /** * 前端传参：是否提交
+     * true: 保存并提交 (状态变待受理)
+     * false/null: 仅保存 (状态变待提交)
+     */
+    private Boolean isSubmit;
     /** 送检单号 */
     @Excel(name = "送检单号")
     private String entrustOrderNo;
-
+    //删除样品数量
+    private Integer scypsl;
     /** 委托单位id */
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long entrustDeptId;

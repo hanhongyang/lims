@@ -14,6 +14,7 @@
             <result property="milkSourcePlanOrderNumber" column="a_milk_source_plan_order_number"/>
             <result property="licensePlateNumber" column="a_license_plate_number"/>
             <result property="entryTime" column="a_entry_time"/>
+            <result property="isPushMilkSource" column="a_is_push_milk_source"/>
         </association>
         <association property="opMilkFillingOrder" javaType="com.gmlimsqi.business.milkfillingorder.domain.OpMilkFillingOrder">
             <id property="opMilkFillingOrderId" column="b_op_milk_filling_order_id"/>
@@ -25,6 +26,7 @@
             <result property="cweightno" column="b_cweightno"/>
             <result property="isAssociatedWeighbridge" column="b_is_associated_weighbridge"/>
             <result property="weighbridgeBillQuantity" column="b_weighbridge_bill_quantity"/>
+            <result property="isPushMilkSource" column="b_is_push_milk_source"/>
         </association>
         <association property="opLeadSealSheet" javaType="com.gmlimsqi.business.leadsealsheet.domain.OpLeadSealSheet">
             <id property="opLeadSealSheetId" column="c_op_lead_seal_sheet_id"/>
@@ -33,6 +35,7 @@
             <result property="sealedMan" column="c_sealed_man"/>
             <result property="sealedPhoto" column="c_sealed_photo"/>
             <result property="qfNumber" column="c_qf_number"/>
+            <result property="isPushMilkSource" column="c_is_push_milk_source"/>
         </association>
         <association property="opMilkSampleQualityInspection" javaType="com.gmlimsqi.business.milksamplequalityinspection.domain.OpMilkSampleQualityInspection">
             <id property="opMilkSampleQualityInspectionId" column="d_op_milk_sample_quality_inspection_id"/>
@@ -44,6 +47,7 @@
             <result property="samplingTime" column="d_sampling_time"/>
             <result property="tester" column="d_tester"/>
             <result property="testTime" column="d_test_time"/>
+            <result property="isPushMilkSource" column="d_is_push_milk_source"/>
         </association>
     </resultMap>
 
@@ -61,6 +65,7 @@
         a.milk_source_plan_order_number as a_milk_source_plan_order_number,
         a.license_plate_number as a_license_plate_number,
         a.entry_time as a_entry_time,
+        a.is_push_milk_source as a_is_push_milk_source,
         b.op_milk_filling_order_id as b_op_milk_filling_order_id,
         b.milk_filling_order_number as b_milk_filling_order_number,
         b.status as b_status,
@@ -70,12 +75,14 @@
         b.cweightno as b_cweightno,
         (CASE WHEN b.cweightno IS NOT NULL AND b.cweightno != '' THEN '1' ELSE '0' END) as b_is_associated_weighbridge,
         b.net_weight as b_weighbridge_bill_quantity,
+        b.is_push_milk_source as b_is_push_milk_source,
         c.op_lead_seal_sheet_id as c_op_lead_seal_sheet_id,
         c.lead_seal_number as c_lead_seal_number,
         c.status as c_status,
         c.sealed_man as c_sealed_man,
         c.sealed_photo as c_sealed_photo,
         c.qf_number as c_qf_number,
+        c.is_push_milk_source as c_is_push_milk_source,
         d.op_milk_sample_quality_inspection_id as d_op_milk_sample_quality_inspection_id,
         d.status as d_status,
         d.milk_sample_quality_inspection_number as d_milk_sample_quality_inspection_number,
@@ -84,11 +91,12 @@
         d.sampler as d_sampler,
         d.sampling_time as d_sampling_time,
         d.tester as d_tester,
-        d.test_time as d_test_time
+        d.test_time as d_test_time,
+        d.is_push_milk_source as d_is_push_milk_source
         from op_inspection_milk_tankers a
         left join op_milk_filling_order b on a.inspection_milk_tankers_id = b.inspection_milk_tankers_id and b.is_delete = '0'
-        left join op_lead_seal_sheet c on a.inspection_milk_tankers_id = c.inspection_milk_tankers_id and c.is_delete = '0'
-        left join op_milk_sample_quality_inspection d on a.inspection_milk_tankers_id = d.inspection_milk_tankers_id and d.is_delete = '0'
+        left join op_lead_seal_sheet c on a.inspection_milk_tankers_id = c.inspection_milk_tankers_id and b.op_milk_filling_order_id = c.op_milk_filling_order_id and c.is_delete = '0'
+        left join op_milk_sample_quality_inspection d on a.inspection_milk_tankers_id = d.inspection_milk_tankers_id and b.op_milk_filling_order_id = d.op_milk_filling_order_id and d.is_delete = '0'
         <where>
             a.is_delete = '0'
             <if test="milkSourcePlanOrderNumber != null and milkSourcePlanOrderNumber != ''">
@@ -99,6 +107,9 @@
             </if>
             <if test="status != null and status != ''">
                 and a.status = #{status}
+            </if>
+            <if test="deptId != null and deptId != ''">
+                and a.dept_id = #{deptId}
             </if>
         </where>
         order by a.create_time desc

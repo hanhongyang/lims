@@ -57,4 +57,11 @@ public interface IOpInspectionMilkTankersService
      * @return
      */
     int pushMilkSource(String inspectionMilkTankersId);
+
+    /**
+     * 变更计划单
+     * @param opInspectionMilkTankers
+     * @return
+     */
+    int changePlan(OpInspectionMilkTankers opInspectionMilkTankers);
 }

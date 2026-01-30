@@ -177,7 +177,7 @@ public class OpSamplingPlanSampleInfoVO extends BaseEntity implements BaseEntity
     private String file;
 
     /** 附件url */
-    private List<String> fileUrl;
+    private String fileUrl;
 
     /** 样品类型 0：成品，1：库存，2：垫料 */
     @Excel(name = "样品类型 sampling_type 0：成品，1：库存，2：垫料")
@@ -216,4 +216,7 @@ public class OpSamplingPlanSampleInfoVO extends BaseEntity implements BaseEntity
 
     /** 货位 */
     private String storageLocation;
+
+    /** 样品新增的类型0：手动新增，1：扫码新增 */
+    private String isscan;
 }

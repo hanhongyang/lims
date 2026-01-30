@@ -1,96 +1,132 @@
-<p align="center">
-	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-d3d0a9303e11d522a06cd263f3079027715.png">
-</p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">RuoYi v3.8.8</h1>
-<h4 align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</h4>
-<p align="center">
-	<a href="https://gitee.com/y_project/RuoYi-Vue/stargazers"><img src="https://gitee.com/y_project/RuoYi-Vue/badge/star.svg?theme=dark"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue"><img src="https://img.shields.io/badge/RuoYi-v3.8.8-brightgreen.svg"></a>
-	<a href="https://gitee.com/y_project/RuoYi-Vue/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-</p>
 
-## 平台简介
+# LIMS 系统核心业务功能说明书
 
-若依是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
+## 第一部分：基础数据模块
 
-* 前端采用Vue、Element UI。
-* 后端采用Spring Boot、Spring Security、Redis & Jwt。
-* 权限认证使用Jwt，支持多终端认证系统。
-* 支持加载动态权限菜单，多方式轻松权限控制。
-* 高效率开发，使用代码生成器可以一键生成前后端代码。
-* 提供了技术栈（[Vue3](https://v3.cn.vuejs.org) [Element Plus](https://element-plus.org/zh-CN) [Vite](https://cn.vitejs.dev)）版本[RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3)，保持同步更新。
-* 提供了单应用版本[RuoYi-Vue-fast](https://github.com/yangzongzhuan/RuoYi-Vue-fast)，Oracle版本[RuoYi-Vue-Oracle](https://github.com/yangzongzhuan/RuoYi-Vue-Oracle)，保持同步更新。
-* 不分离版本，请移步[RuoYi](https://gitee.com/y_project/RuoYi)，微服务版本，请移步[RuoYi-Cloud](https://gitee.com/y_project/RuoYi-Cloud)
-* 阿里云折扣场：[点我进入](http://aly.ruoyi.vip)，腾讯云秒杀场：[点我进入](http://txy.ruoyi.vip)&nbsp;&nbsp;
-* 阿里云优惠券：[点我领取](https://www.aliyun.com/minisite/goods?userCode=brki8iof&share_source=copy_link)，腾讯云优惠券：[点我领取](https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console)&nbsp;&nbsp;
+> **定位**：系统的“字典”与“规则引擎”。此处定义的数据将直接决定化验室流程如何流转、报告如何生成以及判定标准是什么。
 
-## 内置功能
+### 1.1 检测体系定义
 
-1.  用户管理：用户是系统操作者，该功能主要完成系统用户配置。
-2.  部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
-3.  岗位管理：配置系统用户所属担任职务。
-4.  菜单管理：配置系统菜单，操作权限，按钮权限标识等。
-5.  角色管理：角色菜单权限分配、设置角色按机构进行数据范围权限划分。
-6.  字典管理：对系统中经常使用的一些较为固定的数据进行维护。
-7.  参数管理：对系统动态配置常用参数。
-8.  通知公告：系统通知公告信息发布维护。
-9.  操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
-10. 登录日志：系统登录日志记录查询包含登录异常。
-11. 在线用户：当前系统中活跃用户状态监控。
-12. 定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
-13. 代码生成：前后端代码的生成（java、html、xml、sql）支持CRUD下载 。
-14. 系统接口：根据业务代码自动生成相关的api接口文档。
-15. 服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
-16. 缓存监控：对系统的缓存信息查询，命令统计等。
-17. 在线构建器：拖动表单元素生成相应的HTML代码。
-18. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
+这是实验室最核心的元数据，定义了“测什么”和“怎么测”。
 
-## 在线体验
-
-- admin/admin123  
-- 陆陆续续收到一些打赏，为了更好的体验已用于演示服务器升级。谢谢各位小伙伴。
-
-演示地址：http://vue.ruoyi.vip  
-文档地址：http://doc.ruoyi.vip
-
-## 演示图
-
-<table>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/cd1f90be5f2684f4560c9519c0f2a232ee8.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/1cbcf0e6f257c7d3a063c0e3f2ff989e4b3.jpg"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8074972883b5ba0622e13246738ebba237a.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-9f88719cdfca9af2e58b352a20e23d43b12.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-39bf2584ec3a529b0d5a3b70d15c9b37646.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-936ec82d1f4872e1bc980927654b6007307.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-b2d62ceb95d2dd9b3fbe157bb70d26001e9.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d67451d308b7a79ad6819723396f7c3d77a.png"/></td>
-    </tr>	 
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/5e8c387724954459291aafd5eb52b456f53.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/644e78da53c2e92a95dfda4f76e6d117c4b.jpg"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8370a0d02977eebf6dbf854c8450293c937.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-49003ed83f60f633e7153609a53a2b644f7.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d4fe726319ece268d4746602c39cffc0621.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-c195234bbcd30be6927f037a6755e6ab69c.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/b6115bc8c31de52951982e509930b20684a.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-5e4daac0bb59612c5038448acbcef235e3a.png"/></td>
-    </tr>
-</table>
+* **检测项目管理**
+* **功能**：定义实验室可开展的所有检测参数（如：蛋白、脂肪、黄曲霉毒素、布病抗体等）。设置标签可以区分不同类型的项目。配置各个部门的关联设备及地点。
+* **关键属性**：项目编码、项目名称、单位、检测周期、保留小数位数、所属实验室部门。
 
 
-## 若依前后端分离交流群
+* **检测特性**
+* **功能**：定义项目的不同特性（如：≥100g/kg、≤12.0%）。
+* **关键属性**：特性描述、第一上限、第一下限、规格上限、规格下限、计量单位。
 
-QQ群： [![加入QQ群](https://img.shields.io/badge/已满-937441-blue.svg)](https://jq.qq.com/?_wv=1027&k=5bVB1og) [![加入QQ群](https://img.shields.io/badge/已满-887144332-blue.svg)](https://jq.qq.com/?_wv=1027&k=5eiA4DH) [![加入QQ群](https://img.shields.io/badge/已满-180251782-blue.svg)](https://jq.qq.com/?_wv=1027&k=5AxMKlC) [![加入QQ群](https://img.shields.io/badge/已满-104180207-blue.svg)](https://jq.qq.com/?_wv=1027&k=51G72yr) [![加入QQ群](https://img.shields.io/badge/已满-186866453-blue.svg)](https://jq.qq.com/?_wv=1027&k=VvjN2nvu) [![加入QQ群](https://img.shields.io/badge/已满-201396349-blue.svg)](https://jq.qq.com/?_wv=1027&k=5vYAqA05) [![加入QQ群](https://img.shields.io/badge/已满-101456076-blue.svg)](https://jq.qq.com/?_wv=1027&k=kOIINEb5) [![加入QQ群](https://img.shields.io/badge/已满-101539465-blue.svg)](https://jq.qq.com/?_wv=1027&k=UKtX5jhs) [![加入QQ群](https://img.shields.io/badge/已满-264312783-blue.svg)](https://jq.qq.com/?_wv=1027&k=EI9an8lJ) [![加入QQ群](https://img.shields.io/badge/已满-167385320-blue.svg)](https://jq.qq.com/?_wv=1027&k=SWCtLnMz) [![加入QQ群](https://img.shields.io/badge/已满-104748341-blue.svg)](https://jq.qq.com/?_wv=1027&k=96Dkdq0k) [![加入QQ群](https://img.shields.io/badge/已满-160110482-blue.svg)](https://jq.qq.com/?_wv=1027&k=0fsNiYZt) [![加入QQ群](https://img.shields.io/badge/已满-170801498-blue.svg)](https://jq.qq.com/?_wv=1027&k=7xw4xUG1) [![加入QQ群](https://img.shields.io/badge/已满-108482800-blue.svg)](https://jq.qq.com/?_wv=1027&k=eCx8eyoJ) [![加入QQ群](https://img.shields.io/badge/已满-101046199-blue.svg)](https://jq.qq.com/?_wv=1027&k=SpyH2875) [![加入QQ群](https://img.shields.io/badge/已满-136919097-blue.svg)](https://jq.qq.com/?_wv=1027&k=tKEt51dz) [![加入QQ群](https://img.shields.io/badge/已满-143961921-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=0vBbSb0ztbBgVtn3kJS-Q4HUNYwip89G&authKey=8irq5PhutrZmWIvsUsklBxhj57l%2F1nOZqjzigkXZVoZE451GG4JHPOqW7AW6cf0T&noverify=0&group_code=143961921) [![加入QQ群](https://img.shields.io/badge/已满-174951577-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=ZFAPAbp09S2ltvwrJzp7wGlbopsc0rwi&authKey=HB2cxpxP2yspk%2Bo3WKTBfktRCccVkU26cgi5B16u0KcAYrVu7sBaE7XSEqmMdFQp&noverify=0&group_code=174951577) [![加入QQ群](https://img.shields.io/badge/已满-161281055-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=Fn2aF5IHpwsy8j6VlalNJK6qbwFLFHat&authKey=uyIT%2B97x2AXj3odyXpsSpVaPMC%2Bidw0LxG5MAtEqlrcBcWJUA%2FeS43rsF1Tg7IRJ&noverify=0&group_code=161281055) [![加入QQ群](https://img.shields.io/badge/已满-138988063-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=XIzkm_mV2xTsUtFxo63bmicYoDBA6Ifm&authKey=dDW%2F4qsmw3x9govoZY9w%2FoWAoC4wbHqGal%2BbqLzoS6VBarU8EBptIgPKN%2FviyC8j&noverify=0&group_code=138988063) [![加入QQ群](https://img.shields.io/badge/151450850-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DkugnCg68PevlycJSKSwjhFqfIgrWWwR&authKey=pR1Pa5lPIeGF%2FFtIk6d%2FGB5qFi0EdvyErtpQXULzo03zbhopBHLWcuqdpwY241R%2F&noverify=0&group_code=151450850) 点击按钮入群。
+
+* **项目特性对应**
+* **功能**：检测项目和项目特性的对应关系。
+
+
+
+* **人员对应项目**
+* **功能**：管理实验员的技能矩阵。
+* **逻辑**：建立“人员-检测项目”对照表，系统在分配任务时，只能将任务分配给具备该项目资质的实验员，确保合规性。
+
+
+* **物料档案**
+* **功能**：定义待检样品的物料基础信息。可以根据类型和标签来区分。支持 SAP 同步。
+
+
+* **物料项目标准**
+* **功能**：配置物料和项目的对应关系。决定物料可以做哪些检测项目。
+
+
+### 1.3 实验室配置
+
+* **工作日配置**：定义实验室的工作日历，用于系统自动计算预计出送检期限。
+
+* **通讯方式**：配置各个牧场的联系人、电话、邮箱、收报告类型。
+---
+
+## 第二部分：中心化验室业务 
+
+
+### 2.1 委托登记 
+
+系统根据不同的业务场景，设计了独立的委托入口，以适应不同的字段需求。
+
+* **血样委托**：针对牧场牛只血样检测（如布病、口蹄疫、生化、早孕）。重点记录牛号、管号信息。
+* **饲料委托**：针对原料（豆粕、玉米）和成品饲料检测。重点记录物料信息、检测项目、检测方法、样品信息。
+* **PCR 委托**：分子生物学检测，检测项目：八联、五联、七联、单联金葡、单联支原体、单联无乳。
+* **外部送样登记**：处理第三方的检测需求。
+
+**核心能力**：
+* **编码生成**：委托保存后，系统生成委托单编码，打印委托单。
+* **批量导入**：支持 Excel 模板导入，快速创建大批量委托单。
+* **委托单打印**
+
+### 2.2 样品接收 
+
+* **功能**：提交后的委托单，检测中心可以在该页面确认接收。可以修改委托单信息或退回。
+* **流程**：
+1. 扫描委托单上的条形码。
+2. **核对状态**：确认样品是否存在破损、量不足等拒收情况。
+3. **签收**：系统状态由“待受理”变更为“已受理”，并生成具体的实验室内部编号（Lab No.）。
+
+
+* **分包/流转**：根据检测项目对应的人员，自动将样品流转到对应人员的检测任务种。
+
+### 2.3 任务分配 
+
+* **功能**：实验室主管将已接收的样品分配给具体的实验员。
+* **饲料**：分为化学法、初水分两个列表。点开始化验打开化验单。
+* **PCR**：
+* **疾病**：
+* **早孕**：
+* **生化**：
+* **近红外国内**：
+
+
+### 2.4 实验检测与结果录入
+
+这是后端逻辑最复杂的部分 
+
+* **数据录入**：
+* **手工录入**：实验员在 Web 端填报结果。
+* **Excel 导入**：支持下载录入模板，线下填写后上传。
+* **仪器采集**：(部分实现) 通过接口直接读取联网设备的数据。
+
+
+* **自动计算与修约**：
+* 后端根据 `LabtestMethodsFormula`（公式配置）自动计算最终结果。
+* 根据基础数据中的“保留小数位数”进行数值修约。
+
+
+* **自动判定**：
+* 将结果与 `Standard`（判定标准）比对，自动标记为“合格”、“不合格”或“阴性/阳性”。
+
+
+* **异常处理**：
+* 如果结果超标，系统会触发复检提醒或异常流程。
+
+
+
+### 2.5 报告管理 
+
+* **报告生成**：
+* 支持按委托单合并生成报告，也支持按样品生成。
+* 后端使用 PDF 引擎或 Excel 引擎生成最终文件。
+
+
+* **审核流程**：
+* **三级审核机制**：录入人提交 -> 审核人核对（Review） -> 批准人签发（Approve）。
+* 电子签名：审核通过后自动加盖电子签章。
+
+
+* **报告分发**：
+* 支持在线预览、下载 PDF。
+* (扩展功能) 结果回传至 SAP 系统或通过钉钉推送给委托人。
+
+
+
+### 2.6 样品结算 
+
+* **功能**：针对需要内部核算或外部收费的样品。
+* **逻辑**：根据检测项目单价 × 样品数量，生成结算清单或发票申请单。
+

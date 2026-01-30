@@ -80,7 +80,7 @@ public class OpMilkBinQualityInspectionServiceImpl implements IOpMilkBinQualityI
 
     /**
      * 查询奶仓质检单列表
-     * * @param opMilkBinQualityInspection 奶仓质检单
+     * @param opMilkBinQualityInspection 奶仓质检单
      * @return 奶仓质检单
      */
     // +++ 新增：@DataScope 注解以激活数据权限切面 +++
@@ -164,15 +164,16 @@ public class OpMilkBinQualityInspectionServiceImpl implements IOpMilkBinQualityI
      * @return 结果
      */
     @Override
-    public int updateOpMilkBinQualityInspection(OpMilkBinQualityInspection opMilkBinQualityInspection)
+    public String updateOpMilkBinQualityInspection(OpMilkBinQualityInspection opMilkBinQualityInspection)
     {
-        if ("1".equals(opMilkBinQualityInspection.getStatus())){
+        /*if ("1".equals(opMilkBinQualityInspection.getStatus())){
             throw new IllegalArgumentException("已审核的质检单不能修改");
-        }
+        }*/
 
         // 自动填充更新信息
         opMilkBinQualityInspection.fillUpdateInfo();
-        return opMilkBinQualityInspectionMapper.updateOpMilkBinQualityInspection(opMilkBinQualityInspection);
+        opMilkBinQualityInspectionMapper.updateOpMilkBinQualityInspection(opMilkBinQualityInspection);
+        return opMilkBinQualityInspection.getId();
     }
 
     /**

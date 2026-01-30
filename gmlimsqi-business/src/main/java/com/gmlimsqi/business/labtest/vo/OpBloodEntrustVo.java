@@ -1,6 +1,7 @@
 package com.gmlimsqi.business.labtest.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gmlimsqi.business.labtest.domain.OpBloodEntrustOrderChangeLog;
 import com.gmlimsqi.business.labtest.domain.OpBloodEntrustOrderSample;
 import com.gmlimsqi.common.annotation.Excel;
 import lombok.Data;
@@ -22,7 +23,11 @@ public class OpBloodEntrustVo {
      * 送检单位
      */
     private String entrustDeptName;
-
+    /** * 前端传参：是否提交
+     * true: 保存并提交 (状态变待受理)
+     * false/null: 仅保存 (状态变待提交)
+     */
+    private Boolean isSubmit;
     /**
      * 委托单位id
      */
@@ -129,4 +134,9 @@ public class OpBloodEntrustVo {
       * 退回原因
       */
     private String returnReason;
+    /** 变更日志 (新增) */
+    private List<OpBloodEntrustOrderChangeLog> changeLogs;
+
+    /** 已删除的样品列表 (新增) */
+    private List<OpBloodEntrustOrderSample> deletedSampleList;
 }

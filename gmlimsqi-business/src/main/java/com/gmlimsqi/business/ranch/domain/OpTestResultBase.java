@@ -10,7 +10,7 @@ import com.gmlimsqi.common.core.domain.BaseEntity;
 
 /**
  * 样品化验对象 op_test_result_base
- * 
+ *
  * @author hhy
  * @date 2025-11-07
  */
@@ -48,13 +48,13 @@ public class OpTestResultBase extends BaseEntity implements BaseEntity.CreateAwa
     private String examineUserId;
 
     /** 审核时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "审核时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "审核时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date examineTime;
 
     /** 检测时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "检测时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "检测时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date testTime;
 
     /** 检测人 */
@@ -78,6 +78,11 @@ public class OpTestResultBase extends BaseEntity implements BaseEntity.CreateAwa
 
     /** 删除id（0为未删除，删除则为id） */
     private String deleteId;
+
+    /** 样品编号 */
+    @Excel(name = "样品编号")
+    private String sampleNo;
+
     /** 化验结果信息子表 */
     private List<OpTestResultInfo> opTestResultInfoList;
 

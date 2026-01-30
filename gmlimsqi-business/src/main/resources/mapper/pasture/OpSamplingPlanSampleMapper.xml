@@ -59,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="warehouseName" column="warehouse_name"/>
         <result property="batch" column="batch"/>
         <result property="storageLocation" column="storage_location"/>
+        <result property="isscan"    column="isscan"    />
     </resultMap>
     <sql id="selectOpSamplingPlanSampleVo">
         select op_sampling_plan_sample_id,
@@ -113,7 +114,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                warehouse_code,
                warehouse_name,
                batch,
-               storage_location
+               storage_location,
+               isscan
         from op_sampling_plan_sample
     </sql>
 
@@ -171,6 +173,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             s.warehouse_name,
             s.batch,
             s.storage_location,
+            s.isscan,
             p.sampling_plan_no,
             p.supplier_name,
             p.driver_name,
@@ -201,8 +204,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="driverCode != null and driverCode != ''"> AND p.driver_code LIKE CONCAT('%', #{driverCode}, '%')</if>
             <if test="status != null and status != ''"> AND s.status = #{status}</if>
             <if test="isReceive != null and isReceive != ''"> AND s.is_receive = #{isReceive}</if>
+            <if test="deptId != null and deptId != ''"> AND s.dept_id = #{deptId}</if>
         </where>
-        ORDER BY s.create_time DESC
+        ORDER BY IFNULL(s.update_time, s.create_time) DESC
     </select>
 
     <select id="selectOpSamplingPlanSampleList" parameterType="OpSamplingPlanSample" resultMap="OpSamplingPlanSampleResult">
@@ -325,6 +329,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warehouseName != null">warehouse_name,</if>
             <if test="batch != null">batch,</if>
             <if test="storageLocation != null">storage_location,</if>
+            <if test="isscan != null">isscan,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="opSamplingPlanSampleId != null">#{opSamplingPlanSampleId},</if>
@@ -379,6 +384,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warehouseName !=null">#{warehouseName},</if>
             <if test="batch != null">#{batch},</if>
             <if test="storageLocation != null">#{storageLocation},</if>
+            <if test="isscan != null">#{isscan},</if>
         </trim>
     </insert>
 
@@ -436,6 +442,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warehouseName != null and warehouseName != ''">warehouse_name = #{warehouseName},</if>
             <if test="batch != null and batch != ''">batch = #{batch},</if>
             <if test="storageLocation != null and storageLocation != ''">storage_location = #{storageLocation},</if>
+            <if test="isscan != null and isscan != ''">isscan = #{isscan},</if>
         </trim>
         where op_sampling_plan_sample_id = #{opSamplingPlanSampleId}
     </update>
@@ -572,7 +579,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         warehouse_code,
         warehouse_name,
         batch,
-        storage_location
+        storage_location,
+        isscan
         ) VALUES
         <foreach collection="list" item="item" separator=",">
             (
@@ -626,7 +634,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{item.warehouseCode},
             #{item.warehouseName},
             #{item.batch},
-            #{item.storageLocation}
+            #{item.storageLocation},
+            #{item.isscan}
             )
         </foreach>
     </insert>
@@ -691,7 +700,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                s.warehouse_code,
                s.warehouse_name,
                s.batch,
-               s.storage_location
+               s.storage_location,
+               s.isscan
         from op_sampling_plan_sample s
         left join sys_dept d on s.dept_id = d.dept_id
         <where>
@@ -803,7 +813,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         warehouse_code,
         warehouse_name,
         batch,
-        storage_location
+        storage_location,
+        isscan
         from op_sampling_plan_sample
         where op_sampling_plan_sample_id = #{opSamplingPlanSampleId}
     </select>
@@ -865,6 +876,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="sampler_name" property="samplerName" jdbcType="VARCHAR"/>
         <result column="sample_time" property="sampleTime" jdbcType="VARCHAR"/>
+        <result column="isscan" property="isscan" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="selectOpSamplingPlanSampleListLinkOFPSP"
@@ -912,12 +924,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         a.batch,
         a.storage_location,
         p.sampler_name,
-        p.sample_time
+        p.sample_time,
+        a.isscan
         from op_sampling_plan_sample a
         left join sys_dept d on d.dept_id = a.dept_id
         left join op_sampling_plan p on p.op_sampling_plan_id = a.sampling_plan_id
         <where>
-            and a.is_receive = '0' and a.is_delete = '0'
+            and a.is_delete = '0'
             <if test="deptId != null and deptId != ''">
                 and d.dept_id = #{deptId}
             </if>
@@ -992,6 +1005,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR"/>
         <result column="batch" property="batch" jdbcType="VARCHAR"/>
         <result column="storage_location" property="storageLocation" jdbcType="VARCHAR"/>
+        <result column="isscan" property="isscan" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="selectOpSamplingPlanSampleDetail"
@@ -1053,7 +1067,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         warehouse_code,
         warehouse_name,
         batch,
-        storage_location
+        storage_location,
+        isscan
         from op_sampling_plan_sample
         <where>
             is_delete = '0'
@@ -1115,8 +1130,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectOpSamplingBySampleNo"
             resultType="com.gmlimsqi.business.ranch.domain.OpSamplingPlanSample">
         select
-            op_sampling_plan_sample_id
+            *
             from op_sampling_plan_sample
-        where sample_no = #{sampleNo}
+        where sample_no = #{sampleNo} and is_delete='0'
     </select>
 </mapper>

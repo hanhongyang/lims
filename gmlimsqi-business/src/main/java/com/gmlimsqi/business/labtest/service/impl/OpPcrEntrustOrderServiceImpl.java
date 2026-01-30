@@ -2,6 +2,7 @@ package com.gmlimsqi.business.labtest.service.impl;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,21 +13,22 @@ import com.gmlimsqi.business.basicdata.mapper.LabtestItemsMapper;
 import com.gmlimsqi.business.labtest.domain.*;
 import com.gmlimsqi.business.labtest.dto.OpJczxTestTaskDto;
 import com.gmlimsqi.business.labtest.dto.OpSampleReceiveDto;
+import com.gmlimsqi.business.labtest.mapper.OpPcrEntrustOrderChangeLogMapper;
 import com.gmlimsqi.business.labtest.mapper.OpPcrEntrustOrderItemMapper;
 import com.gmlimsqi.business.labtest.mapper.OpPcrEntrustOrderSampleMapper;
 import com.gmlimsqi.business.labtest.service.IOpSampleReceiveService;
 import com.gmlimsqi.business.util.CodeGeneratorUtil;
 import com.gmlimsqi.business.util.UserInfoProcessor;
+import com.gmlimsqi.common.core.domain.entity.SysUser;
 import com.gmlimsqi.common.enums.EntrustOrderStatusEnum;
 import com.gmlimsqi.common.enums.EntrustOrderTypeEnum;
 import com.gmlimsqi.common.enums.YesNo2Enum;
 import com.gmlimsqi.common.exception.BusinessException;
 import com.gmlimsqi.common.exception.ServiceException;
-import com.gmlimsqi.common.utils.SecurityUtils;
-import com.gmlimsqi.common.utils.ServletUtils;
-import com.gmlimsqi.common.utils.StringUtils;
+import com.gmlimsqi.common.utils.*;
 import com.gmlimsqi.common.utils.uuid.IdUtils;
 import com.gmlimsqi.system.service.ISysConfigService;
+import com.gmlimsqi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -59,9 +61,13 @@ public class OpPcrEntrustOrderServiceImpl implements IOpPcrEntrustOrderService
     @Autowired
     private IOpSampleReceiveService sampleReceiveService;
     @Autowired
+    private ISysUserService sysUserService;
+    @Autowired
     private LabtestItemsMapper itemMapper;
     @Value("${ruoyi.profile}/templates")
     private String templateBasePath;
+    @Autowired
+    private OpPcrEntrustOrderChangeLogMapper changeLogMapper;
     @Autowired
     private ISysConfigService configService;
     /**
@@ -70,12 +76,121 @@ public class OpPcrEntrustOrderServiceImpl implements IOpPcrEntrustOrderService
      * @param opPcrEntrustOrderId PCR样品委托单主键
      * @return PCR样品委托单
      */
-    @Override
-    public OpPcrEntrustOrder selectOpPcrEntrustOrderByOpPcrEntrustOrderId(String opPcrEntrustOrderId)
+
+    public OpPcrEntrustOrder selectOpPcrEntrustOrderByOpPcrEntrustOrderId2(String opPcrEntrustOrderId)
     {
         return opPcrEntrustOrderMapper.selectOrderDetailById(opPcrEntrustOrderId);
     }
 
+    /**
+     * 通用对比并记录日志方法
+     */
+    private void compareAndLog(String businessId, String type, String fieldKey, String fieldName,
+                               String oldVal, String newVal, List<OpPcrEntrustOrderChangeLog> list, String user) {
+        String o = oldVal == null ? "" : oldVal.trim();
+        String n = newVal == null ? "" : newVal.trim();
+
+        // 简单数值比对兼容 (如 "1.00" == "1")
+        if (o.matches("-?\\d+(\\.\\d+)?") && n.matches("-?\\d+(\\.\\d+)?")) {
+            try {
+                BigDecimal b1 = new BigDecimal(o);
+                BigDecimal b2 = new BigDecimal(n);
+                if (b1.compareTo(b2) == 0) return;
+            } catch (Exception ignored) {}
+        }
+
+        if (!o.equals(n)) {
+            OpPcrEntrustOrderChangeLog log = new OpPcrEntrustOrderChangeLog();
+            log.setLogId(IdUtils.simpleUUID());
+            log.setBusinessId(businessId);
+            log.setBusinessType(type);
+            log.setFieldKey(fieldKey);
+            log.setFieldName(fieldName);
+            log.setOldValue(o);
+            log.setNewValue(n);
+            log.setCreateBy(user);
+            list.add(log);
+        }
+    }
+
+    private String formatDate(Date date) {
+        if (date == null) return "";
+        return DateUtils.parseDateToStr("yyyy-MM-dd", date);
+    }
+
+
+    /**
+     * 查询PCR委托单详情（包含正常样品、删除样品、修改记录）
+     */
+    @Override
+    public OpPcrEntrustOrder selectOpPcrEntrustOrderByOpPcrEntrustOrderId(String opPcrEntrustOrderId)
+    {
+        // 1. 查询主表和正常的样品 (is_delete = 0)
+        OpPcrEntrustOrder order = opPcrEntrustOrderMapper.selectOrderDetailById(opPcrEntrustOrderId);
+
+        if (order != null) {
+            // 2. 查询已删除样品
+            List<OpPcrEntrustOrderSample> deletedSamples = sampleMapper.selectDeletedSamplesByOrderId(opPcrEntrustOrderId);
+
+            // ================== 核心过滤逻辑 Start ==================
+            if (deletedSamples != null && !deletedSamples.isEmpty()) {
+                // 获取配置的检测中心（接收方）部门ID
+                String jczxDeptIdStr = configService.selectConfigByKey("jczx.deptId");
+
+                Iterator<OpPcrEntrustOrderSample> iterator = deletedSamples.iterator();
+                while (iterator.hasNext()) {
+                    OpPcrEntrustOrderSample sample = iterator.next();
+                    String deleteBy = sample.getUpdateBy(); // 获取执行删除操作的人
+
+                    // 如果没有删除人信息，默认不显示，移除
+                    if (StringUtils.isEmpty(deleteBy)) {
+                        iterator.remove();
+                        continue;
+                    }
+
+                    // 查询该用户的部门信息
+                    SysUser user = sysUserService.selectUserById(Long.valueOf(deleteBy));
+
+                    // 过滤逻辑：
+                    // 如果查不到用户 OR 用户部门为空 OR 用户部门 != 检测中心部门ID
+                    // 则认为是委托方（客户）自己删的，从列表中移除
+                    if (user == null || user.getDeptId() == null ||
+                            !String.valueOf(user.getDeptId()).equals(jczxDeptIdStr)) {
+                        iterator.remove();
+                    }
+                }
+            }
+            // ================== 核心过滤逻辑 End ==================
+
+            order.setDeletedSampleList(deletedSamples);
+
+            // 2.1 填充已删除样品的项目信息 (只处理过滤后剩下的)
+            if (deletedSamples != null && !deletedSamples.isEmpty()) {
+                for (OpPcrEntrustOrderSample delSample : deletedSamples) {
+                    List<OpPcrEntrustOrderItem> delItems = orderItemMapper.selectItemsBySampleIdIncludeDeleted(delSample.getOpPcrEntrustOrderSampleId());
+                    delSample.setTestItem(delItems);
+                }
+            }
+
+            // 3. 查询修改日志
+            List<String> allIds = new ArrayList<>();
+            allIds.add(order.getOpPcrEntrustOrderId()); // 订单ID
+            // 正常样品
+            if (order.getSampleList() != null) {
+                order.getSampleList().forEach(s -> allIds.add(s.getOpPcrEntrustOrderSampleId()));
+            }
+            // 过滤后的已删除样品
+            if (deletedSamples != null) {
+                deletedSamples.forEach(s -> allIds.add(s.getOpPcrEntrustOrderSampleId()));
+            }
+
+            if (!allIds.isEmpty()) {
+                List<OpPcrEntrustOrderChangeLog> logs = changeLogMapper.selectLogsByBusinessIds(allIds);
+                order.setChangeLogs(logs);
+            }
+        }
+        return order;
+    }
     /**
      * 查询PCR样品委托单列表
      * 
@@ -122,6 +237,12 @@ public class OpPcrEntrustOrderServiceImpl implements IOpPcrEntrustOrderService
         opPcrEntrustOrder.setOpPcrEntrustOrderId(IdUtils.simpleUUID());
         // 自动填充创建/更新信息
         opPcrEntrustOrder.fillCreateInfo();
+        // 根据 isSubmit 决定初始状态
+        if (Boolean.TRUE.equals(opPcrEntrustOrder.getIsSubmit())) {
+            opPcrEntrustOrder.setStatus(EntrustOrderStatusEnum.DSL.getCode()); // 1
+        } else {
+            opPcrEntrustOrder.setStatus(EntrustOrderStatusEnum.DTJ.getCode()); // 0
+        }
         try {
             String orderNo = codeGeneratorUtil.generatePcrEntrustOrderNo();
             opPcrEntrustOrder.setEntrustOrderNo(orderNo);
@@ -186,53 +307,252 @@ public class OpPcrEntrustOrderServiceImpl implements IOpPcrEntrustOrderService
      * @param opPcrEntrustOrder PCR样品委托单
      * @return 结果
      */
-    @Transactional
+//    @Transactional
+//    //@Override
+//    public int updateOpPcrEntrustOrder2(OpPcrEntrustOrder opPcrEntrustOrder)
+//    {
+//        //如果状态不是待处理，则不允许修改
+//        OpPcrEntrustOrder selectOrder = opPcrEntrustOrderMapper.selectOpPcrEntrustOrderByOpPcrEntrustOrderId(opPcrEntrustOrder.getOpPcrEntrustOrderId());
+//        if(selectOrder==null){
+//            throw new RuntimeException("委托单不存在");
+//        }
+//        if(!EntrustOrderStatusEnum.DSL.getCode().equals(selectOrder.getStatus()) &&
+//                !EntrustOrderStatusEnum.YBH.getCode().equals(selectOrder.getStatus())){
+//            throw new RuntimeException("委托单已受理，不允许修改");
+//        }
+//        // 自动填充更新信息
+//        opPcrEntrustOrder.fillUpdateInfo();
+//        //更新子表删除标志并插入
+//        orderItemMapper.updateDeleteByOrderId(opPcrEntrustOrder.getUpdateBy(),opPcrEntrustOrder.getOpPcrEntrustOrderId());
+//        sampleMapper.updateDeleteByOrderId(opPcrEntrustOrder.getUpdateBy(),opPcrEntrustOrder.getOpPcrEntrustOrderId());
+//        if(!CollectionUtil.isEmpty(opPcrEntrustOrder.getSampleList())){
+//            for (OpPcrEntrustOrderSample opPcrEntrustOrderSample : opPcrEntrustOrder.getSampleList()){
+////                String sampleNo = codeGeneratorUtil.generatePcrSampleNo();
+////                opPcrEntrustOrderSample.setSampleNo(sampleNo);
+//                opPcrEntrustOrderSample.setOpPcrEntrustOrderSampleId(IdUtils.simpleUUID());
+//                opPcrEntrustOrderSample.setPcrEntrustOrderId(opPcrEntrustOrder.getOpPcrEntrustOrderId());
+//                opPcrEntrustOrderSample.fillCreateInfo();
+//                sampleMapper.insertOpPcrEntrustOrderSample(opPcrEntrustOrderSample);
+//                if(!CollectionUtil.isEmpty(opPcrEntrustOrderSample.getTestItem())){
+//                    List<OpPcrEntrustOrderItem> itemList = new ArrayList<>();
+//                    for (OpPcrEntrustOrderItem testItem : opPcrEntrustOrderSample.getTestItem()) {
+//                        OpPcrEntrustOrderItem item = new OpPcrEntrustOrderItem();
+//                        item.setOpPcrEntrustOrderItemId(IdUtils.simpleUUID());
+//                        item.setPcrEntrustOrderSampleId(opPcrEntrustOrderSample.getOpPcrEntrustOrderSampleId());
+//                        item.setItemId(testItem.getItemId());
+//                        item.setItemName(testItem.getItemName());
+//                        item.fillCreateInfo();
+//                        itemList.add(item);
+//                    }
+//                    if (!itemList.isEmpty()) {
+//                        orderItemMapper.insertBatch(itemList);
+//                    }
+//                }
+//            }
+//        }
+//        // 提交时修改为未退回状态
+//        opPcrEntrustOrder.setIsReturn("0");
+//        opPcrEntrustOrder.setStatus(EntrustOrderStatusEnum.DSL.getCode());
+//        int count =  opPcrEntrustOrderMapper.updateOpPcrEntrustOrder(opPcrEntrustOrder);
+//        //接收
+//        if(YesNo2Enum.YES.getCode().equals(opPcrEntrustOrder.getIsReceive())){
+//            OpSampleReceiveDto dto = new OpSampleReceiveDto();
+//            dto.setType(EntrustOrderTypeEnum.PCR.getCode());
+//            String[] sampleIds = opPcrEntrustOrder.getSampleList().
+//                    stream().map(OpPcrEntrustOrderSample :: getOpPcrEntrustOrderSampleId).toArray(String[]::new);
+//            dto.setSampleIds(sampleIds);
+//            sampleReceiveService.add(dto);
+//        }
+//        return count;
+//    }
+
+    /**
+     * 修改PCR委托单（带日志记录和软删除）
+     */
     @Override
-    public int updateOpPcrEntrustOrder(OpPcrEntrustOrder opPcrEntrustOrder)
-    {
-        //如果状态不是待处理，则不允许修改
-        OpPcrEntrustOrder selectOrder = opPcrEntrustOrderMapper.selectOpPcrEntrustOrderByOpPcrEntrustOrderId(opPcrEntrustOrder.getOpPcrEntrustOrderId());
-        if(selectOrder==null){
+    @Transactional
+    public int updateOpPcrEntrustOrder(OpPcrEntrustOrder opPcrEntrustOrder) {
+        String orderId = opPcrEntrustOrder.getOpPcrEntrustOrderId();
+
+        // 1. 获取数据库中的旧数据全貌 (包含样品和项目)
+        OpPcrEntrustOrder oldFullOrder = opPcrEntrustOrderMapper.selectOrderDetailById(orderId);
+        if (oldFullOrder == null) {
             throw new RuntimeException("委托单不存在");
         }
-        if(!EntrustOrderStatusEnum.DSL.getCode().equals(selectOrder.getStatus()) &&
-                !EntrustOrderStatusEnum.YBH.getCode().equals(selectOrder.getStatus())){
-            throw new RuntimeException("委托单已受理，不允许修改");
+
+        // 如果是“提交/撤回”操作（isSubmit != null），则严格校验状态；
+        // 如果是“仅保存”操作（isSubmit == null，通常是接收方修改），则允许修改。
+        if (opPcrEntrustOrder.getIsSubmit() != null) {
+            // 如果试图改变状态（提交或存草稿），必须确保当前是 待提交(0) 或 已驳回(6)
+            if (!EntrustOrderStatusEnum.DTJ.getCode().equals(oldFullOrder.getStatus()) &&
+                    !EntrustOrderStatusEnum.YBH.getCode().equals(oldFullOrder.getStatus())) {
+                throw new RuntimeException("当前委托单已提交或受理，不允许修改状态，请先撤回");
+            }
+        }// else: 如果 isSubmit 为 null，说明是接收方或管理员在修改业务数据，不做状态拦截（
+
+        // 将旧样品转为 Map，方便按 ID 快速查找
+        Map<String, OpPcrEntrustOrderSample> oldSampleMap = new HashMap<>();
+        if (oldFullOrder.getSampleList() != null) {
+            for (OpPcrEntrustOrderSample s : oldFullOrder.getSampleList()) {
+                oldSampleMap.put(s.getOpPcrEntrustOrderSampleId(), s);
+            }
         }
-        // 自动填充更新信息
-        opPcrEntrustOrder.fillUpdateInfo();
-        //更新子表删除标志并插入
-        orderItemMapper.updateDeleteByOrderId(opPcrEntrustOrder.getUpdateBy(),opPcrEntrustOrder.getOpPcrEntrustOrderId());
-        sampleMapper.updateDeleteByOrderId(opPcrEntrustOrder.getUpdateBy(),opPcrEntrustOrder.getOpPcrEntrustOrderId());
-        if(!CollectionUtil.isEmpty(opPcrEntrustOrder.getSampleList())){
-            for (OpPcrEntrustOrderSample opPcrEntrustOrderSample : opPcrEntrustOrder.getSampleList()){
-//                String sampleNo = codeGeneratorUtil.generatePcrSampleNo();
-//                opPcrEntrustOrderSample.setSampleNo(sampleNo);
-                opPcrEntrustOrderSample.setOpPcrEntrustOrderSampleId(IdUtils.simpleUUID());
-                opPcrEntrustOrderSample.setPcrEntrustOrderId(opPcrEntrustOrder.getOpPcrEntrustOrderId());
-                opPcrEntrustOrderSample.fillCreateInfo();
-                sampleMapper.insertOpPcrEntrustOrderSample(opPcrEntrustOrderSample);
-                if(!CollectionUtil.isEmpty(opPcrEntrustOrderSample.getTestItem())){
-                    List<OpPcrEntrustOrderItem> itemList = new ArrayList<>();
-                    for (OpPcrEntrustOrderItem testItem : opPcrEntrustOrderSample.getTestItem()) {
-                        OpPcrEntrustOrderItem item = new OpPcrEntrustOrderItem();
-                        item.setOpPcrEntrustOrderItemId(IdUtils.simpleUUID());
-                        item.setPcrEntrustOrderSampleId(opPcrEntrustOrderSample.getOpPcrEntrustOrderSampleId());
-                        item.setItemId(testItem.getItemId());
-                        item.setItemName(testItem.getItemName());
-                        item.fillCreateInfo();
-                        itemList.add(item);
+
+        // 2. 准备日志集合与当前用户
+        List<OpPcrEntrustOrderChangeLog> logList = new ArrayList<>();
+        String currentUsername = SecurityUtils.getUsername();
+
+        // 3. 对比并更新主表字段
+        // 送检单位
+        compareAndLog(orderId, "ORDER", "entrustDeptName", "送检单位",
+                oldFullOrder.getEntrustDeptName(), opPcrEntrustOrder.getEntrustDeptName(), logList, currentUsername);
+
+        // 送检时间 (送样日期)
+        compareAndLog(orderId, "ORDER", "sendSampleDate", "送检时间",
+                formatDate(oldFullOrder.getSendSampleDate()), formatDate(opPcrEntrustOrder.getSendSampleDate()), logList, currentUsername);
+
+        // 地址 (报告寄送地址)
+        compareAndLog(orderId, "ORDER", "address", "地址",
+                oldFullOrder.getAddress(), opPcrEntrustOrder.getAddress(), logList, currentUsername);
+
+        // 送样人 (联系人/委托人)
+        compareAndLog(orderId, "ORDER", "entrustContact", "送样人",
+                oldFullOrder.getEntrustContact(), opPcrEntrustOrder.getEntrustContact(), logList, currentUsername);
+        // 如果是接收操作（isReceive=Y），计算本次操作删除的样品数量并记录
+        if (YesNo2Enum.YES.getCode().equals(opPcrEntrustOrder.getIsReceive())) {
+            long deleteCount = 0;
+            // 确保旧数据存在 (oldSampleMap 在方法开头已构建)
+            if (oldSampleMap != null && !oldSampleMap.isEmpty()) {
+                // 1. 获取前端本次提交的所有有效样品ID集合
+                Set<String> inputIds = new HashSet<>();
+                List<OpPcrEntrustOrderSample> inputSampleList = opPcrEntrustOrder.getSampleList();
+                if (inputSampleList != null) {
+                    inputSampleList.stream()
+                            .map(OpPcrEntrustOrderSample::getOpPcrEntrustOrderSampleId)
+                            .filter(StringUtils::isNotEmpty)
+                            .forEach(inputIds::add);
+                }
+
+                // 2. 遍历旧数据，如果在提交的ID集合中不存在，则视为本次被删除
+                for (String oldId : oldSampleMap.keySet()) {
+                    if (!inputIds.contains(oldId)) {
+                        deleteCount++;
                     }
-                    if (!itemList.isEmpty()) {
-                        orderItemMapper.insertBatch(itemList);
+                }
+            }
+            // 3. 设置删除数量字段
+            opPcrEntrustOrder.setScypsl((int)deleteCount);
+        }
+
+        opPcrEntrustOrder.fillUpdateInfo();
+
+        // 只有当 isSubmit 明确不为 null 时，才进行状态流转
+        if (opPcrEntrustOrder.getIsSubmit() != null) {
+            if (Boolean.TRUE.equals(opPcrEntrustOrder.getIsSubmit())) {
+                // 动作：提交 -> 变更为 待受理(1)
+                opPcrEntrustOrder.setStatus(EntrustOrderStatusEnum.DSL.getCode());
+                // 提交时重置退回状态
+                opPcrEntrustOrder.setIsReturn("0");
+            } else {
+                // 动作：存草稿 -> 变更为 待提交(0)
+                opPcrEntrustOrder.setStatus(EntrustOrderStatusEnum.DTJ.getCode());
+            }
+        }
+        // 如果 isSubmit 为 null，则完全不设置 status 字段，MyBatis 会忽略该字段的更新，从而保持原状态（如检测中、已受理等）
+
+
+        int count = opPcrEntrustOrderMapper.updateOpPcrEntrustOrder(opPcrEntrustOrder);
+
+        // ================== 4. 样品处理 ==================
+        Set<String> processedIds = new HashSet<>();
+
+        if (opPcrEntrustOrder.getSampleList() != null) {
+            for (OpPcrEntrustOrderSample sample : opPcrEntrustOrder.getSampleList()) {
+                String inputId = sample.getOpPcrEntrustOrderSampleId();
+
+                // --- Case A: 修改 (Update) ---
+                if (StringUtils.isNotEmpty(inputId) && oldSampleMap.containsKey(inputId)) {
+                    OpPcrEntrustOrderSample oldSample = oldSampleMap.get(inputId);
+                    processedIds.add(inputId);
+
+                    // A1. 记录修改日志
+                    // 物料 (对应 invbillName)
+                    compareAndLog(inputId, "SAMPLE", "invbillName", "物料",
+                            oldSample.getInvbillName(), sample.getInvbillName(), logList, currentUsername);
+
+                    // 样品描述 (对应 sampleName)
+                    compareAndLog(inputId, "SAMPLE", "name", "样品描述",
+                            oldSample.getName(), sample.getName(), logList, currentUsername);
+
+                    // 备注
+                    compareAndLog(inputId, "SAMPLE", "remark", "备注",
+                            oldSample.getRemark(), sample.getRemark(), logList, currentUsername);
+
+                    // 检测项目比对 (List 转 String)
+                    String oldItemsStr = DictUtils.getDictLabel("pcr_task_item_type",oldSample.getPcrTaskItemType());
+                    String newItemsStr = DictUtils.getDictLabel("pcr_task_item_type",sample.getPcrTaskItemType());
+                    compareAndLog(inputId, "SAMPLE", "pcrTaskItemType", "检测项目",
+                            oldItemsStr, newItemsStr, logList, currentUsername);
+
+                    // A2. 更新样品
+                    sample.fillUpdateInfo();
+                    sampleMapper.updateOpPcrEntrustOrderSample(sample);
+
+                    // A3. 处理检测项目 (简单策略：删旧插新)
+                    // 假设你有 pcrEntrustOrderItemMapper
+                    if (sample.getTestItem() != null) {
+                        orderItemMapper.deleteBySampleId(inputId,SecurityUtils.getUserId().toString()); // 物理删或软删均可，视业务定
+                        for (OpPcrEntrustOrderItem item : sample.getTestItem()) {
+                            item.setOpPcrEntrustOrderItemId(IdUtils.simpleUUID());
+                            item.setPcrEntrustOrderSampleId(inputId);
+                            item.fillCreateInfo();
+                            orderItemMapper.insertOpPcrEntrustOrderItem(item);
+                        }
+                    }
+                }
+                // --- Case B: 新增 (Insert) ---
+                else {
+                    sample.setPcrEntrustOrderId(orderId);
+                    if (StringUtils.isEmpty(sample.getOpPcrEntrustOrderSampleId())) {
+                        sample.setOpPcrEntrustOrderSampleId(IdUtils.simpleUUID());
+                    }
+                    sample.fillCreateInfo();
+                    sampleMapper.insertOpPcrEntrustOrderSample(sample);
+
+                    // 插入新项目
+                    if (sample.getTestItem() != null) {
+                        for (OpPcrEntrustOrderItem item : sample.getTestItem()) {
+                            item.setOpPcrEntrustOrderItemId(IdUtils.simpleUUID());
+                            item.setPcrEntrustOrderSampleId(sample.getOpPcrEntrustOrderSampleId());
+                            item.fillCreateInfo();
+                            orderItemMapper.insertOpPcrEntrustOrderItem(item);
+                        }
                     }
                 }
             }
         }
-        // 提交时修改为未退回状态
-        opPcrEntrustOrder.setIsReturn("0");
-        opPcrEntrustOrder.setStatus(EntrustOrderStatusEnum.DSL.getCode());
-        int count =  opPcrEntrustOrderMapper.updateOpPcrEntrustOrder(opPcrEntrustOrder);
+
+        // ================== 5. 处理软删除的样品 ==================
+        for (String oldId : oldSampleMap.keySet()) {
+            if (!processedIds.contains(oldId)) {
+                // 执行软删除
+                OpPcrEntrustOrderSample delSample = new OpPcrEntrustOrderSample();
+                delSample.setOpPcrEntrustOrderSampleId(oldId);
+                delSample.setIsDelete("1");
+                delSample.setUpdateBy(opPcrEntrustOrder.getUpdateBy());
+                delSample.setUpdateTime(new Date());
+                sampleMapper.updateOpPcrEntrustOrderSample(delSample);
+
+                // 同时软删除项目 (如果需要)
+                // pcrEntrustOrderItemMapper.updateDeleteBySampleId(oldId);
+            }
+        }
+
+        // 6. 批量插入日志
+        if (!logList.isEmpty()) {
+            changeLogMapper.insertBatch(logList);
+        }
+
         //接收
         if(YesNo2Enum.YES.getCode().equals(opPcrEntrustOrder.getIsReceive())){
             OpSampleReceiveDto dto = new OpSampleReceiveDto();
@@ -244,8 +564,6 @@ public class OpPcrEntrustOrderServiceImpl implements IOpPcrEntrustOrderService
         }
         return count;
     }
-
-
     /**
      * 根据类型下载导入模板
      * (此版本不依赖 ServletUtils.writeAttachment)
@@ -307,5 +625,22 @@ public class OpPcrEntrustOrderServiceImpl implements IOpPcrEntrustOrderService
         return null;
     }
 
+    @Override
+    public void withdrawOrder(String orderId) {
+        OpPcrEntrustOrder opPcrEntrustOrder = opPcrEntrustOrderMapper.selectOpPcrEntrustOrderByOpPcrEntrustOrderId(orderId);
+        if (opPcrEntrustOrder == null) throw new BusinessException("订单不存在");
 
+        // 只有 待受理(1) 的单子可以撤回 (如果已经检测中，就不允许撤回了)
+        if (!EntrustOrderStatusEnum.DSL.getCode().equals(opPcrEntrustOrder.getStatus())) {
+            throw new BusinessException("当前状态不允许撤回（仅待受理状态可撤回）");
+        }
+
+        OpPcrEntrustOrder update = new OpPcrEntrustOrder();
+        update.setOpPcrEntrustOrderId(orderId);
+        update.setStatus(EntrustOrderStatusEnum.DTJ.getCode()); // 变回 0
+        update.setUpdateBy(SecurityUtils.getUserId().toString());
+        update.setUpdateTime(new Date());
+
+        opPcrEntrustOrderMapper.updateOpPcrEntrustOrder(update);
+    }
 }

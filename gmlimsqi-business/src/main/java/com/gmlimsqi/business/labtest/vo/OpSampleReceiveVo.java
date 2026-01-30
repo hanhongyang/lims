@@ -63,4 +63,6 @@ public class OpSampleReceiveVo {
     private Boolean isReturn;
     /** 退回原因 */
     private String returnReason;
+    private String jhwNo;
+    private String batchNo;
 }

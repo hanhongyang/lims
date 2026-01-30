@@ -8,6 +8,7 @@
         <result property="opFeedEntrustOrderItemId"    column="op_feed_entrust_order_item_id"    />
         <result property="opFeedEntrustOrderSampleId"    column="op_feed_entrust_order_sample_id"    />
         <result property="itemId"    column="item_id"    />
+        <result property="itemName"    column="item_name"    />
         <result property="isDelete"    column="is_delete"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
@@ -132,7 +133,7 @@
         where op_feed_entrust_order_sample_id = #{sampleId}
     </update>
     <select id="selectItemsBySampleIdIncludeDeleted" resultMap="OpFeedEntrustOrderItemResult">
-        select i.*, b.item_name, b.item_code
+        select distinct b.item_name
         from op_feed_entrust_order_item i
                  left join bs_labtest_items b on i.item_id = b.bs_labtest_items_id
         where i.op_feed_entrust_order_sample_id = #{sampleId}

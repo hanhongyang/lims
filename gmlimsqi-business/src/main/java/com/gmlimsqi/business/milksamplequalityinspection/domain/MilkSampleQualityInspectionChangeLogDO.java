@@ -12,10 +12,4 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class MilkSampleQualityInspectionChangeLogDO extends BaseChangeLogDO {
-
-    /**
-     * 奶样质检表主键ID
-     */
-    private String opMilkSampleQualityInspectionId;
-
 }

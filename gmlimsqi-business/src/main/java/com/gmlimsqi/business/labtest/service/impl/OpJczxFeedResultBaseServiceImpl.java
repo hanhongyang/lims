@@ -10,13 +10,19 @@ import com.gmlimsqi.business.labtest.mapper.*;
 import com.gmlimsqi.business.labtest.service.IOpJczxFeedResultBaseService;
 import com.gmlimsqi.business.labtest.vo.OpJczxFeedResultInitVo;
 import com.gmlimsqi.business.labtest.vo.OpJczxFeedResultVo;
+import com.gmlimsqi.business.ranch.domain.OpSamplingPlanSample;
+import com.gmlimsqi.business.ranch.domain.OpTestResultBase;
+import com.gmlimsqi.business.ranch.domain.OpTestResultInfo;
+import com.gmlimsqi.business.ranch.mapper.OpSamplingPlanSampleMapper;
+import com.gmlimsqi.business.ranch.mapper.OpTestResultBaseMapper;
+import com.gmlimsqi.business.ranch.mapper.OpTestResultInfoMapper;
+import com.gmlimsqi.business.ranch.service.IOpTestResultBaseService;
 import com.gmlimsqi.business.util.CodeGeneratorUtil;
 import com.gmlimsqi.common.core.domain.entity.SysUser;
 import com.gmlimsqi.common.enums.EntrustOrderStatusEnum;
 import com.gmlimsqi.common.enums.JczxFeedReportStatusEnum;
 import com.gmlimsqi.common.enums.JczxFeedResultStatusEnum;
 import com.gmlimsqi.common.exception.BusinessException;
-import com.gmlimsqi.common.utils.CollectionUtils;
 import com.gmlimsqi.common.utils.SecurityUtils;
 import com.gmlimsqi.common.utils.StringUtils;
 import com.gmlimsqi.common.utils.uuid.IdUtils;
@@ -63,6 +69,14 @@ public class OpJczxFeedResultBaseServiceImpl implements IOpJczxFeedResultBaseSer
     LabtestItemsMapper itemMapper;
     @Autowired
     private OpEquipmentTempHumMonitorMapper opEquipmentTempHumMonitorMapper;
+    @Autowired
+    private IOpTestResultBaseService testResultBaseService;
+    @Autowired
+    private OpTestResultBaseMapper opTestResultBaseMapper;
+    @Autowired
+    private OpTestResultInfoMapper opTestResultInfoMapper;
+    @Autowired
+    private    OpSamplingPlanSampleMapper samplingPlanSampleMapper;
 
     /**
      * 查询检测中心饲料检测结果基础
@@ -1024,5 +1038,69 @@ public class OpJczxFeedResultBaseServiceImpl implements IOpJczxFeedResultBaseSer
                 "2", // 状态
                 SecurityUtils.getUserId().toString() // 当前用户id
         );
+    }
+
+    @Override
+    public void addRanchResult(String sampleNo, String opJczxFeedReportBaseId) {
+        //根据样品编号查询化验单
+        List<OpJczxFeedResultInfo> resultBySampleNo2 = infoMapper.getResultBySampleNo3(sampleNo);
+        //根据项目分组
+        Map<String, List<OpJczxFeedResultInfo>> map = resultBySampleNo2.stream().collect(Collectors.groupingBy(OpJczxFeedResultInfo::getItemName));
+        OpFeedEntrustOrder opFeedEntrustOrder = orderMapper.selectOrderBySampleNo(sampleNo);
+        OpFeedEntrustOrderSample sample = feedEntrustOrderSampleMapper.selectBySampleNo(sampleNo);
+        OpSamplingPlanSample opSamplingPlanSample = samplingPlanSampleMapper.selectOpSamplingBySampleNo(sample.getMaterialSampleNo());
+        List<OpJczxFeedReportInfo> opJczxFeedReportInfos = opJczxFeedReportBaseMapper.selectReportInfoByBaseId( opJczxFeedReportBaseId);
+
+        //组装牧场化验单
+        map.forEach((s,itemList)->{
+            System.out.println(s);
+
+            OpJczxFeedResultBase feedResultBase = opJczxFeedResultBaseMapper.selectOpJczxFeedResultBaseByOpJczxFeedResultBaseId(itemList.get(0).getBaseId());
+            OpTestResultBase base = new OpTestResultBase();
+            base.setId(IdUtils.simpleUUID());
+            base.fillCreateInfo();
+            base.setDeptId(opFeedEntrustOrder.getEntrustDeptId().toString());
+            base.setResultNo(codeGeneratorUtil.generateHydAssayOrderNo(opFeedEntrustOrder.getEntrustDeptId().toString())); // 临时单号
+            base.setItemName(itemList.get(0).getItemName());
+            base.setItemId(itemList.get(0).getItemId());
+            base.setTestUser(feedResultBase.getTestUser());
+            base.setTestTime(feedResultBase.getTestEndTime());
+            base.setExamineTime(feedResultBase.getExamineTime());
+            base.setExamineUser(feedResultBase.getExamineUser());
+            base.setResultAddType("1");
+            base.setStatus("4"); // 状态：待提交
+            opTestResultBaseMapper.insertOpTestResultBase(base);
+            for (OpJczxFeedResultInfo opJczxFeedResultInfo : itemList) {
+                OpTestResultInfo info = new OpTestResultInfo();
+                opJczxFeedReportInfos.stream().filter(a -> s.equals(a.getItemName())).findFirst().ifPresent(opJczxFeedResultInfo1 -> {
+                    info.setResult( opJczxFeedResultInfo1.getValueOfTest());
+                });
+                info.setId(IdUtils.simpleUUID());
+                info.fillCreateInfo();
+                info.setBaseId(base.getId());
+                info.setDeptId(base.getDeptId());
+                info.setSampleNo(sample.getMaterialSampleNo());
+                info.setSampleName(sample.getName());
+
+                //info.setInvbillId(sample.getInvillId());
+                info.setInvbillCode(sample.getInvbillCode());
+                info.setInvbillName(sample.getInvbillName());
+                info.setPlanId(opSamplingPlanSample.getSamplingPlanId());
+                info.setPlanSampleId(opSamplingPlanSample.getOpSamplingPlanSampleId());
+                info.setItemName(opJczxFeedResultInfo.getItemName());
+                info.setItemId(opJczxFeedResultInfo.getItemId());
+                //  info.setPlanItemId(item.getOpSamplingPlanItemId());
+                info.setIsPushSap("0");
+                //  info.setFeatureId(item.getFeatureId());
+                //  info.setFeatureName(item.getFeatureName());
+                //  info.setUpperLimit(item.getUpperLimit());
+                //  info.setLowerLimit(item.getLowerLimit());
+                //   info.setQualitativeOrQuantitative(item.getQualitativeOrQuantitative());
+
+
+                opTestResultInfoMapper.insertOpTestResultInfo(info);
+
+            }
+        });
     }
 }

@@ -6,9 +6,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum EntrustOrderStatusEnum {
-    /**
-     * 0否1是
-     */
+
+    DTJ("0", "待提交"),
     DSL("1", "待受理"),
     JCZ("2", "检测中"),
     JCWC("3", "检测完成"),

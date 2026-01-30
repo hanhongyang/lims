@@ -66,8 +66,8 @@ public class OpInspectionMilkTankers extends BaseEntity implements BaseEntity.Cr
     private String cylinderHeadGasketPhotoUrl;*/
 
     /** 进场时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "进场时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "进场时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date entryTime;
 
     /** 创建人名称 */

@@ -23,7 +23,7 @@ import com.gmlimsqi.common.core.page.TableDataInfo;
 
 /**
  * 铅封单Controller
- * 
+ *
  * @author hhy
  * @date 2025-11-10
  */
@@ -106,8 +106,8 @@ public class OpLeadSealSheetController extends BaseController
      * 手动推送奶源
      */
     @Log(title = "铅封单", businessType = BusinessType.UPDATE)
-    @PutMapping("/pushMilkSource")
-    public AjaxResult pushMilkSource(@RequestBody String opLeadSealSheetId) {
+    @PutMapping("/pushMilkSource/{opLeadSealSheetId}")
+    public AjaxResult pushMilkSource(@PathVariable String opLeadSealSheetId) {
         return toAjax(opLeadSealSheetService.pushMilkSource(opLeadSealSheetId));
     }
 }

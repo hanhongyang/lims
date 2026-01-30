@@ -31,7 +31,7 @@ public interface IOpBloodEntrustOrderService
      * @return 血样样品委托单集合
      */
     public List<OpBloodEntrustOrder> selectOpBloodEntrustOrderList(OpBloodEntrustOrder opBloodEntrustOrder);
-
+    void withdrawOrder(String orderId);
     /**
      * 新增血样样品委托单
      * 

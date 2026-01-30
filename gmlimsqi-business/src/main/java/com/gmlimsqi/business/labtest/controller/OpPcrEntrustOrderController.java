@@ -117,5 +117,14 @@ public class OpPcrEntrustOrderController extends BaseController
         }
     }
 
-
+    /**
+     * 撤回委托单（将待受理状态变回待提交）
+     */
+    @Log(title = "饲料样品委托单", businessType = BusinessType.UPDATE)
+    @GetMapping("/withdraw/{opPcrEntrustOrderId}")
+    public AjaxResult withdraw(@PathVariable("opPcrEntrustOrderId") String opPcrEntrustOrderId)
+    {
+        opPcrEntrustOrderService.withdrawOrder(opPcrEntrustOrderId);
+        return success();
+    }
 }

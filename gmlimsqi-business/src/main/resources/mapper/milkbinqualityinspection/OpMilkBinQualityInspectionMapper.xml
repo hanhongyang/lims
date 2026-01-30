@@ -59,6 +59,8 @@
             <result property="alcoholValue"    column="alcohol_value"    />
             <result property="alcoholPhoto"    column="alcohol_photo"    />
             <result property="meloxicam"    column="meloxicam"    />
+            <result property="imidacloprid"    column="imidacloprid"    />
+            <result property="acetamiprid"    column="acetamiprid"    />
 
             <result column="fat_percent_photo" property="fatPercentPhoto"/>
             <result column="protein_percent_photo" property="proteinPercentPhoto"/>
@@ -85,6 +87,8 @@
             <result column="quinolone_photo" property="quinolonePhoto" />
             <result column="freezing_point_photo" property="freezingPointPhoto" />
             <result column="meloxicam_photo" property="meloxicamPhoto" />
+            <result column="imidacloprid_photo" property="imidaclopridPhoto" />
+            <result column="acetamiprid_photo" property="acetamipridPhoto" />
 
             <result column="fatPercentPhotoUrl" property="fatPercentPhotoUrl" />
             <result column="proteinPercentPhotoUrl" property="proteinPercentPhotoUrl" />
@@ -112,6 +116,8 @@
             <result column="freezingPointPhotoUrl" property="freezingPointPhotoUrl" />
             <result column="alcoholPhotoUrl" property="alcoholPhotoUrl" />
             <result column="meloxicamPhotoUrl" property="meloxicamPhotoUrl" />
+            <result column="imidaclopridPhotoUrl" property="imidaclopridPhotoUrl" />
+            <result column="acetamipridPhotoUrl" property="acetamipridPhotoUrl" />
     </resultMap>
 
     <sql id="selectOpMilkBinQualityInspectionVo">
@@ -193,7 +199,11 @@
                a.alcohol_value,
                a.alcohol_photo,
                a.meloxicam,
-               a.meloxicam_photo
+               a.meloxicam_photo,
+               a.imidacloprid,
+               a.imidacloprid_photo,
+               a.acetamiprid,
+               a.acetamiprid_photo
         from op_milk_bin_quality_inspection a
     </sql>
 
@@ -241,6 +251,9 @@
                         <if test="reviewStartTime != null "> and a.review_time >= #{reviewStartTime}</if>
                         <if test="reviewEndTime != null "> and a.review_time &lt;= #{reviewEndTime}</if>
                         <if test="isDelete != null  and isDelete != ''"> and a.is_delete = #{isDelete}</if>
+                        <if test="meloxicam != null  and meloxicam != ''"> and a.meloxicam = #{meloxicam}</if>
+                        <if test="imidacloprid != null  and imidacloprid != ''"> and a.imidacloprid = #{imidacloprid}</if>
+                        <if test="acetamiprid != null  and acetamiprid != ''"> and a.acetamiprid = #{acetamiprid}</if>
             ${params.dataScope}
         </where>
         order by a.create_time desc
@@ -328,6 +341,10 @@
         a.alcohol_photo,
         a.meloxicam,
         a.meloxicam_photo,
+        a.imidacloprid,
+        a.imidacloprid_photo,
+        a.acetamiprid,
+        a.acetamiprid_photo,
 
         fat_file.url as fatPercentPhotoUrl,
         protein_file.url as proteinPercentPhotoUrl,
@@ -354,7 +371,9 @@
         quinolone_file.url as quinolonePhotoUrl,
         freezing_file.url as freezingPointPhotoUrl,
         alcohol_file.url as alcoholPhotoUrl,
-        meloxicam_file.url as meloxicamPhotoUrl
+        meloxicam_file.url as meloxicamPhotoUrl,
+        imidacloprid_file.url as imidaclopridPhotoUrl,
+        acetamiprid_file.url as acetamipridPhotoUrl
 
         from op_milk_bin_quality_inspection a
 
@@ -385,10 +404,12 @@
         left join sys_upload_file freezing_file on a.freezing_point_photo = freezing_file.file_id
         left join sys_upload_file alcohol_file on a.alcohol_photo = alcohol_file.file_id
         left join sys_upload_file meloxicam_file on a.meloxicam_photo = meloxicam_file.file_id
+        left join sys_upload_file imidacloprid_file on a.imidacloprid_photo = imidacloprid_file.file_id
+        left join sys_upload_file acetamiprid_file on a.acetamiprid_photo = acetamiprid_file.file_id
 
         -- 条件：根据a表id查询单条详情，过滤已删除数据
         where a.id = #{id}
-        and a.is_delete = 0;
+        and a.is_delete = 0
     </select>
 
     <insert id="insertOpMilkBinQualityInspection" parameterType="OpMilkBinQualityInspection"
@@ -476,6 +497,10 @@
             <if test="alcoholPhoto != null">alcohol_photo,</if>
             <if test="meloxicam != null">meloxicam,</if>
             <if test="meloxicamPhoto != null">meloxicam_photo,</if> <!-- 新增：美洛昔康图片file_id -->
+            <if test="imidacloprid != null">imidacloprid,</if>
+            <if test="imidaclopridPhoto != null">imidacloprid_photo,</if>
+            <if test="acetamiprid != null">acetamiprid,</if>
+            <if test="acetamipridPhoto != null">acetamiprid_photo,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -558,6 +583,10 @@
             <if test="alcoholPhoto != null">#{alcoholPhoto},</if>
             <if test="meloxicam != null">#{meloxicam},</if>
             <if test="meloxicamPhoto != null">#{meloxicamPhoto},</if> <!-- 新增：对应实体类美洛昔康图片属性 -->
+            <if test="imidacloprid != null">#{imidacloprid},</if>
+            <if test="imidaclopridPhoto != null">#{imidaclopridPhoto},</if>
+            <if test="acetamiprid != null">#{acetamiprid},</if>
+            <if test="acetamipridPhoto != null">#{acetamipridPhoto},</if>
         </trim>
     </insert>
 
@@ -640,6 +669,10 @@
             <if test="alcoholPhoto != null">alcohol_photo = #{alcoholPhoto},</if>
             <if test="meloxicam != null">meloxicam = #{meloxicam},</if>
             <if test="meloxicamPhoto != null">meloxicam_photo = #{meloxicamPhoto},</if> <!-- 新增：美洛昔康图片file_id -->
+            <if test="imidacloprid != null">imidacloprid = #{imidacloprid},</if>
+            <if test="imidaclopridPhoto != null">imidacloprid_photo = #{imidaclopridPhoto},</if>
+            <if test="acetamiprid != null">acetamiprid = #{acetamiprid},</if>
+            <if test="acetamipridPhoto != null">acetamiprid_photo = #{acetamipridPhoto},</if>
         </trim>
         where id = #{id}
     </update>

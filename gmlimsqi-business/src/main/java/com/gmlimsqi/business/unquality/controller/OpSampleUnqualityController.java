@@ -125,14 +125,14 @@ public class OpSampleUnqualityController extends BaseController
 
     /**
      * 手动关闭不合格处理单
-     * @param opSampleUnqualityId 样品不合格处理单id列表
+     * @param opSampleUnquality 样品不合格处理单
      * @return {@link AjaxResult} 结果
      */
 
-    @PutMapping("/manualUpdate/{opSampleUnqualityId}")
-    public AjaxResult manualUpdate(@PathVariable String opSampleUnqualityId)
+    @PutMapping("/manualUpdate")
+    public AjaxResult manualUpdate(@RequestBody OpSampleUnquality opSampleUnquality)
     {
-        return toAjax(opSampleUnqualityService.updateOpSampleUnqualityManually(opSampleUnqualityId));
+        return toAjax(opSampleUnqualityService.updateOpSampleUnqualityManually(opSampleUnquality));
     }
 
 

@@ -77,6 +77,9 @@ public class OpSamplingPlanItem extends BaseEntity implements BaseEntity.CreateA
     /** 单项判定结果 (合格/不合格) */
     private String checkResult;
 
+    /** 单位 */
+    private String unitOfMeasurement;
+
     /** 是否化验完成 (根据 status != '1' 判断) */
     public Boolean getIsCompleted() {
         return testStatus != null && !"1".equals(testStatus);

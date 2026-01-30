@@ -104,6 +104,17 @@ public class OpFeedEntrustOrderController extends BaseController
         return toAjax(opFeedEntrustOrderService.updateOpFeedEntrustOrder3(opFeedEntrustOrder));
     }
 
+    /**
+     * 撤回委托单（将待受理状态变回待提交）
+     */
+    @Log(title = "饲料样品委托单", businessType = BusinessType.UPDATE)
+    @GetMapping("/withdraw/{opFeedEntrustOrderId}")
+    public AjaxResult withdraw(@PathVariable("opFeedEntrustOrderId") String opFeedEntrustOrderId)
+    {
+        opFeedEntrustOrderService.withdrawOrder(opFeedEntrustOrderId);
+        return success();
+    }
+
     @PostMapping("/jhwItemList")
     public AjaxResult selectJhwItemList(@RequestBody List<String> sampleIdList)
     {

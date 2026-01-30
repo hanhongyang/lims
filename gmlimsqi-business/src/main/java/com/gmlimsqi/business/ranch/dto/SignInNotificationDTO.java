@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.validation.constraints.NotBlank; // 引入校验
 
 /**
@@ -41,7 +42,7 @@ public class SignInNotificationDTO implements Serializable {
     private String signInStatus;
     
     /** 签到时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date signInTime;
     
     /** 目的地编码 (LIMS的牧场编码) */
@@ -51,8 +52,8 @@ public class SignInNotificationDTO implements Serializable {
     /** 附件信息 */
     private String filePath;
     /** 附件信息 */
-    private String fileBase64;
-    private String originalFilename;
+    private List<String> fileBase64;
+    private List<String> originalFilename;
     /** 0:收货，1:发货，2：淘汰牛 */
     private String status;
     

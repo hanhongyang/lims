@@ -45,7 +45,7 @@ public interface IOpMilkSampleQualityInspectionService
      * @param opMilkSampleQualityInspection 奶样质检
      * @return 结果
      */
-    public int updateOpMilkSampleQualityInspection(OpMilkSampleQualityInspection opMilkSampleQualityInspection);
+    public String updateOpMilkSampleQualityInspection(OpMilkSampleQualityInspection opMilkSampleQualityInspection);
 
     /**
      * 审核奶样质检单
@@ -90,4 +90,9 @@ public interface IOpMilkSampleQualityInspectionService
      * @return
      */
     int pushMilkSource(String opMilkSampleQualityInspectionId);
+
+    /**
+      * 手动新增奶样质检
+      */
+    int manuallyAdd(OpMilkSampleQualityInspection opMilkSampleQualityInspection);
 }

@@ -26,6 +26,7 @@ import com.gmlimsqi.system.mapper.SysUploadFileMapper;
 import com.gmlimsqi.system.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.gmlimsqi.business.util.CodeGeneratorUtil.CODE_TYPE_LEAD_SEAL_SHEET;
 
@@ -187,6 +188,7 @@ public class OpLeadSealSheetServiceImpl implements IOpLeadSealSheetService
     }
 
     @Override
+    @Transactional
     public int audit(String opLeadSealSheetId) {
         // 检查单是否存在
         OpLeadSealSheet opLeadSealSheet = selectOpLeadSealSheetByOpLeadSealSheetId(opLeadSealSheetId);
@@ -216,9 +218,13 @@ public class OpLeadSealSheetServiceImpl implements IOpLeadSealSheetService
         }
         opLeadSealSheet.setReviewTime(new Date());
 
-        this.pushMilkSource(opLeadSealSheetId);
+        int i = opLeadSealSheetMapper.updateOpLeadSealSheet(opLeadSealSheet);
 
-        return opLeadSealSheetMapper.updateOpLeadSealSheet(opLeadSealSheet);
+        int i1 = this.pushMilkSource(opLeadSealSheetId);
+
+        System.out.println("修改铅封单状态为1，推送奶源状态为1" + i1);
+
+        return i;
     }
 
     @Override
@@ -242,6 +248,7 @@ public class OpLeadSealSheetServiceImpl implements IOpLeadSealSheetService
         // 调用 RMTS 接口推送奶源信息
         R r = rmtsRanchLimsService.qualityInfo(qualitySyncDTO);
         if (r.getCode() == 200){
+            System.out.println("修改铅封单推送奶源状态为1");
             opLeadSealSheet.setIsPushMilkSource("1");
         }
         // ---------------------------推送奶源逻辑结束

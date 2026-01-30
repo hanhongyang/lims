@@ -1,10 +1,12 @@
 package com.gmlimsqi.common.change.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gmlimsqi.common.change.constant.ChangeLogConstant;
 import com.gmlimsqi.common.core.domain.model.LoginUser;
 import com.gmlimsqi.common.utils.DateUtils;
 import com.gmlimsqi.common.utils.SecurityUtils;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -19,6 +21,11 @@ public class BaseChangeLogDO {
      * 主键ID
      */
     private Long id;
+
+    /**
+     * 业务ID
+     */
+    private String bizId;
 
     /**
      * 操作类型：INSERT/UPDATE/DELETE
@@ -115,6 +122,7 @@ public class BaseChangeLogDO {
     /**
      * 操作时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
@@ -133,7 +141,7 @@ public class BaseChangeLogDO {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         // 填充创建信息
         this.setCreateBy(loginUser.getUserId().toString());
-        this.setCreateByName(loginUser.getUsername());
+        this.setCreateByName(loginUser.getUser().getNickName());
         this.setCreateTime(now);
     }
 }

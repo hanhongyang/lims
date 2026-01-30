@@ -1,6 +1,12 @@
 # 项目相关配置
 ruoyi:
     profile: D:/ruoyi/uploadPath
+jasypt:
+    encryptor:
+        # 指定加密算法 (必须与生成密文时使用的算法一致)
+        algorithm: PBEWithMD5AndDES
+        # 指定 IV 生成器 (通常是 RandomIvGenerator)
+        iv-generator-classname: org.jasypt.iv.RandomIvGenerator
 # 数据源配置
 spring:
     datasource:
@@ -12,14 +18,15 @@ spring:
                 url: jdbc:mysql://116.204.121.45:24309/gmlimsqi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 #password: n%lGhOtu0VanJRax
-                password: egp.666999
+                #加密前密码password: egp.666999
+                password: ENC(lqrgCgvg25i36w4A74aQtfNzZDNMWn3W5sexsTy3z1s=)
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
-                enabled: false
-                url: 
-                username: 
-                password: 
+                enabled: true
+                url: jdbc:mysql://116.204.121.45:24309/guangming_dbykt_test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: root
+                password: ENC(lqrgCgvg25i36w4A74aQtfNzZDNMWn3W5sexsTy3z1s=)
             # 初始连接数
             initialSize: 5
             # 最小连接池数量

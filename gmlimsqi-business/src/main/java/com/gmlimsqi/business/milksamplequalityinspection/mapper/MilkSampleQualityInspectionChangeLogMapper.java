@@ -22,8 +22,7 @@ public interface MilkSampleQualityInspectionChangeLogMapper {
     /**
      * 根据奶样质检主表ID查询日志（按时间倒序）
      */
-    List<MilkSampleQualityInspectionChangeLogDO> selectListByMilkId(
-            @Param("milkId") String opMilkSampleQualityInspectionId);
+    List<MilkSampleQualityInspectionChangeLogDO> selectListByBizId(@Param("bizId") String bizId);
 
     /**
      * 条件查询列表（都非必填）

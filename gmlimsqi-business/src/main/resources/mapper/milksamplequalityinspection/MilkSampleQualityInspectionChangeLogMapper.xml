@@ -11,7 +11,9 @@
 
         <id property="id" column="id"/>
 
-        <result property="opMilkSampleQualityInspectionId" column="op_milk_sample_quality_inspection_id"/>
+        <!-- 统一业务主键 -->
+        <result property="bizId" column="biz_id"/>
+
         <result property="opType" column="op_type"/>
         <result property="changeReason" column="change_reason"/>
 
@@ -27,7 +29,7 @@
     <!-- 公共查询列 -->
     <sql id="Base_Column_List">
         id,
-        op_milk_sample_quality_inspection_id,
+        biz_id,
         op_type,
         change_reason,
         old_data,
@@ -35,10 +37,7 @@
         diff_data,
         create_by,
         create_by_name,
-        create_time,
-        update_by,
-        update_time,
-        remark
+        create_time
     </sql>
 
     <!-- 插入日志 -->
@@ -48,7 +47,7 @@
             keyProperty="id"
             keyColumn="id">
         INSERT INTO op_milk_sample_quality_inspection_change_log
-        (op_milk_sample_quality_inspection_id,
+        (biz_id,
          op_type,
          change_reason,
          old_data,
@@ -56,11 +55,8 @@
          diff_data,
          create_by,
          create_by_name,
-         create_time,
-         update_by,
-         update_time,
-         remark)
-        VALUES (#{opMilkSampleQualityInspectionId},
+         create_time)
+        VALUES (#{bizId},
                 #{opType},
                 #{changeReason},
                 #{oldData},
@@ -68,10 +64,7 @@
                 #{diffData},
                 #{createBy},
                 #{createByName},
-                #{createTime},
-                #{updateBy},
-                #{updateTime},
-                #{remark})
+                #{createTime})
     </insert>
 
     <!-- 根据主键查询 -->
@@ -82,12 +75,12 @@
         WHERE id = #{id}
     </select>
 
-    <!-- 根据奶样质检主表ID查询 -->
-    <select id="selectListByMilkId" resultMap="MilkSampleQualityInspectionChangeLogMap">
+    <!-- 根据业务主键（bizId）查询 -->
+    <select id="selectListByBizId" resultMap="MilkSampleQualityInspectionChangeLogMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM op_milk_sample_quality_inspection_change_log
-        WHERE op_milk_sample_quality_inspection_id = #{milkId}
+        WHERE biz_id = #{bizId}
         ORDER BY create_time DESC
     </select>
 
@@ -98,15 +91,20 @@
         FROM op_milk_sample_quality_inspection_change_log
         <where>
             <if test="query != null">
-                <if test="query.opMilkSampleQualityInspectionId != null and query.opMilkSampleQualityInspectionId != ''">
-                    AND op_milk_sample_quality_inspection_id = #{query.opMilkSampleQualityInspectionId}
+
+                <!-- 统一：bizId -->
+                <if test="query.bizId != null and query.bizId != ''">
+                    AND biz_id = #{query.bizId}
                 </if>
+
                 <if test="query.opType != null and query.opType != ''">
                     AND op_type = #{query.opType}
                 </if>
+
                 <if test="query.createBy != null and query.createBy != ''">
                     AND create_by = #{query.createBy}
                 </if>
+
                 <if test="query.createByName != null and query.createByName != ''">
                     AND create_by_name = #{query.createByName}
                 </if>

@@ -87,7 +87,7 @@ public interface OpJczxBloodReportBaseMapper
      * @param bloodEntrustOrderId 血样委托单号
      * @return 检测中心血样报告主集合
      */
-    public List<OpJczxBloodReportBase> selectReportBaseByOrderId(String bloodEntrustOrderId);
+    public List<OpJczxBloodReportBase> selectReportBaseByOrderIdLimit1(String bloodEntrustOrderId);
 
 
     Integer  getStatus0Count(OpJczxBloodReportBase opJczxBloodReportBase);

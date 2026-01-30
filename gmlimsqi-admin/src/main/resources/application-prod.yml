@@ -1,6 +1,12 @@
 # 项目相关配置
 ruoyi:
     profile: E:/project/lims/lims-java/uploadPath
+jasypt:
+    encryptor:
+        # 指定加密算法 (必须与生成密文时使用的算法一致)
+        algorithm: PBEWithMD5AndDES
+        # 指定 IV 生成器 (通常是 RandomIvGenerator)
+        iv-generator-classname: org.jasypt.iv.RandomIvGenerator
 # 数据源配置
 spring:
     datasource:
@@ -11,15 +17,15 @@ spring:
             master:
                 url: jdbc:mysql://172.16.86.208:52147/gmlimsqi?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
-                password: GMzhijian.1028***
+                password: ENC(ONj/9yG+g+FMYSyDpD8Y7FxuUIDOvWTVetMCsd3eTLft4KdM2XtiGg==)
 
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
                 enabled: false
-                url: 
-                username: 
-                password: 
+                url: jdbc:mysql://172.16.84.81:3306/gm_db_ykt?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                username: root
+                password: ENC(ONj/9yG+g+FMYSyDpD8Y7FxuUIDOvWTVetMCsd3eTLft4KdM2XtiGg==)
             # 初始连接数
             initialSize: 5
             # 最小连接池数量

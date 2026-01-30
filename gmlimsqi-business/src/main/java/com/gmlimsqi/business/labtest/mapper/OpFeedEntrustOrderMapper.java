@@ -62,4 +62,7 @@ public interface OpFeedEntrustOrderMapper
     int migrateResultToNewItem(@Param("sampleId") String sampleId,
                                @Param("dictItemId") String dictItemId,
                                @Param("newItemId") String newItemId);
+
+    OpFeedEntrustOrder selectOrderBySampleNo(@Param("sampleNo")String sampleNo);
+
 }

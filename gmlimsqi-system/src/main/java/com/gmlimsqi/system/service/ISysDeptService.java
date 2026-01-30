@@ -2,6 +2,7 @@ package com.gmlimsqi.system.service;
 
 import com.gmlimsqi.common.core.domain.TreeSelect;
 import com.gmlimsqi.common.core.domain.entity.SysDept;
+import com.gmlimsqi.system.domain.SysDeptMilkConfig;
 
 import java.util.List;
 
@@ -131,4 +132,11 @@ public interface ISysDeptService {
      * 界面下拉筛选框
      */
     List<SysDept> filterDept();
+
+    /**
+     * 根据当前登录用户获取对应的奶源系统部门编码
+     *
+     * @return 奶源系统部门编码
+     */
+    public List<SysDeptMilkConfig> getLoginUserMilkSourceCode();
 }

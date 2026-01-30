@@ -21,7 +21,7 @@ public class DdConfigSign {
     
     @Autowired
     private DingTalkToken dingTalkToken;
-    
+
     /**
      * 计算dd.config的签名参数
      *

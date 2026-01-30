@@ -306,7 +306,7 @@ public class OpJczxPcrReportBaseServiceImpl implements IOpJczxPcrReportBaseServi
 
 
     @Override
-    public void generatePcrReportExcel(HttpServletResponse response, OpPcrEntrustOrder dto) { // <--- 修改签名
+    public void generatePcrReportExcel(HttpServletResponse response, OpPcrEntrustOrder dto) {
         log.info("开始生成 PCR 报告 Excel (HttpServletResponse 方式)，委托单 ID: {}", dto.getOpPcrEntrustOrderId());
         OpPcrEntrustOrder order = null;
         try {
@@ -323,133 +323,116 @@ public class OpJczxPcrReportBaseServiceImpl implements IOpJczxPcrReportBaseServi
                     .filter(s -> StringUtils.isNotEmpty(s.getPcrTaskItemType()))
                     .filter(s -> s.getPcrTaskItemType().equals(dto.getPcrTaskItemType()))
                     .collect(Collectors.groupingBy(OpPcrEntrustOrderSample::getPcrTaskItemType));
-            if (groupedSamples.isEmpty()) {
-                log.warn("委托单 {} 的样品缺少 pcrTaskItemType 信息", order.getEntrustOrderNo());
-            }
 
             String fileName = "PCR检测报告_" + order.getEntrustOrderNo() + ".xlsx";
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setCharacterEncoding("utf-8");
             response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
 
-
             try (XSSFWorkbook workbook = new XSSFWorkbook();
                  OutputStream outputStream = response.getOutputStream()) {
 
-                log.info("开始创建 Excel 内容...");
+                XSSFCellStyle onePlusStyle = createCellStyleWithBackground(workbook, IndexedColors.YELLOW);
+                XSSFCellStyle twoPlusStyle = createCellStyleWithBackground(workbook, IndexedColors.DARK_RED, IndexedColors.WHITE);
+                XSSFCellStyle threePlusStyle = createCellStyleWithBackground(workbook, IndexedColors.RED);
 
-                // 创建红色背景样式（关键修改）
-                // 创建三种不同的背景色样式
-                XSSFCellStyle onePlusStyle = createCellStyleWithBackground(workbook, IndexedColors.YELLOW);        // 一个加号：黄色
-                XSSFCellStyle twoPlusStyle = createCellStyleWithBackground(workbook, IndexedColors.DARK_RED, IndexedColors.WHITE);      // 两个加号：深红
-                XSSFCellStyle threePlusStyle = createCellStyleWithBackground(workbook, IndexedColors.RED);         // 三个加号：红色
-
-                // ... (你之前验证过的数据填充和日志记录逻辑) ...
                 for (Map.Entry<String, List<OpPcrEntrustOrderSample>> entry : groupedSamples.entrySet()) {
                     String pcrTaskItemType = entry.getKey();
                     List<OpPcrEntrustOrderSample> samplesInGroup = entry.getValue();
-                    log.info("处理类型 '{}'，包含 {} 个样品", pcrTaskItemType, samplesInGroup.size());
+
                     String sheetName = DictUtils.getDictLabel("pcr_task_item_type", pcrTaskItemType);
                     if (StringUtils.isEmpty(sheetName)) {
                         sheetName = "Type_" + pcrTaskItemType;
                     }
                     sheetName = sheetName.replaceAll("[\\\\/*?\\[\\]:]", "_").substring(0, Math.min(sheetName.length(), 30));
-                    log.info("创建 Sheet: {}", sheetName);
                     XSSFSheet sheet = workbook.createSheet(sheetName);
+
                     List<String> sortedItemNames = getSortedItemNamesByType(samplesInGroup, pcrTaskItemType);
-                    log.info("Sheet '{}' 的项目列: {}", sheetName, sortedItemNames);
+
+                    // 1. 提取全局批号
+                    String globalTqsjh = "";
+                    String globalKzsjh = "";
+                    for (OpPcrEntrustOrderSample sample : samplesInGroup) {
+                        if (CollectionUtil.isNotEmpty(sample.getTestItem())) {
+                            for (OpPcrEntrustOrderItem item : sample.getTestItem()) {
+                                if (!Arrays.asList("空白样", "阳性对照", "阴性对照").contains(item.getSampleNo())) {
+                                    if (StringUtils.isEmpty(globalTqsjh) && StringUtils.isNotEmpty(item.getTqsjh())) globalTqsjh = item.getTqsjh();
+                                    if (StringUtils.isEmpty(globalKzsjh) && StringUtils.isNotEmpty(item.getKzsjh())) globalKzsjh = item.getKzsjh();
+                                }
+                            }
+                        }
+                        if (StringUtils.isNotEmpty(globalTqsjh) && StringUtils.isNotEmpty(globalKzsjh)) break;
+                    }
+
+                    // 2. 构建表头
                     Row headerRow = sheet.createRow(0);
                     int colIndex = 0;
-                    setCellValue(headerRow, colIndex++, "提取试剂盒批号");
-                    setCellValue(headerRow, colIndex++, "扩增试剂盒批号");
                     setCellValue(headerRow, colIndex++, "序号");
                     setCellValue(headerRow, colIndex++, "所属牧场");
                     setCellValue(headerRow, colIndex++, "样品名称");
+                    int sampleDescColIndex = colIndex; // 记录样品描述列索引
                     setCellValue(headerRow, colIndex++, "样品描述");
-                    setCellValue(headerRow, colIndex++, "委托备注");
-                    setCellValue(headerRow, colIndex++, "样品编号");
+
                     Map<String, Integer> itemColIndexMap = new HashMap<>();
                     for (String itemName : sortedItemNames) {
                         setCellValue(headerRow, colIndex, itemName);
                         itemColIndexMap.put(itemName, colIndex++);
                     }
+
+                    int remarkColIndex = colIndex++;
+                    setCellValue(headerRow, remarkColIndex, "委托备注");
+                    int sampleNoColIndex = colIndex++;
+                    setCellValue(headerRow, sampleNoColIndex, "样品编号");
+
+                    // 3. 填充数据
                     int rowIndex = 1;
                     int sampleIndex = 0;
                     for (OpPcrEntrustOrderSample sample : samplesInGroup) {
                         Row dataRow = sheet.createRow(rowIndex++);
-                        colIndex = 0;
-                        String tqsjh = sample.getTestItem().stream()
-                                .filter(item -> !("空白样".equals(item.getSampleNo()) || "阳性对照".equals(item.getSampleNo()) || "阴性对照".equals(item.getSampleNo())))
-                                .map(OpPcrEntrustOrderItem::getTqsjh)
-                                .filter(StringUtils::isNotEmpty)
-                                .distinct()
-                                .collect(Collectors.joining(", "));
+                        int curCol = 0;
+                        setCellValue(dataRow, curCol++, ++sampleIndex);
+                        setCellValue(dataRow, curCol++, order.getEntrustDeptName());
+                        setCellValue(dataRow, curCol++, sample.getInvbillName());
+                        setCellValue(dataRow, curCol++, sample.getName());
 
-                        String kzsjh = sample.getTestItem().stream()
-                                .filter(item -> !("空白样".equals(item.getSampleNo()) || "阳性对照".equals(item.getSampleNo()) || "阴性对照".equals(item.getSampleNo())))
-                                .map(OpPcrEntrustOrderItem::getKzsjh)
-                                .filter(StringUtils::isNotEmpty)
-                                .distinct()
-                                .collect(Collectors.joining(", "));
-                        setCellValue(dataRow, colIndex++, tqsjh);
-                        setCellValue(dataRow, colIndex++, kzsjh);
-                        setCellValue(dataRow, colIndex++, ++sampleIndex);
-                        setCellValue(dataRow, colIndex++, order.getEntrustDeptName());
-                        setCellValue(dataRow, colIndex++, sample.getInvbillName());
-                        setCellValue(dataRow, colIndex++, sample.getName());
-                        setCellValue(dataRow, colIndex++, sample.getRemark());
-                        setCellValue(dataRow, colIndex++, sample.getSampleNo());
-
-
-         /*               if(CollectionUtil.isNotEmpty(sample.getTestItem())){
-                            for (OpPcrEntrustOrderItem item : sample.getTestItem()) {
-                                if (!("空白样".equals(item.getSampleNo()) || "阳性对照".equals(item.getSampleNo()) || "阴性对照".equals(item.getSampleNo()))) {
-                                    Integer itemCol = itemColIndexMap.get(item.getItemName());
-                                    if (itemCol != null) {
-                                        setCellValue(dataRow, itemCol, item.getTestResult());
-                                    }
-                                }
-                            }
-                        }
-                    }*/
-                        // 检测项目列使用新重载方法（需要样式）
                         if(CollectionUtil.isNotEmpty(sample.getTestItem())){
                             for (OpPcrEntrustOrderItem item : sample.getTestItem()) {
-                                if (!("空白样".equals(item.getSampleNo()) || "阳性对照".equals(item.getSampleNo()) || "阴性对照".equals(item.getSampleNo()))) {
+                                if (!Arrays.asList("空白样", "阳性对照", "阴性对照").contains(item.getSampleNo())) {
                                     Integer itemCol = itemColIndexMap.get(item.getItemName());
                                     if (itemCol != null) {
-                                        // 使用新的多条件方法
-                                        setCellValueWithMultipleConditions(dataRow, itemCol, item.getTestResult(),
-                                                onePlusStyle, twoPlusStyle, threePlusStyle);
+                                        setCellValueWithMultipleConditions(dataRow, itemCol, item.getTestResult(), onePlusStyle, twoPlusStyle, threePlusStyle);
                                     }
                                 }
                             }
                         }
+                        setCellValue(dataRow, remarkColIndex, sample.getRemark());
+                        setCellValue(dataRow, sampleNoColIndex, sample.getSampleNo());
                     }
 
+                    // 4. 添加固定行
+                    addFixedRows(sheet, rowIndex, sampleDescColIndex, sampleNoColIndex, samplesInGroup, itemColIndexMap, onePlusStyle, twoPlusStyle, threePlusStyle);
+                    rowIndex += 3;
 
-                    addFixedRows(sheet, rowIndex, 0, 1, 7, sortedItemNames.size(), samplesInGroup, itemColIndexMap,
-                            onePlusStyle, twoPlusStyle, threePlusStyle);
+                    // 5. 底部追加批号
+                    Row tqsjhRow = sheet.createRow(rowIndex++);
+                    setCellValue(tqsjhRow, 0, "提取试剂盒批号:" + globalTqsjh);
+                    Row kzsjhRow = sheet.createRow(rowIndex++);
+                    setCellValue(kzsjhRow, 0, "扩增试剂盒批号:" + globalKzsjh);
 
+                    // 自动列宽调整 (可选)
+                    for (int i = 0; i < colIndex; i++) {
+                        sheet.autoSizeColumn(i);
+                        sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 5 * 256);
+                    }
                 }
-
-                log.info("Excel 内容创建完成，准备写入 response 输出流...");
-
-                // *** 写入并刷新 ***
                 workbook.write(outputStream);
                 outputStream.flush();
-                log.info("Excel 写入 response 输出流并刷新完成");
-
             } catch (IOException e) {
-                log.error("!!! POI workbook.write 或 response.getOutputStream 过程中发生 IO 异常 !!!", e);
-                throw new RuntimeException("Excel 写入 IO 异常", e); // 抛出异常
-            } catch (Exception e) {
-                log.error("!!! POI workbook.write 过程中发生其他异常 !!!", e);
-                throw new RuntimeException("Excel 写入未知异常", e); // 抛出异常
+                log.error("IO 异常", e);
+                throw new RuntimeException("Excel 写入 IO 异常", e);
             }
         } catch (Exception e) {
-            log.error("生成 PCR 报告 Excel 失败 (Service层)", e);
-            // 抛出异常，让 Controller 层的 try-catch 捕获
+            log.error("生成 PCR 报告 Excel 失败", e);
             throw new ServiceException("生成报告失败: " + e.getMessage());
         }
     }
@@ -611,113 +594,56 @@ public class OpJczxPcrReportBaseServiceImpl implements IOpJczxPcrReportBaseServi
 
     /**
      * 添加固定行（空白样、阳性对照、阴性对照）- *** 已修改 ***
-     * @param sheet        XSSFSheet 对象
-     * @param startRow     开始添加的行索引
-     * @param tqsjhCol     提取试剂盒批号列索引
-     * @param kzsjhCol     扩增试剂盒批号列索引
-     * @param sampleNoCol  样品编号列索引
-     * @param itemCount    (参数保留，但逻辑可能不再需要)
-     * @param samplesInGroup 包含对照组数据的样品列表
-     * @param itemColIndexMap 项目名到列索引的映射
+     * 去掉了 tqsjhCol, kzsjhCol 参数，新增 sampleDescCol 参数
      */
-    private void addFixedRows(XSSFSheet sheet, int startRow, int tqsjhCol, int kzsjhCol, int sampleNoCol, int itemCount,
+    private void addFixedRows(XSSFSheet sheet, int startRow, int sampleDescCol, int sampleNoCol,
                               List<OpPcrEntrustOrderSample> samplesInGroup,
                               Map<String, Integer> itemColIndexMap,
-                              XSSFCellStyle onePlusStyle, // <-- 修正：新增样式参数
-                              XSSFCellStyle twoPlusStyle, // <-- 修正：新增样式参数
-                              XSSFCellStyle threePlusStyle) { // <-- 修正：新增样式参数
-        // 假设对照组数据已经通过 getSortedItemNamesByType 方法被添加到了 *第一个* 样品的 testItem 列表中
+                              XSSFCellStyle onePlusStyle,
+                              XSSFCellStyle twoPlusStyle,
+                              XSSFCellStyle threePlusStyle) {
+
         if (CollectionUtil.isEmpty(samplesInGroup) || CollectionUtil.isEmpty(samplesInGroup.get(0).getTestItem())) {
-            log.warn("addFixedRows 失败：samplesInGroup 为空或第一个样品没有 testItem 列表");
-            // 回退到创建空行
-            Row blankRow = sheet.createRow(startRow);
-            setCellValue(blankRow, sampleNoCol, "空白样");
-            Row positiveRow = sheet.createRow(startRow + 1);
-            setCellValue(positiveRow, sampleNoCol, "阳性对照");
-            Row negativeRow = sheet.createRow(startRow + 2);
-            setCellValue(negativeRow, sampleNoCol, "阴性对照");
             return;
         }
 
-        // 从第一个样品（假设它包含了所有对照组的 items）中提取对照组数据
         List<OpPcrEntrustOrderItem> allItems = samplesInGroup.get(0).getTestItem();
 
-        List<OpPcrEntrustOrderItem> blankItems = allItems.stream()
-                .filter(item -> "空白样".equals(item.getSampleNo()))
-                .collect(Collectors.toList());
+        List<OpPcrEntrustOrderItem> blankItems = allItems.stream().filter(item -> "空白样".equals(item.getSampleNo())).collect(Collectors.toList());
+        List<OpPcrEntrustOrderItem> positiveItems = allItems.stream().filter(item -> "阳性对照".equals(item.getSampleNo())).collect(Collectors.toList());
+        List<OpPcrEntrustOrderItem> negativeItems = allItems.stream().filter(item -> "阴性对照".equals(item.getSampleNo())).collect(Collectors.toList());
 
-        List<OpPcrEntrustOrderItem> positiveItems = allItems.stream()
-                .filter(item -> "阳性对照".equals(item.getSampleNo()))
-                .collect(Collectors.toList());
-
-        List<OpPcrEntrustOrderItem> negativeItems = allItems.stream()
-                .filter(item -> "阴性对照".equals(item.getSampleNo()))
-                .collect(Collectors.toList());
-
-        // --- 创建 空白样 Row ---
+        // --- 1. 空白样 ---
         Row blankRow = sheet.createRow(startRow);
-        setCellValue(blankRow, sampleNoCol, "空白样");
-        if (CollectionUtil.isNotEmpty(blankItems)) {
-            // 假设同一组对照的批号相同，取第一个
-            setCellValue(blankRow, tqsjhCol, blankItems.get(0).getTqsjh());
-            setCellValue(blankRow, kzsjhCol, blankItems.get(0).getKzsjh());
-            // 填充检测结果
-            for (OpPcrEntrustOrderItem item : blankItems) {
-                Integer itemCol = itemColIndexMap.get(item.getItemName());
-                if (itemCol != null) {
-                    // 【修正】使用 setCellValueWithMultipleConditions 来应用颜色
-                    setCellValueWithMultipleConditions(blankRow, itemCol, item.getTestResult(),
-                            onePlusStyle, twoPlusStyle, threePlusStyle);
-                } else {
-                    log.warn("未找到对照项目 '空白样' - '{}' 在表头中的列索引", item.getItemName());
-                }
-            }
-        } else {
-            log.warn("未在数据中找到 '空白样' 的项目信息");
-        }
+        setCellValue(blankRow, sampleDescCol, "空白样"); // 样品描述
+        setCellValue(blankRow, sampleNoCol, "空白样");   // 样品编号
+        fillControlItems(blankRow, blankItems, itemColIndexMap, onePlusStyle, twoPlusStyle, threePlusStyle);
 
-        // --- 创建 阳性对照 Row ---
+        // --- 2. 阳性对照 ---
         Row positiveRow = sheet.createRow(startRow + 1);
-        setCellValue(positiveRow, sampleNoCol, "阳性对照");
-        if (CollectionUtil.isNotEmpty(positiveItems)) {
-            setCellValue(positiveRow, tqsjhCol, positiveItems.get(0).getTqsjh());
-            setCellValue(positiveRow, kzsjhCol, positiveItems.get(0).getKzsjh());
-            for (OpPcrEntrustOrderItem item : positiveItems) {
-                Integer itemCol = itemColIndexMap.get(item.getItemName());
-                if (itemCol != null) {
-                    // 【修正】使用 setCellValueWithMultipleConditions 来应用颜色
-                    setCellValueWithMultipleConditions(positiveRow, itemCol, item.getTestResult(),
-                            onePlusStyle, twoPlusStyle, threePlusStyle);
-                } else {
-                    log.warn("未找到对照项目 '阳性对照' - '{}' 在表头中的列索引", item.getItemName());
-                }
-            }
-        } else {
-            log.warn("未在数据中找到 '阳性对照' 的项目信息");
-        }
+        setCellValue(positiveRow, sampleDescCol, "阳性对照"); // 样品描述
+        setCellValue(positiveRow, sampleNoCol, "阳性对照");   // 样品编号
+        fillControlItems(positiveRow, positiveItems, itemColIndexMap, onePlusStyle, twoPlusStyle, threePlusStyle);
 
-
-        // --- 创建 阴性对照 Row ---
+        // --- 3. 阴性对照 ---
         Row negativeRow = sheet.createRow(startRow + 2);
-        setCellValue(negativeRow, sampleNoCol, "阴性对照");
-        if (CollectionUtil.isNotEmpty(negativeItems)) {
-            setCellValue(negativeRow, tqsjhCol, negativeItems.get(0).getTqsjh());
-            setCellValue(negativeRow, kzsjhCol, negativeItems.get(0).getKzsjh());
-            for (OpPcrEntrustOrderItem item : negativeItems) {
-                Integer itemCol = itemColIndexMap.get(item.getItemName());
-                if (itemCol != null) {
-                    // 【修正】使用 setCellValueWithMultipleConditions 来应用颜色
-                    setCellValueWithMultipleConditions(negativeRow, itemCol, item.getTestResult(),
-                            onePlusStyle, twoPlusStyle, threePlusStyle);
-                } else {
-                    log.warn("未找到对照项目 '阴性对照' - '{}' 在表头中的列索引", item.getItemName());
-                }
-            }
-        } else {
-            log.warn("未在数据中找到 '阴性对照' 的项目信息");
-        }
+        setCellValue(negativeRow, sampleDescCol, "阴性对照"); // 样品描述
+        setCellValue(negativeRow, sampleNoCol, "阴性对照");   // 样品编号
+        fillControlItems(negativeRow, negativeItems, itemColIndexMap, onePlusStyle, twoPlusStyle, threePlusStyle);
     }
 
+    // 提取公共填充逻辑
+    private void fillControlItems(Row row, List<OpPcrEntrustOrderItem> items, Map<String, Integer> itemColIndexMap,
+                                  XSSFCellStyle s1, XSSFCellStyle s2, XSSFCellStyle s3) {
+        if (CollectionUtil.isNotEmpty(items)) {
+            for (OpPcrEntrustOrderItem item : items) {
+                Integer itemCol = itemColIndexMap.get(item.getItemName());
+                if (itemCol != null) {
+                    setCellValueWithMultipleConditions(row, itemCol, item.getTestResult(), s1, s2, s3);
+                }
+            }
+        }
+    }
 
     // --- 确保 getSortedItemNamesByType 和 setCellValue 方法存在且正确 ---
     /**
@@ -869,50 +795,27 @@ public class OpJczxPcrReportBaseServiceImpl implements IOpJczxPcrReportBaseServi
         log.info("开始批量生成PCR报告Excel，共 {} 个委托单", orders.size());
         List<PcrReportExcelResult> results = new ArrayList<>(orders.size());
 
-        for (OpPcrEntrustOrder orderDTO : orders) { // 1. 改名 order -> orderDTO，明确它是入参
+        for (OpPcrEntrustOrder orderDTO : orders) {
             String orderId = orderDTO.getOpPcrEntrustOrderId();
-            // 2. 【关键修复】先提取出本次要导出的目标类型
             String targetTaskItemType = orderDTO.getPcrTaskItemType();
 
-            log.info("开始处理委托单 ID: {}, 目标检测类型: {}", orderId, targetTaskItemType);
-
             try {
-                // 3. 查询数据库获取完整详情
                 OpPcrEntrustOrder dbOrder = opPcrEntrustOrderMapper.selectOrderDetailById(orderId);
-
-                if (dbOrder == null) {
-                    throw new RuntimeException("未找到委托单数据");
-                }
+                if (dbOrder == null) throw new RuntimeException("未找到委托单数据");
                 String orderNo = dbOrder.getEntrustOrderNo();
 
-                // 校验目标类型是否为空
-                if (StringUtils.isEmpty(targetTaskItemType)) {
-                    log.warn("委托单 {} 未指定导出类型(pcrTaskItemType)，跳过", orderNo);
-                    continue;
-                }
+                if (StringUtils.isEmpty(targetTaskItemType)) continue;
 
-                if (CollectionUtil.isEmpty(dbOrder.getSampleList())) {
-                    log.warn("委托单 {} 下没有样品数据", orderNo);
-                }
-
-                // 4. 【关键修复】使用 targetTaskItemType 进行过滤
                 Map<String, List<OpPcrEntrustOrderSample>> groupedSamples = dbOrder.getSampleList().stream()
                         .filter(s -> StringUtils.isNotEmpty(s.getPcrTaskItemType()))
-                        // 修正：使用之前提取的 targetTaskItemType，而不是 dbOrder 中的 null 值
                         .filter(s -> s.getPcrTaskItemType().equals(targetTaskItemType))
                         .collect(Collectors.groupingBy(OpPcrEntrustOrderSample::getPcrTaskItemType));
 
-                if (groupedSamples.isEmpty()) {
-                    log.warn("委托单 {} 过滤后没有符合类型[{}]的样品，生成的Excel将为空", orderNo, targetTaskItemType);
-                    // 可以在这里直接 continue，避免生成空文件
-                    continue;
-                }
+                if (groupedSamples.isEmpty()) continue;
 
-                // 生成Excel并转换为MultipartFile
                 try (XSSFWorkbook workbook = new XSSFWorkbook();
                      ByteArrayOutputStream byteOut = new ByteArrayOutputStream()) {
 
-                    // ... (样式创建代码不变) ...
                     XSSFCellStyle onePlusStyle = createCellStyleWithBackground(workbook, IndexedColors.YELLOW);
                     XSSFCellStyle twoPlusStyle = createCellStyleWithBackground(workbook, IndexedColors.DARK_RED, IndexedColors.WHITE);
                     XSSFCellStyle threePlusStyle = createCellStyleWithBackground(workbook, IndexedColors.RED);
@@ -921,29 +824,36 @@ public class OpJczxPcrReportBaseServiceImpl implements IOpJczxPcrReportBaseServi
                         String pcrTaskItemType = entry.getKey();
                         List<OpPcrEntrustOrderSample> samplesInGroup = entry.getValue();
 
-                        // ... (Sheet创建和表头逻辑保持不变) ...
-                        // 注意：下面用到 dbOrder 的地方要保持使用 dbOrder
-
                         String sheetName = DictUtils.getDictLabel("pcr_task_item_type", pcrTaskItemType);
-                        if (StringUtils.isEmpty(sheetName)) {
-                            sheetName = "Type_" + pcrTaskItemType;
-                        }
+                        if (StringUtils.isEmpty(sheetName)) sheetName = "Type_" + pcrTaskItemType;
                         sheetName = sheetName.replaceAll("[\\\\/*?\\[\\]:]", "_").substring(0, Math.min(sheetName.length(), 30));
-
                         XSSFSheet sheet = workbook.createSheet(sheetName);
+
                         List<String> sortedItemNames = getSortedItemNamesByType(samplesInGroup, pcrTaskItemType);
 
+                        // 1. 提取全局批号
+                        String globalTqsjh = "";
+                        String globalKzsjh = "";
+                        for (OpPcrEntrustOrderSample sample : samplesInGroup) {
+                            if (CollectionUtil.isNotEmpty(sample.getTestItem())) {
+                                for (OpPcrEntrustOrderItem item : sample.getTestItem()) {
+                                    if (!Arrays.asList("空白样", "阳性对照", "阴性对照").contains(item.getSampleNo())) {
+                                        if (StringUtils.isEmpty(globalTqsjh) && StringUtils.isNotEmpty(item.getTqsjh())) globalTqsjh = item.getTqsjh();
+                                        if (StringUtils.isEmpty(globalKzsjh) && StringUtils.isNotEmpty(item.getKzsjh())) globalKzsjh = item.getKzsjh();
+                                    }
+                                }
+                            }
+                            if (StringUtils.isNotEmpty(globalTqsjh) && StringUtils.isNotEmpty(globalKzsjh)) break;
+                        }
+
+                        // 2. 构建表头
                         Row headerRow = sheet.createRow(0);
                         int colIndex = 0;
-                        // ... (表头设置代码不变) ...
-                        setCellValue(headerRow, colIndex++, "提取试剂盒批号");
-                        setCellValue(headerRow, colIndex++, "扩增试剂盒批号");
                         setCellValue(headerRow, colIndex++, "序号");
                         setCellValue(headerRow, colIndex++, "所属牧场");
                         setCellValue(headerRow, colIndex++, "样品名称");
+                        int sampleDescColIndex = colIndex;
                         setCellValue(headerRow, colIndex++, "样品描述");
-                        setCellValue(headerRow, colIndex++, "委托备注");
-                        setCellValue(headerRow, colIndex++, "样品编号");
 
                         Map<String, Integer> itemColIndexMap = new HashMap<>();
                         for (String itemName : sortedItemNames) {
@@ -951,65 +861,57 @@ public class OpJczxPcrReportBaseServiceImpl implements IOpJczxPcrReportBaseServi
                             itemColIndexMap.put(itemName, colIndex++);
                         }
 
+                        int remarkColIndex = colIndex++;
+                        setCellValue(headerRow, remarkColIndex, "委托备注");
+                        int sampleNoColIndex = colIndex++;
+                        setCellValue(headerRow, sampleNoColIndex, "样品编号");
+
+                        // 3. 填充数据
                         int rowIndex = 1;
                         int sampleIndex = 0;
                         for (OpPcrEntrustOrderSample sample : samplesInGroup) {
                             Row dataRow = sheet.createRow(rowIndex++);
-                            colIndex = 0;
-
-                            // ... (数据填充逻辑不变，直接复制原来的即可) ...
-                            String tqsjh = sample.getTestItem().stream()
-                                    .filter(item -> !("空白样".equals(item.getSampleNo()) || "阳性对照".equals(item.getSampleNo()) || "阴性对照".equals(item.getSampleNo())))
-                                    .map(OpPcrEntrustOrderItem::getTqsjh)
-                                    .filter(StringUtils::isNotEmpty)
-                                    .distinct()
-                                    .collect(Collectors.joining(", "));
-
-                            String kzsjh = sample.getTestItem().stream()
-                                    .filter(item -> !("空白样".equals(item.getSampleNo()) || "阳性对照".equals(item.getSampleNo()) || "阴性对照".equals(item.getSampleNo())))
-                                    .map(OpPcrEntrustOrderItem::getKzsjh)
-                                    .filter(StringUtils::isNotEmpty)
-                                    .distinct()
-                                    .collect(Collectors.joining(", "));
-
-                            setCellValue(dataRow, colIndex++, tqsjh);
-                            setCellValue(dataRow, colIndex++, kzsjh);
-                            setCellValue(dataRow, colIndex++, ++sampleIndex);
-                            setCellValue(dataRow, colIndex++, dbOrder.getEntrustDeptName()); // 注意这里用 dbOrder
-                            setCellValue(dataRow, colIndex++, sample.getInvbillName());
-                            setCellValue(dataRow, colIndex++, sample.getName());
-                            setCellValue(dataRow, colIndex++, sample.getRemark());
-                            setCellValue(dataRow, colIndex++, sample.getSampleNo());
+                            int curCol = 0;
+                            setCellValue(dataRow, curCol++, ++sampleIndex);
+                            setCellValue(dataRow, curCol++, dbOrder.getEntrustDeptName());
+                            setCellValue(dataRow, curCol++, sample.getInvbillName());
+                            setCellValue(dataRow, curCol++, sample.getName());
 
                             if (CollectionUtil.isNotEmpty(sample.getTestItem())) {
                                 for (OpPcrEntrustOrderItem item : sample.getTestItem()) {
-                                    if (!("空白样".equals(item.getSampleNo())
-                                            || "阳性对照".equals(item.getSampleNo())
-                                            || "阴性对照".equals(item.getSampleNo()))) {
+                                    if (!Arrays.asList("空白样", "阳性对照", "阴性对照").contains(item.getSampleNo())) {
                                         Integer itemCol = itemColIndexMap.get(item.getItemName());
                                         if (itemCol != null) {
-                                            setCellValueWithMultipleConditions(dataRow, itemCol, item.getTestResult(),
-                                                    onePlusStyle, twoPlusStyle, threePlusStyle);
+                                            setCellValueWithMultipleConditions(dataRow, itemCol, item.getTestResult(), onePlusStyle, twoPlusStyle, threePlusStyle);
                                         }
                                     }
                                 }
                             }
+                            setCellValue(dataRow, remarkColIndex, sample.getRemark());
+                            setCellValue(dataRow, sampleNoColIndex, sample.getSampleNo());
                         }
 
-                        addFixedRows(sheet, rowIndex, 0, 1, 7, sortedItemNames.size(), samplesInGroup, itemColIndexMap,
-                                onePlusStyle, twoPlusStyle, threePlusStyle);
+                        // 4. 添加固定行
+                        addFixedRows(sheet, rowIndex, sampleDescColIndex, sampleNoColIndex, samplesInGroup, itemColIndexMap, onePlusStyle, twoPlusStyle, threePlusStyle);
+                        rowIndex += 3;
+
+                        // 5. 底部追加批号
+                        Row tqsjhRow = sheet.createRow(rowIndex++);
+                        setCellValue(tqsjhRow, 0, "提取试剂盒批号:" + globalTqsjh);
+                        Row kzsjhRow = sheet.createRow(rowIndex++);
+                        setCellValue(kzsjhRow, 0, "扩增试剂盒批号:" + globalKzsjh);
+
+                        // 自动列宽调整 (可选)
+                        for (int i = 0; i < colIndex; i++) {
+                            sheet.autoSizeColumn(i);
+                            sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 5 * 256);
+                        }
                     }
 
                     workbook.write(byteOut);
                     byte[] excelBytes = byteOut.toByteArray();
-
                     String fileName = "PCR检测报告_" + orderNo + ".xlsx";
-                    MultipartFile multipartFile = new MockMultipartFile(
-                            "file", fileName,
-                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                            excelBytes
-                    );
-
+                    MultipartFile multipartFile = new MockMultipartFile("file", fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelBytes);
                     results.add(new PcrReportExcelResult(orderId, multipartFile));
 
                 } catch (IOException e) {

@@ -26,7 +26,7 @@ public interface OpPcrEntrustOrderSampleMapper
      * @return pcr样品委托单-样品
      */
     public OpPcrEntrustOrderSample selectOpPcrEntrustOrderSampleByOpPcrEntrustOrderSampleId(String opPcrEntrustOrderSampleId);
-
+    List<OpPcrEntrustOrderSample> selectDeletedSamplesByOrderId(String orderId);
     /**
      * 查询pcr样品委托单-样品列表
      * 

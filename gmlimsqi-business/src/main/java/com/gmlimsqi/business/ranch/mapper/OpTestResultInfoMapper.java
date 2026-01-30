@@ -6,15 +6,14 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * 化验结果信息Mapper接口
- * 
+ *
  * @author hhy
  * @date 2025-11-07
  */
-public interface OpTestResultInfoMapper 
-{
+public interface OpTestResultInfoMapper {
     /**
      * 查询化验结果信息
-     * 
+     *
      * @param id 化验结果信息主键
      * @return 化验结果信息
      */
@@ -22,7 +21,7 @@ public interface OpTestResultInfoMapper
 
     /**
      * 查询化验结果信息列表
-     * 
+     *
      * @param opTestResultInfo 化验结果信息
      * @return 化验结果信息集合
      */
@@ -30,6 +29,7 @@ public interface OpTestResultInfoMapper
 
     /**
      * 根据主表ID查询化验结果信息
+     *
      * @param baseId 父表id
      * @return 化验结果信息集合
      */
@@ -37,7 +37,7 @@ public interface OpTestResultInfoMapper
 
     /**
      * 新增化验结果信息
-     * 
+     *
      * @param opTestResultInfo 化验结果信息
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface OpTestResultInfoMapper
 
     /**
      * 修改化验结果信息
-     * 
+     *
      * @param opTestResultInfo 化验结果信息
      * @return 结果
      */
@@ -70,7 +70,7 @@ public interface OpTestResultInfoMapper
     /**
      * 根据主表ID批量软删除化验结果信息
      *
-     * @param baseId 父表id
+     * @param baseId   父表id
      * @param updateBy 更新人
      * @return 结果
      */
@@ -78,7 +78,21 @@ public interface OpTestResultInfoMapper
 
     int updateIsResetById(String updateUser, String s);
 
-    int updateRetestFlagById(@Param("updateUser") String updateUser, @Param("id") String id);
+    int updateRetestFlagById(@Param("updateUser") String updateUser, @Param("id") String id, @Param("retestFlag") String retestFlag);
 
+    /**
+     * 根据主表ID更新所有子表的复检标志
+     */
+    int updateRetestFlagByBaseId(@Param("updateUser") String updateUser, @Param("baseId") String baseId, @Param("retestFlag") String retestFlag);
 
+    /**
+     * 清空检测结果
+     */
+    int clearResultById(String id);
+
+    /**
+     * 更新复检标志
+     */
+    int updateRetestFlag(@Param("id") String id, @Param("retestFlag") String retestFlag);
 }
+

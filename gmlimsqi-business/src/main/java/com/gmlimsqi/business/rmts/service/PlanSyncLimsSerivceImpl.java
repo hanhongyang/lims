@@ -12,8 +12,12 @@ import com.gmlimsqi.business.util.RmtsRanchLimsHttpUtil;
 import com.gmlimsqi.business.util.SignatureUtils;
 import com.gmlimsqi.common.annotation.FunLog;
 import com.gmlimsqi.common.core.domain.R;
+import com.gmlimsqi.common.core.domain.entity.SysDept;
 import com.gmlimsqi.common.enums.BusinessType;
 import com.gmlimsqi.common.enums.FunTypeEnums;
+import com.gmlimsqi.common.exception.ServiceException;
+import com.gmlimsqi.common.utils.SecurityUtils;
+import com.gmlimsqi.system.mapper.SysDeptMapper;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +32,12 @@ import java.util.Map;
 @Service
 public class PlanSyncLimsSerivceImpl implements RmtsRanchLimsService {
 
+    private final SysDeptMapper sysDeptMapper;
+
+    public PlanSyncLimsSerivceImpl(SysDeptMapper sysDeptMapper) {
+        this.sysDeptMapper = sysDeptMapper;
+    }
+
     /**
      * 计划同步
      * @param planSyncDTO
@@ -39,6 +49,14 @@ public class PlanSyncLimsSerivceImpl implements RmtsRanchLimsService {
         if (planSyncDTO.getSchedulingDate() == null) {
             throw new IllegalArgumentException("计划日期不能为空");
         }
+
+        Long deptId = SecurityUtils.getDeptId();
+        SysDept sysDept = sysDeptMapper.selectDeptById(deptId);
+        if (sysDept == null) {
+            throw new ServiceException("获取牧场信息失败");
+        }
+
+//        planSyncDTO.setPastureCode(sysDept.getSapName());
 
         // 日期格式校验
         Date currentDate = new Date();
@@ -206,5 +224,10 @@ public class PlanSyncLimsSerivceImpl implements RmtsRanchLimsService {
 
         System.out.println(jsonString);
     }
+
+    /*public static void main(String[] args) {
+        String encryptPassword = SecurityUtils.encryptPassword("gmmG48563@Hst");
+        System.out.println(encryptPassword);
+    }*/
 
 }

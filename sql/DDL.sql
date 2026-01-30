@@ -281,7 +281,6 @@ alter table op_feed_entrust_order
 alter table op_jczx_feed_report_base
     modify test_time varchar(100) null comment '检测时间';
 
--- -------------- 以上已执行 ------------------
 alter table bs_labtest_feature
     add first_upper_limit DECIMAL null comment '第一上限';
 
@@ -310,3 +309,180 @@ alter table op_jczx_blood_result_info
 
 alter table op_jczx_blood_report_info
     add mnh varchar(50) null comment '母牛号';
+
+CREATE TABLE `op_pcr_entrust_order_change_log` (
+                                                   `log_id` varchar(32) NOT NULL COMMENT '日志主键',
+                                                   `business_id` varchar(32) NOT NULL COMMENT '业务ID(订单ID或样品ID)',
+                                                   `business_type` varchar(20) NOT NULL COMMENT '业务类型(ORDER/SAMPLE)',
+                                                   `field_key` varchar(50) DEFAULT NULL COMMENT '字段键值',
+                                                   `field_name` varchar(50) DEFAULT NULL COMMENT '字段名称',
+                                                   `old_value` text COMMENT '旧值',
+                                                   `new_value` text COMMENT '新值',
+                                                   `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',
+                                                   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                                                   PRIMARY KEY (`log_id`),
+                                                   KEY `idx_biz_id` (`business_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='PCR委托单变更记录表';
+
+
+
+CREATE TABLE `op_blood_entrust_order_change_log` (
+                                                     `log_id` varchar(32) NOT NULL COMMENT '日志主键',
+                                                     `business_id` varchar(32) NOT NULL COMMENT '业务ID(订单ID或样品ID)',
+                                                     `business_type` varchar(20) NOT NULL COMMENT '业务类型(ORDER/SAMPLE)',
+                                                     `field_key` varchar(50) DEFAULT NULL COMMENT '字段键值',
+                                                     `field_name` varchar(50) DEFAULT NULL COMMENT '字段名称',
+                                                     `old_value` text COMMENT '旧值',
+                                                     `new_value` text COMMENT '新值',
+                                                     `create_by` varchar(64) DEFAULT NULL COMMENT '创建者',
+                                                     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+                                                     PRIMARY KEY (`log_id`),
+                                                     KEY `idx_blood_biz_id` (`business_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='血样委托单变更记录表';
+
+alter table op_blood_entrust_order
+    add scypsl int default 0 null comment '删除样品数量';
+alter table op_feed_entrust_order
+    add scypsl int default 0 null comment '删除样品数量';
+
+alter table op_pcr_entrust_order
+    add scypsl int default 0 null comment '删除样品数量';
+
+
+
+
+-- 1. 添加密码修改时间字段
+ALTER TABLE sys_user ADD pwd_update_date datetime COMMENT '密码最后修改时间';
+
+-- 2. 初始化现有数据（防止系统上线后老用户立刻全部被锁定）
+-- 将现有用户的密码修改时间设为当前时间，或者设为他们的创建时间
+UPDATE sys_user SET pwd_update_date = create_time WHERE pwd_update_date IS NULL;
+
+drop table if exists bs_consumable_archive;
+create table bs_consumable_archive (
+                                       consumable_id       varchar(50)   not null comment '耗材ID' primary key,
+                                       consumable_code     varchar(50)   not null comment '耗材编号',
+                                       consumable_name     varchar(100)  not null comment '耗材名称',
+                                       consumable_type     varchar(50)   null     comment '耗材分类(试剂/玻璃/耗材)',
+                                       spec_model          varchar(100)  null     comment '规格型号',
+                                       unit                varchar(20)   null     comment '计量单位',
+                                       manufacturer        varchar(100)  null     comment '生产厂家',
+                                       safety_stock        int           default 0 comment '安全库存预警值',
+                                       storage_condition   varchar(100)  null     comment '存储条件(常温/冷藏)',
+                                       remark              varchar(500)  null     comment '备注',
+
+    -- 公共字段
+                                       create_by           varchar(50)   null     comment '创建人',
+                                       create_time         datetime      null     comment '创建时间',
+                                       update_by           varchar(50)   null     comment '更新人',
+                                       update_time         datetime      null     comment '更新时间',
+                                       is_delete           char(1)       default '0' not null comment '是否删除'
+) comment = '化验室耗材档案表';
+
+drop table if exists bs_consumable_stock;
+create table bs_consumable_stock (
+                                     stock_id            varchar(50)   not null comment '库存ID' primary key,
+                                     consumable_id       varchar(50)   not null comment '耗材ID',
+                                     batch_no            varchar(50)   not null comment '批号',
+                                     expiry_date         date          null     comment '有效期至',
+                                     quantity            decimal(10,2) default 0.00 comment '当前库存数量',
+                                     price               decimal(10,2) default 0.00 comment '入库单价(成本)',
+                                     location            varchar(100)  null     comment '存放位置(柜号/层号)',
+
+                                     create_time         datetime      null     comment '首次入库时间',
+                                     update_time         datetime      null     comment '最后变动时间',
+
+    -- 索引建议：查询某耗材总库存时用到
+                                     index idx_stock_consumable (consumable_id)
+) comment = '化验室耗材库存表';
+
+drop table if exists bs_consumable_inbound;
+create table bs_consumable_inbound (
+                                       inbound_id          varchar(50)   not null comment '入库单ID' primary key,
+                                       inbound_no          varchar(50)   not null comment '入库单号',
+                                       inbound_date        date          not null comment '入库日期',
+                                       inbound_type        varchar(20)   default '1' comment '入库类型(1:采购入库 2:赠送 3:盘盈)',
+                                       supplier            varchar(100)  null     comment '供应商',
+                                       operator            varchar(50)   null     comment '入库经办人',
+                                       status              char(1)       default '0' comment '状态(0:草稿 1:已确认)',
+                                       remark              varchar(500)  null     comment '备注',
+
+                                       create_by           varchar(50)   null,
+                                       create_time         datetime      null,
+                                       update_by           varchar(50)   null,
+                                       update_time         datetime      null,
+                                       is_delete           char(1)       default '0'
+) comment = '耗材入库单主表';
+drop table if exists bs_consumable_inbound_detail;
+create table bs_consumable_inbound_detail (
+                                              detail_id           varchar(50)   not null comment '明细ID' primary key,
+                                              inbound_id          varchar(50)   not null comment '入库单ID',
+                                              consumable_id       varchar(50)   not null comment '耗材ID',
+                                              batch_no            varchar(50)   null     comment '批号',
+                                              expiry_date         date          null     comment '有效期',
+                                              price               decimal(10,2) default 0.00 comment '单价',
+                                              quantity            decimal(10,2) not null comment '入库数量',
+                                              total_amount        decimal(10,2) default 0.00 comment '总金额',
+
+                                              remark              varchar(200)  null
+) comment = '耗材入库单明细表';
+
+drop table if exists bs_consumable_outbound;
+create table bs_consumable_outbound (
+                                        outbound_id         varchar(50)   not null comment '出库单ID' primary key,
+                                        outbound_no         varchar(50)   not null comment '出库单号',
+                                        outbound_date       date          not null comment '出库日期',
+                                        outbound_type       varchar(20)   default '1' comment '出库类型(1:领用出库 2:报损出库 3:盘亏)',
+                                        dept_id             varchar(50)   null     comment '领用部门ID',
+                                        receiver            varchar(50)   null     comment '领用人',
+                                        status              char(1)       default '0' comment '状态(0:草稿 1:已确认)',
+                                        remark              varchar(500)  null     comment '备注',
+
+                                        create_by           varchar(50)   null,
+                                        create_time         datetime      null,
+                                        update_by           varchar(50)   null,
+                                        update_time         datetime      null,
+                                        is_delete           char(1)       default '0'
+) comment = '耗材出库单主表';
+drop table if exists bs_consumable_outbound_detail;
+create table bs_consumable_outbound_detail (
+                                               detail_id           varchar(50)   not null comment '明细ID' primary key,
+                                               outbound_id         varchar(50)   not null comment '出库单ID',
+                                               consumable_id       varchar(50)   not null comment '耗材ID',
+                                               batch_no            varchar(50)   null     comment '出库批号(对应库存中的批号)',
+                                               quantity            decimal(10,2) not null comment '出库数量',
+
+                                               remark              varchar(200)  null
+) comment = '耗材出库单明细表';
+
+drop table if exists bs_consumable_return;
+create table bs_consumable_return (
+                                      return_id           varchar(50)   not null comment '退库单ID' primary key,
+                                      return_no           varchar(50)   not null comment '退库单号',
+                                      return_date         date          not null comment '退库日期',
+                                      dept_id             varchar(50)   null     comment '退库部门ID',
+                                      returner            varchar(50)   null     comment '退库人',
+                                      status              char(1)       default '0' comment '状态(0:草稿 1:已确认)',
+                                      remark              varchar(500)  null     comment '备注',
+
+                                      create_by           varchar(50)   null,
+                                      create_time         datetime      null,
+                                      update_by           varchar(50)   null,
+                                      update_time         datetime      null,
+                                      is_delete           char(1)       default '0'
+) comment = '耗材退库单主表';
+drop table if exists bs_consumable_return_detail;
+create table bs_consumable_return_detail (
+                                             detail_id           varchar(50)   not null comment '明细ID' primary key,
+                                             return_id           varchar(50)   not null comment '退库单ID',
+                                             consumable_id       varchar(50)   not null comment '耗材ID',
+                                             batch_no            varchar(50)   null     comment '批号(应与原出库批号一致或重新指定)',
+                                             quantity            decimal(10,2) not null comment '退库数量',
+                                             return_reason       varchar(200)  null     comment '退库原因',
+
+                                             remark              varchar(200)  null
+) comment = '耗材退库单明细表';
+alter table sys_dept
+    add pasture_code varchar(50) null comment '牧场简码';
+
+-- -------------- 以上已执行 ------------------

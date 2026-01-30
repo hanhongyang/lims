@@ -65,7 +65,7 @@ public class BsMilkWarehouseServiceImpl implements IBsMilkWarehouseService
 //    @DataScope(deptAlias = "d")
     public List<BsMilkWarehouse> selectBsMilkWarehouseList(BsMilkWarehouse bsMilkWarehouse)
     {
-        if (SecurityUtils.isAdmin(SecurityUtils.getUserId())){
+        if (!SecurityUtils.isAdmin(SecurityUtils.getUserId())){
             bsMilkWarehouse.setDeptId(SecurityUtils.getDeptId().toString());
         }
         List<BsMilkWarehouse> items = bsMilkWarehouseMapper.selectBsMilkWarehouseList(bsMilkWarehouse);

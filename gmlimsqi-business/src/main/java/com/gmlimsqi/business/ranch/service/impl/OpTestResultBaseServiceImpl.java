@@ -28,6 +28,9 @@ import com.gmlimsqi.common.exception.ServiceException; // (新) 引入
 import com.gmlimsqi.common.utils.StringUtils;
 import com.gmlimsqi.common.utils.uuid.IdUtils;
 import com.gmlimsqi.common.utils.SecurityUtils;
+import com.github.pagehelper.Page;
+import com.gmlimsqi.common.core.page.TableSupport;
+import com.gmlimsqi.common.core.page.PageDomain;
 import com.gmlimsqi.common.core.domain.model.LoginUser;
 import com.gmlimsqi.common.annotation.DataScope;
 import com.gmlimsqi.sap.accept.domain.dto.CheckResRetJudgeDTO;
@@ -91,6 +94,8 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
 
     @Autowired
     private IOpTestResultChangeLogService opTestResultChangeLogService;
+    @Autowired
+    private OpTestResultInfoSubMapper opTestResultInfoSubMapper;
 
     /**
      * 查询样品化验 (修改：同时查询子表)
@@ -105,6 +110,13 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
             base.setOpTestResultInfoList(infoList);
 
             for (OpTestResultInfo info : infoList) {
+                // 查询是否有子表数据
+                List<OpTestResultInfoSub> subList = opTestResultInfoSubMapper.selectOpTestResultInfoByBaseId(info.getId());
+
+                if (!CollectionUtils.isEmpty(subList)) {
+                    info.setSubList(subList);
+                }
+
                 if (StringUtils.isEmpty(info.getUpperLimit())) {
                     String upperLimit = "";
                     info.setUpperLimit(upperLimit);
@@ -116,17 +128,19 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
                 }
 
                 // 查询样品化验项目信息
-                OpSamplingPlanItem item = opSamplingPlanItemMapper.selectOpSamplingPlanItemByOpSamplingPlanItemId(info.getPlanItemId());
-                info.setOpSamplingPlanItem(item);
+                if(StringUtils.isNotEmpty(info.getPlanItemId())) {
+                    OpSamplingPlanItem item = opSamplingPlanItemMapper.selectOpSamplingPlanItemByOpSamplingPlanItemId(info.getPlanItemId());
+                    info.setOpSamplingPlanItem(item);
 
-                if (StringUtils.isEmpty(item.getUpperLimit())) {
-                    String upperLimit = "";
-                    item.setUpperLimit(upperLimit);
-                }
+                    if (StringUtils.isEmpty(item.getUpperLimit())) {
+                        String upperLimit = "";
+                        item.setUpperLimit(upperLimit);
+                    }
 
-                if (StringUtils.isEmpty(item.getLowerLimit())) {
-                    String lowerLimit = "";
-                    item.setLowerLimit(lowerLimit);
+                    if (StringUtils.isEmpty(item.getLowerLimit())) {
+                        String lowerLimit = "";
+                        item.setLowerLimit(lowerLimit);
+                    }
                 }
 
                 // 查询取样人
@@ -154,6 +168,13 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
         }
 
         List<OpTestResultBase> items = opTestResultBaseMapper.selectOpTestResultBaseList(opTestResultBase);
+        if ("4".equals(opTestResultBase.getStatus())){
+            if (!items.isEmpty()){
+                items.forEach(vo->{
+                    vo.setExamineTime(vo.getUpdateTime());
+                });
+            }
+        }
         if (!items.isEmpty()) {
             Set<String> userIds = items.stream()
                     .map(OpTestResultBase::getCreateBy)
@@ -216,23 +237,95 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
         int count = 0;
         String updateUser = SecurityUtils.getUserId().toString();
         for (String s : infoId) {
-            OpTestResultInfo info = opTestResultInfoMapper.
-                    selectOpTestResultInfoById(s);
-            if (info == null) {
-                throw new RuntimeException("复检样品不存在 ");
-            } else {
+            OpTestResultInfo info = opTestResultInfoMapper.selectOpTestResultInfoById(s);
+            if (info != null) {
                 OpSamplingPlanSample sample = opSamplingPlanSampleMapper.
                         selectOpSamplingPlanSampleByOpSamplingPlanSampleId(info.getPlanSampleId());
                 if (!"0".equals(sample.getIsDestroy())) {
                     throw new ServiceException("已销毁的样品不能复检");
                 }
-
-                count = count + opTestResultInfoMapper.updateRetestFlagById(updateUser, s);
-                // 更新项目表检测人、结果为空
-                opSamplingPlanItemMapper.updateTestToNullById(info.getPlanItemId(), updateUser);
+                count = count + opTestResultInfoMapper.updateRetestFlagById(updateUser, s, "1");
             }
         }
         return count;
+    }
+
+    @Override
+    @Transactional
+    public int retestSingle(String infoId) {
+        String updateUser = SecurityUtils.getUserId().toString();
+        if (StringUtils.isEmpty(infoId)) {
+            throw new RuntimeException("参数错误");
+        }
+
+        OpTestResultInfo info = opTestResultInfoMapper.selectOpTestResultInfoById(infoId);
+        if (info == null) {
+            throw new ServiceException("检测详情不存在");
+        }
+
+        // 校验该单据下的样品是否已销毁
+        OpSamplingPlanSample sample = opSamplingPlanSampleMapper.
+                selectOpSamplingPlanSampleByOpSamplingPlanSampleId(info.getPlanSampleId());
+        if (sample != null && !"0".equals(sample.getIsDestroy())) {
+            throw new ServiceException("样品[" + info.getSampleNo() + "]已销毁，不能复检");
+        }
+
+        // 更新子项的复检标志为 2 (复检待审核)
+        opTestResultInfoMapper.updateRetestFlagById(updateUser, infoId, "2");
+
+        // 更新涉及到的父表状态为待审核 (3)
+        OpTestResultBase base = new OpTestResultBase();
+        base.setId(info.getBaseId());
+        base.setStatus("3"); // 待审核
+        base.fillUpdateInfo();
+        opTestResultBaseMapper.updateOpTestResultBase(base);
+
+        return 1;
+    }
+
+    @Override
+    public List<OpTestResultBase> selectRetestPendingList(OpTestResultBase opTestResultBase) {
+        if (!SecurityUtils.isAdmin(SecurityUtils.getUserId())) {
+            Long deptId = SecurityUtils.getDeptId();
+            opTestResultBase.setDeptId(deptId.toString());
+        }
+        return opTestResultBaseMapper.selectRetestPendingList(opTestResultBase);
+    }
+
+    @Override
+    @Transactional
+    public int approveRetestSingle(String id) {
+        OpTestResultBase base = opTestResultBaseMapper.selectOpTestResultBaseById(id);
+        if (base == null) {
+            throw new ServiceException("化验单不存在");
+        }
+        if (!"3".equals(base.getStatus())) {
+            throw new ServiceException("当前化验单状态不允许复检审核");
+        }
+
+        base.fillUpdateInfo();
+        base.setStatus("1"); // 审核通过后进入待化验
+        base.setExamineTime(new java.util.Date());
+        base.setExamineUserId(SecurityUtils.getUserId().toString());
+        base.setExamineUser(SecurityUtils.getLoginUser().getUser().getNickName());
+        
+        List<OpTestResultInfo> infoList = opTestResultInfoMapper.selectOpTestResultInfoByBaseId(id);
+        if (infoList != null && !infoList.isEmpty()) {
+            for (OpTestResultInfo info : infoList) {
+                if ("2".equals(info.getRetestFlag())) {
+                    // 作废之前生成的不合格处理单
+                    opSampleUnqualityService.deleteOpSampleUnqualityBySourceId(info.getPlanSampleId());
+                    // 清空子表结果
+                    opTestResultInfoMapper.clearResultById(info.getId());
+                    // 设置复检标志为 1 (复检中)
+                    opTestResultInfoMapper.updateRetestFlag(info.getId(), "1");
+                    // 更新项目表检测人、结果为空
+                    opSamplingPlanItemMapper.updateTestToNullById(info.getPlanItemId(), SecurityUtils.getUserId().toString());
+                }
+            }
+        }
+        
+        return opTestResultBaseMapper.updateOpTestResultBase(base);
     }
 
     @Override
@@ -549,7 +642,6 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
             info.setQualitativeOrQuantitative(item.getQualitativeOrQuantitative());
 
 
-
             opTestResultInfoMapper.insertOpTestResultInfo(info);
         }
 
@@ -621,7 +713,7 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
     public int approveTestResult(String id) {
         OpTestResultBase base = opTestResultBaseMapper.selectOpTestResultBaseById(id);
 
-        if ("4".equals(base.getStatus())){
+        if ("4".equals(base.getStatus())) {
             throw new ServiceException("化验单已审核");
         }
 
@@ -636,42 +728,7 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
         if (!base.getOpTestResultInfoList().isEmpty()) {
             for (OpTestResultInfo info : base.getOpTestResultInfoList()) {
                 if ("2".equals(info.getCheckResult())) {
-                    // 查询是否有签到id
-                    OpSamplingPlan opSamplingPlan = opSamplingPlanMapper.selectOpSamplingPlanByOpSamplingPlanId(info.getPlanId());
-
-                    // 整合不合格数据
-                    OpSampleUnquality opSampleUnquality = new OpSampleUnquality();
-                    opSampleUnquality.setSourceId(info.getPlanSampleId());
-                    opSampleUnquality.setMaterialId(info.getInvbillId());
-                    opSampleUnquality.setMaterialCode(info.getInvbillCode());
-                    opSampleUnquality.setMaterialName(info.getInvbillName());
-                    opSampleUnquality.setIsDelete("0");
-                    opSampleUnquality.setTestUserId(String.valueOf(SecurityUtils.getUserId()));
-                    opSampleUnquality.setTestResult(info.getResult());
-                    opSampleUnquality.setCtype("化验不合格");
-                    opSampleUnquality.setProcessingType("1");
-                    opSampleUnquality.setStatus("0");
-                    opSampleUnquality.setCfilepath(info.getSjtFileUrl());
-
-                    if (opSamplingPlan != null) {
-                        if (StringUtils.isNotEmpty(opSamplingPlan.getSignInId())){
-                            opSampleUnquality.setSignInId(opSamplingPlan.getSignInId());
-                        }
-                    }
-
-                    // 新增子表
-                    List<OpSampleUnqualityDetail> list = new ArrayList<>();
-                    OpSampleUnqualityDetail opSampleUnqualityDetail = new OpSampleUnqualityDetail();
-                    opSampleUnqualityDetail.setOpSampleUnqualityId(opSampleUnquality.getOpSampleUnqualityId());
-                    opSampleUnqualityDetail.setItemId(info.getItemId());
-                    opSampleUnqualityDetail.setItemName(info.getItemName());
-                    opSampleUnqualityDetail.setCtx(info.getFeatureName());
-                    opSampleUnqualityDetail.setCtestresult(info.getResult());
-                    opSampleUnqualityDetail.setChg(info.getCheckResult());
-
-                    list.add(opSampleUnqualityDetail);
-                    opSampleUnquality.setOpSampleUnqualityDetailList(list);
-                    opSampleUnqualityService.insertOpSampleUnquality(opSampleUnquality);
+                    handleUnquality(info);
                 }
             }
         }
@@ -689,6 +746,66 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
         }
 
         return opTestResultBaseMapper.updateOpTestResultBase(base);
+    }
+
+    private void handleUnquality(OpTestResultInfo info) {
+        // 查询是否有签到id
+        OpSamplingPlan opSamplingPlan = opSamplingPlanMapper.selectOpSamplingPlanByOpSamplingPlanId(info.getPlanId());
+        // 查询样品子表数据
+        List<OpSamplingPlanSample> sample = opSamplingPlanSampleMapper.selectOpSamplingPlanSampleListByPlanId(info.getPlanId());
+
+        // 整合不合格数据
+        OpSampleUnquality opSampleUnquality = new OpSampleUnquality();
+        opSampleUnquality.setSourceId(info.getPlanSampleId());
+        opSampleUnquality.setMaterialId(info.getInvbillId());
+        opSampleUnquality.setMaterialCode(info.getInvbillCode());
+        opSampleUnquality.setMaterialName(info.getInvbillName());
+        opSampleUnquality.setIsDelete("0");
+        opSampleUnquality.setTestUserId(String.valueOf(SecurityUtils.getUserId()));
+        opSampleUnquality.setTestResult(info.getResult());
+        opSampleUnquality.setCtype("化验不合格");
+        opSampleUnquality.setProcessingType("1");
+        opSampleUnquality.setStatus("0");
+        opSampleUnquality.setCfilepath(info.getSjtFileUrl());
+        if (sample != null) {
+            if (!sample.isEmpty()) {
+                OpSamplingPlanSample firstSample = sample.get(0);
+                if (StringUtils.isNotEmpty(firstSample.getSupplierCode())) {
+                    opSampleUnquality.setSupplierCode(firstSample.getSupplierCode());
+                }
+                if (StringUtils.isNotEmpty(firstSample.getSupplierName())) {
+                    opSampleUnquality.setSupplierName(firstSample.getSupplierName());
+                }
+            }
+        }
+        if (StringUtils.isNotEmpty(opSamplingPlan.getDriverName())) {
+            opSampleUnquality.setDriverName(opSamplingPlan.getDriverName());
+        }
+        if (StringUtils.isNotEmpty(opSamplingPlan.getDriverCode())) {
+            opSampleUnquality.setDriverCode(opSamplingPlan.getDriverCode());
+        }
+
+        if (opSamplingPlan != null) {
+            if (StringUtils.isNotEmpty(opSamplingPlan.getSignInId())) {
+                opSampleUnquality.setSignInId(opSamplingPlan.getSignInId());
+            }
+        }
+
+        // 新增子表
+        List<OpSampleUnqualityDetail> list = new ArrayList<>();
+        OpSampleUnqualityDetail opSampleUnqualityDetail = new OpSampleUnqualityDetail();
+        opSampleUnquality.setOpSampleUnqualityId(IdUtils.simpleUUID());
+        opSampleUnqualityDetail.setOpSampleUnqualityDetailId(IdUtils.simpleUUID());
+        opSampleUnqualityDetail.setOpSampleUnqualityId(opSampleUnquality.getOpSampleUnqualityId());
+        opSampleUnqualityDetail.setItemId(info.getItemId());
+        opSampleUnqualityDetail.setItemName(info.getItemName());
+        opSampleUnqualityDetail.setCtx(info.getFeatureName());
+        opSampleUnqualityDetail.setCtestresult(info.getResult());
+        opSampleUnqualityDetail.setChg(info.getCheckResult());
+
+        list.add(opSampleUnqualityDetail);
+        opSampleUnquality.setOpSampleUnqualityDetailList(list);
+        opSampleUnqualityService.insertOpSampleUnquality(opSampleUnquality);
     }
 
     /**
@@ -753,28 +870,32 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
      */
     @Override
     public List<JckcTestVO> callProTransGetJCKCTest(GetJCKCTestDTO getJCKCTestDTO) {
-        String ccorpcode = getJCKCTestDTO.getCcorpcode();
-        String cinvname = getJCKCTestDTO.getCinvname();
-        String starttime = getJCKCTestDTO.getStarttime();
-        String endtime = getJCKCTestDTO.getEndtime();
-        String type = getJCKCTestDTO.getType();
+        // 1. 参数清洗：确保 null 变为空字符串，确保存储过程逻辑生效
+        String ccorpcode = StringUtils.nvl(getJCKCTestDTO.getCcorpcode(), "");
+        String cinvname = StringUtils.nvl(getJCKCTestDTO.getCinvname(), "");
+        String starttime = StringUtils.nvl(getJCKCTestDTO.getStarttime(), "");
+        String endtime = StringUtils.nvl(getJCKCTestDTO.getEndtime(), "");
+        String type = StringUtils.nvl(getJCKCTestDTO.getType(), "");
 
-        if (StringUtils.isEmpty(starttime) || StringUtils.isEmpty(endtime)) {
-            throw new IllegalArgumentException("开始时间和结束时间不能为空");
+        // 2. 时间格式处理：截取为 YYYY-MM-DD，防止 MySQL 报 Data truncation 错误
+        if (starttime.length() > 10) {
+            starttime = starttime.substring(0, 10);
+        }
+        if (endtime.length() > 10) {
+            endtime = endtime.substring(0, 10);
         }
 
-        // 存储过程调用语法：{call 存储过程名(参数1,参数2,参数3,参数4,参数5)}
+        // 存储过程调用语法
         String procSql = "{call Pro_Trans_GetJCKCTest(?, ?, ?, ?, ?)}";
 
-        // 执行存储过程并映射结果集
-        return jdbcTemplate.query(
+        // 3. 执行存储过程获取全量结果 (JdbcTemplate 不支持 PageHelper 自动分页)
+        List<JckcTestVO> allList = jdbcTemplate.query(
                 procSql,
-                new Object[]{ccorpcode, cinvname, starttime, endtime, type}, // 按存储过程参数顺序传入
+                new Object[]{ccorpcode, cinvname, starttime, endtime, type},
                 new RowMapper<JckcTestVO>() {
                     @Override
                     public JckcTestVO mapRow(ResultSet rs, int rowNum) throws SQLException {
                         JckcTestVO dto = new JckcTestVO();
-                        // 字段映射：rs.getXXX(数据库字段名)
                         dto.setOp_sampling_plan_sample_id(rs.getString("op_sampling_plan_sample_id"));
                         dto.setSample_no(rs.getString("sample_no"));
                         dto.setSampling_type(rs.getString("sampling_type"));
@@ -794,6 +915,54 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
                     }
                 }
         );
+
+        // 4. 处理姓名转换：将取样人(qyr)和检测人(jcr)的 ID 转换为真实姓名
+        if (!allList.isEmpty()) {
+            Set<String> userIds = new HashSet<>();
+            allList.forEach(item -> {
+                if (StringUtils.isNotEmpty(item.getQyr())) userIds.add(item.getQyr());
+                if (StringUtils.isNotEmpty(item.getJcr())) userIds.add(item.getJcr());
+            });
+
+            if (!userIds.isEmpty()) {
+                Map<String, String> usernameMap = userCacheService.batchGetUsernames(userIds);
+                allList.forEach(item -> {
+                    if (StringUtils.isNotEmpty(item.getQyr())) {
+                        item.setQyr(usernameMap.getOrDefault(item.getQyr(), item.getQyr()));
+                    }
+                    if (StringUtils.isNotEmpty(item.getJcr())) {
+                        item.setJcr(usernameMap.getOrDefault(item.getJcr(), item.getJcr()));
+                    }
+                });
+            }
+        }
+
+        // 5. 手动实现内存分页
+        PageDomain pageDomain = TableSupport.buildPageRequest();
+        Integer pageNum = pageDomain.getPageNum();
+        Integer pageSize = pageDomain.getPageSize();
+
+        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize)) {
+            int total = allList.size();
+            int fromIndex = (pageNum - 1) * pageSize;
+            int toIndex = Math.min(fromIndex + pageSize, total);
+
+            // 越界处理
+            if (fromIndex > total) {
+                fromIndex = total;
+                toIndex = total;
+            }
+
+            List<JckcTestVO> pageList = allList.subList(fromIndex, toIndex);
+
+            // 关键：必须封装成 Page 对象，否则 Controller 的 getDataTable 无法获取正确的 total
+            Page<JckcTestVO> resultPage = new Page<>(pageNum, pageSize);
+            resultPage.setTotal(total);
+            resultPage.addAll(pageList);
+            return resultPage;
+        }
+
+        return allList;
     }
 
     /**
@@ -822,6 +991,67 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
         opTestResultInfo.fillUpdateInfo();
         int update = opTestResultInfoMapper.updateOpTestResultInfo(opTestResultInfo);
 
+        // 化验不合格处理
+        if ("2".equals(opTestResultInfo.getCheckResult())) {
+            // 查询是否有签到id
+            OpSamplingPlan opSamplingPlan = opSamplingPlanMapper.selectOpSamplingPlanByOpSamplingPlanId(opTestResultInfo.getPlanId());
+            // 查询样品子表数据
+            List<OpSamplingPlanSample> sample = opSamplingPlanSampleMapper.selectOpSamplingPlanSampleListByPlanId(opTestResultInfo.getPlanId());
+
+            // 整合不合格数据
+            OpSampleUnquality opSampleUnquality = new OpSampleUnquality();
+            opSampleUnquality.setSourceId(opTestResultInfo.getPlanSampleId());
+            opSampleUnquality.setMaterialId(opTestResultInfo.getInvbillId());
+            opSampleUnquality.setMaterialCode(opTestResultInfo.getInvbillCode());
+            opSampleUnquality.setMaterialName(opTestResultInfo.getInvbillName());
+            opSampleUnquality.setIsDelete("0");
+            opSampleUnquality.setTestUserId(String.valueOf(SecurityUtils.getUserId()));
+            opSampleUnquality.setTestResult(opTestResultInfo.getResult());
+            opSampleUnquality.setCtype("化验不合格");
+            opSampleUnquality.setProcessingType("1");
+            opSampleUnquality.setStatus("0");
+            opSampleUnquality.setCfilepath(opTestResultInfo.getSjtFileUrl());
+            if (sample != null) {
+                if (!sample.isEmpty()) {
+                    OpSamplingPlanSample firstSample = sample.get(0);
+                    if (StringUtils.isNotEmpty(firstSample.getSupplierCode())) {
+                        opSampleUnquality.setSupplierCode(firstSample.getSupplierCode());
+                    }
+                    if (StringUtils.isNotEmpty(firstSample.getSupplierName())) {
+                        opSampleUnquality.setSupplierName(firstSample.getSupplierName());
+                    }
+                }
+            }
+            if (StringUtils.isNotEmpty(opSamplingPlan.getDriverName())) {
+                opSampleUnquality.setDriverName(opSamplingPlan.getDriverName());
+            }
+            if (StringUtils.isNotEmpty(opSamplingPlan.getDriverCode())) {
+                opSampleUnquality.setDriverCode(opSamplingPlan.getDriverCode());
+            }
+
+            if (opSamplingPlan != null) {
+                if (StringUtils.isNotEmpty(opSamplingPlan.getSignInId())) {
+                    opSampleUnquality.setSignInId(opSamplingPlan.getSignInId());
+                }
+            }
+
+            // 新增子表
+            List<OpSampleUnqualityDetail> list = new ArrayList<>();
+            OpSampleUnqualityDetail opSampleUnqualityDetail = new OpSampleUnqualityDetail();
+            opSampleUnquality.setOpSampleUnqualityId(IdUtils.simpleUUID());
+            opSampleUnqualityDetail.setOpSampleUnqualityDetailId(IdUtils.simpleUUID());
+            opSampleUnqualityDetail.setOpSampleUnqualityId(opSampleUnquality.getOpSampleUnqualityId());
+            opSampleUnqualityDetail.setItemId(opTestResultInfo.getItemId());
+            opSampleUnqualityDetail.setItemName(opTestResultInfo.getItemName());
+            opSampleUnqualityDetail.setCtx(opTestResultInfo.getFeatureName());
+            opSampleUnqualityDetail.setCtestresult(opTestResultInfo.getResult());
+            opSampleUnqualityDetail.setChg(opTestResultInfo.getCheckResult());
+
+            list.add(opSampleUnqualityDetail);
+            opSampleUnquality.setOpSampleUnqualityDetailList(list);
+            opSampleUnqualityService.insertOpSampleUnquality(opSampleUnquality);
+        }
+
         // 4. 写变更日志（用原值）
         OpTestResultChangeLog log = OpTestResultChangeLog.builder()
                 .resultId(dto.getResultId())
@@ -840,7 +1070,7 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
     @Override
     @Transactional
     public int approveTest(OpTestResultBase opTestResultBase) {
-        if ("4".equals(opTestResultBase.getStatus())){
+        if ("4".equals(opTestResultBase.getStatus())) {
             throw new ServiceException("化验单已审核");
         }
 
@@ -855,47 +1085,12 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
         if (!opTestResultBase.getOpTestResultInfoList().isEmpty()) {
             for (OpTestResultInfo info : opTestResultBase.getOpTestResultInfoList()) {
                 if ("2".equals(info.getCheckResult())) {
-                    // 查询是否有签到id
-                    OpSamplingPlan opSamplingPlan = opSamplingPlanMapper.selectOpSamplingPlanByOpSamplingPlanId(info.getPlanId());
-
-                    // 整合不合格数据
-                    OpSampleUnquality opSampleUnquality = new OpSampleUnquality();
-                    opSampleUnquality.setSourceId(info.getPlanSampleId());
-                    opSampleUnquality.setMaterialId(info.getInvbillId());
-                    opSampleUnquality.setMaterialCode(info.getInvbillCode());
-                    opSampleUnquality.setMaterialName(info.getInvbillName());
-                    opSampleUnquality.setIsDelete("0");
-                    opSampleUnquality.setTestUserId(String.valueOf(SecurityUtils.getUserId()));
-                    opSampleUnquality.setTestResult(info.getResult());
-                    opSampleUnquality.setCtype("化验不合格");
-                    opSampleUnquality.setProcessingType("1");
-                    opSampleUnquality.setStatus("0");
-                    opSampleUnquality.setCfilepath(info.getSjtFileUrl());
-
-                    if (opSamplingPlan != null) {
-                        if (StringUtils.isNotEmpty(opSamplingPlan.getSignInId())){
-                            opSampleUnquality.setSignInId(opSamplingPlan.getSignInId());
-                        }
-                    }
-
-                    // 新增子表
-                    List<OpSampleUnqualityDetail> list = new ArrayList<>();
-                    OpSampleUnqualityDetail opSampleUnqualityDetail = new OpSampleUnqualityDetail();
-                    opSampleUnqualityDetail.setOpSampleUnqualityId(opSampleUnquality.getOpSampleUnqualityId());
-                    opSampleUnqualityDetail.setItemId(info.getItemId());
-                    opSampleUnqualityDetail.setItemName(info.getItemName());
-                    opSampleUnqualityDetail.setCtx(info.getFeatureName());
-                    opSampleUnqualityDetail.setCtestresult(info.getResult());
-                    opSampleUnqualityDetail.setChg(info.getCheckResult());
-
-                    list.add(opSampleUnqualityDetail);
-                    opSampleUnquality.setOpSampleUnqualityDetailList(list);
-                    opSampleUnqualityService.insertOpSampleUnquality(opSampleUnquality);
+                    handleUnquality(info);
                 }
             }
         }
 
-        // 复检
+        // 复检 (原本就有这段逻辑)
         List<OpTestResultInfo> opTestResultInfoList = opTestResultBase.getOpTestResultInfoList();
         if (opTestResultInfoList != null && !opTestResultInfoList.isEmpty()) {
             List<String> idList = opTestResultInfoList.stream()
@@ -906,7 +1101,14 @@ public class OpTestResultBaseServiceImpl implements IOpTestResultBaseService {
                 retest(idList);
             }
         }
+        return updateOpTestResultBase(opTestResultBase);
+    }
 
-        return opTestResultBaseMapper.updateOpTestResultBase(opTestResultBase);
+    @Override
+    public int jczxAdd(OpSamplingPlanSample opSamplingPlanSample) {
+        String sampleNo = opSamplingPlanSample.getSampleNo();
+        OpTestResultBase base = new OpTestResultBase();
+        insertOpTestResultBase(base);
+        return 0;
     }
 }

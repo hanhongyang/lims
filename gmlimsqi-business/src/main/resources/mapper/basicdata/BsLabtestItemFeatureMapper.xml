@@ -22,6 +22,7 @@
         <result property="upperLimit"    column="upper_limit"    />
         <result property="lowerLimit"    column="lower_limit"    />
         <result property="remark"    column="remark"    />
+        <result property="unitOfMeasurement"    column="unit_of_measurement"    />
     </resultMap>
 
 
@@ -35,8 +36,16 @@
     </resultMap>
 
     <sql id="selectBsLabtestItemFeatureVo">
-        select bs_labtest_item_feature_id, item_id, feature_id, dept_id, create_time, create_by, update_time, update_by,
-               is_delete, is_enable
+        select bs_labtest_item_feature_id,
+               item_id,
+               feature_id,
+               dept_id,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               is_delete,
+               is_enable
         from bs_labtest_item_feature
     </sql>
 
@@ -95,6 +104,7 @@
         i.item_name,
         i.item_code,
         i.sap_code,
+        f.unit_of_measurement,
         f.name,
         f.upper_limit,
         f.lower_limit

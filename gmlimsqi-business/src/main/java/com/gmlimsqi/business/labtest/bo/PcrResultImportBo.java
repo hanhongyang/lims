@@ -82,5 +82,6 @@ public class PcrResultImportBo {
     private String item16;
     @Excel(name = "无乳链球菌")
     private String item17;
-
+    @Excel(name = "产气荚膜梭菌")
+    private String item18;
 }

@@ -99,7 +99,7 @@ public class OpFinishedProductSamplingPlanServiceImpl implements IOpFinishedProd
                             SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(fileId);
                             urlList.add(sysUploadFile.getUrl());
                         }
-                        opFinishedProductSamplingPlanDetail.setFileUrl(urlList);
+                        opFinishedProductSamplingPlanDetail.setFileUrl(String.join(",", urlList));
                     }
                 }
             }
@@ -365,8 +365,26 @@ public class OpFinishedProductSamplingPlanServiceImpl implements IOpFinishedProd
             opSamplingPlanSampleVOS.forEach(vo -> {
                 if (StringUtils.isNotEmpty(vo.getCreateBy())) {
                     SysUser sysUser = sysUserMapper.selectUserById(Long.parseLong(vo.getCreateBy()));
-                    vo.setSamplerName(sysUser.getNickName());
+                    if (sysUser != null) {
+                        vo.setSamplerName(sysUser.getNickName());
+                    }
                 }
+
+                // 处理附件URL
+                if (StringUtils.isNotEmpty(vo.getFileInfo())) {
+                    List<String> fileIdList = IdListHandler.parseIdStr(vo.getFileInfo());
+                    if (!fileIdList.isEmpty()) {
+                        List<String> urlList = new ArrayList<>();
+                        for (String fileId : fileIdList) {
+                            SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(fileId);
+                            if (sysUploadFile != null) {
+                                urlList.add(sysUploadFile.getUrl());
+                            }
+                        }
+                        vo.setFileUrl(String.join(",", urlList));
+                    }
+                }
+
                 // 根据样品ID查询关联的检测项目列表
                 List<OpSamplingPlanItem> itemList = opSamplingPlanItemMapper.selectOpSamplingPlanItemBySampleId(vo.getOpSamplingPlanSampleId());
                 vo.setOpSamplingPlanItemList(itemList);
@@ -513,6 +531,21 @@ public class OpFinishedProductSamplingPlanServiceImpl implements IOpFinishedProd
         }
 
         opSamplingPlanSample.setSamplerName(sysUser.getNickName());
+
+        // 处理附件URL
+        if (StringUtils.isNotEmpty(opSamplingPlanSample.getFileInfo())) {
+            List<String> fileIdList = IdListHandler.parseIdStr(opSamplingPlanSample.getFileInfo());
+            if (!fileIdList.isEmpty()) {
+                List<String> urlList = new ArrayList<>();
+                for (String fileId : fileIdList) {
+                    SysUploadFile sysUploadFile = sysUploadFileMapper.selectFileById(fileId);
+                    if (sysUploadFile != null) {
+                        urlList.add(sysUploadFile.getUrl());
+                    }
+                }
+                opSamplingPlanSample.setFileUrl(String.join(",", urlList));
+            }
+        }
 
         List<OpSamplingPlanItem> opSamplingPlanItemList = opSamplingPlanItemMapper.selectOpSamplingPlanItemBySampleId(opSamplingPlanSampleId);
 

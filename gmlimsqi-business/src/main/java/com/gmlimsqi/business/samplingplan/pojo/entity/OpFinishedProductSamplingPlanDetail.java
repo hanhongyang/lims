@@ -56,7 +56,7 @@ public class OpFinishedProductSamplingPlanDetail extends BaseEntity implements B
     private String file;
 
      /** 附件url */
-    private List<String> fileUrl;
+    private String fileUrl;
 
     // 主表数据
     /** 取样计划单号 */

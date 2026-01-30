@@ -26,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="deptType" column="dept_type"/>
 		<result property="emailType" column="email_type"/>
 		<result property="emailAuthorizationCode" column="email_authorization_code"/>
+		<result property="pastureCode" column="pasture_code"/>
 	</resultMap>
 
 	<sql id="selectDeptVo">
@@ -46,7 +47,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			   d.dept_type,
 			   d.email_type,
 			   d.email_authorization_code,
-			   d.address
+			   d.address,
+			   d.pasture_code
 		from sys_dept d
 	</sql>
     
@@ -99,7 +101,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			   d.email_type,
 			   d.email_authorization_code,
 			   d.address,
-			   d.sap_name
+			   d.sap_name,
+			   d.pasture_code
 		from sys_dept d
 		where d.dept_id = #{deptId}
 	</select>
@@ -143,6 +146,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="emailType != null">email_type,</if>
 			<if test="emailAuthorizationCode != null">email_authorization_code,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
+			<if test="pastureCode != null and pastureCode != ''">pasture_code,</if>
  			create_time
  		)values(
  			<if test="deptId != null and deptId != 0">#{deptId},</if>
@@ -160,6 +164,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="emailType != null">#{emailType},</if>
 			<if test="emailAuthorizationCode != null">#{emailAuthorizationCode},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="pastureCode != null and pastureCode != ''">#{pastureCode},</if>
  			sysdate()
  		)
 	</insert>
@@ -181,6 +186,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="emailAuthorizationCode != null and emailAuthorizationCode != ''">email_authorization_code = #{emailAuthorizationCode},</if>
 			<if test="address != null and address != ''">address = #{address},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			<if test="pastureCode != null and pastureCode != ''">pasture_code = #{pastureCode},</if>
  			update_time = sysdate()
  		</set>
  		where dept_id = #{deptId}

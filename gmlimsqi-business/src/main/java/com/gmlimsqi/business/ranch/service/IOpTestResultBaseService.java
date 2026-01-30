@@ -2,7 +2,7 @@
 package com.gmlimsqi.business.ranch.service;
 
 import java.util.List;
-import java.util.Map; // (新) 引入
+import java.util.Map;
 
 import com.gmlimsqi.business.ranch.domain.OpSamplingPlanSample;
 import com.gmlimsqi.business.ranch.domain.OpTestResultBase;
@@ -11,9 +11,9 @@ import com.gmlimsqi.business.ranch.dto.OpSamplingPlanSamplePushSapDTO;
 import com.gmlimsqi.business.ranch.dto.changelog.ResultChangeSaveDTO;
 import com.gmlimsqi.business.ranch.vo.JckcTestVO;
 import com.gmlimsqi.business.ranch.vo.SampleInfoVO;
-import com.gmlimsqi.business.ranch.vo.SampleTaskVo; // (新) 引入
+import com.gmlimsqi.business.ranch.vo.SampleTaskVo;
 import com.gmlimsqi.business.ranch.vo.SamplingPlanReportVO;
-import org.apache.ibatis.annotations.Param; // (新) 引入
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 样品化验Service接口
@@ -82,6 +82,21 @@ public interface IOpTestResultBaseService
     public int retest(List<String> infoId);
 
     /**
+     * 复检单据 (单条 infoId，进入待审核流程)
+     */
+    public int retestSingle(String infoId);
+
+    /**
+     * 查询待审核的复检记录
+     */
+    public List<OpTestResultBase> selectRetestPendingList(OpTestResultBase opTestResultBase);
+
+    /**
+     * 审核通过复检单条记录 (待审核 -> 待化验)
+     */
+    public int approveRetestSingle(String id);
+
+    /**
      * 查询样品未推送SAP的列表
      */
     List<OpSamplingPlanSample> selectUnPushSapList(OpSamplingPlanSample opSamplingPlanSample);
@@ -142,4 +157,6 @@ public interface IOpTestResultBaseService
       * 化验审核通过（手机端使用）
       */
     int approveTest(OpTestResultBase opTestResultBase);
+
+    int jczxAdd(OpSamplingPlanSample opSamplingPlanSample);
 }

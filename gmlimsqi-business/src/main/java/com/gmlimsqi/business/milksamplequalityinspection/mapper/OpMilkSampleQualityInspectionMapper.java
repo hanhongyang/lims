@@ -4,20 +4,22 @@ import com.gmlimsqi.business.milksamplequalityinspection.domain.ExitInspectionRe
 import com.gmlimsqi.business.milksamplequalityinspection.domain.ExitInspectionReportVO;
 import com.gmlimsqi.business.milksamplequalityinspection.domain.OpMilkSampleQIException;
 import com.gmlimsqi.business.milksamplequalityinspection.domain.OpMilkSampleQualityInspection;
+import com.gmlimsqi.common.change.annotation.ChangeLog;
+import com.gmlimsqi.common.change.constant.BizType;
+import com.gmlimsqi.common.change.constant.ChangeLogConstant;
 
 import java.util.List;
 
 /**
  * 奶样质检Mapper接口
- * 
+ *
  * @author hhy
  * @date 2025-11-10
  */
-public interface OpMilkSampleQualityInspectionMapper 
-{
+public interface OpMilkSampleQualityInspectionMapper {
     /**
      * 查询奶样质检
-     * 
+     *
      * @param opMilkSampleQualityInspectionId 奶样质检主键
      * @return 奶样质检
      */
@@ -25,7 +27,7 @@ public interface OpMilkSampleQualityInspectionMapper
 
     /**
      * 查询奶样质检列表
-     * 
+     *
      * @param opMilkSampleQualityInspection 奶样质检
      * @return 奶样质检集合
      */
@@ -33,7 +35,7 @@ public interface OpMilkSampleQualityInspectionMapper
 
     /**
      * 新增奶样质检
-     * 
+     *
      * @param opMilkSampleQualityInspection 奶样质检
      * @return 结果
      */
@@ -41,10 +43,17 @@ public interface OpMilkSampleQualityInspectionMapper
 
     /**
      * 修改奶样质检
-     * 
+     *
      * @param opMilkSampleQualityInspection 奶样质检
      * @return 结果
      */
+    @ChangeLog(
+            bizType = BizType.MILK_SAMPLE_QUALITY_INSPECTION,
+            opType = ChangeLogConstant.OP_TYPE_UPDATE,
+            bizId = "#p0.opMilkSampleQualityInspectionId",
+            selectById = "selectOpMilkSampleQualityInspectionByOpMilkSampleQualityInspectionId(#bizId)",
+            reason = "#p0.remark"
+    )
     public int updateOpMilkSampleQualityInspection(OpMilkSampleQualityInspection opMilkSampleQualityInspection);
 
     /**
@@ -76,7 +85,7 @@ public interface OpMilkSampleQualityInspectionMapper
      */
     public List<OpMilkSampleQIException> selectOpMilkSampleQIExceptionList(OpMilkSampleQIException opMilkSampleQIException);
 
-     /**
+    /**
      * 查询退出检查报告列表
      *
      * @param exitInspectionReportDTO 退出检查报告查询条件

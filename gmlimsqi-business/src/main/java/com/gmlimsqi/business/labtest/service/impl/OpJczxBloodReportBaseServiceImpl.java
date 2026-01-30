@@ -980,7 +980,7 @@ public class OpJczxBloodReportBaseServiceImpl implements IOpJczxBloodReportBaseS
             if (StringUtils.isEmpty(bloodEntrustOrderId)) {
                 throw new ServiceException("缺少必要参数");
             }
-            List<OpJczxBloodReportBase> baseList = opJczxBloodReportBaseMapper.selectReportBaseByOrderId(bloodEntrustOrderId);
+            List<OpJczxBloodReportBase> baseList = opJczxBloodReportBaseMapper.selectReportBaseByOrderIdLimit1(bloodEntrustOrderId);
             logger.info("Fetched {} report bases for order ID {}", baseList.size(), bloodEntrustOrderId);
             if (ObjectUtils.isEmpty(baseList)) {
                 throw new ServiceException("获取报告数据失败");

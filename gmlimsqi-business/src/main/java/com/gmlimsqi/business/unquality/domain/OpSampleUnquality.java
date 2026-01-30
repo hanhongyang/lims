@@ -1,7 +1,12 @@
 package com.gmlimsqi.business.unquality.domain;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.gmlimsqi.common.annotation.Excel;
@@ -13,6 +18,8 @@ import com.gmlimsqi.common.core.domain.BaseEntity;
  * @author hhy
  * @date 2025-11-28
  */
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class OpSampleUnquality extends BaseEntity implements BaseEntity.CreateAware, BaseEntity.UpdateAware
 {
@@ -80,6 +87,7 @@ public class OpSampleUnquality extends BaseEntity implements BaseEntity.CreateAw
     private String ikjweight;
 
     /** 按比例扣重 */
+    @JsonProperty("iProportionkjweight")
     private String iProportionkjweight;
 
     /** 扣款 */
@@ -105,6 +113,18 @@ public class OpSampleUnquality extends BaseEntity implements BaseEntity.CreateAw
 
     /** 核销磅单号 */
     private String writeOffCweightno;
+
+    /** 手动关闭备注 */
+    private String manualClosingRemark;
+
+    /** 新物料凭证 */
+    private String newMaterialVoucher;
+
+    /** 司机姓名 */
+    private String driverName;
+
+    /** 车牌号 */
+    private String driverCode;
 
     /** 样品不合格处理单详情信息 */
     private List<OpSampleUnqualityDetail> opSampleUnqualityDetailList;

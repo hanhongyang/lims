@@ -316,13 +316,13 @@ public class OpJczxBloodResultBaseServiceImpl implements IOpJczxBloodResultBaseS
             //去重
             sampleNoList  = sampleNoList.stream().distinct().collect(Collectors.toList());
             //过滤样品 已审核通过的数据，并返回前端
-            List<OpBloodEntrustOrderSample> examineSampleList = entrustOrderSampleMapper.selectExamineBySampleNoList(sampleNoList);
-            List<String> exanmineSampleNoList = examineSampleList.stream().map(OpBloodEntrustOrderSample::getSampleNo).collect(Collectors.toList());
+            //List<OpBloodEntrustOrderSample> examineSampleList = entrustOrderSampleMapper.selectExamineBySampleNoList(sampleNoList);
+            //List<String> exanmineSampleNoList = examineSampleList.stream().map(OpBloodEntrustOrderSample::getSampleNo).collect(Collectors.toList());
 
             // --- 从 importList 中移除已审核的样品 ---
-            importList = importList.stream().filter(a -> !exanmineSampleNoList.contains(a.getSampleNo())).collect(Collectors.toList());
+            //importList = importList.stream().filter(a -> !exanmineSampleNoList.contains(a.getSampleNo())).collect(Collectors.toList());
             // --- 从 sampleNoList 中也移除 ---
-            sampleNoList.removeAll(exanmineSampleNoList);
+            //sampleNoList.removeAll(exanmineSampleNoList);
 
             if (importList.isEmpty()) {
                 sysUploadFileService.deleteFile(fileId);
@@ -633,14 +633,14 @@ public class OpJczxBloodResultBaseServiceImpl implements IOpJczxBloodResultBaseS
             // 标记文件为正式文件
             sysUploadFileService.markFileAsPermanent(fileId);
 
-            // (exanmineSampleNoList 是最初被过滤掉的已审核列表)
-            if(CollectionUtil.isEmpty(exanmineSampleNoList)){
-                return "导入成功，共处理 " + importList.size() + " 条数据";
-            }else {
-                String result = String.join(",", exanmineSampleNoList);
-                return "导入成功，共处理 " + importList.size() + " 条数据。另有 " + exanmineSampleNoList.size() + " 条已审核数据被跳过，样品编号为：" + result;
-            }
-
+//            // (exanmineSampleNoList 是最初被过滤掉的已审核列表)
+//            if(CollectionUtil.isEmpty(exanmineSampleNoList)){
+//                return "导入成功，共处理 " + importList.size() + " 条数据";
+//            }else {
+//                String result = String.join(",", exanmineSampleNoList);
+//                return "导入成功，共处理 " + importList.size() + " 条数据。另有 " + exanmineSampleNoList.size() + " 条已审核数据被跳过，样品编号为：" + result;
+//            }
+            return "导入成功，共处理 " + importList.size() + " 条数据";
         } catch (Exception e) {
             // 如果文件上传了但后续失败，删除它
             if (fileId != null) {

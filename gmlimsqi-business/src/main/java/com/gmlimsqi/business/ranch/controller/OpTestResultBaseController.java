@@ -1,13 +1,12 @@
-// (文件: com/gmlimsqi/business/ranch/controller/OpTestResultBaseController.java)
-// 【请替换您已有的 OpTestResultBaseController.java】
 package com.gmlimsqi.business.ranch.controller;
 
 import java.util.List;
-import java.util.Map; // (新) 引入
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.gmlimsqi.business.ranch.domain.OpSamplingPlanSample;
+import com.gmlimsqi.business.ranch.domain.OpTestResultBase;
 import com.gmlimsqi.business.ranch.dto.GetJCKCTestDTO;
 import com.gmlimsqi.business.ranch.dto.OpSamplingPlanSamplePushSapDTO;
 import com.gmlimsqi.business.ranch.dto.changelog.ResultChangeSaveDTO;
@@ -15,19 +14,13 @@ import com.gmlimsqi.business.ranch.vo.JckcTestVO;
 import com.gmlimsqi.business.ranch.vo.SampleTaskVo;
 import com.gmlimsqi.business.ranch.vo.SamplingPlanReportVO;
 import com.gmlimsqi.common.annotation.Anonymous;
+import com.gmlimsqi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.gmlimsqi.common.annotation.Log;
 import com.gmlimsqi.common.core.controller.BaseController;
 import com.gmlimsqi.common.core.domain.AjaxResult;
 import com.gmlimsqi.common.enums.BusinessType;
-import com.gmlimsqi.business.ranch.domain.OpTestResultBase;
 import com.gmlimsqi.business.ranch.service.IOpTestResultBaseService;
 import com.gmlimsqi.common.utils.poi.ExcelUtil;
 import com.gmlimsqi.common.core.page.TableDataInfo;
@@ -197,6 +190,36 @@ public class OpTestResultBaseController extends BaseController {
     }
 
     /**
+     * 复检单据 (单条 infoId，进入待审核流程)
+     */
+    @PutMapping("/retestSingle")
+    public AjaxResult retestSingle(@RequestParam("infoId") String infoId) {
+        if (StringUtils.isEmpty(infoId)) {
+            return error("缺少参数");
+        }
+        return toAjax(opTestResultBaseService.retestSingle(infoId));
+    }
+
+    /**
+     * 查询待审核的复检记录
+     */
+    @GetMapping("/retestPendingList")
+    public TableDataInfo retestPendingList(OpTestResultBase opTestResultBase) {
+        startPage();
+        List<OpTestResultBase> list = opTestResultBaseService.selectRetestPendingList(opTestResultBase);
+        return getDataTable(list);
+    }
+
+    /**
+     * 审核通过复检单条记录
+     */
+    @Log(title = "复检审核", businessType = BusinessType.UPDATE)
+    @PutMapping("/approveRetestSingle/{id}")
+    public AjaxResult approveRetestSingle(@PathVariable("id") String id) {
+        return toAjax(opTestResultBaseService.approveRetestSingle(id));
+    }
+
+    /**
      * 查询样品未推送SAP的列表
      */
     @GetMapping("/unPushSapList")
@@ -284,5 +307,11 @@ public class OpTestResultBaseController extends BaseController {
     @PutMapping("/resultChange")
     public AjaxResult resultChange(@RequestBody ResultChangeSaveDTO dto) {
         return toAjax(opTestResultBaseService.changeResult(dto));
+    }
+
+    //
+    @PostMapping("/jczxAdd")
+    public AjaxResult jczxAdd(@RequestBody OpSamplingPlanSample opSamplingPlanSample) {
+        return toAjax(opTestResultBaseService.jczxAdd(opSamplingPlanSample));
     }
 }

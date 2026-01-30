@@ -48,4 +48,7 @@ public class BsLabtestItemFeature extends BaseEntity implements BaseEntity.Creat
     private String itemSapCode;
     private String upperLimit;
     private String lowerLimit;
+
+    /** 单位 */
+    private String unitOfMeasurement;
 }

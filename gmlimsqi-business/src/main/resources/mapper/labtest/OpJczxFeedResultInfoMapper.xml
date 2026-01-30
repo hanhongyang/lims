@@ -761,6 +761,18 @@
         s.sample_no = #{sampleNo}
         and i.delete_id = '0'
     </select>
+
+    <select id="getResultBySampleNo3"   parameterType="String" resultMap="OpJczxFeedResultInfoResult">
+        select i.*,s.sample_no,s.name as sample_name,li.item_name,li.bs_labtest_items_id
+        from op_jczx_feed_result_info i
+            left join op_jczx_feed_result_base b on b.op_jczx_feed_result_base_id = i.base_id
+                 left join op_feed_entrust_order_sample s on s.op_feed_entrust_order_sample_id=i.entrust_order_sample_id and s.is_delete = '0'
+                 left join op_feed_entrust_order_item oi on oi.op_feed_entrust_order_item_id =i.entrust_order_item_id and oi.is_delete='0'
+                 left join bs_labtest_items li on li.bs_labtest_items_id=oi.item_id and li.is_delete='0'
+        where
+            s.sample_no = #{sampleNo} and b.status !='5' and i.is_reset='0'
+          and i.delete_id = '0'
+    </select>
     <update id="updateSampleId" parameterType="String">
         update op_jczx_feed_result_info set entrust_order_sample_id=#{newSampleId} where entrust_order_sample_id=#{oldSampleId} and delete_id='0'
     </update>

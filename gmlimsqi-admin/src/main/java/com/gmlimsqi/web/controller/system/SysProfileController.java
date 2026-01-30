@@ -1,6 +1,7 @@
 package com.gmlimsqi.web.controller.system;
 
 import com.gmlimsqi.framework.web.service.SysPasswordService;
+import org.bouncycastle.openssl.PasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,6 +107,16 @@ public class SysProfileController extends BaseController
         {
             return error("新密码不能与旧密码相同");
         }
+        // 检查是否包含用户名
+        if (password.toLowerCase().contains(userName.toLowerCase())) {
+            return error("密码不能包含用户名");
+        }
+
+        // 检查是否包含手机号
+        if (StringUtils.isNotEmpty(loginUser.getUser().getPhonenumber()) && password.contains(loginUser.getUser().getPhonenumber())) {
+            return error("密码不能包含手机号码");
+        }
+
 
         // 1. 校验新密码复杂度
         passwordService.validateNewPassword(newPassword);

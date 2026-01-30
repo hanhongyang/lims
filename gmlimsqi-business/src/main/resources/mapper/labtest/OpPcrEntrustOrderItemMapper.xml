@@ -443,4 +443,21 @@
                 ELSE NULL  -- 特殊样品不需要按sequence排序
                 END ASC
     </select>
+    <select id="selectItemsBySampleIdIncludeDeleted" resultMap="OpPcrEntrustOrderItemResult">
+        SELECT
+            distinct
+            bli.item_name
+        FROM op_pcr_entrust_order_item i
+                 LEFT JOIN bs_labtest_items bli ON i.item_id = bli.bs_labtest_items_id
+        WHERE i.pcr_entrust_order_sample_id = #{sampleId}
+    </select>
+
+    <update id="deleteBySampleId">
+        UPDATE op_pcr_entrust_order_item
+        SET is_delete = '1',
+            update_by = #{updateBy},
+            update_time = sysdate()
+        WHERE pcr_entrust_order_sample_id = #{sampleId}
+          AND is_delete = '0'
+    </update>
 </mapper>

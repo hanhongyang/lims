@@ -100,4 +100,28 @@ public interface IOpJczxTestTaskService
      */
     public int countEarlyPregnancyWaitTest();
 
+    /**
+     * 统计PCR待受理数量
+     * @return 数量
+     */
+    int countPcrWaitAccept();
+
+    /**
+     * 统计病害待受理数量
+     * @return 数量
+     */
+    int countDiseaseWaitAccept();
+
+    /**
+     * 统计生化待受理数量
+     * @return 数量
+     */
+    int countBiochemistryWaitAccept();
+
+    /**
+     * 统计早产待受理数量
+     * @return 数量
+     */
+    int countEarlyPregnancyWaitAccept();
+
 }

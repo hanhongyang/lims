@@ -120,6 +120,32 @@ public class SysLoginController
         ajax.put("user", user);
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
+        // 定义过期时间（180天）
+        long expireDays = 180;
+        //SysUser user = SecurityUtils.getLoginUser().getUser();
+        // 获取最后修改时间，如果为空则默认为创建时间，如果创建时间也为空，则视为必须修改
+        Date lastUpdate = user.getPwdUpdateDate();
+        if (lastUpdate == null) {
+            lastUpdate = user.getCreateTime();
+        }
+
+        boolean isPwdExpired = false;
+        if (lastUpdate == null) {
+            // 极端情况：既没修改时间也没创建时间，强制过期
+            isPwdExpired = true;
+        } else {
+            // 计算相差天数 (使用 RuoYi 自带的 DateUtils 或 Hutool)
+            // 这里假设使用毫秒数计算：
+            long diff = System.currentTimeMillis() - lastUpdate.getTime();
+            long days = diff / (1000 * 60 * 60 * 24);
+
+            if (days > expireDays) {
+                isPwdExpired = true;
+            }
+        }
+
+        // 将判断结果返回给前端
+        ajax.put("pwdExpired", isPwdExpired);
         return ajax;
     }
 

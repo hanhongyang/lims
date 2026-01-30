@@ -116,4 +116,6 @@ public class OpJczxBloodResultInfo extends BaseEntity implements BaseEntity.Crea
     private String sn;
     @Excel(name = "判定结果")
     private String pdjg;
+    /** 关联的报告状态 (用于前端控制只读) */
+    private String reportStatus;
 }

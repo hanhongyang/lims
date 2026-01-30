@@ -1,6 +1,8 @@
 package com.gmlimsqi.business.labtest.service;
 
 import java.util.List;
+
+import com.gmlimsqi.business.labtest.domain.OpJczxFeedReportBase;
 import com.gmlimsqi.business.labtest.domain.OpJczxFeedResultBase;
 import com.gmlimsqi.business.labtest.domain.OpJczxFeedResultInfo;
 import com.gmlimsqi.business.labtest.dto.OpJczxFeedResultBaseDto;
@@ -94,5 +96,5 @@ public interface IOpJczxFeedResultBaseService
      * @return 待校对数量
      */
     public int countFeedWaitCheckByCurrentUser();
-
+    public void addRanchResult(String sampleNo, String opJczxFeedReportBaseId);
 }

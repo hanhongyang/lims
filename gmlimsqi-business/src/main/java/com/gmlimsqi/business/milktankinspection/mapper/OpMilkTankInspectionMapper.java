@@ -1,6 +1,9 @@
 package com.gmlimsqi.business.milktankinspection.mapper;
 
 import com.gmlimsqi.business.milktankinspection.domain.OpMilkTankInspection;
+import com.gmlimsqi.common.change.annotation.ChangeLog;
+import com.gmlimsqi.common.change.constant.BizType;
+import com.gmlimsqi.common.change.constant.ChangeLogConstant;
 
 import java.util.List;
 
@@ -42,6 +45,13 @@ public interface OpMilkTankInspectionMapper
      * @param opMilkTankInspection 奶罐车质检
      * @return 结果
      */
+    @ChangeLog(
+            bizType = BizType.MILK_TANK_INSPECTION,
+            opType = ChangeLogConstant.OP_TYPE_UPDATE,
+            bizId = "#p0.opMilkTankInspectionId",
+            selectById = "selectOpMilkTankInspectionByOpMilkTankInspectionId(#bizId)",
+            reason = "#p0.remark"
+    )
     public int updateOpMilkTankInspection(OpMilkTankInspection opMilkTankInspection);
 
     /**

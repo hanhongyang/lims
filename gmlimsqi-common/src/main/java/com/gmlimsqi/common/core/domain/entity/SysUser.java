@@ -142,6 +142,9 @@ public class SysUser extends BaseEntity {
      */
     //@Excel(name = "钉钉用户id")
     private String dingtaskUserId;
+    /** 密码最后修改时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date pwdUpdateDate;
 
     //是否接收报告
     private String isReceive;
@@ -392,5 +395,14 @@ public class SysUser extends BaseEntity {
                 .append("dept", getDept())
                 .append("is_receive", getIsReceive())
                 .toString();
+    }
+
+
+    public Date getPwdUpdateDate() {
+        return pwdUpdateDate;
+    }
+
+    public void setPwdUpdateDate(Date pwdUpdateDate) {
+        this.pwdUpdateDate = pwdUpdateDate;
     }
 }
